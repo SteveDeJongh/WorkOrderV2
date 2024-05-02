@@ -1,26 +1,18 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { API_URL } from "../constants";
 
 function NavBar() {
   return (
-    <ul className="list-group">
-      <li className="list-group-item">
-        <Link htmlFor="/">Customers</Link>
-      </li>
-      <li>
-        <Link htmlFor="/">Invoices</Link>
-      </li>
-      <li>
-        <Link htmlFor="/">Work Orders</Link>
-      </li>
-      <li>
-        <Link htmlFor="/">Products</Link>
-      </li>
-      <li>
-        <Link htmlFor="/">Labour</Link>
-      </li>
-    </ul>
+    <div className="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
+      <ul className="nav nav-pills flex-column mb-auto">
+        <li className="nav-item">Customers</li>
+        <li className="nav-item">Invoices</li>
+        <li className="nav-item">WorkOrders</li>
+        <li className="nav-item">Products</li>
+        <li className="nav-item">Labour</li>
+        <li className="nav-item">Reports</li>
+      </ul>
+    </div>
   );
 }
 
