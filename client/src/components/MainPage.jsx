@@ -2,14 +2,24 @@ import Header from "./Header";
 import SideBar from "./SideBar";
 import PageContent from "./PageContent";
 import Footer from "./Footer";
+import { useState, useEffect } from "react";
 
 function MainPage() {
+  const [page, setPage] = useState("");
+
+  useEffect(() => {
+    console.log("render");
+  }, [page]);
+
+  function onTabClick(arg) {
+    setPage(arg);
+  }
   return (
     <>
       <Header />
       <div id="layout">
-        <SideBar />
-        <PageContent />
+        <SideBar onTabClick={onTabClick} />
+        <PageContent page={page} />
       </div>
       <Footer />
     </>
@@ -17,15 +27,3 @@ function MainPage() {
 }
 
 export default MainPage;
-
-{
-  /* <div className="container-fluid">
-<div className="row flex-nowrap">
-  <SideBar />
-  <div className="col-auto col-sm-10 col-md-9 col-xl-10 px-0">
-    <Header />
-    <PageContent />
-  </div>
-</div>
-</div> */
-}

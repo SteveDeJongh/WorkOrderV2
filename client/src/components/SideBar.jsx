@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
-import { API_URL } from "../constants";
 
-function SideBar() {
+function SideBar({ onTabClick }) {
   return (
     <>
       <nav>
         <ul>
-          <li>Dashboard</li>
-          <li>Customers</li>
+          <li onClick={() => onTabClick("dashboard")}>Dashboard</li>
+          <li onClick={() => onTabClick("customers")}>Customers</li>
           <li>Workorders</li>
           <li>Products</li>
           <li>Services</li>
