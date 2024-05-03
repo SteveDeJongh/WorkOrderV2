@@ -1,7 +1,7 @@
 function Actions() {
   return (
     <>
-      <ul>
+      <ul id="actions-list">
         <li>Add</li>
         <li>View</li>
         <li>Edit</li>
