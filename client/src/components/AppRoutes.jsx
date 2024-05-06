@@ -1,10 +1,16 @@
 import { Route, Routes } from "react-router-dom";
-import MainPage from "./MainPage";
+import Dashboard from "./Dashboard";
+import Customers from "./Customers";
+import WorkOrders from "./WorkOrders";
+import Products from "./Products";
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<MainPage />} />
+      <Route path="/" element={<Dashboard />} />
+      <Route path="/customers" element={<Customers />} />
+      <Route path="/workorders" element={<WorkOrders />} />
+      <Route path="/products" element={<Products />} />
     </Routes>
   );
 }

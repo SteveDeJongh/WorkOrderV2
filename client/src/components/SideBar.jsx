@@ -1,17 +1,40 @@
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
-function SideBar({ onTabClick }) {
+function SideBar({ currentPage }) {
+  useEffect(() => {
+    let links = Array.from(document.querySelectorAll(".sidebar-link"));
+    let activePage = links.filter(
+      (link) => link.id.split("-")[3] === currentPage
+    )[0];
+    activePage.classList.add("selected");
+  }, []);
+
   return (
     <>
       <nav>
         <ul>
-          <li onClick={() => onTabClick("dashboard")}>Dashboard</li>
-          <li onClick={() => onTabClick("customers")}>Customers</li>
-          <li>Workorders</li>
-          <li>Products</li>
-          <li>Services</li>
-          <li>Reports</li>
-          <li>Settings</li>
+          <li id="sidebar-link-for-dashboard" className="sidebar-link">
+            <Link to="/">Dashboard</Link>
+          </li>
+          <li id="sidebar-link-for-customers" className="sidebar-link">
+            <Link to="/customers">Customers</Link>
+          </li>
+          <li id="sidebar-link-for-workorders" className="sidebar-link">
+            <Link to="/workorders">Workorders</Link>
+          </li>
+          <li id="sidebar-link-for-products" className="sidebar-link">
+            <Link to="/products">Products</Link>
+          </li>
+          <li id="sidebar-link-for-services" className="sidebar-link">
+            <Link to="/services">Services</Link>
+          </li>
+          <li id="sidebar-link-for-reports" className="sidebar-link">
+            <Link to="/reports">Reports</Link>
+          </li>
+          <li id="sidebar-link-for-settings" className="sidebar-link">
+            <Link to="/settings">Settings</Link>
+          </li>
         </ul>
       </nav>
     </>

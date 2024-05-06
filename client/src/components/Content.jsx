@@ -8,7 +8,9 @@ function Content({ page, tableData }) {
       <div className="content">
         <h1>{page}</h1>
         <p>Main Page Content</p>
-        {tableData && <Table page={page} data={tableData} />}
+        <div className="table-container">
+          {tableData && <Table page={page} data={tableData} />}
+        </div>
       </div>
     </>
   );

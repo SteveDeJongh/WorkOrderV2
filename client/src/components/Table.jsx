@@ -1,15 +1,13 @@
 function Table({ page, data }) {
-  console.log("Data from table", data);
   let headers = Object.keys(data[0]);
 
   return (
     <>
-      <h1>{page}</h1>
       <table>
         <thead>
           <tr>
             {headers.map((header) => {
-              return <th>{header}</th>;
+              return <th key={header}>{header}</th>;
             })}
           </tr>
         </thead>
