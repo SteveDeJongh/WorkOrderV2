@@ -5,6 +5,8 @@ class Api::V1::CustomersController < ApplicationController
   def index
     @customers = Customer.all
 
+    sleep 0.3
+
     render json: @customers
   end
 

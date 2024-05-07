@@ -1,31 +1,38 @@
-function Table({ page, data }) {
+import PropTypes from "prop-types";
+
+function Table({ data }) {
   let headers = Object.keys(data[0]);
 
   return (
     <>
-      <table>
-        <thead>
-          <tr>
-            {headers.map((header) => {
-              return <th key={header}>{header}</th>;
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              {headers.map((header) => {
+                return <th key={header}>{header}</th>;
+              })}
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((row) => {
+              return (
+                <tr key={row.id}>
+                  {Object.keys(row).map((key) => {
+                    return <td key={row["id"] + key}>{row[key]}</td>;
+                  })}
+                </tr>
+              );
             })}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row) => {
-            return (
-              <tr key={row.id}>
-                {Object.values(row).map((field) => {
-                  console.log(field);
-                  return <td key={row.id + field}>{field}</td>;
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </>
   );
 }
+
+Table.propTypes = {
+  data: PropTypes.array.isRequired,
+};
 
 export default Table;

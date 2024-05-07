@@ -1,8 +1,10 @@
-function Actions({ page }) {
+function Actions({ page, openForm }) {
   return (
     <>
       <ul id="actions-list">
-        <li>Add {page}</li>
+        <li>
+          <button onClick={() => openForm(true)}>Add {page}</button>
+        </li>
         <li>View</li>
         <li>Edit</li>
         <li>Delete</li>

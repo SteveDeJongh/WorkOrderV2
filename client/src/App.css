@@ -4,7 +4,7 @@
   --main-text: rgb(230, 237, 243);
   --light-border: #8b949e;
   --light-selection: #30363d;
-
+  --dark-selection: #2b2f33;
 }
 
 * {
@@ -80,7 +80,7 @@ header ul li {
 }
 
 .selected {
-  background-color: red;
+  background-color: var(--dark-selection);
 }
 
 .main-panel {
@@ -106,10 +106,15 @@ header ul li {
   align-items: center;
   justify-content: center;
   background-color: var(--light-selection);
-  width: 100px;
+  width: 120px;
   height: 5vh;
   border: 2px solid var(--light-border);
   border-radius: 5px;
+  padding:5px;
+}
+
+#actions-list li:hover {
+  background-color: var(--dark-selection);
 }
 
 .main-panel .content {
@@ -123,11 +128,19 @@ header ul li {
 }
 
 .table-container {
-  height: 90%;
+  height: 100%;
   width: 100%;
   overflow: auto;
 }
 
+table {
+  border-collapse: collapse;
+}
 table td {
   overflow: hidden;
+}
+
+thead tr th{
+  border: 3px solid black;
+  padding: 0 5px;
 }
