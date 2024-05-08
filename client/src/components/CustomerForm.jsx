@@ -1,17 +1,5 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const newCustomerSchema = z.object({
-  firstName: z.string().min(2, "name must be at least 2 characters long."),
-  lastName: z.string(),
-  email: z.string().email(),
-  phone: z.string(),
-  address: z.string(),
-  city: z.string(),
-  province: z.string(),
-  country: z.string(),
-});
+import { createCustomer } from "../services/customerService";
 
 function CustomerForm() {
   const {
@@ -19,13 +7,21 @@ function CustomerForm() {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm({
-    resolver: zodResolver(newCustomerSchema),
-  });
+    getValues,
+  } = useForm();
 
   async function onSubmit(data) {
     // Todo, send info to server.
     console.log(data);
+    try {
+      const response = await createCustomer(data);
+      if (response.ok) {
+        console.log("success!");
+        reset();
+      }
+    } catch (e) {
+      console.error("Failed to create customer.");
+    }
     await new Promise((resolve) => setTimeout(resolve, 1000));
     // reset();
   }
@@ -35,7 +31,9 @@ function CustomerForm() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="firstName">First name:</label>
         <input
-          {...register("firstName")}
+          {...register("firstName", {
+            required: "First Name is required.",
+          })}
           type="text"
           id="firstName"
           name="firstName"
@@ -45,7 +43,9 @@ function CustomerForm() {
         <br />
         <label htmlFor="lastName">Last name:</label>
         <input
-          {...register("lastName")}
+          {...register("lastName", {
+            required: "Last Name is required.",
+          })}
           type="text"
           id="lastName"
           name="lastName"
@@ -55,7 +55,12 @@ function CustomerForm() {
         <br />
         <label htmlFor="Email">Email:</label>
         <input
-          {...register("email")}
+          {...register("email", {
+            pattern: {
+              value: /^\S+@\S+$/,
+              message: "Please enter a valid email address.",
+            },
+          })}
           type="email"
           id="email"
           name="email"
@@ -65,7 +70,13 @@ function CustomerForm() {
         <br />
         <label htmlFor="phone">Phone Number:</label>
         <input
-          {...register("phone")}
+          {...register("phone", {
+            validate: (value) => {
+              if (value === "" && getValues("email") === "") {
+                return "A contact method is requried, please provide a phone number or email address.";
+              }
+            },
+          })}
           type="phone"
           id="phone"
           name="phone"
