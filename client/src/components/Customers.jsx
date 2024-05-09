@@ -12,6 +12,8 @@ function Customers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [form, setFormOpen] = useState(false);
+  const [selection, setSelection] = useState("");
+  const [disableActions, setDisableActions] = useState(true);
 
   useEffect(() => {
     async function loadData() {
@@ -32,7 +34,15 @@ function Customers() {
     }
 
     loadData();
-  }, []);
+  }, [form]);
+
+  useEffect(() => {
+    function toggleActions() {
+      selection ? setDisableActions(false) : setDisableActions(true);
+    }
+
+    toggleActions();
+  }, [selection]);
 
   return (
     <>
@@ -40,12 +50,19 @@ function Customers() {
       <div id="layout">
         <SideBar currentPage={"customers"} />
         <div className="main-panel">
-          <Actions page={"Customer"} openForm={setFormOpen} />
+          <Actions
+            page={"Customer"}
+            openForm={setFormOpen}
+            disableActions={disableActions}
+            selection={selection}
+          />
           <div className="content">
             {loading && <p>Information loading...</p>}
             {error && <p>An error occured.</p>}
-            {form && <CustomerForm />}
-            {!loading && !form && <Table data={data} />}
+            {form && <CustomerForm showForm={setFormOpen} />}
+            {!loading && !form && (
+              <Table data={data} setSelection={setSelection} />
+            )}
           </div>
         </div>
       </div>

@@ -48,6 +48,6 @@ class Api::V1::CustomersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def customer_params
-      params.require(:customer).permit(:firstName, :lastName)
+      params.require(:customer).permit(:firstName, :lastName, :email, :phone, :address, :province, :country, :city)
     end
 end

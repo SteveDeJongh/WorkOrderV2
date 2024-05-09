@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
-import { createCustomer } from "../services/customerService";
+import { createCustomer } from "../services/customerServices";
+import { objectToFormData } from "../utils/formDataHelper";
 
-function CustomerForm() {
+function CustomerForm({ showForm }) {
   const {
     register,
     handleSubmit,
@@ -10,20 +11,15 @@ function CustomerForm() {
     getValues,
   } = useForm();
 
-  async function onSubmit(data) {
-    // Todo, send info to server.
-    console.log(data);
+  async function onSubmit(rawData) {
     try {
-      const response = await createCustomer(data);
-      if (response.ok) {
-        console.log("success!");
-        reset();
-      }
+      const formData = objectToFormData({ customer: rawData });
+      const response = await createCustomer(formData);
+      reset();
+      showForm(false);
     } catch (e) {
-      console.error("Failed to create customer.");
+      console.error("Failed to create customer: ", e);
     }
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    // reset();
   }
 
   return (
