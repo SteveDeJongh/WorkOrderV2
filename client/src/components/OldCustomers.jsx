@@ -1,5 +1,8 @@
+import Header from "./Header";
+import SideBar from "./NavBar";
+import Footer from "./Footer";
+import Actions from "./Actions";
 import Table from "./Table";
-import SingleColTable from "./SingleColTable";
 import CustomerForm from "./CustomerForm";
 import { API_URL } from "../constants";
 import { useState, useEffect } from "react";
@@ -17,13 +20,7 @@ function Customers() {
       try {
         const response = await fetch(`${API_URL}/customers`);
         if (response.ok) {
-          let responseData = await response.json();
-          responseData = responseData.map((obj) => {
-            return {
-              id: obj.id,
-              fullName: `${obj.firstName} ${obj.lastName}`,
-            };
-          });
+          const responseData = await response.json();
           setData(responseData);
         } else {
           throw response;
@@ -49,24 +46,27 @@ function Customers() {
 
   return (
     <>
-      <div id="panes">
-        <div className="pane pane-left">
-          <div className="pane-inner">
+      <Header />
+      <div id="layout">
+        <SideBar currentPage={"customers"} />
+        <div className="main-panel">
+          <Actions
+            page={"Customer"}
+            openForm={setFormOpen}
+            disableActions={disableActions}
+            selection={selection}
+          />
+          <div className="content">
             {loading && <p>Information loading...</p>}
             {error && <p>An error occured.</p>}
+            {form && <CustomerForm showForm={setFormOpen} />}
             {!loading && !form && (
-              <SingleColTable
-                title={"Customers"}
-                data={data}
-                setSelection={setSelection}
-              />
+              <Table data={data} setSelection={setSelection} />
             )}
           </div>
         </div>
-        <div className="pane pane-mid">
-          <div className="pane-inner"></div>
-        </div>
       </div>
+      <Footer />
     </>
   );
 }

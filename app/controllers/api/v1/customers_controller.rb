@@ -3,9 +3,9 @@ class Api::V1::CustomersController < ApplicationController
 
   # GET /customers
   def index
-    @customers = Customer.all
+    @customers = Customer.select(:id, :firstName, :lastName)
 
-    sleep 0.3
+    sleep 0.7
 
     render json: @customers
   end

@@ -24,16 +24,16 @@ body {
 }
 
 header {
-  display: flex;
   background-color: var(--main-black);
   height: 5vh;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
+  padding: 0px;
+  margin-bottom: 2vh;
   border-bottom: 2px solid var(--light-border);
+  display: flex;
+  align-items: center;
 }
 
-header ul {
+#header-sections{
   background-color: inherit;
   display: flex;
   flex-direction: row;
@@ -41,12 +41,96 @@ header ul {
   justify-content: space-between;
 }
 
-header ul li {
+.header-section {
   background-color: inherit;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+
+}
+
+.header-section ul{
+  display: flex;
+  flex-direction: row;
+  height: 5vh;
+  align-items: center;
+}
+
+.header-left {
+  justify-content: start;
+  width: 40%;
+}
+
+.header-mid {
+  justify-content: center;
+  width: 20%;
+}
+.header-right {
+  justify-content: end;
+  width: 40%;
+}
+
+nav a {
+  text-decoration: none;
+  color: inherit;
+}
+
+nav li {
+  height: 5vh;
+  padding: 2px;
+}
+
+nav li:has(a:hover) {
+  background-color: var(--light-selection);
+  width: 100%;
+}
+
+nav li:has(a.active) {
+  background-color: var(--dark-selection);
+}
+
+.navBar-tab {
+  display: flex;
+  align-items: center;
+}
+
+.user-nav {
+  display: flex;
+  flex-direction: row;
+}
+
+.user-nav li {
+  padding: 10px;
+}
+
+/* PANES */
+
+#panes {
+  display: flex;
+  flex-direction: row;
+}
+
+.pane-left {
+  width: 20%;
+  height: 93vh;
+}
+
+.pane-inner {
   padding: 0 10px;
 }
 
-#layout {
+.pane-left ul {
+  width: 100%;
+  background-color: red;
+  overflow: auto;
+
+}
+
+.pane-left li {
+  padding: 10px;
+}
+
+/* #layout {
   background-color: var(--alt-black);
   height: 100%;
   display: flex;
@@ -76,12 +160,8 @@ header ul li {
 }
 
 #layout nav ul li:hover {
-  background-color: var(--light-selection);
 }
 
-.selected {
-  background-color: var(--dark-selection);
-}
 
 .main-panel {
   display: flex;
@@ -143,4 +223,4 @@ table td {
 thead tr th{
   border: 3px solid black;
   padding: 0 5px;
-}
+} */

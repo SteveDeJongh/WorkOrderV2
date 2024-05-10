@@ -1,5 +1,5 @@
 import Header from "./Header";
-import SideBar from "./SideBar";
+import SideBar from "./NavBar";
 import Footer from "./Footer";
 import { useState, useEffect } from "react";
 
