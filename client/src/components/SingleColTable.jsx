@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 
-function SingleColTable({ title, data, setSelection }) {
+function SingleColTable({ title, data, setSelection, selection }) {
   const [lastSelection, setLastSeleciton] = useState(null);
 
   function handleClick(e, id) {
@@ -28,13 +28,17 @@ function SingleColTable({ title, data, setSelection }) {
       <ul>
         {data.map((row) => {
           return (
+            // <a href={`/customers/${row.id}`} key={row.id}>
             <li
               key={row.id}
               onClick={(e) => handleClick(e, row.id)}
-              className={"single-col-li"}
+              className={`single-col-li ${
+                row.id == selection ? "selected" : ""
+              }`}
             >
               {row.fullName}
             </li>
+            // </a>
           );
         })}
       </ul>

@@ -1,5 +1,7 @@
 import SingleColTable from "./SingleColTable";
 import Customer from "./Customer";
+import { Outlet, useParams } from "react-router-dom";
+
 import { API_URL } from "../constants";
 import { fetchCustomerData } from "../services/customerServices";
 import { useState, useEffect } from "react";
@@ -9,12 +11,14 @@ function Customers() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selection, setSelection] = useState("");
+  const [selection, setSelection] = useState(useParams().id);
+
+  console.log(selection, "from customers");
 
   // Main Pane states
-  const [mainLoading, setMainLoading] = useState(false);
-  const [mainError, setMainError] = useState(false);
-  const [mainData, setMainData] = useState([]);
+  // const [mainLoading, setMainLoading] = useState(false);
+  // const [mainError, setMainError] = useState(false);
+  // const [mainData, setMainData] = useState([]);
 
   // const [form, setFormOpen] = useState(false);
   // const [disableActions, setDisableActions] = useState(true);
@@ -46,26 +50,26 @@ function Customers() {
     loadData();
   }, []);
 
-  useEffect(() => {
-    async function loadCustomerData() {
-      if (!selection) {
-        setMainData({});
-        return;
-      }
-      try {
-        setMainLoading(true);
-        const response = await fetchCustomerData(selection);
-        setMainData(response);
-      } catch (e) {
-        setMainError("An error occured fetching the data.");
-        console.error(e);
-      } finally {
-        setMainLoading(false);
-      }
-    }
+  // useEffect(() => {
+  //   async function loadCustomerData() {
+  //     if (!selection) {
+  //       setMainData({});
+  //       return;
+  //     }
+  //     try {
+  //       setMainLoading(true);
+  //       const response = await fetchCustomerData(selection);
+  //       setMainData(response);
+  //     } catch (e) {
+  //       setMainError("An error occured fetching the data.");
+  //       console.error(e);
+  //     } finally {
+  //       setMainLoading(false);
+  //     }
+  //   }
 
-    loadCustomerData();
-  }, [selection]);
+  //   loadCustomerData();
+  // }, [selection]);
 
   return (
     <>
@@ -74,21 +78,18 @@ function Customers() {
           <div className="pane-inner">
             {loading && <p>Information loading...</p>}
             {error && <p>An error occured.</p>}
-            {!loading && (
+            {!loading && !error && (
               <SingleColTable
                 title={"Customers"}
                 data={data}
                 setSelection={setSelection}
+                selection={selection}
               />
             )}
           </div>
         </div>
         <div className="pane pane-mid">
-          <div className="pane-inner">
-            {mainLoading && <p>Information loading...</p>}
-            {mainError && <p>An error occured.</p>}
-            {!mainLoading && <Customer customer={mainData} />}
-          </div>
+          <Outlet context={selection} />
         </div>
       </div>
     </>
