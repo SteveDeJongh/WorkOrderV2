@@ -1,16 +1,23 @@
-import Table from "./Table";
 import SingleColTable from "./SingleColTable";
-import CustomerForm from "./CustomerForm";
+import Customer from "./Customer";
 import { API_URL } from "../constants";
+import { fetchCustomerData } from "../services/customerServices";
 import { useState, useEffect } from "react";
 
 function Customers() {
+  // Side Pane states
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [form, setFormOpen] = useState(false);
   const [selection, setSelection] = useState("");
-  const [disableActions, setDisableActions] = useState(true);
+
+  // Main Pane states
+  const [mainLoading, setMainLoading] = useState(false);
+  const [mainError, setMainError] = useState(false);
+  const [mainData, setMainData] = useState([]);
+
+  // const [form, setFormOpen] = useState(false);
+  // const [disableActions, setDisableActions] = useState(true);
 
   useEffect(() => {
     async function loadData() {
@@ -37,14 +44,27 @@ function Customers() {
     }
 
     loadData();
-  }, [form]);
+  }, []);
 
   useEffect(() => {
-    function toggleActions() {
-      selection ? setDisableActions(false) : setDisableActions(true);
+    async function loadCustomerData() {
+      if (!selection) {
+        setMainData({});
+        return;
+      }
+      try {
+        setMainLoading(true);
+        const response = await fetchCustomerData(selection);
+        setMainData(response);
+      } catch (e) {
+        setMainError("An error occured fetching the data.");
+        console.error(e);
+      } finally {
+        setMainLoading(false);
+      }
     }
 
-    toggleActions();
+    loadCustomerData();
   }, [selection]);
 
   return (
@@ -54,7 +74,7 @@ function Customers() {
           <div className="pane-inner">
             {loading && <p>Information loading...</p>}
             {error && <p>An error occured.</p>}
-            {!loading && !form && (
+            {!loading && (
               <SingleColTable
                 title={"Customers"}
                 data={data}
@@ -64,7 +84,11 @@ function Customers() {
           </div>
         </div>
         <div className="pane pane-mid">
-          <div className="pane-inner"></div>
+          <div className="pane-inner">
+            {mainLoading && <p>Information loading...</p>}
+            {mainError && <p>An error occured.</p>}
+            {!mainLoading && <Customer customer={mainData} />}
+          </div>
         </div>
       </div>
     </>

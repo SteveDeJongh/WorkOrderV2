@@ -5,7 +5,7 @@ function SingleColTable({ title, data, setSelection }) {
   const [lastSelection, setLastSeleciton] = useState(null);
 
   function handleClick(e, id) {
-    let row = e.target.closest("tr");
+    let row = e.target.closest("li");
     if (lastSelection === row) {
       lastSelection.classList.toggle("selected");
       setSelection(null);
@@ -28,12 +28,21 @@ function SingleColTable({ title, data, setSelection }) {
       <ul>
         {data.map((row) => {
           return (
-            <li key={row.id} onClick={(e) => handleClick(e, row.id)}>
+            <li
+              key={row.id}
+              onClick={(e) => handleClick(e, row.id)}
+              className={"single-col-li"}
+            >
               {row.fullName}
             </li>
           );
         })}
       </ul>
+      <div id="single-col-bottom">
+        <a href="/customers/new">
+          <span>➕ New Customer</span>
+        </a>
+      </div>
     </>
   );
 }

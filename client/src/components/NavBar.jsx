@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 
-function NavBar({ currentPage }) {
+function NavBar() {
   // useEffect(() => {
   //   let links = Array.from(document.querySelectorAll(".navBar-tab"));
   //   let activePage = links.filter(
@@ -45,5 +45,5 @@ function NavBar({ currentPage }) {
 export default NavBar;
 
 NavBar.propTypes = {
-  currentPage: PropTypes.string.isRequired,
+  // currentPage: PropTypes.string.isRequired,
 };

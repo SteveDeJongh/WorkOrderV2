@@ -16,4 +16,14 @@ async function createCustomer(customerData) {
   return response.json();
 }
 
-export { createCustomer };
+async function fetchCustomerData(id) {
+  const response = await fetch(`${API_URL}/customers/${id}`)
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
+  return response.json();
+}
+
+export { createCustomer, fetchCustomerData };
