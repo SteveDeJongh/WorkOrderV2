@@ -1,15 +1,22 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function SingleColTable({ title, data, setSelection, selection }) {
   const [lastSelection, setLastSeleciton] = useState(null);
 
   function handleClick(e, id) {
+    if (!e) {
+      lastSelection ? lastSelection.classList.toggle("selected") : null;
+      return;
+    }
+
     let row = e.target.closest("li");
     if (lastSelection === row) {
-      lastSelection.classList.toggle("selected");
-      setSelection(null);
-      setLastSeleciton(null);
+      // Do we want to be able to switch batch to no selection at all?
+      // lastSelection.classList.toggle("selected");
+      // setSelection(null);
+      // setLastSeleciton(null);
     } else if (lastSelection) {
       lastSelection.classList.toggle("selected");
       row.classList.toggle("selected");
@@ -28,24 +35,24 @@ function SingleColTable({ title, data, setSelection, selection }) {
       <ul>
         {data.map((row) => {
           return (
-            // <a href={`/customers/${row.id}`} key={row.id}>
-            <li
-              key={row.id}
-              onClick={(e) => handleClick(e, row.id)}
-              className={`single-col-li ${
-                row.id == selection ? "selected" : ""
-              }`}
-            >
-              {row.fullName}
-            </li>
-            // </a>
+            <Link to={`/customers/${row.id}`} key={row.id} className="col-link">
+              <li
+                key={row.id}
+                onClick={(e) => handleClick(e, row.id)}
+                className={`single-col-li ${
+                  row.id == selection ? "selected" : ""
+                }`}
+              >
+                {row.fullName}
+              </li>
+            </Link>
           );
         })}
       </ul>
       <div id="single-col-bottom">
-        <a href="/customers/new">
+        <Link to="/customers/new" onClick={() => handleClick(false)}>
           <span>➕ New Customer</span>
-        </a>
+        </Link>
       </div>
     </>
   );
@@ -55,6 +62,7 @@ SingleColTable.propTypes = {
   title: PropTypes.string,
   data: PropTypes.array.isRequired,
   setSelection: PropTypes.func,
+  selection: PropTypes.string || PropTypes.number,
 };
 
 export default SingleColTable;

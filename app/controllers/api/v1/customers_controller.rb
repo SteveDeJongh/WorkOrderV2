@@ -5,7 +5,7 @@ class Api::V1::CustomersController < ApplicationController
   def index
     @customers = Customer.select(:id, :firstName, :lastName)
 
-    sleep 0.7
+    sleep 0.1
 
     render json: @customers
   end

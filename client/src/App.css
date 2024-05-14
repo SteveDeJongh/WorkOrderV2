@@ -148,6 +148,11 @@ border-bottom: 1px solid grey;
 background-color: var(--light-border);
 }
 
+.col-link {
+  text-decoration: none;
+  color: inherit;
+}
+
 .single-col-li:hover {
   background-color: var(--light-selection);
 }

@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import CustomerNav from "./CustomerNav";
 
 function Customer({ customer }) {
   console.log(customer);
@@ -19,29 +20,7 @@ function Customer({ customer }) {
       {!customer && <h2>No Customer Selected</h2>}
       {customer && (
         <>
-          <div id="customer-header">
-            <div id="customer-header-title">
-              <h2>
-                {customer.firstName} {customer.lastName}
-              </h2>
-              <div className="customer-id">Customer #{customer.id}</div>
-            </div>
-            <div id="customer-nav">
-              <ul id="customer-profile-nav">
-                <li>
-                  <a href={`customers/${customer.id}`} className="selected">
-                    Profile
-                  </a>
-                </li>
-                <li>
-                  <a href={`customers/${customer.id}`}>Edit</a>
-                </li>
-                <li>
-                  <a href={`customers/${customer.id}`}>Details</a>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <CustomerNav customer={customer} />
           <div id="customer-info">
             <div className="panel customer-details">
               <h3>Details</h3>

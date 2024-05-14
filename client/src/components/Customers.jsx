@@ -1,9 +1,6 @@
 import SingleColTable from "./SingleColTable";
-import Customer from "./Customer";
 import { Outlet, useParams } from "react-router-dom";
-
 import { API_URL } from "../constants";
-import { fetchCustomerData } from "../services/customerServices";
 import { useState, useEffect } from "react";
 
 function Customers() {
@@ -11,17 +8,7 @@ function Customers() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selection, setSelection] = useState(useParams().id);
-
-  console.log(selection, "from customers");
-
-  // Main Pane states
-  // const [mainLoading, setMainLoading] = useState(false);
-  // const [mainError, setMainError] = useState(false);
-  // const [mainData, setMainData] = useState([]);
-
-  // const [form, setFormOpen] = useState(false);
-  // const [disableActions, setDisableActions] = useState(true);
+  const [selection, setSelection] = useState(useParams().id || "");
 
   useEffect(() => {
     async function loadData() {
@@ -50,27 +37,6 @@ function Customers() {
     loadData();
   }, []);
 
-  // useEffect(() => {
-  //   async function loadCustomerData() {
-  //     if (!selection) {
-  //       setMainData({});
-  //       return;
-  //     }
-  //     try {
-  //       setMainLoading(true);
-  //       const response = await fetchCustomerData(selection);
-  //       setMainData(response);
-  //     } catch (e) {
-  //       setMainError("An error occured fetching the data.");
-  //       console.error(e);
-  //     } finally {
-  //       setMainLoading(false);
-  //     }
-  //   }
-
-  //   loadCustomerData();
-  // }, [selection]);
-
   return (
     <>
       <div id="panes">
@@ -89,7 +55,7 @@ function Customers() {
           </div>
         </div>
         <div className="pane pane-mid">
-          <Outlet context={selection} />
+          <Outlet />
         </div>
       </div>
     </>
