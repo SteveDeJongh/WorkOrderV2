@@ -1,7 +1,7 @@
-import Header from "./Header";
+import Header from "../Header";
 import SideBar from "./SideBar";
 import PageContent from "./PageContent";
-import Footer from "./Footer";
+import Footer from "../Footer";
 import { useState, useEffect } from "react";
 
 function MainPage() {

@@ -1,6 +1,6 @@
 import SingleColTable from "./SingleColTable";
 import { Outlet, useParams } from "react-router-dom";
-import { API_URL } from "../constants";
+import { API_URL } from "../../constants";
 import { useState, useEffect } from "react";
 
 function Customers() {

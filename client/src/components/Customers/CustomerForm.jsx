@@ -1,30 +1,73 @@
 import { useForm } from "react-hook-form";
-import { createCustomer } from "../services/customerServices";
-import { objectToFormData } from "../utils/formDataHelper";
+import { createCustomer } from "../../services/customerServices";
+import { objectToFormData } from "../../utils/formDataHelper";
+import { Link } from "react-router-dom";
 
-function CustomerForm({ showForm }) {
+function CustomerForm({ customer, headerText, onSubmit, buttonText }) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
     getValues,
-  } = useForm();
+  } = useForm({
+    defaultValues: customer
+      ? {
+          firstName: customer.firstName,
+          lastName: customer.lastName,
+          email: customer.email,
+          phone: customer.phone,
+          address: customer.address,
+          city: customer.city,
+          province: customer.province,
+          country: customer.country,
+        }
+      : undefined,
+  });
 
-  async function onSubmit(rawData) {
+  async function onSubmitHandler(data) {
+    console.log(data);
     try {
-      const formData = objectToFormData({ customer: rawData });
-      const response = await createCustomer(formData);
-      reset();
-      showForm(false);
+      onSubmit(data);
     } catch (e) {
-      console.error("Failed to create customer: ", e);
+      console.log("failed!");
     }
+    // if (!customer) {
+    //   try {
+    //     const formData = objectToFormData({ customer: data });
+    //     const response = await createCustomer(formData);
+    //     console.log(response);
+    //     reset();
+    //   } catch (e) {
+    //     console.error("Failed to create customer: ", e);
+    //   }
+    // } else {
+    //   try {
+    //     console.log("were here");
+    //   } catch (e) {
+    //     console.log("We're in error.");
+    //   }
+    // }
   }
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <div id="customer-header">
+        <div id="customer-header-title">
+          <h2>{headerText}</h2>
+          <div className="customer-form-actions">
+            <button>
+              {customer && <Link to={`/customers`}>Cancel</Link>}
+              {!customer && (
+                <Link to={`/customers/${"placeholder"}/profile`}>Cancel</Link>
+              )}
+            </button>
+            <button form="customer-form" disabled={isSubmitting} type="submit">
+              {buttonText}
+            </button>
+          </div>
+        </div>
+      </div>
+      <form id="customer-form" onSubmit={handleSubmit(onSubmitHandler)}>
         <label htmlFor="firstName">First name:</label>
         <input
           {...register("firstName", {
@@ -120,10 +163,6 @@ function CustomerForm({ showForm }) {
         />
         {errors.country && <p>{`${errors.country.message}`}</p>}
         <br />
-        <button disabled={isSubmitting} type="submit">
-          Create
-        </button>
-        {/* <button type="cancel">Cancel</button> */}
       </form>
     </>
   );

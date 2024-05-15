@@ -12,21 +12,26 @@ function CustomerNav({ customer }) {
           <div className="customer-id">Customer #{customer.id}</div>
         </div>
         <div id="customer-nav">
-          <ul id="customer-profile-nav">
-            <li>
-              <NavLink
-                to={`/customers/${customer.id}/profile`}
-                className="active"
-              >
+          <ul id="customer-profile-nav" className="mid-nav">
+            <li className="mid-nav-pill">
+              <NavLink to={`/customers/${customer.id}/profile`}>
                 Profile
               </NavLink>
             </li>
-            <li>
+            <li className="mid-nav-pill">
               <NavLink to={`/customers/${customer.id}/edit`}>Edit</NavLink>
             </li>
-            <li>
+            <li className="mid-nav-pill">
               <NavLink to={`/customers/${customer.id}/invoices`}>
                 Invoices
+              </NavLink>
+            </li>
+            <li className="mid-nav-pill">
+              <NavLink to={`/customers/${customer.id}/items`}>Items</NavLink>
+            </li>
+            <li className="mid-nav-pill">
+              <NavLink to={`/customers/${customer.id}/workorders`}>
+                WorkOrders
               </NavLink>
             </li>
           </ul>

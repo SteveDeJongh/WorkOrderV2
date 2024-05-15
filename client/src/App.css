@@ -18,6 +18,11 @@ body {
   height:100vh;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 #root {
   display: flex;
   flex-direction: column;
@@ -190,6 +195,24 @@ background-color: var(--light-border);
   display: flex;
   flex-direction: column;
 }
+
+/* Middle Pane Nav */
+
+.mid-nav-pill {
+  margin: 0 5px;
+  background: var(--dark-selection);
+}
+
+.mid-nav-pill:hover {
+  background-color: var(--light-border);
+  color: var(--light-selection)
+}
+
+.mid-nav-pill:has(a.active) {
+  background-color: var(--light-border);
+  color: var(--light-selection);
+}
+
 /* Middle Pane Customer Profile */
 .pane-mid > .pane-inner > div {
   /* border: 1px solid red; */
@@ -261,6 +284,17 @@ background-color: var(--light-border);
 .panel-section-icon {
   padding: 0 10px 0 0;
 }
+
+/* Customer form */
+
+#customer-header-title > .customer-form-actions > button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  text-decoration: none;
+  color: inherit;
+  background-color: var(--light-border);
+}
+
 /* #layout {
   background-color: var(--alt-black);
   height: 100%;

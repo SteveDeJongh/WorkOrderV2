@@ -1,13 +1,13 @@
 import { Route, Routes } from "react-router-dom";
 import Layout from "./Layout";
-import Customers from "./Customers";
-import CustomerProfile from "./CustomerProfile";
-import CustomerNew from "./CustomerNew";
-import CustomerShow from "./CustomerShow";
-import CustomerEdit from "./CustomerEdit";
-import CustomerInvoices from "./CustomerInvoices";
-import WorkOrders from "./WorkOrders";
-import Products from "./Products";
+import Customers from "./Customers/Customers";
+import CustomerProfile from "./Customers/CustomerProfile";
+import CustomerNew from "./Customers/CustomerNew";
+import CustomerShow from "./Customers/CustomerShow";
+import CustomerEdit from "./Customers/CustomerEdit";
+import CustomerInvoices from "./Customers/CustomerInvoices";
+import WorkOrders from "./Unused/WorkOrders";
+import Products from "./Unused/Products";
 
 function AppRoutes() {
   return (

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchCustomerData } from "../services/customerServices";
+import { fetchCustomerData } from "../../services/customerServices";
 
 function CustomerProfile() {
   const [mainLoading, setMainLoading] = useState(false);

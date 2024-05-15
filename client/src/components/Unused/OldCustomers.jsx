@@ -1,10 +1,10 @@
-import Header from "./Header";
-import SideBar from "./NavBar";
-import Footer from "./Footer";
+import Header from "../Header";
+import SideBar from "../NavBar";
+import Footer from "../Footer";
 import Actions from "./Actions";
 import Table from "./Table";
 import CustomerForm from "./CustomerForm";
-import { API_URL } from "../constants";
+import { API_URL } from "../../constants";
 import { useState, useEffect } from "react";
 
 function Customers() {

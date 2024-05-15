@@ -1,5 +1,5 @@
 import CustomerNav from "./CustomerNav";
-import { fetchCustomerData } from "../services/customerServices";
+import { fetchCustomerData } from "../../services/customerServices";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Outlet } from "react-router-dom";
