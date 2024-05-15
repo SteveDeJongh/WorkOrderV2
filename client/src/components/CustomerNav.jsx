@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 
 function CustomerNav({ customer }) {
@@ -13,7 +14,10 @@ function CustomerNav({ customer }) {
         <div id="customer-nav">
           <ul id="customer-profile-nav">
             <li>
-              <NavLink to={`customers/${customer.id}`} className="selected">
+              <NavLink
+                to={`/customers/${customer.id}/profile`}
+                className="active"
+              >
                 Profile
               </NavLink>
             </li>
@@ -21,7 +25,7 @@ function CustomerNav({ customer }) {
               <NavLink to={`/customers/${customer.id}/edit`}>Edit</NavLink>
             </li>
             <li>
-              <NavLink to={`customers/${customer.id}/invoices`}>
+              <NavLink to={`/customers/${customer.id}/invoices`}>
                 Invoices
               </NavLink>
             </li>
@@ -31,5 +35,9 @@ function CustomerNav({ customer }) {
     </>
   );
 }
+
+CustomerNav.propTypes = {
+  customer: PropTypes.object,
+};
 
 export default CustomerNav;

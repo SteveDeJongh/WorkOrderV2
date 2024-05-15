@@ -1,9 +1,8 @@
-import SingleColTable from "./SingleColTable";
-import Customer from "./Customer";
-import { API_URL } from "../constants";
+import CustomerNav from "./CustomerNav";
 import { fetchCustomerData } from "../services/customerServices";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 function CustomerShow() {
   // Main Pane states
@@ -40,7 +39,12 @@ function CustomerShow() {
         <div className="pane-inner">
           {mainLoading && <p>Information loading...</p>}
           {mainError && <p>An error occured.</p>}
-          {!mainLoading && <Customer customer={mainData} />}
+          {!mainLoading && (
+            <>
+              <CustomerNav customer={mainData} />
+              <Outlet />
+            </>
+          )}
         </div>
       </div>
     </>

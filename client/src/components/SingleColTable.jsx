@@ -35,7 +35,11 @@ function SingleColTable({ title, data, setSelection, selection }) {
       <ul>
         {data.map((row) => {
           return (
-            <Link to={`/customers/${row.id}`} key={row.id} className="col-link">
+            <Link
+              to={`/customers/${row.id}/profile`}
+              key={row.id}
+              className="col-link"
+            >
               <li
                 key={row.id}
                 onClick={(e) => handleClick(e, row.id)}

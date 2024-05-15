@@ -13,7 +13,7 @@ class Api::V1::CustomersController < ApplicationController
   # GET /customers/1
   def show
 
-    sleep 0.5
+    sleep 0.2
 
     render json: @customer
   end

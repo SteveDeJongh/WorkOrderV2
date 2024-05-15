@@ -1,6 +1,6 @@
-import CustomerNav from "./CustomerNav";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { fetchCustomerData } from "../services/customerServices";
 
 function CustomerEdit() {
   const [mainLoading, setMainLoading] = useState(false);
@@ -35,10 +35,10 @@ function CustomerEdit() {
         <div className="pane-inner">
           {mainLoading && <p>Information loading...</p>}
           {mainError && <p>An error occured.</p>}
-          {!mainLoading && (
+          {!mainLoading && !mainError && (
             <>
-              <CustomerNav customer={mainData} />
               <h1>Edit page</h1>
+              <p>{mainData}</p>
             </>
           )}
         </div>

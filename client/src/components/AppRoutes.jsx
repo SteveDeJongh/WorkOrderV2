@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Layout from "./Layout";
 import Customers from "./Customers";
+import CustomerProfile from "./CustomerProfile";
 import CustomerNew from "./CustomerNew";
 import CustomerShow from "./CustomerShow";
 import CustomerEdit from "./CustomerEdit";
@@ -12,12 +13,12 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        {/* <Route path="customers" element={<Customers />}></Route>
-        <Route path="customers/new" element={<CustomerNew />} /> */}
         <Route path="customers" element={<Customers />}>
-          <Route path=":id" element={<CustomerShow />} />
+          <Route path=":id" element={<CustomerShow />}>
+            <Route path="profile" element={<CustomerProfile />} />
+            <Route path="invoices" element={<CustomerInvoices />} />
+          </Route>
           <Route path=":id/edit" element={<CustomerEdit />} />
-          <Route path=":id/invoices" element={<CustomerInvoices />} />
           <Route path="new" element={<CustomerNew />} />
         </Route>
         <Route path="workorders" element={<WorkOrders />} />
