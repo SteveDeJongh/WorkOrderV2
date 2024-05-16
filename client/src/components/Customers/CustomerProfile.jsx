@@ -29,7 +29,7 @@ function CustomerProfile() {
     loadCustomerData();
   }, [id]);
 
-  console.log(customerData);
+  // console.log(customerData);
   let customer = Object.keys(customerData).length < 1 ? false : customerData;
 
   // Example Notices data, to be part of the customer data api fetch in the future.

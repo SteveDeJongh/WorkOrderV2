@@ -8,6 +8,7 @@ function SingleColTable({ title, data, setSelection, selection }) {
   function handleClick(e, id) {
     if (!e) {
       lastSelection ? lastSelection.classList.toggle("selected") : null;
+      console.log(selection, lastSelection, "from single col table");
       return;
     }
 
@@ -20,11 +21,11 @@ function SingleColTable({ title, data, setSelection, selection }) {
     } else if (lastSelection) {
       lastSelection.classList.toggle("selected");
       row.classList.toggle("selected");
-      setSelection(id);
+      setSelection(String(id));
       setLastSeleciton(row);
     } else {
       row.classList.toggle("selected");
-      setSelection(id);
+      setSelection(String(id));
       setLastSeleciton(row);
     }
   }
@@ -66,7 +67,7 @@ SingleColTable.propTypes = {
   title: PropTypes.string,
   data: PropTypes.array.isRequired,
   setSelection: PropTypes.func,
-  selection: PropTypes.string || PropTypes.number,
+  selection: PropTypes.string,
 };
 
 export default SingleColTable;

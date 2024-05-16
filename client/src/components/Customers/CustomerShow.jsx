@@ -3,12 +3,14 @@ import { fetchCustomerData } from "../../services/customerServices";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Outlet } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
 function CustomerShow() {
   // Main Pane states
   const [mainLoading, setMainLoading] = useState(false);
   const [mainError, setMainError] = useState(false);
   const [mainData, setMainData] = useState({});
+  const [selection, setSelection] = useOutletContext();
 
   let { id } = useParams();
 
@@ -33,6 +35,8 @@ function CustomerShow() {
     loadCustomerData();
   }, [id]);
 
+  console.log(selection, "From customer Show");
+
   return (
     <>
       <div className="pane pane-mid">
@@ -42,7 +46,7 @@ function CustomerShow() {
           {!mainLoading && (
             <>
               <CustomerNav customer={mainData} />
-              <Outlet />
+              <Outlet context={[selection, setSelection]} />
             </>
           )}
         </div>

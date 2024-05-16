@@ -1,14 +1,17 @@
 import SingleColTable from "./SingleColTable";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useParams, useLocation } from "react-router-dom";
 import { API_URL } from "../../constants";
 import { useState, useEffect } from "react";
+import NoSelection from "../NoSelection";
 
 function Customers() {
   // Side Pane states
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selection, setSelection] = useState(useParams().id || "");
+  let { pathname } = useLocation();
+  // let prevSelection = state ? state.selection : null;
+  const [selection, setSelection] = useState(String(useParams().id) || "");
 
   useEffect(() => {
     async function loadData() {
@@ -37,6 +40,19 @@ function Customers() {
     loadData();
   }, []);
 
+  console.log(pathname);
+
+  function isCustomerPath() {
+    return "/customers" === pathname;
+  }
+
+  console.log(
+    selection,
+    "selection from Customers.",
+    "Is it the `/customers` path?",
+    isCustomerPath()
+  );
+
   return (
     <>
       <div id="panes">
@@ -55,7 +71,11 @@ function Customers() {
           </div>
         </div>
         <div className="pane pane-mid">
-          <Outlet />
+          {isCustomerPath() ? (
+            <NoSelection item={"customer"} />
+          ) : (
+            <Outlet context={[selection, setSelection]} />
+          )}
         </div>
       </div>
     </>

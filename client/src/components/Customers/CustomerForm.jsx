@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
-import { createCustomer } from "../../services/customerServices";
-import { objectToFormData } from "../../utils/formDataHelper";
 import { Link } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
 function CustomerForm({ customer, headerText, onSubmit, buttonText }) {
   const {
@@ -24,6 +23,10 @@ function CustomerForm({ customer, headerText, onSubmit, buttonText }) {
       : undefined,
   });
 
+  const [selection, setSelection] = useOutletContext();
+
+  console.log(selection, "selection from customer form.");
+
   async function onSubmitHandler(data) {
     console.log(data);
     try {
@@ -31,22 +34,6 @@ function CustomerForm({ customer, headerText, onSubmit, buttonText }) {
     } catch (e) {
       console.log("failed!");
     }
-    // if (!customer) {
-    //   try {
-    //     const formData = objectToFormData({ customer: data });
-    //     const response = await createCustomer(formData);
-    //     console.log(response);
-    //     reset();
-    //   } catch (e) {
-    //     console.error("Failed to create customer: ", e);
-    //   }
-    // } else {
-    //   try {
-    //     console.log("were here");
-    //   } catch (e) {
-    //     console.log("We're in error.");
-    //   }
-    // }
   }
 
   return (
@@ -56,10 +43,10 @@ function CustomerForm({ customer, headerText, onSubmit, buttonText }) {
           <h2>{headerText}</h2>
           <div className="customer-form-actions">
             <button>
-              {customer && <Link to={`/customers`}>Cancel</Link>}
-              {!customer && (
-                <Link to={`/customers/${"placeholder"}/profile`}>Cancel</Link>
+              {customer && (
+                <Link to={`/customers/${customer.id}/profile`}>Cancel</Link>
               )}
+              {!customer && <Link to={`/customers`}>Cancel</Link>}
             </button>
             <button form="customer-form" disabled={isSubmitting} type="submit">
               {buttonText}
