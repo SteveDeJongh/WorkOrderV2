@@ -1,14 +1,53 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-function SingleColTable({ title, data, setSelection, selection }) {
+import SearchBar from "./SearchBar";
+import useCustomerData from "../../hooks/useCustomersData";
+import useURLSearchParam from "../../hooks/useURLSearchParam";
+import useCustomersData from "../../hooks/useCustomersData";
+
+function SingleColTable({ title, setSelection, selection }) {
   const [lastSelection, setLastSeleciton] = useState(null);
 
+  // Customers List Data
+  const [customers, setCustomers] = useState([]);
+  // const [, setLoading] = useState(true);
+  // const [, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] =
+    useURLSearchParam("search");
+
+  const {
+    customers: fetchedCustomers,
+    loading,
+    error,
+  } = useCustomersData(debouncedSearchTerm);
+
+  useEffect(() => {
+    if (fetchedCustomers) {
+      setCustomers(fetchedCustomers);
+      console.log(customers, loading, error);
+    }
+  }, [fetchedCustomers]);
+
+  function handleDebouncedSearchChange(searchValue) {
+    setSearchTerm(searchValue);
+  }
+
+  function handleImmediateSearchChange(searchValue) {
+    setDebouncedSearchTerm(searchValue);
+  }
+
+  // Existing functionality below.
   function handleClick(e, id) {
     if (!e) {
-      lastSelection ? lastSelection.classList.toggle("selected") : null;
-      console.log(selection, lastSelection, "from single col table");
+      console.log(
+        selection,
+        lastSelection,
+        "from single col table handleClick method."
+      );
+      lastSelection ? lastSelection.classList.remove("selected") : null;
       return;
     }
 
@@ -33,27 +72,36 @@ function SingleColTable({ title, data, setSelection, selection }) {
   return (
     <>
       <h3>{title}</h3>
-      <ul>
-        {data.map((row) => {
-          return (
-            <Link
-              to={`/customers/${row.id}/profile`}
-              key={row.id}
-              className="col-link"
-            >
-              <li
+      <SearchBar
+        value={searchTerm}
+        onSearchChange={handleDebouncedSearchChange}
+        onImmediateChange={handleImmediateSearchChange}
+      />
+      {loading && <p>Information loading...</p>}
+      {error && <p>An error occured.</p>}
+      {!loading && !error && (
+        <ul>
+          {customers.map((row) => {
+            return (
+              <Link
+                to={`/customers/${row.id}/profile`}
                 key={row.id}
-                onClick={(e) => handleClick(e, row.id)}
-                className={`single-col-li ${
-                  row.id == selection ? "selected" : ""
-                }`}
+                className="col-link"
               >
-                {row.fullName}
-              </li>
-            </Link>
-          );
-        })}
-      </ul>
+                <li
+                  key={row.id}
+                  onClick={(e) => handleClick(e, row.id)}
+                  className={`single-col-li ${
+                    row.id == selection ? "selected" : ""
+                  }`}
+                >
+                  {row.fullName}
+                </li>
+              </Link>
+            );
+          })}
+        </ul>
+      )}
       <div id="single-col-bottom">
         <Link to="/customers/new" onClick={() => handleClick(false)}>
           <span>➕ New Customer</span>

@@ -35,8 +35,6 @@ function CustomerShow() {
     loadCustomerData();
   }, [id]);
 
-  console.log(selection, "From customer Show");
-
   return (
     <>
       <div className="pane pane-mid">
