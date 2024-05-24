@@ -1,4 +1,4 @@
-// retrieves information for customer list in selectable colum.
+// retrieves information for customer list in selectable column.
 
 import { useState, useEffect } from "react";
 import {
@@ -20,8 +20,6 @@ function useCustomersData(searchTerm) {
         } else {
           data = await fetchAllCustomers();
         }
-        // let responseData = await data.json();
-        console.log(data);
         setCustomers(data);
         setLoading(false);
       } catch (e) {

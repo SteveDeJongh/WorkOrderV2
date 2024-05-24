@@ -15,7 +15,7 @@ function SearchBar({ value, onSearchChange, onImmediateChange }) {
 
     searchDebouceRef.current = setTimeout(() => {
       onSearchChange(searchValue);
-    }, 500);
+    }, 1000);
   }
 
   return (

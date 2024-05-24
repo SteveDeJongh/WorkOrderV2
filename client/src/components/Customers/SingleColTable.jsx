@@ -3,17 +3,14 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import SearchBar from "./SearchBar";
-import useCustomerData from "../../hooks/useCustomersData";
-import useURLSearchParam from "../../hooks/useURLSearchParam";
 import useCustomersData from "../../hooks/useCustomersData";
+import useURLSearchParam from "../../hooks/useURLSearchParam";
 
 function SingleColTable({ title, setSelection, selection }) {
-  const [lastSelection, setLastSeleciton] = useState(null);
+  const [lastSelection, setLastSelection] = useState(null);
 
   // Customers List Data
   const [customers, setCustomers] = useState([]);
-  // const [, setLoading] = useState(true);
-  // const [, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
     useURLSearchParam("search");
@@ -27,26 +24,20 @@ function SingleColTable({ title, setSelection, selection }) {
   useEffect(() => {
     if (fetchedCustomers) {
       setCustomers(fetchedCustomers);
-      console.log(customers, loading, error);
     }
   }, [fetchedCustomers]);
 
   function handleDebouncedSearchChange(searchValue) {
-    setSearchTerm(searchValue);
+    setDebouncedSearchTerm(searchValue);
   }
 
   function handleImmediateSearchChange(searchValue) {
-    setDebouncedSearchTerm(searchValue);
+    setSearchTerm(searchValue);
   }
 
   // Existing functionality below.
   function handleClick(e, id) {
     if (!e) {
-      console.log(
-        selection,
-        lastSelection,
-        "from single col table handleClick method."
-      );
       lastSelection ? lastSelection.classList.remove("selected") : null;
       return;
     }
@@ -56,16 +47,16 @@ function SingleColTable({ title, setSelection, selection }) {
       // Do we want to be able to switch batch to no selection at all?
       // lastSelection.classList.toggle("selected");
       // setSelection(null);
-      // setLastSeleciton(null);
+      // setLastSelection(null);
     } else if (lastSelection) {
       lastSelection.classList.toggle("selected");
       row.classList.toggle("selected");
       setSelection(String(id));
-      setLastSeleciton(row);
+      setLastSelection(row);
     } else {
       row.classList.toggle("selected");
       setSelection(String(id));
-      setLastSeleciton(row);
+      setLastSelection(row);
     }
   }
 
@@ -113,7 +104,6 @@ function SingleColTable({ title, setSelection, selection }) {
 
 SingleColTable.propTypes = {
   title: PropTypes.string,
-  data: PropTypes.array.isRequired,
   setSelection: PropTypes.func,
   selection: PropTypes.string,
 };
