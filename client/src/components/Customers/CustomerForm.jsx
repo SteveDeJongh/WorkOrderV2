@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { useOutletContext } from "react-router-dom";
+// import { useOutletContext } from "react-router-dom";
 
 function CustomerForm({ customer, headerText, onSubmit, buttonText }) {
   const {
@@ -23,9 +23,7 @@ function CustomerForm({ customer, headerText, onSubmit, buttonText }) {
       : undefined,
   });
 
-  const [selection, setSelection] = useOutletContext();
-
-  console.log(selection, "selection from customer form.");
+  // const [selection, setSelection] = useOutletContext();
 
   async function onSubmitHandler(data) {
     console.log(data);

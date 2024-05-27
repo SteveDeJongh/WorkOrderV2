@@ -8,15 +8,11 @@ function Customers() {
   let pathname = location.pathname;
   let navigate = useNavigate();
 
-  // let prevSelection = state ? state.selection : null;
-  const [selection, setSelection] = useState(String(useParams().id) || "");
+  const [selection, setSelection] = useState(Number(useParams().id) || null);
 
-  function renderNoSelection() {
-    return !!("/customers" === pathname && !selection);
-  }
+  let renderNoSelection = "/customers" === pathname && !selection;
 
   if (selection && selection !== "undefined" && pathname === "/customers") {
-    console.log("In the if", selection, !!selection, pathname === "/customers");
     navigate(`/customers/${selection}/profile`);
   }
 
@@ -30,11 +26,10 @@ function Customers() {
               setSelection={setSelection}
               selection={selection}
             />
-            {/* )} */}
           </div>
         </div>
         <div className="pane pane-mid">
-          {renderNoSelection() ? (
+          {renderNoSelection ? (
             <NoSelection item={"customer"} />
           ) : (
             <Outlet context={[selection, setSelection]} />

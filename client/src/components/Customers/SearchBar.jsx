@@ -22,6 +22,7 @@ function SearchBar({ value, onSearchChange, onImmediateChange }) {
     <div id="searchBar">
       <input
         type="text"
+        name="searchBar"
         placeholder="Search Customers..."
         value={value}
         onChange={handleSearchChange}

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import SearchBar from "./SearchBar";
+import ListItem from "./ListItem";
 import useCustomersData from "../../hooks/useCustomersData";
 import useURLSearchParam from "../../hooks/useURLSearchParam";
 
@@ -35,29 +36,31 @@ function SingleColTable({ title, setSelection, selection }) {
     setSearchTerm(searchValue);
   }
 
-  // Existing functionality below.
-  function handleClick(e, id) {
-    if (!e) {
-      lastSelection ? lastSelection.classList.remove("selected") : null;
-      return;
-    }
+  function handleItemClick(e, id) {
+    let nextCustomers = customers.slice();
 
-    let row = e.target.closest("li");
-    if (lastSelection === row) {
-      // Do we want to be able to switch batch to no selection at all?
-      // lastSelection.classList.toggle("selected");
-      // setSelection(null);
-      // setLastSelection(null);
-    } else if (lastSelection) {
-      lastSelection.classList.toggle("selected");
-      row.classList.toggle("selected");
-      setSelection(String(id));
-      setLastSelection(row);
-    } else {
-      row.classList.toggle("selected");
-      setSelection(String(id));
-      setLastSelection(row);
+    let item = nextCustomers.filter((cust) => cust.id == id)[0];
+    if (lastSelection) {
+      let lastItem = nextCustomers.filter(
+        (cust) => cust.id == lastSelection
+      )[0];
+      lastItem.selected = false;
     }
+    item.selected = true;
+    setSelection(id);
+    setLastSelection(id);
+    setCustomers(nextCustomers);
+  }
+
+  function handleNewClick() {
+    let nextCustomers = customers.slice();
+
+    selection
+      ? (nextCustomers.filter((cust) => {
+          return cust.id == selection;
+        })[0].selected = false)
+      : null;
+    setCustomers(nextCustomers);
   }
 
   return (
@@ -72,29 +75,25 @@ function SingleColTable({ title, setSelection, selection }) {
       {error && <p>An error occured.</p>}
       {!loading && !error && (
         <ul>
-          {customers.map((row) => {
+          {customers.map((cust) => {
             return (
-              <Link
-                to={`/customers/${row.id}/profile`}
-                key={row.id}
-                className="col-link"
-              >
-                <li
-                  key={row.id}
-                  onClick={(e) => handleClick(e, row.id)}
-                  className={`single-col-li ${
-                    row.id == selection ? "selected" : ""
-                  }`}
-                >
-                  {row.fullName}
-                </li>
-              </Link>
+              <ListItem
+                value={cust}
+                key={cust.id}
+                handleClick={handleItemClick}
+                selected={cust.id === selection}
+              />
             );
           })}
         </ul>
       )}
       <div id="single-col-bottom">
-        <Link to="/customers/new" onClick={() => handleClick(false)}>
+        <Link
+          to="/customers/new"
+          onClick={() => {
+            handleNewClick(false);
+          }}
+        >
           <span>➕ New Customer</span>
         </Link>
       </div>
@@ -105,7 +104,7 @@ function SingleColTable({ title, setSelection, selection }) {
 SingleColTable.propTypes = {
   title: PropTypes.string,
   setSelection: PropTypes.func,
-  selection: PropTypes.string,
+  selection: PropTypes.number,
 };
 
 export default SingleColTable;

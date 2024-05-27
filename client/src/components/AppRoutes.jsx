@@ -6,6 +6,8 @@ import CustomerNew from "./Customers/CustomerNew";
 import CustomerShow from "./Customers/CustomerShow";
 import CustomerEdit from "./Customers/CustomerEdit";
 import CustomerInvoices from "./Customers/CustomerInvoices";
+import CustomerItems from "./Customers/CustomerItems";
+import CustomerWorkOrders from "./Customers/CustomerWorkOrders";
 import WorkOrders from "./Unused/WorkOrders";
 import Products from "./Unused/Products";
 
@@ -17,6 +19,8 @@ function AppRoutes() {
           <Route path=":id" element={<CustomerShow />}>
             <Route path="profile" element={<CustomerProfile />} />
             <Route path="invoices" element={<CustomerInvoices />} />
+            <Route path="items" element={<CustomerItems />} />
+            <Route path="workorders" element={<CustomerWorkOrders />} />
           </Route>
           <Route path=":id/edit" element={<CustomerEdit />} />
           <Route path="new" element={<CustomerNew />} />
