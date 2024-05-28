@@ -1,7 +1,8 @@
-import SingleColTable from "./SingleColTable";
+import LeftListWithAction from "../../multiuse/LeftListWithAction";
 import { Outlet, useParams, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import NoSelection from "../NoSelection";
+import useCustomersData from "../../hooks/useCustomersData";
 
 function Customers() {
   let location = useLocation();
@@ -21,10 +22,11 @@ function Customers() {
       <div id="panes">
         <div className="pane pane-left">
           <div className="pane-inner">
-            <SingleColTable
+            <LeftListWithAction
               title={"Customers"}
               setSelection={setSelection}
               selection={selection}
+              fetcher={useCustomersData}
             />
           </div>
         </div>

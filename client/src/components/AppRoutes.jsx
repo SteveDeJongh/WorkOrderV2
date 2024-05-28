@@ -8,8 +8,9 @@ import CustomerEdit from "./Customers/CustomerEdit";
 import CustomerInvoices from "./Customers/CustomerInvoices";
 import CustomerItems from "./Customers/CustomerItems";
 import CustomerWorkOrders from "./Customers/CustomerWorkOrders";
-import WorkOrders from "./Unused/WorkOrders";
+import WorkOrders from "./WorkOrders/WorkOrders";
 import Products from "./Unused/Products";
+import Invoices from "./Invoices/Invoices";
 
 function AppRoutes() {
   return (
@@ -27,6 +28,7 @@ function AppRoutes() {
         </Route>
         <Route path="workorders" element={<WorkOrders />} />
         <Route path="products" element={<Products />} />
+        <Route path="invoices" element={<Invoices />} />
       </Route>
     </Routes>
   );

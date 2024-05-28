@@ -31,7 +31,9 @@ function useCustomersData(searchTerm) {
     loadCustomers();
   }, [searchTerm]);
 
-  return { customers, loading, error };
+  let data = customers;
+
+  return { data, loading, error };
 }
 
 export default useCustomersData;

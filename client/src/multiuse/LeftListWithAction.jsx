@@ -2,33 +2,26 @@ import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import SearchBar from "../../multiuse/SearchBar";
-import ListItem from "../../multiuse/ListItem";
-import useCustomersData from "../../hooks/useCustomersData";
-import useURLSearchParam from "../../hooks/useURLSearchParam";
+import SearchBar from "./SearchBar";
+import ListItem from "./ListItem";
+import useURLSearchParam from "../hooks/useURLSearchParam";
 
-// Currently not used, changed to be more usable elsewhere.
-
-function SingleColTable({ title, setSelection, selection }) {
+function LeftListWithAction({ title, setSelection, selection, fetcher }) {
   const [lastSelection, setLastSelection] = useState(null);
 
   // Customers List Data
-  const [customers, setCustomers] = useState([]);
+  const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
     useURLSearchParam("search");
 
-  const {
-    customers: fetchedCustomers,
-    loading,
-    error,
-  } = useCustomersData(debouncedSearchTerm);
+  const { data: fetchedData, loading, error } = fetcher(debouncedSearchTerm);
 
   useEffect(() => {
-    if (fetchedCustomers) {
-      setCustomers(fetchedCustomers);
+    if (fetchedData) {
+      setData(fetchedData);
     }
-  }, [fetchedCustomers]);
+  }, [fetchedData]);
 
   function handleDebouncedSearchChange(searchValue) {
     setDebouncedSearchTerm(searchValue);
@@ -39,36 +32,35 @@ function SingleColTable({ title, setSelection, selection }) {
   }
 
   function handleItemClick(e, id) {
-    let nextCustomers = customers.slice();
+    let nextData = data.slice();
 
-    let item = nextCustomers.filter((cust) => cust.id == id)[0];
+    let item = nextData.filter((data) => data.id == id)[0];
     if (lastSelection) {
-      let lastItem = nextCustomers.filter(
-        (cust) => cust.id == lastSelection
-      )[0];
+      let lastItem = nextData.filter((data) => data.id == lastSelection)[0];
       lastItem.selected = false;
     }
     item.selected = true;
     setSelection(id);
     setLastSelection(id);
-    setCustomers(nextCustomers);
+    setData(nextData);
   }
 
   function handleNewClick() {
-    let nextCustomers = customers.slice();
+    let nextData = data.slice();
 
     selection
-      ? (nextCustomers.filter((cust) => {
-          return cust.id == selection;
+      ? (nextData.filter((data) => {
+          return data.id == selection;
         })[0].selected = false)
       : null;
-    setCustomers(nextCustomers);
+    setData(nextData);
   }
 
   return (
     <>
       <h3>{title}</h3>
       <SearchBar
+        title={title}
         value={searchTerm}
         onSearchChange={handleDebouncedSearchChange}
         onImmediateChange={handleImmediateSearchChange}
@@ -77,13 +69,13 @@ function SingleColTable({ title, setSelection, selection }) {
       {error && <p>An error occured.</p>}
       {!loading && !error && (
         <ul>
-          {customers.map((cust) => {
+          {data.map((data) => {
             return (
               <ListItem
-                value={cust}
-                key={cust.id}
+                value={data}
+                key={data.id}
                 handleClick={handleItemClick}
-                selected={cust.id === selection}
+                selected={data.id === selection}
               />
             );
           })}
@@ -91,22 +83,23 @@ function SingleColTable({ title, setSelection, selection }) {
       )}
       <div id="single-col-bottom">
         <Link
-          to="/customers/new"
+          to={`/${title.toLowerCase()}/new`}
           onClick={() => {
             handleNewClick(false);
           }}
         >
-          <span>➕ New Customer</span>
+          <span>➕ New {title}</span>
         </Link>
       </div>
     </>
   );
 }
 
-SingleColTable.propTypes = {
+LeftListWithAction.propTypes = {
   title: PropTypes.string,
   setSelection: PropTypes.func,
   selection: PropTypes.number,
+  fetcher: PropTypes.func,
 };
 
-export default SingleColTable;
+export default LeftListWithAction;

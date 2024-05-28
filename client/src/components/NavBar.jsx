@@ -14,6 +14,9 @@ function NavBar() {
           <li id="navBar-link-for-workorders" className="navBar-tab">
             <NavLink to="/workorders">Workorders</NavLink>
           </li>
+          <li id="navBar-link-for-reports" className="navBar-tab">
+            <NavLink to="/invoices">Invoices</NavLink>
+          </li>
           <li id="navBar-link-for-products" className="navBar-tab">
             <NavLink to="/products">Products</NavLink>
           </li>

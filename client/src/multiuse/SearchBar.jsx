@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import PropTypes from "prop-types";
 
-function SearchBar({ value, onSearchChange, onImmediateChange }) {
+function SearchBar({ title, value, onSearchChange, onImmediateChange }) {
   const searchDebouceRef = useRef(null);
 
   function handleSearchChange(e) {
@@ -23,7 +23,7 @@ function SearchBar({ value, onSearchChange, onImmediateChange }) {
       <input
         type="text"
         name="searchBar"
-        placeholder="Search Customers..."
+        placeholder={`Search ${title}...`}
         value={value}
         onChange={handleSearchChange}
       />
@@ -32,6 +32,7 @@ function SearchBar({ value, onSearchChange, onImmediateChange }) {
 }
 
 SearchBar.propTypes = {
+  title: PropTypes.string,
   value: PropTypes.string.isRequired,
   onSearchChange: PropTypes.func.isRequired,
   onImmediateChange: PropTypes.func.isRequired,
