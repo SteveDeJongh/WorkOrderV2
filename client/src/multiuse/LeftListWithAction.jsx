@@ -6,7 +6,7 @@ import SearchBar from "./SearchBar";
 import ListItem from "./ListItem";
 import useURLSearchParam from "../hooks/useURLSearchParam";
 
-function LeftListWithAction({ title, setSelection, selection, fetcher }) {
+function LeftListWithAction({ title, page, setSelection, selection, fetcher }) {
   const [lastSelection, setLastSelection] = useState(null);
 
   // Customers List Data
@@ -72,7 +72,9 @@ function LeftListWithAction({ title, setSelection, selection, fetcher }) {
           {data.map((data) => {
             return (
               <ListItem
+                resource={title.toLowerCase()}
                 value={data}
+                page={page}
                 key={data.id}
                 handleClick={handleItemClick}
                 selected={data.id === selection}

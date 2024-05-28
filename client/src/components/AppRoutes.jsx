@@ -9,7 +9,9 @@ import CustomerInvoices from "./Customers/CustomerInvoices";
 import CustomerItems from "./Customers/CustomerItems";
 import CustomerWorkOrders from "./Customers/CustomerWorkOrders";
 import WorkOrders from "./WorkOrders/WorkOrders";
-import Products from "./Unused/Products";
+import Products from "./Products/Products";
+import ProductShow from "./Products/ProductShow";
+import ProductView from "./Products/ProductView";
 import Invoices from "./Invoices/Invoices";
 
 function AppRoutes() {
@@ -26,8 +28,15 @@ function AppRoutes() {
           <Route path=":id/edit" element={<CustomerEdit />} />
           <Route path="new" element={<CustomerNew />} />
         </Route>
+
+        <Route path="products" element={<Products />}>
+          <Route path=":id" element={<ProductShow />}>
+            <Route path="view" element={<ProductView />} />
+          </Route>
+        </Route>
+
         <Route path="workorders" element={<WorkOrders />} />
-        <Route path="products" element={<Products />} />
+
         <Route path="invoices" element={<Invoices />} />
       </Route>
     </Routes>

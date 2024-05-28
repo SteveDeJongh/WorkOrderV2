@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :products
   resources :customers
   get 'pages/home'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -13,10 +14,10 @@ Rails.application.routes.draw do
   # API routes should be in /api/v1
   namespace :api do
     namespace :v1 do
-      get 'search/customers'
+      get 'search/customers' # /api/v1/search/products?q=query
+      resources :customers
+      get 'search/products'
+      resources :products
     end
-        namespace :v1 do
-          resources :customers
-        end
   end
 end

@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-function ListItem({ value, handleClick, selected }) {
+function ListItem({ resource, value, page, handleClick, selected }) {
   return (
     <>
-      <Link to={`/customers/${value.id}/profile`} className="col-link">
+      <Link to={`/${resource}/${value.id}/${page}`} className="col-link">
         <li
           onClick={(e) => handleClick(e, value.id)}
           className={`single-col-li ${selected ? "selected" : ""}`}

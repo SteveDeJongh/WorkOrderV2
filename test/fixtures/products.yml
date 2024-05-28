@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyString
+  sku: MyString
+  upc: 1
+  price: 1.5
+  cost: 1.5
+  stock: 1
+  min: 1
+  max: 1
+  inventory: false
+  taxrate: 1
+
+two:
+  name: MyString
+  description: MyString
+  sku: MyString
+  upc: 1
+  price: 1.5
+  cost: 1.5
+  stock: 1
+  min: 1
+  max: 1
+  inventory: false
+  taxrate: 1
