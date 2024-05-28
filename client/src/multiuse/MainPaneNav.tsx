@@ -1,46 +1,47 @@
-import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 
-function MainPaneNav({ title, customer }) {
+interface MainPaneNavProps {
+  title: string;
+  id: string;
+  identifier: string;
+  pages: Array<string>;
+}
+
+const MainPaneNav: React.FC<MainPaneNavProps> = ({
+  title,
+  id,
+  identifier,
+  pages,
+}) => {
   return (
     <>
       <div id="main-pane-header">
         <div id="main-pane-header-title">
           <h2>{title}</h2>
-          <div className="main-pane-id">Customer #{customer.id}</div>
+          <div className="main-pane-id">
+            {identifier} {id}
+          </div>
         </div>
         <div id="main-pane-nav">
           <ul id="main-pane-profile-nav" className="mid-nav">
-            <li className="mid-nav-pill">
-              <NavLink to={`/customers/${customer.id}/profile`}>
-                Profile
-              </NavLink>
-            </li>
-            <li className="mid-nav-pill">
-              <NavLink to={`/customers/${customer.id}/edit`}>Edit</NavLink>
-            </li>
-            <li className="mid-nav-pill">
-              <NavLink to={`/customers/${customer.id}/invoices`}>
-                Invoices
-              </NavLink>
-            </li>
-            <li className="mid-nav-pill">
-              <NavLink to={`/customers/${customer.id}/items`}>Items</NavLink>
-            </li>
-            <li className="mid-nav-pill">
-              <NavLink to={`/customers/${customer.id}/workorders`}>
-                WorkOrders
-              </NavLink>
-            </li>
+            {pages.map((page: string) => {
+              return (
+                <li key={page} className="mid-nav-pill">
+                  <NavLink
+                    to={`/${
+                      identifier.toLowerCase() + "s"
+                    }/${id}/${page.toLowerCase()}`}
+                  >
+                    {page}
+                  </NavLink>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
     </>
   );
-}
-
-MainPaneNav.propTypes = {
-  customer: PropTypes.string,
 };
 
 export default MainPaneNav;

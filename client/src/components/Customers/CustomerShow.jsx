@@ -1,4 +1,3 @@
-import CustomerNav from "./CustomerNav";
 import MainPaneNav from "../../multiuse/MainPaneNav";
 import { fetchCustomerData } from "../../services/customerServices";
 import { useState, useEffect } from "react";
@@ -38,23 +37,20 @@ function CustomerShow() {
 
   return (
     <>
-      <div className="pane pane-mid">
-        <div className="pane-inner">
-          {mainLoading && <p>Information loading...</p>}
-          {mainError && <p>An error occured.</p>}
-          {!mainLoading && (
-            <>
-              {/* <CustomerNav
-                title={`${mainData.firstName} ${mainData.lastName}`}
-              /> */}
-              <MainPaneNav
-                title={`${mainData.firstName} ${mainData.lastName}`}
-                customer={mainData}
-              />
-              <Outlet context={[selection, setSelection]} />
-            </>
-          )}
-        </div>
+      <div className="pane-inner">
+        {mainLoading && <p>Information loading...</p>}
+        {mainError && <p>An error occured.</p>}
+        {!mainLoading && (
+          <>
+            <MainPaneNav
+              title={`${mainData.firstName} ${mainData.lastName}`}
+              id={mainData.id}
+              identifier={"Customer"}
+              pages={["Profile", "Edit", "Invoices", "Items", "WorkOrders"]}
+            />
+            <Outlet context={[selection, setSelection]} />
+          </>
+        )}
       </div>
     </>
   );

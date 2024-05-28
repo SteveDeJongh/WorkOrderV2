@@ -156,11 +156,25 @@ nav li:has(a.active) {
   background-color: var(--light-black);
 }
 
+/* List Item Styling */
+
 .single-col-li {
 padding: 10px;
 border-top: 1px solid grey;
 border-bottom: 1px solid grey;
 background-color: var(--light-border);
+display: flex;
+flex-direction: column;;
+}
+
+.single-col-li>.li-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.li-row>span {
+  display: inline-block;
+  padding: 2px;
 }
 
 .col-link {
@@ -297,105 +311,10 @@ background-color: var(--light-border);
 
 /* Customer form */
 
-#customer-header-title > .customer-form-actions > button {
+#main-pane-header-title > .main-pane-form-actions > button {
   padding: 5px 10px;
   margin: 0 5px;
   text-decoration: none;
   color: inherit;
   background-color: var(--light-border);
 }
-
-/* #layout {
-  background-color: var(--alt-black);
-  height: 100%;
-  display: flex;
-  align-items: stretch;
-}
-
-#layout nav {
-  background-color: var(--main-black);
-  width: 20vw;
-  height: 100%;
-}
-
-#layout nav ul {
-  padding: 30px;
-}
-
-#layout nav ul li {
-  padding: 10px;
-  width: 10vw;
-  font-size: 20px;
-  border-radius: 5px;
-}
-
-#layout nav ul li a {
-  text-decoration: none;
-  color: inherit;
-}
-
-#layout nav ul li:hover {
-}
-
-
-.main-panel {
-  display: flex;
-  flex-direction: column;
-  width: 80vw;
-  padding: 20px;
-}
-
-#actions-list {
-  border: 2px solid var(--light-border);
-  border-radius: 5px;
-  background-color: var(--main-black);
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 100%;
-  padding: 30px;
-}
-
-#actions-list li {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--light-selection);
-  width: 120px;
-  height: 5vh;
-  border: 2px solid var(--light-border);
-  border-radius: 5px;
-  padding:5px;
-}
-
-#actions-list li:hover {
-  background-color: var(--dark-selection);
-}
-
-.main-panel .content {
-  padding: 20px;
-  height: 75vh;
-  width: 100%;
-  background-color: var(--light-selection);
-  margin-top: 10px;
-  border: 2px solid var(--light-border);
-  border-radius: 5px;
-}
-
-.table-container {
-  height: 100%;
-  width: 100%;
-  overflow: auto;
-}
-
-table {
-  border-collapse: collapse;
-}
-table td {
-  overflow: hidden;
-}
-
-thead tr th{
-  border: 3px solid black;
-  padding: 0 5px;
-} */

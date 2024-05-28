@@ -36,23 +36,23 @@ function CustomerForm({ customer, headerText, onSubmit, buttonText }) {
 
   return (
     <>
-      <div id="customer-header">
-        <div id="customer-header-title">
+      <div id="main-pane-header">
+        <div id="main-pane-header-title">
           <h2>{headerText}</h2>
-          <div className="customer-form-actions">
+          <div className="main-pane-form-actions">
             <button>
               {customer && (
                 <Link to={`/customers/${customer.id}/profile`}>Cancel</Link>
               )}
               {!customer && <Link to={`/customers`}>Cancel</Link>}
             </button>
-            <button form="customer-form" disabled={isSubmitting} type="submit">
+            <button form="main-pane-form" disabled={isSubmitting} type="submit">
               {buttonText}
             </button>
           </div>
         </div>
       </div>
-      <form id="customer-form" onSubmit={handleSubmit(onSubmitHandler)}>
+      <form id="main-pane-form" onSubmit={handleSubmit(onSubmitHandler)}>
         <label htmlFor="firstName">First name:</label>
         <input
           {...register("firstName", {

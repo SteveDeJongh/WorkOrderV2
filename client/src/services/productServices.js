@@ -9,6 +9,8 @@ async function fetchAllProducts() {
           id: obj.id,
           sku: obj.sku,
           name: obj.name,
+          price: obj.price,
+          stock: obj.stock,
         };
       });
       return responseData;
@@ -26,6 +28,8 @@ async function searchProducts(query) {
         id: obj.id,
         sku: obj.sku,
         name: obj.name,
+        price: obj.price,
+        stock: obj.stock,
       };
     });
     return responseData;
