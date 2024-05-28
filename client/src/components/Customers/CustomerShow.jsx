@@ -1,4 +1,5 @@
 import CustomerNav from "./CustomerNav";
+import MainPaneNav from "../../multiuse/MainPaneNav";
 import { fetchCustomerData } from "../../services/customerServices";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -43,7 +44,13 @@ function CustomerShow() {
           {mainError && <p>An error occured.</p>}
           {!mainLoading && (
             <>
-              <CustomerNav customer={mainData} />
+              {/* <CustomerNav
+                title={`${mainData.firstName} ${mainData.lastName}`}
+              /> */}
+              <MainPaneNav
+                title={`${mainData.firstName} ${mainData.lastName}`}
+                customer={mainData}
+              />
               <Outlet context={[selection, setSelection]} />
             </>
           )}

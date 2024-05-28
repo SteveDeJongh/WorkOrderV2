@@ -223,18 +223,18 @@ background-color: var(--light-border);
   color: var(--light-selection);
 }
 
-/* Middle Pane Customer Profile */
+/* Main Pane Header */
 .pane-mid > .pane-inner > div {
   /* border: 1px solid red; */
 }
 
-#customer-header {
+#main-pane-header {
   display: flex;
   flex-direction: column;
   padding: 10px 0 20px;
 }
 
-#customer-header-title {
+#main-pane-header-title {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -242,16 +242,16 @@ background-color: var(--light-border);
   padding: 10px 0;
 }
 
-#customer-header-title h2 {
+#main-pane-header-title h2 {
   font-size: 32px;
 }
 
-#customer-profile-nav {
+#main-pane-profile-nav {
   display: flex;
   flex-direction: row;
 }
 
-#customer-profile-nav a {
+#main-pane-profile-nav a {
   text-decoration: none;
   color: inherit;
   border: 1px solid transparent;
@@ -259,11 +259,11 @@ background-color: var(--light-border);
   padding: 0 20px;
 }
 
-#customer-profile-nav a:hover {
+#main-pane-profile-nav a:hover {
   color: var(--light-selection);
 }
 
-#customer-profile-nav a.selected {
+#main-pane-profile-nav a.selected {
   background-color: var(--light-selection);
 }
 

@@ -1,25 +1,26 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchCustomerData } from "../../services/customerServices";
+import { fetchProductData } from "../../services/productServices";
 
 function ProductView() {
   // Todo and change to products view section.
 
   const [mainLoading, setMainLoading] = useState(false);
   const [mainError, setMainError] = useState(false);
-  const [customerData, setcustomerData] = useState({});
+  const [productData, setProductData] = useState({});
   let { id } = useParams();
 
   useEffect(() => {
-    async function loadCustomerData() {
+    async function loadProductData() {
       if (!id) {
-        setcustomerData({});
+        setProductData({});
         return;
       }
       try {
         setMainLoading(true);
-        const response = await fetchCustomerData(id);
-        setcustomerData(response);
+        const response = await fetchProductData(id);
+        setProductData(response);
       } catch (e) {
         setMainError("An error occured fetching the data.");
         console.error(e);
@@ -28,23 +29,11 @@ function ProductView() {
       }
     }
 
-    loadCustomerData();
+    loadProductData();
   }, [id]);
 
   // console.log(customerData);
-  let customer = Object.keys(customerData).length < 1 ? false : customerData;
-
-  // Example Notices data, to be part of the customer data api fetch in the future.
-  if (customer && customer.firstName == "Steve") {
-    customer.notices = [
-      { id: 1, notice: "This is notice 1." },
-      { id: 2, notice: "This is notice 2." },
-    ];
-  } else if (customer) {
-    customer.notices = [];
-  }
-
-  let noticeCount = customer ? customer.notices.length : 0;
+  let product = Object.keys(productData).length < 1 ? false : productData;
 
   return (
     <>
@@ -52,8 +41,8 @@ function ProductView() {
       {mainError && <p>An error occured.</p>}
       {!mainLoading && !mainError && (
         <>
-          {!customer && <h2>No Customer Selected</h2>}
-          {customer && (
+          {!product && <h2>No Product Selected</h2>}
+          {product && (
             <>
               <div id="customer-info">
                 <div className="panel customer-details">
@@ -62,38 +51,32 @@ function ProductView() {
                     <div className="panel-contents-section">
                       <div className="panel-section-icon">📞</div>
                       <div className="panel-section-data">
-                        <div className="data-item">{customer.phone}</div>
-                        <div className="data-item">{customer.phone}</div>
+                        <div className="data-item">{product.name}</div>
+                        <div className="data-item">
+                          {Object.entries(product).toString()}
+                        </div>
                       </div>
                     </div>
                     <div className="panel-contents-section">
                       <div className="panel-section-icon">📧</div>
                       <div className="panel-section-data">
-                        <div className="data-item">{customer.email}</div>
+                        <div className="data-item">{product.email}</div>
                       </div>
                     </div>
                     <div className="panel-contents-section">
                       <div className="panel-section-icon">🏠</div>
                       <div className="panel-section-data">
-                        <div className="data-item">{customer.address}</div>
+                        <div className="data-item">{product.address}</div>
                         <div className="data-item">
-                          {customer.city} {customer.province} {customer.postal}
+                          {product.city} {product.province} {product.postal}
                         </div>
-                        <div className="data-item">{customer.country}</div>
+                        <div className="data-item">{product.country}</div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="panel customer-notices">
-                  <h3>
-                    Notices <span>({`${noticeCount}`})</span>
-                  </h3>
-                  <ul>
-                    {noticeCount === 0 && <li>No Notices</li>}
-                    {customer.notices.map((notice) => {
-                      return <li key={notice.id}>{notice.notice}</li>;
-                    })}
-                  </ul>
+                  <h3>Section</h3>
                 </div>
                 <div className="panel customer-history">
                   <h3>History</h3>

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 
-function CustomerNav({ title }) {
+function MainPaneNav({ title, customer }) {
   return (
     <>
       <div id="main-pane-header">
@@ -39,8 +39,8 @@ function CustomerNav({ title }) {
   );
 }
 
-CustomerNav.propTypes = {
-  customer: PropTypes.object,
+MainPaneNav.propTypes = {
+  customer: PropTypes.string,
 };
 
-export default CustomerNav;
+export default MainPaneNav;
