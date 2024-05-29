@@ -120,6 +120,7 @@ nav li:has(a.active) {
 
 .pane-left {
   width: 20%;
+  min-width: 200px;
   height: 93vh;
 }
 
@@ -281,17 +282,17 @@ flex-direction: column;;
   background-color: var(--light-selection);
 }
 
-#customer-info {
+#main-pane-content {
   margin-top: 20px;
 }
 
-#customer-info > .panel {
+#main-pane-content > .panel {
   padding: 10px;
   margin: 10px 0;
   background-color: var(--dark-selection);
 }
 
-#customer-info > .panel > h3 {
+#main-pane-content > .panel > h3 {
   font-size: 20px;
   padding-bottom: 10px;
 }

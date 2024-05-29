@@ -12,6 +12,7 @@ import WorkOrders from "./WorkOrders/WorkOrders";
 import Products from "./Products/Products";
 import ProductShow from "./Products/ProductShow";
 import ProductView from "./Products/ProductView";
+import ProductNew from "./Products/ProductNew";
 import Invoices from "./Invoices/Invoices";
 
 function AppRoutes() {
@@ -33,6 +34,7 @@ function AppRoutes() {
           <Route path=":id" element={<ProductShow />}>
             <Route path="view" element={<ProductView />} />
           </Route>
+          <Route path="new" element={<ProductNew />} />
         </Route>
 
         <Route path="workorders" element={<WorkOrders />} />

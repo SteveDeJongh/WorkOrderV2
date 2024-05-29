@@ -48,4 +48,30 @@ async function fetchProductData(id) {
   return response.json();
 }
 
-export { fetchAllProducts, searchProducts, fetchProductData };
+async function createProduct(productData) {
+  const response = await fetch(`${API_URL}/products`, {
+    method: "POST",
+    body: productData,
+  })
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
+  return response.json();
+}
+
+async function editProduct(id, productData) {
+  const response = await fetch(`${API_URL}/products/${id}`, {
+    method: "PATCH",
+    body: productData,
+  })
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
+  return response.json();
+}
+
+export { createProduct, editProduct, fetchAllProducts, searchProducts, fetchProductData };

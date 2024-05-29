@@ -53,8 +53,8 @@ function CustomerProfile() {
           {!customer && <h2>No Customer Selected</h2>}
           {customer && (
             <>
-              <div id="customer-info">
-                <div className="panel customer-details">
+              <div id="main-pane-content">
+                <div className="panel">
                   <h3>Details</h3>
                   <div className="panel-contents">
                     <div className="panel-contents-section">
