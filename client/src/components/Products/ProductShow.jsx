@@ -1,10 +1,11 @@
+import MainPaneNav from "../../multiuse/MainPaneNav";
 import { fetchProductData } from "../../services/productServices";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { useOutletContext } from "react-router-dom";
 
-function CustomerShow() {
+function ProductShow() {
   // Main Pane states
   const [mainLoading, setMainLoading] = useState(false);
   const [mainError, setMainError] = useState(false);
@@ -42,8 +43,12 @@ function CustomerShow() {
           {mainError && <p>An error occured.</p>}
           {!mainLoading && (
             <>
-              <h1>Product!</h1>
-              {/* <CustomerNav customer={mainData} /> */}
+              <MainPaneNav
+                title={mainData.name}
+                id={mainData.id}
+                identifier={"Product"}
+                pages={["View", "Edit", "Transactions"]}
+              />
               <Outlet context={[selection, setSelection]} />
             </>
           )}
@@ -53,4 +58,4 @@ function CustomerShow() {
   );
 }
 
-export default CustomerShow;
+export default ProductShow;

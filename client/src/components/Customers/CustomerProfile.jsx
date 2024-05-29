@@ -58,20 +58,20 @@ function CustomerProfile() {
                   <h3>Details</h3>
                   <div className="panel-contents">
                     <div className="panel-contents-section">
-                      <div className="panel-section-icon">📞</div>
+                      <div className="panel-section-desc">📞</div>
                       <div className="panel-section-data">
                         <div className="data-item">{customer.phone}</div>
                         <div className="data-item">{customer.phone}</div>
                       </div>
                     </div>
                     <div className="panel-contents-section">
-                      <div className="panel-section-icon">📧</div>
+                      <div className="panel-section-desc">📧</div>
                       <div className="panel-section-data">
                         <div className="data-item">{customer.email}</div>
                       </div>
                     </div>
                     <div className="panel-contents-section">
-                      <div className="panel-section-icon">🏠</div>
+                      <div className="panel-section-desc">🏠</div>
                       <div className="panel-section-data">
                         <div className="data-item">{customer.address}</div>
                         <div className="data-item">
