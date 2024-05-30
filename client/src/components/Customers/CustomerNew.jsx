@@ -12,7 +12,7 @@ function CustomerNew() {
       const response = await createCustomer(formData);
       navigate(`/customers/${response.id}/profile`);
     } catch (e) {
-      console.error("Failed to create post: ", e);
+      console.error("Failed to create customer: ", e);
     }
   }
 

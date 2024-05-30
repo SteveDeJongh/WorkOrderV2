@@ -13,7 +13,7 @@ function ProductNew() {
       console.log(response);
       navigate(`/products/${response.id}/view`);
     } catch (e) {
-      console.error("Failed to create post: ", e);
+      console.error("Failed to create product: ", e);
     }
   }
 

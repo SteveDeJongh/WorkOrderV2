@@ -18,7 +18,8 @@ class Api::V1::ProductsController < ApplicationController
     @product = Product.new(product_params)
 
     if @product.save
-      render json: @product, status: :created, location: @product
+      InventoryMovement.create(productID: @product.id, relation: "adj", adjustment: true, change: @product.stock, changeType: "ProductCreation", userID: 1)
+      render json: @product, status: :created
     else
       render json: @product.errors, status: :unprocessable_entity
     end
@@ -26,7 +27,12 @@ class Api::V1::ProductsController < ApplicationController
 
   # PATCH/PUT /products/1
   def update
+    stockChange = determineStockDifference();
+
     if @product.update(product_params)
+      if (stockChange != 0)
+        InventoryMovement.create(productID: @product.id, relation: "adj", adjustment: true, change: stockChange, changeType: "ProductEdit", userID: 1)
+      end
       render json: @product
     else
       render json: @product.errors, status: :unprocessable_entity
@@ -46,6 +52,10 @@ class Api::V1::ProductsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def product_params
-      params.require(:product).permit(:name, :description, :sku, :upc, :price, :cost, :stock, :min, :max, :inventory, :taxrate)
+      params.require(:product).permit(:id, :name, :description, :sku, :upc, :price, :cost, :stock, :min, :max, :inventory, :taxrate)
+    end
+
+    def determineStockDifference()
+      product_params()["stock"].to_i - @product.stock.to_i
     end
 end

@@ -36,9 +36,9 @@ function ProductEdit() {
     try {
       const formData = objectToFormData({ product: rawData });
       await editProduct(id, formData);
-      navigate(`/products/${id}/profile`);
+      navigate(`/products/${id}/view`);
     } catch (e) {
-      console.error("Failed to create post: ", e);
+      console.error("Failed to create product: ", e);
     }
   }
 

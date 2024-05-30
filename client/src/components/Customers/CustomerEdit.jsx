@@ -41,7 +41,7 @@ function CustomerEdit() {
       await editCustomer(id, formData);
       navigate(`/customers/${id}/profile`);
     } catch (e) {
-      console.error("Failed to create post: ", e);
+      console.error("Failed to create customer: ", e);
     }
   }
 

@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  resources :products
-  resources :customers
+  # resources :inventory_movements
+  # resources :products
+  # resources :customers
   get 'pages/home'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -18,6 +19,7 @@ Rails.application.routes.draw do
       resources :customers
       get 'search/products'
       resources :products
+      resources :inventory_movements
     end
   end
 end

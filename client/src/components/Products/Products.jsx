@@ -14,7 +14,7 @@ function Products() {
   let renderNoSelection = "/products" === pathname && !selection;
 
   if (selection && selection !== "undefined" && pathname === "/products") {
-    navigate(`/products/${selection}/profile`);
+    navigate(`/products/${selection}/view`);
   }
 
   return (

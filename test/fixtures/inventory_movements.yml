@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  relation: MyString
+  adjustment: false
+  change: 1
+  type: 
+  userID: 1
+
+two:
+  relation: MyString
+  adjustment: false
+  change: 1
+  type: 
+  userID: 1

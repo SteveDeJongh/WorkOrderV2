@@ -1,0 +1,2 @@
+class InventoryMovement < ApplicationRecord
+end

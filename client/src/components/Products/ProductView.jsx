@@ -4,8 +4,6 @@ import { fetchCustomerData } from "../../services/customerServices";
 import { fetchProductData } from "../../services/productServices";
 
 function ProductView() {
-  // Todo and change to products view section.
-
   const [mainLoading, setMainLoading] = useState(false);
   const [mainError, setMainError] = useState(false);
   const [productData, setProductData] = useState({});
