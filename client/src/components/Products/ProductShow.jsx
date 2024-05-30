@@ -47,7 +47,7 @@ function ProductShow() {
                 title={mainData.name}
                 id={mainData.id}
                 identifier={"Product"}
-                pages={["View", "Edit", "Transactions"]}
+                pages={["View", "Edit", "Movements"]}
               />
               <Outlet context={[selection, setSelection]} />
             </>

@@ -99,6 +99,7 @@ function LeftListWithAction({ title, page, setSelection, selection, fetcher }) {
 
 LeftListWithAction.propTypes = {
   title: PropTypes.string,
+  page: PropTypes.string,
   setSelection: PropTypes.func,
   selection: PropTypes.number,
   fetcher: PropTypes.func,

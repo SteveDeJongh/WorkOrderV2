@@ -12,6 +12,8 @@ import WorkOrders from "./WorkOrders/WorkOrders";
 import Products from "./Products/Products";
 import ProductShow from "./Products/ProductShow";
 import ProductView from "./Products/ProductView";
+import ProductMovements from "./Products/ProductMovements";
+import ProductEdit from "./Products/ProductEdit";
 import ProductNew from "./Products/ProductNew";
 import Invoices from "./Invoices/Invoices";
 
@@ -33,7 +35,9 @@ function AppRoutes() {
         <Route path="products" element={<Products />}>
           <Route path=":id" element={<ProductShow />}>
             <Route path="view" element={<ProductView />} />
+            <Route path="movements" element={<ProductMovements />} />
           </Route>
+          <Route path=":id/edit" element={<ProductEdit />} />
           <Route path="new" element={<ProductNew />} />
         </Route>
 

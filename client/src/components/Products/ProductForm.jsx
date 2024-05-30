@@ -46,7 +46,7 @@ function ProductForm({ product, headerText, onSubmit, buttonText }) {
           <div className="main-pane-form-actions">
             <button>
               {product && (
-                <Link to={`/products/${product.id}/profile`}>Cancel</Link>
+                <Link to={`/products/${product.id}/view`}>Cancel</Link>
               )}
               {!product && <Link to={`/products`}>Cancel</Link>}
             </button>
