@@ -26,8 +26,9 @@ function ListItem({ resource, value, page, handleClick, selected }) {
               <span>{value.name}</span>{" "}
               {/* trim this to x# of characters eventually. */}
               <span>
+                {/* {value.price} */}
                 <NumericFormat
-                  value={value.price.toFixed(2)}
+                  value={Number(value.price).toFixed(2)}
                   displayType={"text"}
                   thousandSeparator={true}
                   prefix={"$"}

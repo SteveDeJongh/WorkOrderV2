@@ -5,8 +5,8 @@ class CreateProducts < ActiveRecord::Migration[7.1]
       t.string :description
       t.string :sku
       t.integer :upc
-      t.float :price
-      t.float :cost
+      t.decimal :price, precision: 8, scale: 2
+      t.decimal :cost, precision: 8, scale: 2
       t.integer :stock
       t.integer :min
       t.integer :max

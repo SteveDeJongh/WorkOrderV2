@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchCustomerData } from "../../services/customerServices";
+import { NumericFormat } from "react-number-format";
+
 import { fetchProductData } from "../../services/productServices";
 
 function ProductView() {
@@ -30,7 +32,11 @@ function ProductView() {
     loadProductData();
   }, [id]);
 
-  // console.log(customerData);
+  useEffect(() => {
+    async function getProductMovements() {}
+    getProductMovements();
+  }, [id]);
+
   let product = Object.keys(productData).length < 1 ? false : productData;
 
   return (
@@ -42,8 +48,8 @@ function ProductView() {
           {!product && <h2>No Product Selected</h2>}
           {product && (
             <>
-              <div id="customer-info">
-                <div className="panel customer-details">
+              <div id="main-pane-content">
+                <div className="panel">
                   <h3>Details</h3>
                   <div className="panel-contents">
                     <div className="panel-contents-section">
@@ -72,19 +78,34 @@ function ProductView() {
                     </div>
                   </div>
                 </div>
-                <div className="panel customer-details">
+                <div className="panel">
                   <h3>Pricing</h3>
                   <div className="panel-contents">
                     <div className="panel-contents-section">
                       <div className="panel-section-desc">Price:</div>
                       <div className="panel-section-data">
-                        <div className="data-item">{product.price}</div>
+                        <div className="data-item">
+                          <NumericFormat
+                            value={Number(product.price).toFixed(2)}
+                            displayType={"text"}
+                            thousandSeparator={true}
+                            prefix={"$"}
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className="panel-contents-section">
                       <div className="panel-section-desc">Cost:</div>
                       <div className="panel-section-data">
-                        <div className="data-item">{product.cost}</div>
+                        <div className="data-item">
+                          {" "}
+                          <NumericFormat
+                            value={Number(product.cost).toFixed(2)}
+                            displayType={"text"}
+                            thousandSeparator={true}
+                            prefix={"$"}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -18,7 +18,7 @@ class Api::V1::ProductsController < ApplicationController
     @product = Product.new(product_params)
 
     if @product.save
-      InventoryMovement.create(productID: @product.id, relation: "adj", adjustment: true, change: @product.stock, changeType: "ProductCreation", userID: 1)
+      MovementService.new(@product).record_movement("ProductCreation", @product.stock)
       render json: @product, status: :created
     else
       render json: @product.errors, status: :unprocessable_entity
@@ -31,7 +31,7 @@ class Api::V1::ProductsController < ApplicationController
 
     if @product.update(product_params)
       if (stockChange != 0)
-        InventoryMovement.create(productID: @product.id, relation: "adj", adjustment: true, change: stockChange, changeType: "ProductEdit", userID: 1)
+        MovementService.new(@product).record_movement("ProductEdit", stockChange)
       end
       render json: @product
     else

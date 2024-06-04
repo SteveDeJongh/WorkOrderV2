@@ -41,8 +41,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_30_221602) do
     t.string "description"
     t.string "sku"
     t.integer "upc"
-    t.float "price"
-    t.float "cost"
+    t.decimal "price", precision: 8, scale: 2
+    t.decimal "cost", precision: 8, scale: 2
     t.integer "stock"
     t.integer "min"
     t.integer "max"
