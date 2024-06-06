@@ -1,46 +1,13 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchCustomerData } from "../../services/customerServices";
 import { NumericFormat } from "react-number-format";
 import { fetchProductData } from "../../services/productServices";
 import { useQuery } from "@tanstack/react-query";
 
 function ProductView() {
-  // const [mainLoading, setMainLoading] = useState(false);
-  // const [mainError, setMainError] = useState(false);
-  // const [productData, setProductData] = useState({});
   let { id } = useParams();
 
-  // useEffect(() => {
-  //   async function loadProductData() {
-  //     if (!id) {
-  //       setProductData({});
-  //       return;
-  //     }
-  //     try {
-  //       setMainLoading(true);
-  //       const response = await fetchProductData(id);
-  //       setProductData(response);
-  //     } catch (e) {
-  //       setMainError("An error occured fetching the data.");
-  //       console.error(e);
-  //     } finally {
-  //       setMainLoading(false);
-  //     }
-  //   }
-
-  //   loadProductData();
-  // }, [id]);
-
-  // useEffect(() => {
-  //   async function getProductMovements() {}
-  //   getProductMovements();
-  // }, [id]);
-
-  // Using react-query
-
   const { data, isError, isPending, isSuccess } = useQuery({
-    queryKey: ["product"],
+    queryKey: ["product", id],
     queryFn: () => fetchProductData(id),
   });
 

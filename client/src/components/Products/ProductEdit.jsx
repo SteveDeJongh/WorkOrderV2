@@ -1,46 +1,33 @@
-import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchProductData, editProduct } from "../../services/productServices";
 import { objectToFormData } from "../../utils/formDataHelper";
 import ProductForm from "./ProductForm";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 function ProductEdit() {
-  const [mainLoading, setMainLoading] = useState(false);
-  const [mainError, setMainError] = useState(false);
-  const [product, setProduct] = useState({});
   const navigate = useNavigate();
-
+  const queryClient = useQueryClient();
   let { id } = useParams();
-  useEffect(() => {
-    async function loadProductData() {
-      if (!id) {
-        setProduct({});
-        return;
-      }
-      try {
-        setMainLoading(true);
-        const response = await fetchProductData(id);
-        setProduct(response);
-      } catch (e) {
-        setMainError("An error occured fetching the data.");
-        console.error(e);
-      } finally {
-        setMainLoading(false);
-      }
-    }
 
-    loadProductData();
-  }, [id]);
+  const {
+    data: product,
+    isError: mainError,
+    isPending: mainLoading,
+  } = useQuery({
+    queryKey: ["product", id],
+    queryFn: () => fetchProductData(id),
+  });
 
-  async function handleEditSubmit(rawData) {
-    try {
+  const { mutate, isPending, isError, isSuccess } = useMutation({
+    mutationFn: (rawData) => {
       const formData = objectToFormData({ product: rawData });
-      await editProduct(id, formData);
+      editProduct(id, formData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["product", id] });
       navigate(`/products/${id}/view`);
-    } catch (e) {
-      console.error("Failed to create product: ", e);
-    }
-  }
+    },
+  });
 
   return (
     <>
@@ -54,7 +41,7 @@ function ProductEdit() {
                 product={product}
                 headerText={`Edit Product`}
                 buttonText={"Save"}
-                onSubmit={handleEditSubmit}
+                onSubmit={mutate}
               />
             </>
           )}

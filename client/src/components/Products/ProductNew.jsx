@@ -2,20 +2,32 @@ import ProductForm from "./ProductForm";
 import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../services/productServices";
 import { objectToFormData } from "../../utils/formDataHelper";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 function ProductNew() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  async function handleCreateSubmit(rawData) {
-    try {
+  const {
+    mutate: handleCreateSubmit,
+    isPending,
+    isError,
+    isSuccess,
+  } = useMutation({
+    mutationFn: (rawData) => {
       const formData = objectToFormData({ product: rawData });
-      const response = await createProduct(formData);
-      console.log(response);
-      navigate(`/products/${response.id}/view`);
-    } catch (e) {
-      console.error("Failed to create product: ", e);
-    }
-  }
+      console.log("Creating...");
+      return createProduct(formData);
+    },
+    onSuccess: (newProduct) => {
+      console.log("Created!");
+      console.log(newProduct);
+      // queryClient.setQueryData(["products"], (oldProducts) => {
+      //   [...oldProducts, newProduct];
+      // });
+      navigate(`/products/${newProduct.id}/view`);
+    },
+  });
 
   return (
     <>
