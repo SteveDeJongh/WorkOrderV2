@@ -16,11 +16,11 @@ function ProductNew() {
   } = useMutation({
     mutationFn: (rawData) => {
       const formData = objectToFormData({ product: rawData });
-      console.log("Creating...");
+      console.log("Creating product...");
       return createProduct(formData);
     },
     onSuccess: (newProduct) => {
-      console.log("Created!");
+      console.log("Product created!");
       console.log(newProduct);
       // queryClient.setQueryData(["products"], (oldProducts) => {
       //   [...oldProducts, newProduct];
