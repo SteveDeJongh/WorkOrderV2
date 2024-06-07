@@ -1,6 +1,10 @@
 class Api::V1::InventoryMovementsController < ApplicationController
   before_action :set_inventory_movement, only: %i[ show update destroy ]
 
+  def findBy
+    puts "Hello!"
+  end
+
   # GET /inventory_movements
   def index
     @inventory_movements = InventoryMovement.all

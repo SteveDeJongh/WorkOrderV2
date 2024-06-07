@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       get 'search/products'
       resources :products
       resources :inventory_movements
+      get 'search/inventory_movement'
     end
   end
 end

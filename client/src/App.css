@@ -224,7 +224,7 @@ flex-direction: column;;
 /* Middle Pane Nav */
 
 .mid-nav-pill {
-  margin: 0 5px;
+  margin: 0 10px 0 0;
   background: var(--dark-selection);
 }
 

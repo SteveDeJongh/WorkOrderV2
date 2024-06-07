@@ -10,4 +10,10 @@ class Api::V1::SearchController < ApplicationController
 
     render json: @products
   end
+
+  def inventory_movement
+    @inventory_movements = InventoryMovement.all.select {|m| m.productID == params[:q].to_i}
+
+    render json: @inventory_movements
+  end
 end

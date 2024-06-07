@@ -21,3 +21,6 @@ Product.create(name: "Product 5" ,description: "This is product 5" ,sku: "PR0005
 Product.create(name: "Product 6" ,description: "This is product 6" ,sku: "PR0006" , upc: 6, price: 60.00 , cost: 6.00, stock: 6, min: 6, max: 60, inventory: true, taxrate: 2,)
 Product.create(name: "Product 7" ,description: "This is product 7" ,sku: "PR0007" , upc: 777777777777, price: 70.00 , cost: 7.00, stock: 7, min: 7, max: 70, inventory: true, taxrate: 2,)
 Product.create(name: "Product 8" ,description: "This is product 8" ,sku: "PR0008" , upc: 888888888888, price: 80.00 , cost: 8.00, stock: 8, min: 8, max: 80, inventory: true, taxrate: 2,)
+
+
+Product.create(name: "Product 9" ,description: "This is product 9" ,sku: "PR0009" , upc: 999999999999, price: 90.00 , cost: 9.00, stock: 9, min: 9, max: 90, inventory: true, taxrate: 2,)

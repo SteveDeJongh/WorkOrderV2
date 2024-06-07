@@ -16,7 +16,6 @@ class Api::V1::ProductsController < ApplicationController
   # POST /products
   def create
     @product = Product.new(product_params)
-
     if @product.save
       MovementService.new(@product).record_movement("ProductCreation", @product.stock)
       render json: @product, status: :created
