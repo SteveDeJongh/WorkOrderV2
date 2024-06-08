@@ -1,10 +1,6 @@
 class Api::V1::InventoryMovementsController < ApplicationController
   before_action :set_inventory_movement, only: %i[ show update destroy ]
 
-  def findBy
-    puts "Hello!"
-  end
-
   # GET /inventory_movements
   def index
     @inventory_movements = InventoryMovement.all
@@ -50,6 +46,6 @@ class Api::V1::InventoryMovementsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def inventory_movement_params
-      params.require(:inventory_movement).permit(:relation, :adjustment, :change, :type, :userID)
+      params.require(:inventory_movement).permit(:productID, :relation, :adjustment, :change, :type, :userID)
     end
 end
