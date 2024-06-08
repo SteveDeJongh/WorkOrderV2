@@ -16,4 +16,11 @@ class Api::V1::SearchController < ApplicationController
 
     render json: @inventory_movements
   end
+
+  def last_3_inventory_movements
+    movements = InventoryMovement.all.select {|m| m.productID == params[:q].to_i}
+    @inventory_movements = movements.slice!(movements.length - 3, movements.length).reverse
+
+    render json: @inventory_movements
+  end
 end

@@ -1,11 +1,22 @@
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, Link } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
+import { fetchLast3MovementsFor } from "../../services/movementServices";
+import { useQuery } from "@tanstack/react-query";
 
 function ProductView() {
   const {
     productData: { product, isError, isPending },
   } = useOutletContext();
   console.log("This is from calling useOutletContext", product);
+
+  const {
+    data: movementData,
+    isError: movementError,
+    isPending: movementPending,
+  } = useQuery({
+    queryKey: ["3productMovements", product.id],
+    queryFn: () => fetchLast3MovementsFor(product.id),
+  });
 
   return (
     <>
@@ -113,10 +124,62 @@ function ProductView() {
               </div>
             </div>
             <div className="panel customer-history">
-              <h3>Movements</h3>
-              <ul>
-                <li>Todo...</li>
-              </ul>
+              <h3>Movement History</h3>
+              <div className="scrollable-table short">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>relation</th>
+                      <th>Adjustment</th>
+                      <th>Change</th>
+                      <th>Stock</th>
+                      <th>ChangeType</th>
+                      <th>userId</th>
+                      <th>Time</th>
+                      <th>ProductID</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {movementPending && (
+                      <tr>
+                        <td>Loading...</td>
+                      </tr>
+                    )}
+                    {movementError && (
+                      <tr>
+                        <td>Error...</td>
+                      </tr>
+                    )}
+                    {!movementPending &&
+                      !movementError &&
+                      movementData.map((movement) => {
+                        return (
+                          <tr key={movement.id}>
+                            <td>{movement.id}</td>
+                            <td>{movement.relation}</td>
+                            <td>{movement.adjustment ? "True" : "False"}</td>
+                            <td>{movement.change}</td>
+                            <td>{movement.stock}</td>
+                            <td>{movement.changeType}</td>
+                            <td>{movement.userID}</td>
+                            <td>{movement.created_at}</td>
+                            <td>{movement.productID}</td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colSpan="100%">
+                        <Link to={`/products/${product.id}/movements`}>
+                          View Full Movement History
+                        </Link>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
             </div>
           </div>
         </>

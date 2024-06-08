@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       resources :products
       resources :inventory_movements
       get 'search/inventory_movement'
+      get 'search/last_3_inventory_movements'
     end
   end
 end

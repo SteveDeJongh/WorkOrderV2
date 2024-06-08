@@ -325,11 +325,15 @@ flex-direction: column;;
 .scrollable-table {
   border: 1px solid var(--light-border);
   width: 100%;
-  height: 45%;
+  height: 71vh;
   overflow-y: auto;
   /* snap scroll, to do...
   scroll-snap-type: y mandatory;
   */
+}
+
+.scrollable-table.short {
+  height: 13vh;
 }
 
 .scrollable-table > table {
@@ -343,6 +347,9 @@ table {
 th {
   text-align: left;
   height: 40px;
+  background-color: var(--light-black);
+  position: sticky;
+  top: 0;
 }
 
 th, td {
@@ -350,13 +357,8 @@ th, td {
   border-bottom: 1px solid var(--light-border);
 }
 
-thead th {
-  /* border-bottom: 5px solid var(--light-border);
-  border-right: 1px solid var(--light-border); */
-  background-color: var(--light-black);
-  position: sticky;
-  top: 0;
-}
+/* thead th {
+} */
 
 tbody {
   overflow: auto;

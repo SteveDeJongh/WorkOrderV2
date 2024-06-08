@@ -13,13 +13,22 @@ Customer.create(firstName: 'John', lastName: 'Roberts', email: 'cust@gmail.com',
 Customer.create(firstName: 'Bob', lastName: 'Gee', email: 'cust@yahoo.com', phone: "333-333-3333", city: 'Calgary')
 Customer.create(firstName: 'Rob', lastName: 'Jones', email: 'cust@google.com', phone: "444-444-4444", city: 'New York')
 
-Product.create(name: "Product 1" ,description: "This is product 1" ,sku: "PR0001" , upc: 111111111111, price: 10.00 , cost: 1.00, stock: 1, min: 1, max: 10, inventory: true, taxrate: 1,)
-Product.create(name: "Product 2" ,description: "This is product 2" ,sku: "PR0002" , upc: 222222222222, price: 20.00 , cost: 2.00, stock: 2, min: 2, max: 20, inventory: true, taxrate: 1,)
-Product.create(name: "Product 3" ,description: "This is product 3" ,sku: "PR0003" , upc: 333333333333, price: 30.00 , cost: 3.00, stock: 3, min: 3, max: 30, inventory: true, taxrate: 1,)
-Product.create(name: "Product 4" ,description: "This is product 4" ,sku: "PR0004" , upc: 444444444444, price: 40.00 , cost: 4.00, stock: 4, min: 4, max: 40, inventory: true, taxrate: 1,)
-Product.create(name: "Product 5" ,description: "This is product 5" ,sku: "PR0005" , upc: 555555555555, price: 50.00 , cost: 5.00, stock: 5, min: 5, max: 50, inventory: true, taxrate: 1,)
-Product.create(name: "Product 6" ,description: "This is product 6" ,sku: "PR0006" , upc: 6, price: 60.00 , cost: 6.00, stock: 6, min: 6, max: 60, inventory: true, taxrate: 2,)
-Product.create(name: "Product 7" ,description: "This is product 7" ,sku: "PR0007" , upc: 777777777777, price: 70.00 , cost: 7.00, stock: 7, min: 7, max: 70, inventory: true, taxrate: 2,)
-Product.create(name: "Product 8" ,description: "This is product 8" ,sku: "PR0008" , upc: 888888888888, price: 80.00 , cost: 8.00, stock: 8, min: 8, max: 80, inventory: true, taxrate: 2,)
+(1..8).each do |x|
+  p = Product.create(name: "Product #{x}" ,description: "This is product #{x}" ,sku: "PR000#{x}" , upc: (x.to_s * 12).to_i, price: (x * 10) , cost: x, stock: x, min: x, max: (x * 10), inventory: true, taxrate: 1,)
+  MovementService.new(p).record_movement("ProductCreation", x)
+end
 
-puts "4 Customers and 8 Products created."
+productIDs = [1,2,3,4,5,6,7,8]
+
+250.times do |x|
+  id = productIDs.sample
+  product = Product.find_by(id: id)
+  movements = [1 ,-1, 2, -2, 3, -3]
+  movement = product.stock >= 3 ? movements.sample : 1
+  product.stock = product.stock + movement
+  product.save
+
+  MovementService.new(product).record_movement("ProductEdit", movement)
+end
+
+puts "4 Customers and 8 Products created, and inventory movements created."
