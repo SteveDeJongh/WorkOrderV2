@@ -125,12 +125,12 @@ function ProductView() {
             </div>
             <div className="panel customer-history">
               <h3>Movement History</h3>
-              <div className="scrollable-table short">
+              <div className="table short">
                 <table>
                   <thead>
                     <tr>
-                      <th>ID</th>
-                      <th>relation</th>
+                      <th>Movement ID</th>
+                      <th>Relation</th>
                       <th>Adjustment</th>
                       <th>Change</th>
                       <th>Stock</th>
@@ -172,7 +172,10 @@ function ProductView() {
                   <tfoot>
                     <tr>
                       <td colSpan="100%">
-                        <Link to={`/products/${product.id}/movements`}>
+                        <Link
+                          to={`/products/${product.id}/movements`}
+                          className="inLineLink"
+                        >
                           View Full Movement History
                         </Link>
                       </td>

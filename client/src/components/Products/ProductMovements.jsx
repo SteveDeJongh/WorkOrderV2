@@ -25,11 +25,11 @@ function ProductMovements() {
   return (
     <>
       <div id="main-pane-content">
-        <div className="scrollable-table">
+        <div className="scrollable-table tall">
           <table>
             <thead>
               <tr>
-                <th>ID</th>
+                <th>Movement ID</th>
                 <th>relation</th>
                 <th>Adjustment</th>
                 <th>Change</th>

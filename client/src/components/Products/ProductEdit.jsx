@@ -14,7 +14,7 @@ function ProductEdit() {
     isError: mainError,
     isPending: mainLoading,
   } = useQuery({
-    queryKey: ["product", id],
+    queryKey: ["editProduct", id],
     queryFn: () => fetchProductData(id),
   });
 
@@ -23,8 +23,11 @@ function ProductEdit() {
       const formData = objectToFormData({ product: rawData });
       editProduct(id, formData);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["product", id] });
+    onSuccess: (newProduct) => {
+      queryClient.invalidateQueries({ queryKey: ["editProduct", id] });
+      // queryClient.setQueryData(["editProduct", id], (oldProduct) => {
+      //   return newProduct;
+      // });
       navigate(`/products/${id}/view`);
     },
   });

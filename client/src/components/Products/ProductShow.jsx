@@ -10,6 +10,8 @@ function ProductShow() {
   const { data, isError, isPending, isSuccess } = useQuery({
     queryKey: ["product", id],
     queryFn: () => fetchProductData(id),
+    staleTime: 1000, // overriding default staleTime
+    refetchOnWindowFocus: false, // won't refetch when switching tabs.
   });
 
   let product;

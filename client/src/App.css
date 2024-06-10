@@ -325,18 +325,31 @@ flex-direction: column;;
 .scrollable-table {
   border: 1px solid var(--light-border);
   width: 100%;
-  height: 71vh;
   overflow-y: auto;
-  /* snap scroll, to do...
-  scroll-snap-type: y mandatory;
-  */
+}
+
+.table {
+  border: 1px solid var(--light-border);
+  width: 100%;
+  overflow-x: auto;
+}
+
+.scrollable-table.tall {
+  height: 71vh;
 }
 
 .scrollable-table.short {
-  height: 13vh;
+  height: 16vh;
+}
+
+.table.short {
+  height: 100%;
 }
 
 .scrollable-table > table {
+  width: 100%;
+}
+.table > table {
   width: 100%;
 }
 
@@ -347,29 +360,25 @@ table {
 th {
   text-align: left;
   height: 40px;
+  width: 100%;
   background-color: var(--light-black);
+  padding: 6px;
   position: sticky;
   top: 0;
 }
 
 th, td {
-  padding: 4px;
   border-bottom: 1px solid var(--light-border);
+  text-wrap: nowrap;
 }
 
-/* thead th {
-} */
+td {
+  padding: 4px;
+}
 
 tbody {
   overflow: auto;
 }
-
-/* 
-Snap scroll, to do...
-
-table tbody tr {
-  scroll-snap-align: start;
-} */
 
 tbody tr:nth-of-type(even) {
   background-color: var(--light-black);
@@ -377,4 +386,10 @@ tbody tr:nth-of-type(even) {
 
 tbody > tr:hover {
   background-color: var(--light-selection);
+}
+
+/* In Line Link Styling */
+
+.inLineLink:hover {
+  color: var(--light-border)
 }
