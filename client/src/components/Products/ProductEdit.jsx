@@ -34,21 +34,19 @@ function ProductEdit() {
 
   return (
     <>
-      <div className="pane pane-mid">
-        <div className="pane-inner">
-          {mainLoading && <p>Information loading...</p>}
-          {mainError && <p>An error occured.</p>}
-          {!mainLoading && !mainError && (
-            <>
-              <ProductForm
-                product={product}
-                headerText={`Edit Product`}
-                buttonText={"Save"}
-                onSubmit={mutate}
-              />
-            </>
-          )}
-        </div>
+      <div className="pane-inner">
+        {mainLoading && <p>Information loading...</p>}
+        {mainError && <p>An error occured.</p>}
+        {!mainLoading && !mainError && (
+          <>
+            <ProductForm
+              product={product}
+              headerText={`Edit Product`}
+              buttonText={"Save"}
+              onSubmit={mutate}
+            />
+          </>
+        )}
       </div>
     </>
   );

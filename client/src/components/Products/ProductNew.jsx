@@ -31,14 +31,12 @@ function ProductNew() {
 
   return (
     <>
-      <div className="pane pane-mid">
-        <div className="pane-inner">
-          <ProductForm
-            headerText={`New Product`}
-            buttonText={"Create"}
-            onSubmit={handleCreateSubmit}
-          />
-        </div>
+      <div className="pane-inner">
+        <ProductForm
+          headerText={`New Product`}
+          buttonText={"Create"}
+          onSubmit={handleCreateSubmit}
+        />
       </div>
     </>
   );

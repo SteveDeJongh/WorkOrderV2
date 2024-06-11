@@ -215,6 +215,8 @@ flex-direction: column;;
 
 .pane-mid {
   width: 100%;
+  min-width: 600px;
+
 }
 .pane-mid > .pane-inner {
   display: flex;
@@ -310,7 +312,7 @@ flex-direction: column;;
   padding: 0 10px 0 0;
 }
 
-/* Customer form */
+/* Form Actions */
 
 #main-pane-header-title > .main-pane-form-actions > button {
   padding: 5px 10px;
@@ -318,6 +320,34 @@ flex-direction: column;;
   text-decoration: none;
   color: inherit;
   background-color: var(--light-border);
+}
+
+#main-pane-header-title > .main-pane-form-actions > button:hover {
+  background-color: var(--dark-selection);
+  cursor: pointer;
+}
+
+/* Form Sections */
+
+/* .panel-contents-section > .formPair.half {
+ width: 50%;
+}
+
+.panel-contents-section > .formPair.third {
+  width: 33%;
+} */
+
+.half {
+  width: 50%;
+}
+
+.third {
+  width: 33.3333%;
+}
+
+.error {
+  padding-left: 10px;
+  color: red;
 }
 
 /* Tables */

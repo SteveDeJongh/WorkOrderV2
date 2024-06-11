@@ -18,14 +18,12 @@ function CustomerNew() {
 
   return (
     <>
-      <div className="pane pane-mid">
-        <div className="pane-inner">
-          <CustomerForm
-            headerText={`New Customer`}
-            buttonText={"Create"}
-            onSubmit={handleCreateSubmit}
-          />
-        </div>
+      <div className="pane-inner">
+        <CustomerForm
+          headerText={`New Customer`}
+          buttonText={"Create"}
+          onSubmit={handleCreateSubmit}
+        />
       </div>
     </>
   );

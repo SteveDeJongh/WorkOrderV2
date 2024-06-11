@@ -47,21 +47,19 @@ function CustomerEdit() {
 
   return (
     <>
-      <div className="pane pane-mid">
-        <div className="pane-inner">
-          {mainLoading && <p>Information loading...</p>}
-          {mainError && <p>An error occured.</p>}
-          {!mainLoading && !mainError && (
-            <>
-              <CustomerForm
-                customer={customer}
-                headerText={`Edit Customer`}
-                buttonText={"Save"}
-                onSubmit={handleEditSubmit}
-              />
-            </>
-          )}
-        </div>
+      <div className="pane-inner">
+        {mainLoading && <p>Information loading...</p>}
+        {mainError && <p>An error occured.</p>}
+        {!mainLoading && !mainError && (
+          <>
+            <CustomerForm
+              customer={customer}
+              headerText={`Edit Customer`}
+              buttonText={"Save"}
+              onSubmit={handleEditSubmit}
+            />
+          </>
+        )}
       </div>
     </>
   );
