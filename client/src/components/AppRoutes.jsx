@@ -17,10 +17,15 @@ import ProductEdit from "./Products/ProductEdit";
 import ProductNew from "./Products/ProductNew";
 import Invoices from "./Invoices/Invoices";
 
+import SignUp from "./Users/SignUp";
+import Login from "./Users/Login";
+
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
+        <Route path="signup" element={<SignUp />} />
+        <Route path="login" element={<Login />} />
         <Route path="customers" element={<Customers />}>
           <Route path=":id" element={<CustomerShow />}>
             <Route path="profile" element={<CustomerProfile />} />
