@@ -1,23 +1,24 @@
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createSession } from "../../services/userServices";
+import { useContext } from "react";
+import UserContext from "../../contexts/user-context";
 
 function Login() {
   const navigate = useNavigate();
+  const [user, setUser] = useContext(UserContext);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-    getValues,
+    formState: { errors },
   } = useForm();
 
   const {
     mutate: onSubmit,
     isPending,
     isError,
-    isSuccess,
   } = useMutation({
     mutationFn: (rawData) => {
       const allowed = ["email", "password"];
@@ -33,12 +34,13 @@ function Login() {
       return createSession(content);
     },
     onSuccess: (response) => {
-      console.log("Logged in!");
       console.log(response);
+      console.log("Logged in!");
+      setUser({ userID: response.data.id, user: response.data.email }); // maybe don't need this if checking for user auth every time?
       navigate(`/`);
     },
     onError: (error) => {
-      console.log("An Error occured logging in:", error);
+      console.log("An Error occured logging in:", error.status);
       navigate("/Login");
     },
   });
@@ -52,17 +54,19 @@ function Login() {
             <button>
               <Link to={`/`}>Cancel</Link>
             </button>
-            <button
-              form="main-pane-content"
-              disabled={isSubmitting}
-              type="submit"
-            >
+            <button form="main-pane-content" disabled={isPending} type="submit">
               Sign In
             </button>
           </div>
         </div>
       </div>
       <form id="main-pane-content" onSubmit={handleSubmit(onSubmit)}>
+        {isError && (
+          <>
+            <h3>Unable to log in.</h3>
+            <p>Username or password is incorrect.</p>
+          </>
+        )}
         <div className="panel">
           <h3>User Details</h3>
           <div className="panel-contents-section">
@@ -77,7 +81,7 @@ function Login() {
                 name="email"
                 placeholder="First Name"
               />
-              {errors.userEmail && <p>{`${errors.userEmail.message}`}</p>}
+              {errors.email && <p>{`${errors.email.message}`}</p>}
             </div>
             <div className="formPair half">
               <label htmlFor="password">Password:</label>

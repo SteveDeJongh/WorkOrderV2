@@ -26,10 +26,38 @@ async function createSession(userData) {
   })
 
   if (!response.ok) {
-    throw new Error(response.statusText);
+    let err = new Error;
+    err.status = response.status;
+    err.statusText = response.statusText;
+    throw err
   }
+
+  // Need to store this in localstorage
+  let token = response.headers.get("Authorization")
+  console.log("Authorization header", token);
+  localStorage.setItem('authToken', token)
 
   return response.json();
 }
 
-export { createUser, createSession }
+async function destroySession(token) {
+  const response = await fetch(`${HOST_URL}/logout`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": token,
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error(response.statusText)
+  }
+
+  // Need to store this in localstorage
+  // let token = response.headers.get("Authorization")
+  // console.log("Authorization header", token);
+  // localStorage.setItem('authToken', token)
+
+  return response.json();
+}
+
+export { createUser, createSession, destroySession}
