@@ -1,7 +1,11 @@
 import { API_URL } from "../constants";
 
 async function fetchAllCustomers() {
-    const response = await fetch(`${API_URL}/customers`);
+    const response = await fetch(`${API_URL}/customers`, {
+      headers: {
+        "Authorization": localStorage.getItem("authToken"),
+      }
+    });
     if (response.ok) {
       let responseData = await response.json();
       responseData = responseData.map((obj) => {

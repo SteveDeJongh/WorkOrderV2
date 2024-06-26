@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useContext } from "react";
 import { destroySession } from "../services/userServices";
 import { useMutation } from "@tanstack/react-query";
+import { useContext } from "react";
 import UserContext from "../contexts/user-context";
 
 function UserNav() {
@@ -11,6 +11,7 @@ function UserNav() {
   const { mutate: logOut } = useMutation({
     mutationFn: () => {
       let token = localStorage.getItem("authToken");
+      localStorage.removeItem("authToken");
 
       console.log("Logging out...");
       return destroySession(token);
@@ -18,6 +19,7 @@ function UserNav() {
     onSuccess: (response) => {
       console.log(response);
       console.log("Logged out!");
+      setUser(null);
       navigate(`/`);
     },
     onError: (error) => {
