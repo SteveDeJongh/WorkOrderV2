@@ -27,6 +27,15 @@ class Users::SessionsController < Devise::SessionsController
   #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
   # end
 
+  def current_user_details
+    if (current_user)
+      puts current_user
+      render json: UserSerializer.new(current_user).serializable_hash[:data][:attributes], status: :ok
+    else
+      puts "nope"
+    end
+  end
+
   private
 
   def respond_with(resource, _opts = {})

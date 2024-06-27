@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserContext from "../contexts/user-context";
 import Layout from "./Layout";
 import Customers from "./Customers/Customers";
@@ -21,15 +21,42 @@ import Invoices from "./Invoices/Invoices";
 
 import SignUp from "./Users/SignUp";
 import Login from "./Users/Login";
+import Profile from "./Users/Profile";
+import { getUserByToken } from "../services/userServices";
 
 function AppRoutes() {
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    async function getUserDetails() {
+      let token = localStorage.getItem("authToken");
+      console.log(token, !!token);
+      console.log(user, !!user);
+
+      if (token && !user) {
+        try {
+          const response = await getUserByToken(token);
+          console.log(response);
+        } catch (e) {
+          console.log("An error occured: ", e);
+        }
+      } else {
+        console.log("Just Nope");
+        return;
+      }
+    }
+
+    getUserDetails();
+  }, [user]);
+
   return (
     <UserContext.Provider value={[user, setUser]}>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="signup" element={<SignUp />} />
           <Route path="login" element={<Login />} />
+          <Route path="profile" element={<Profile />} />
+
           <Route path="customers" element={<Customers />}>
             <Route path=":id" element={<CustomerShow />}>
               <Route path="profile" element={<CustomerProfile />} />

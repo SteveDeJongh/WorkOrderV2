@@ -1,7 +1,11 @@
 import { API_URL } from "../constants";
 
 async function fetchInventoryMovementsFor(id) {
-    const response = await fetch(`${API_URL}/search/inventory_movement/?q=${id}`)
+    const response = await fetch(`${API_URL}/search/inventory_movement/?q=${id}`, {
+      headers: {
+        "Authorization": localStorage.getItem("authToken"),
+      }
+    })
   
     if (!response.ok) {
       throw new Error(response.statusText);
@@ -11,7 +15,11 @@ async function fetchInventoryMovementsFor(id) {
   }
 
 async function fetchLast3MovementsFor(id) {
-  const response = await fetch(`${API_URL}/search/last_3_inventory_movements/?q=${id}`)
+  const response = await fetch(`${API_URL}/search/last_3_inventory_movements/?q=${id}`, {
+    headers: {
+      "Authorization": localStorage.getItem("authToken"),
+    }
+  })
 
   if (!response.ok) {
     throw new Error(response.statusText);

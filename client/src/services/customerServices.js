@@ -21,7 +21,11 @@ async function fetchAllCustomers() {
 }
 
 async function searchCustomers(query) {
-  const response = await fetch(`${API_URL}/search/customers/?q=${query}`);
+  const response = await fetch(`${API_URL}/search/customers/?q=${query}`, {
+    headers: {
+      "Authorization": localStorage.getItem("authToken"),
+    }
+  });
   if (response.ok) {
     let responseData = await response.json();
     responseData = responseData.map((obj) => {
@@ -39,9 +43,9 @@ async function searchCustomers(query) {
 async function createCustomer(customerData) {
   const response = await fetch(`${API_URL}/customers`, {
     method: "POST",
-    // header: {
-    //   "Content-Type": "application/json",
-    // },
+    headers: {
+      "Authorization": localStorage.getItem("authToken"),
+    },
     body: customerData,
   })
 
@@ -55,9 +59,9 @@ async function createCustomer(customerData) {
 async function editCustomer(id, customerData) {
   const response = await fetch(`${API_URL}/customers/${id}`, {
     method: "PATCH",
-    // header: {
-    //   "Content-Type": "application/json",
-    // },
+    headers: {
+      "Authorization": localStorage.getItem("authToken"),
+    },
     body: customerData,
   })
 
@@ -69,7 +73,11 @@ async function editCustomer(id, customerData) {
 }
 
 async function fetchCustomerData(id) {
-  const response = await fetch(`${API_URL}/customers/${id}`)
+  const response = await fetch(`${API_URL}/customers/${id}`, {
+    headers: {
+      "Authorization": localStorage.getItem("authToken"),
+    }
+  })
 
   if (!response.ok) {
     throw new Error(response.statusText);

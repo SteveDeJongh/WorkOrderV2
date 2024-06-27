@@ -2,15 +2,18 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createUser } from "../../services/userServices";
+import { useContext } from "react";
+import UserContext from "../../contexts/user-context";
 
 function SignUp() {
   const navigate = useNavigate();
+  const [user, setUser] = useContext(UserContext);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    getValues,
+    watch,
   } = useForm();
 
   const {
@@ -34,7 +37,7 @@ function SignUp() {
     },
     onSuccess: (newUser) => {
       console.log("User created!");
-      console.log(newUser);
+      setUser({ userID: newUser.data.id, user: newUser.data.email }); // maybe don't need this if checking for user auth every time?
       navigate(`/`);
     },
     onError: (error) => {
@@ -63,6 +66,11 @@ function SignUp() {
         </div>
       </div>
       <form id="main-pane-content" onSubmit={handleSubmit(onSubmit)}>
+        {isError && (
+          <>
+            <h3>Unable to Create User.</h3>
+          </>
+        )}
         <div className="panel">
           <h3>User Details</h3>
           <div className="panel-contents-section">
@@ -97,6 +105,11 @@ function SignUp() {
               <input
                 {...register("passwordConf", {
                   required: "Password is required.",
+                  validate: (value) => {
+                    if (watch("password") != value) {
+                      return "Passwords must match.";
+                    }
+                  },
                 })}
                 type="password"
                 id="passwordConf"

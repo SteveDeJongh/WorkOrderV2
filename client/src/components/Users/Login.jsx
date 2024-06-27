@@ -34,7 +34,6 @@ function Login() {
       return createSession(content);
     },
     onSuccess: (response) => {
-      console.log(response);
       console.log("Logged in!");
       setUser({ userID: response.data.id, user: response.data.email }); // maybe don't need this if checking for user auth every time?
       navigate(`/`);
@@ -79,7 +78,7 @@ function Login() {
                 type="text"
                 id="email"
                 name="email"
-                placeholder="First Name"
+                placeholder="example@example.com"
               />
               {errors.email && <p>{`${errors.email.message}`}</p>}
             </div>

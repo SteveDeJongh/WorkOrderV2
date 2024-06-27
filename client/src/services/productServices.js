@@ -1,7 +1,11 @@
 import { API_URL } from "../constants";
 
 async function fetchAllProducts() {
-    const response = await fetch(`${API_URL}/products`);
+    const response = await fetch(`${API_URL}/products`, {
+      headers: {
+        "Authorization": localStorage.getItem("authToken"),
+      }
+    });
     if (response.ok) {
       let responseData = await response.json();
       responseData = responseData.map((obj) => {
@@ -20,7 +24,11 @@ async function fetchAllProducts() {
 }
 
 async function searchProducts(query) {
-  const response = await fetch(`${API_URL}/search/products/?q=${query}`);
+  const response = await fetch(`${API_URL}/search/products/?q=${query}`, {
+    headers: {
+      "Authorization": localStorage.getItem("authToken"),
+    }
+  });
   if (response.ok) {
     let responseData = await response.json();
     responseData = responseData.map((obj) => {
@@ -39,7 +47,11 @@ async function searchProducts(query) {
 }
 
 async function fetchProductData(id) {
-  const response = await fetch(`${API_URL}/products/${id}`)
+  const response = await fetch(`${API_URL}/products/${id}`, {
+    headers: {
+      "Authorization": localStorage.getItem("authToken"),
+    }
+  })
 
   if (!response.ok) {
     throw new Error(response.statusText);
@@ -51,6 +63,9 @@ async function fetchProductData(id) {
 async function createProduct(productData) {
   const response = await fetch(`${API_URL}/products`, {
     method: "POST",
+    headers: {
+      "Authorization": localStorage.getItem("authToken"),
+    },
     body: productData,
   })
 
@@ -64,6 +79,9 @@ async function createProduct(productData) {
 async function editProduct(id, productData) {
   const response = await fetch(`${API_URL}/products/${id}`, {
     method: "PATCH",
+    headers: {
+      "Authorization": localStorage.getItem("authToken"),
+    },
     body: productData,
   })
 
