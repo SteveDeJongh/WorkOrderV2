@@ -26,28 +26,37 @@ import { getUserByToken } from "../services/userServices";
 
 function AppRoutes() {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(
+    localStorage.getItem("authToken") ? localStorage.getItem("authToken") : null
+  );
 
   useEffect(() => {
     async function getUserDetails() {
-      let token = localStorage.getItem("authToken");
-      console.log(token, !!token);
-      console.log(user, !!user);
-
       if (token && !user) {
+        console.log(
+          "Passed the condition, we have a stored token but no set user."
+        );
         try {
           const response = await getUserByToken(token);
-          console.log(response);
+          console.log(response.status.code);
+          if (response.status.code === 204) {
+            console.log("Sorry, that token expired.");
+            localStorage.removeItem("authToken");
+          } else {
+            console.log("Still a valid token!");
+            setUser(response.data);
+          }
+          console.log(user);
         } catch (e) {
           console.log("An error occured: ", e);
         }
-      } else {
-        console.log("Just Nope");
-        return;
       }
     }
 
     getUserDetails();
-  }, [user]);
+  }, [token]);
+
+  console.log(user);
 
   return (
     <UserContext.Provider value={[user, setUser]}>

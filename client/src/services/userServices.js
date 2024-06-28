@@ -61,9 +61,10 @@ async function destroySession(token) {
 
 async function fetchUserData(id) {
   let response =  {
-    userID: id,
+    id: id,
     name: "Some name",
     email: "Some@email.com",
+    created_date: "06/18/2024",
   }
 
   return response;

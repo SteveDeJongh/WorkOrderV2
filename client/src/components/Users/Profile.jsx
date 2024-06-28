@@ -7,14 +7,18 @@ function Profile() {
   const [mainLoading, setMainLoading] = useState(false);
   const [mainError, setMainError] = useState(false);
   const [profileData, setprofileData] = useState({});
+  const [id, setID] = useState(user ? user.id : null);
 
-  let id = user ? user.userID : null;
+  // let id = user ? user.id : null;
 
   console.log(user, "User from component scope.");
+  console.log(id);
 
   useEffect(() => {
+    console.log("In the useEffect");
     async function loadprofileData() {
       if (!id) {
+        console.log("Getting in here");
         setprofileData({});
         return;
       }
@@ -33,7 +37,9 @@ function Profile() {
     }
 
     loadprofileData();
-  }, [user]);
+  }, [id]);
+
+  console.log(profileData);
 
   return (
     <>
@@ -51,8 +57,10 @@ function Profile() {
                     <div className="panel-contents-section">
                       <div className="panel-section-desc">📞</div>
                       <div className="panel-section-data">
-                        <div className="data-item">{profileData.userID}</div>
-                        <div className="data-item">{profileData.phone}</div>
+                        <div className="data-item">{profileData.id}</div>
+                        <div className="data-item">
+                          {profileData.created_date}
+                        </div>
                       </div>
                     </div>
                     <div className="panel-contents-section">

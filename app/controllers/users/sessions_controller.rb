@@ -29,10 +29,16 @@ class Users::SessionsController < Devise::SessionsController
 
   def current_user_details
     if (current_user)
-      puts current_user
-      render json: UserSerializer.new(current_user).serializable_hash[:data][:attributes], status: :ok
+      user = UserSerializer.new(current_user).serializable_hash[:data][:attributes]
+      puts user
+      render json: {
+        status: {code: 200, message: "User for token found."},
+        data: user,
+      }, status: :ok
     else
-      puts "nope"
+      render json: {
+        status: {code: 204, message: "No active session for that token."}
+      }
     end
   end
 
