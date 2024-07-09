@@ -26,16 +26,13 @@ import { getUserByToken } from "../services/userServices";
 
 function AppRoutes() {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(
-    localStorage.getItem("authToken") ? localStorage.getItem("authToken") : null
-  );
 
   useEffect(() => {
-    async function getUserDetails() {
-      if (token && !user) {
-        console.log(
-          "Passed the condition, we have a stored token but no set user."
-        );
+    async function checkActiveUser() {
+      let token = localStorage.getItem("authToken");
+
+      if (token) {
+        console.log("We have a token.");
         try {
           const response = await getUserByToken(token);
           console.log(response.status.code);
@@ -43,18 +40,52 @@ function AppRoutes() {
             console.log("Sorry, that token expired.");
             localStorage.removeItem("authToken");
           } else {
-            console.log("Still a valid token!");
-            setUser(response.data);
+            console.log("That's still a valid token, checking if user is set.");
+            if (!user) {
+              console.log("We didn't have a set user, so let's set it now.");
+              setUser(response.data);
+            }
           }
-          console.log(user);
         } catch (e) {
-          console.log("An error occured: ", e);
+          console.log("An error occured checking the token: ", e);
         }
       }
     }
 
-    getUserDetails();
-  }, [token]);
+    checkActiveUser();
+  });
+
+  // useEffect(() => {
+  //   async function getUserDetails() {
+  //     let token = localStorage.getItem("authToken");
+
+  //     if (token && !user) {
+  //       console.log(
+  //         "Passed the condition, we have a stored token but no set user."
+  //       );
+  //       try {
+  //         const response = await getUserByToken(token);
+  //         console.log(response.status.code);
+  //         if (response.status.code === 204) {
+  //           console.log("Sorry, that token expired.");
+  //           localStorage.removeItem("authToken");
+  //         } else {
+  //           console.log("Still a valid token!");
+  //           setUser(response.data);
+  //         }
+  //         console.log(user);
+  //       } catch (e) {
+  //         console.log("An error occured: ", e);
+  //       }
+  //     } else if (token && user) {
+  //       console.log(
+  //         "Still have a user, but should probably check if the token is still valid."
+  //       );
+  //     }
+  //   }
+
+  //   getUserDetails();
+  // });
 
   console.log(user);
 
@@ -65,7 +96,6 @@ function AppRoutes() {
           <Route path="signup" element={<SignUp />} />
           <Route path="login" element={<Login />} />
           <Route path="profile" element={<Profile />} />
-
           <Route path="customers" element={<Customers />}>
             <Route path=":id" element={<CustomerShow />}>
               <Route path="profile" element={<CustomerProfile />} />
@@ -76,7 +106,6 @@ function AppRoutes() {
             <Route path=":id/edit" element={<CustomerEdit />} />
             <Route path="new" element={<CustomerNew />} />
           </Route>
-
           <Route path="products" element={<Products />}>
             <Route path=":id" element={<ProductShow />}>
               <Route path="view" element={<ProductView />} />
@@ -85,9 +114,7 @@ function AppRoutes() {
             <Route path=":id/edit" element={<ProductEdit />} />
             <Route path="new" element={<ProductNew />} />
           </Route>
-
           <Route path="workorders" element={<WorkOrders />} />
-
           <Route path="invoices" element={<Invoices />} />
         </Route>
       </Routes>

@@ -1,4 +1,4 @@
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createSession } from "../../services/userServices";
@@ -35,7 +35,7 @@ function Login() {
     },
     onSuccess: (response) => {
       console.log("Logged in!");
-      setUser({ userID: response.data.id, user: response.data.email }); // maybe don't need this if checking for user auth every time?
+      setUser(response.data);
       navigate(`/`);
     },
     onError: (error) => {

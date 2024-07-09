@@ -35,9 +35,9 @@ function SignUp() {
       console.log("Creating user...");
       return createUser(content);
     },
-    onSuccess: (newUser) => {
+    onSuccess: (response) => {
       console.log("User created!");
-      setUser({ userID: newUser.data.id, user: newUser.data.email }); // maybe don't need this if checking for user auth every time?
+      setUser(response.data); // maybe don't need this if checking for user auth every time?
       navigate(`/`);
     },
     onError: (error) => {

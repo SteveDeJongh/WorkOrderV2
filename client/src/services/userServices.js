@@ -59,17 +59,6 @@ async function destroySession(token) {
   return response.json();
 }
 
-async function fetchUserData(id) {
-  let response =  {
-    id: id,
-    name: "Some name",
-    email: "Some@email.com",
-    created_date: "06/18/2024",
-  }
-
-  return response;
-}
-
 async function getUserByToken(token) {
   const response = await fetch(`${HOST_URL}/current_user`, {
     headers: {
@@ -85,4 +74,4 @@ async function getUserByToken(token) {
 }
 
 
-export { createUser, createSession, destroySession, fetchUserData, getUserByToken}
+export { createUser, createSession, destroySession, getUserByToken}
