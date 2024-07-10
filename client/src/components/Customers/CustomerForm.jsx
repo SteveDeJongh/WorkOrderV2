@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import { useOutletContext } from "react-router-dom";
 
 function CustomerForm({ customer, headerText, onSubmit, buttonText }) {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -40,11 +41,8 @@ function CustomerForm({ customer, headerText, onSubmit, buttonText }) {
         <div id="main-pane-header-title">
           <h2>{headerText}</h2>
           <div className="main-pane-form-actions">
-            <button>
-              {customer && (
-                <Link to={`/customers/${customer.id}/profile`}>Cancel</Link>
-              )}
-              {!customer && <Link to={`/customers`}>Cancel</Link>}
+            <button type="button" onClick={() => navigate(-1)}>
+              Cancel
             </button>
             <button
               form="main-pane-content"

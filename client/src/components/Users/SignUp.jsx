@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createUser } from "../../services/userServices";
 import { useContext } from "react";
 import UserContext from "../../contexts/user-context";
+import PageTitle from "../PageTitle";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ function SignUp() {
 
   return (
     <>
+      <PageTitle title="Sign Up" />
       <div id="main-pane-header">
         <div id="main-pane-header-title">
           <h2>Create New User</h2>

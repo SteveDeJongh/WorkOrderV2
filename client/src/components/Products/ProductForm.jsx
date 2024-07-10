@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 function ProductForm({ product, headerText, onSubmit, buttonText }) {
+  const navigate = useNavigate();
   const [inventoried, setInventoried] = useState(
     product ? product.inventory : true
   );
@@ -44,11 +45,8 @@ function ProductForm({ product, headerText, onSubmit, buttonText }) {
         <div id="main-pane-header-title">
           <h2>{headerText}</h2>
           <div className="main-pane-form-actions">
-            <button>
-              {product && (
-                <Link to={`/products/${product.id}/view`}>Cancel</Link>
-              )}
-              {!product && <Link to={`/products`}>Cancel</Link>}
+            <button type="button" onClick={() => navigate(-1)}>
+              Cancel
             </button>
             <button
               form="main-pane-content"

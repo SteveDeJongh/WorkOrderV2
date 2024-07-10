@@ -1,11 +1,13 @@
 import { useContext } from "react";
 import UserContext from "../../contexts/user-context";
+import PageTitle from "../PageTitle";
 
 function Profile() {
   const [user, setUser] = useContext(UserContext);
 
   return (
     <>
+      <PageTitle title="Profile" />
       {!user && <h2>No Customer Selected</h2>}
       {user && (
         <>

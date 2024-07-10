@@ -1,3 +1,6 @@
+// File is no longer used due to the switch to a created Browser Router in App.jsx
+// Keeping this here for reference.
+
 import { Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 import UserContext from "../contexts/user-context";

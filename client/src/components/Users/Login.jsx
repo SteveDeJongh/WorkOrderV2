@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createSession } from "../../services/userServices";
 import { useContext } from "react";
 import UserContext from "../../contexts/user-context";
+import PageTitle from "../PageTitle";
 
 function Login() {
   const navigate = useNavigate();
@@ -46,6 +47,7 @@ function Login() {
 
   return (
     <>
+      <PageTitle title="Sign In" />
       <div id="main-pane-header">
         <div id="main-pane-header-title">
           <h2>Sign In</h2>
