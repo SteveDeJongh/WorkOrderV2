@@ -32,10 +32,12 @@ function UserNav() {
     <ul className="user-nav">
       {user && (
         <>
-          <li>
-            <Link to="/profile">My Profile</Link>
-          </li>
-          <li onClick={() => logOut()}>Sign Out</li>
+          <Link to="/profile">
+            <li>My Profile</li>
+          </Link>
+          <Link>
+            <li onClick={() => logOut()}>Sign Out</li>
+          </Link>
         </>
       )}
       {!user && (

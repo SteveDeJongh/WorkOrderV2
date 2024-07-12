@@ -30,6 +30,7 @@ import Login from "./components/Users/Login";
 import Profile from "./components/Users/Profile";
 import PageTitle from "./components/PageTitle";
 import { getUserByToken } from "./services/userServices";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -45,100 +46,105 @@ const router = createBrowserRouter([
       { index: true, element: <Index /> },
       // Page title done in each component for User actions
       {
-        path: "signup",
-        element: <SignUp />,
-      },
-      {
         path: "login",
         element: <Login />,
       },
       {
-        path: "profile",
-        element: <Profile />,
+        path: "signup",
+        element: <SignUp />,
       },
       {
-        path: "customers",
-        element: (
-          <>
-            <PageTitle title="Customers" />
-            <Customers />
-          </>
-        ),
+        element: <ProtectedRoute />,
         children: [
-          { index: true, element: <CustomerIndex /> },
           {
-            path: ":id",
-            element: <CustomerShow />,
+            path: "profile",
+            element: <Profile />,
+          },
+          {
+            path: "customers",
+            element: (
+              <>
+                <PageTitle title="Customers" />
+                <Customers />
+              </>
+            ),
             children: [
+              { index: true, element: <CustomerIndex /> },
               {
-                path: "profile",
-                element: <CustomerProfile />,
+                path: ":id",
+                element: <CustomerShow />,
+                children: [
+                  {
+                    path: "profile",
+                    element: <CustomerProfile />,
+                  },
+                  {
+                    path: "invoices",
+                    element: <CustomerInvoices />,
+                  },
+                  {
+                    path: "items",
+                    element: <CustomerItems />,
+                  },
+                  {
+                    path: "workorders",
+                    element: <CustomerWorkOrders />,
+                  },
+                ],
               },
               {
-                path: "invoices",
-                element: <CustomerInvoices />,
+                path: ":id/edit",
+                element: <CustomerEdit />,
               },
               {
-                path: "items",
-                element: <CustomerItems />,
-              },
-              {
-                path: "workorders",
-                element: <CustomerWorkOrders />,
+                path: "new",
+                element: <CustomerNew />,
               },
             ],
           },
           {
-            path: ":id/edit",
-            element: <CustomerEdit />,
-          },
-          {
-            path: "new",
-            element: <CustomerNew />,
-          },
-        ],
-      },
-      {
-        path: "products",
-        element: (
-          <>
-            <PageTitle title="Products" />
-            <Products />
-          </>
-        ),
-        children: [
-          { index: true, element: <ProductIndex /> },
-          {
-            path: ":id",
-            element: <ProductShow />,
+            path: "products",
+            element: (
+              <>
+                <PageTitle title="Products" />
+                <Products />
+              </>
+            ),
             children: [
+              { index: true, element: <ProductIndex /> },
               {
-                path: "view",
-                element: <ProductView />,
+                path: ":id",
+                element: <ProductShow />,
+                children: [
+                  {
+                    path: "view",
+                    element: <ProductView />,
+                  },
+                  {
+                    path: "movements",
+                    element: <ProductMovements />,
+                  },
+                ],
               },
               {
-                path: "movements",
-                element: <ProductMovements />,
+                path: ":id/edit",
+                element: <ProductEdit />,
+              },
+              {
+                path: "new",
+                element: <ProductNew />,
               },
             ],
           },
           {
-            path: ":id/edit",
-            element: <ProductEdit />,
+            path: "workorders",
+            element: <WorkOrders />,
           },
           {
-            path: "new",
-            element: <ProductNew />,
+            path: "invoices",
+            element: <Invoices />,
           },
         ],
-      },
-      {
-        path: "workorders",
-        element: <WorkOrders />,
-      },
-      {
-        path: "invoices",
-        element: <Invoices />,
       },
     ],
   },

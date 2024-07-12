@@ -5,9 +5,10 @@ function NavBar() {
     <>
       <nav>
         <ul>
-          <li id="navBar-link-for-home" className="navBar-tab">
+          {/*  Removed Home link for now as the Logo will play that role. */}
+          {/* <li id="navBar-link-for-home" className="navBar-tab">
             <NavLink to="/">Home</NavLink>
-          </li>
+          </li> */}
           <li id="navBar-link-for-customers" className="navBar-tab">
             <NavLink to="/customers">Customers</NavLink>
           </li>

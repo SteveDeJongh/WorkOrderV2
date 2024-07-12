@@ -1,5 +1,6 @@
 import NavBar from "./NavBar";
 import UserNav from "./UserNav";
+import { Link } from "react-router-dom";
 
 function Header() {
   return (
@@ -10,7 +11,9 @@ function Header() {
             <NavBar />
           </li>
           <li className="header-section header-mid">
-            <h1>WorkOrder App Logo</h1>
+            <Link to="/">
+              <h1>WorkOrder Logo</h1>
+            </Link>
           </li>
           <li className="header-section header-right">
             <UserNav />
