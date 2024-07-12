@@ -54,7 +54,7 @@ const router = createBrowserRouter([
         element: <SignUp />,
       },
       {
-        element: <ProtectedRoute />,
+        element: <ProtectedRoute />, // Users must be logged in to access these routes.
         children: [
           {
             path: "profile",
