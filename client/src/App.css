@@ -350,6 +350,11 @@ flex-direction: column;;
   color: red;
 }
 
+.formList {
+  display: flex;
+  flex-direction: column;
+}
+
 /* Tables */
 
 .scrollable-table {

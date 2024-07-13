@@ -15,7 +15,9 @@ function SignUp() {
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
-  } = useForm();
+  } = useForm({
+    defaultValues: { roles: [] },
+  });
 
   const {
     mutate: onSubmit,
@@ -24,7 +26,8 @@ function SignUp() {
     isSuccess,
   } = useMutation({
     mutationFn: (rawData) => {
-      const allowed = ["email", "password"];
+      console.log(rawData);
+      const allowed = ["email", "password", "name", "roles"];
       let content = { user: {} };
 
       Object.keys(rawData)
@@ -75,50 +78,108 @@ function SignUp() {
         )}
         <div className="panel">
           <h3>User Details</h3>
-          <div className="panel-contents-section">
-            <div className="formPair">
-              <label htmlFor="email">Email:</label>
-              <input
-                {...register("email", {
-                  required: "Email is required.",
-                })}
-                type="text"
-                id="email"
-                name="email"
-                placeholder="First Name"
-              />
-              {errors.userEmail && <p>{`${errors.userEmail.message}`}</p>}
+          <div className="panel-contents">
+            <div className="panel-contents-section">
+              <div className="formPair half">
+                <label htmlFor="name">Name:</label>
+                <input
+                  {...register("name", {
+                    required: "name is required.",
+                  })}
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Your Name"
+                />
+                {errors.name && <p>{`${errors.name.message}`}</p>}
+              </div>
+              <div className="formPair half">
+                <label htmlFor="email">Email:</label>
+                <input
+                  {...register("email", {
+                    required: "Email is required.",
+                  })}
+                  type="text"
+                  id="email"
+                  name="email"
+                  placeholder="Email"
+                />
+                {errors.userEmail && <p>{`${errors.userEmail.message}`}</p>}
+              </div>
             </div>
-            <div className="formPair half">
-              <label htmlFor="password">Password:</label>
-              <input
-                {...register("password", {
-                  required: "Password is required.",
-                })}
-                type="password"
-                id="password"
-                name="password"
-                placeholder=""
-              />
-              {errors.password && <p>{`${errors.password.message}`}</p>}
+            <div className="panel-contents-section">
+              <div className="formPair half">
+                <label htmlFor="password">Password:</label>
+                <input
+                  {...register("password", {
+                    required: "Password is required.",
+                  })}
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder=""
+                />
+                {errors.password && <p>{`${errors.password.message}`}</p>}
+              </div>
+              <div className="formPair half">
+                <label htmlFor="passwordConf">Confirm Password:</label>
+                <input
+                  {...register("passwordConf", {
+                    required: "Password is required.",
+                    validate: (value) => {
+                      if (watch("password") != value) {
+                        return "Passwords must match.";
+                      }
+                    },
+                  })}
+                  type="password"
+                  id="passwordConf"
+                  name="passwordConf"
+                  placeholder=""
+                />
+                {errors.passwordConf && (
+                  <p>{`${errors.passwordConf.message}`}</p>
+                )}
+              </div>
             </div>
-            <div className="formPair half">
-              <label htmlFor="passwordConf">Confirm Password:</label>
-              <input
-                {...register("passwordConf", {
-                  required: "Password is required.",
-                  validate: (value) => {
-                    if (watch("password") != value) {
-                      return "Passwords must match.";
-                    }
-                  },
-                })}
-                type="password"
-                id="passwordConf"
-                name="passwordConf"
-                placeholder=""
-              />
-              {errors.passwordConf && <p>{`${errors.passwordConf.message}`}</p>}
+            <div className="panel-contents-section">
+              <div className="formList">
+                <h3>Roles:</h3>
+                <div className="formPair">
+                  <input
+                    {...register("roles")}
+                    type="checkbox"
+                    // id="user"
+                    // name="roles"
+                    value="user"
+                    // defaultChecked
+                  />
+                  <label htmlFor="user">User</label>
+                  {errors.user && <p>{`${errors.user.message}`}</p>}
+                </div>
+                <div className="formPair">
+                  <input
+                    {...register("roles")}
+                    type="checkbox"
+                    // id="manager"
+                    // name="roles"
+                    value="manager"
+                  />
+                  <label htmlFor="manager">Manager</label>
+                  {errors.user && <p>{`${errors.user.message}`}</p>}
+                </div>
+                <div className="formPair">
+                  <input
+                    {...register("roles")}
+                    type="checkbox"
+                    // id="admin"
+                    // name="roles"
+                    value="admin"
+                  />
+                  <label htmlFor="admin">Admin</label>
+                  {errors.admin && <p>{`${errors.admin.message}`}</p>}
+                </div>
+              </div>
             </div>
           </div>
         </div>

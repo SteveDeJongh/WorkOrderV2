@@ -1,24 +1,41 @@
-# README
+# WorkOrder
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Under Construction
 
-Things you may want to cover:
+A web hosted Point of Sale and Workorder app.
 
-* Ruby version
+## Features
 
-* System dependencies
+User accounts with permission levels, customer/product/service management, reporting.
 
-* Configuration
+## Languages and Libraries
 
-* Database creation
+The app runs as a Rails API with a React front end.
 
-* Database initialization
+- Ruby 3.2.0
+- Rails 7.1
+- Devise
+- JSON API serializer
+- React
+- React Query
+- React Hook Form
 
-* How to run the test suite
+## Running the app.
 
-* Services (job queues, cache servers, search engines, etc.)
+Running the App requires Ruby 3.2.0 and Node.JS to be installed on your machine.
 
-* Deployment instructions
+Pull down repo.
+Run bundle install from main directory
+Remove master.key and credentials.yml.enc files in config.
+Run `bin/rails credentials:edit`
+Run `npm install`
+Run `rails db:migrate` and `rails db:seed`
+Start the api with `Rails s` in terminal window.
 
-* ...
+Open 2nd terminal window.
+navigate to client directory
+create a `.env.development` file
+add `VITE_API_URL="http://localhost:3000/api/v1"`
+run `npm install`
+run `npm run dev` to start front end server
+Navgiate to url listed in terminal window.
