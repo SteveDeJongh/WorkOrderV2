@@ -24,18 +24,18 @@ The app runs as a Rails API with a React front end.
 
 Running the App requires Ruby 3.2.0 and Node.JS to be installed on your machine.
 
-Pull down repo.
-Run bundle install from main directory
-Remove master.key and credentials.yml.enc files in config.
-Run `bin/rails credentials:edit`
-Run `npm install`
-Run `rails db:migrate` and `rails db:seed`
+Pull down repo.  
+Run bundle install from main directory  
+Remove master.key and credentials.yml.enc files in config.  
+Run `bin/rails credentials:edit`  
+Run `npm install`  
+Run `rails db:migrate` and `rails db:seed`  
 Start the api with `Rails s` in terminal window.
 
-Open 2nd terminal window.
-navigate to client directory
-create a `.env.development` file
-add `VITE_API_URL="http://localhost:3000/api/v1"`
-run `npm install`
-run `npm run dev` to start front end server
+Open 2nd terminal window.  
+navigate to client directory  
+create a `.env.development` file  
+add `VITE_API_URL="http://localhost:3000/api/v1"`  
+run `npm install`  
+run `npm run dev` to start front end server  
 Navgiate to url listed in terminal window.
