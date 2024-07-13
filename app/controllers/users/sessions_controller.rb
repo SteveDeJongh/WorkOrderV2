@@ -28,6 +28,7 @@ class Users::SessionsController < Devise::SessionsController
   # end
 
   def current_user_details
+    sleep 1 # Debugging fetch current user on refresh
     if (current_user)
       user = UserSerializer.new(current_user).serializable_hash[:data][:attributes]
       puts user

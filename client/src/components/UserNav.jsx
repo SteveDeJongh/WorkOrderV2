@@ -38,15 +38,17 @@ function UserNav() {
           <Link>
             <li onClick={() => logOut()}>Sign Out</li>
           </Link>
+          {user.roles.includes("admin") && ( // Eventually turn this into a link to an admin panel?
+            <li>
+              <Link to="/signup">Create Account</Link>
+            </li>
+          )}
         </>
       )}
       {!user && (
         <>
           <li>
             <Link to="/login">Sign In</Link>
-          </li>
-          <li>
-            <Link to="/signup">Create Account</Link>
           </li>
         </>
       )}

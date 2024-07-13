@@ -60,7 +60,7 @@ async function destroySession(token) {
 }
 
 async function getUserByToken(token) {
-  const response = await fetch(`${HOST_URL}/current_user`, {
+  const response = await fetch(`${HOST_URL}/current_user_details`, {
     headers: {
       "Authorization": token,
     }

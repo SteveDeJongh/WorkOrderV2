@@ -50,11 +50,16 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "signup",
-        element: <SignUp />,
+        element: <ProtectedRoute role="admin" />,
+        children: [
+          {
+            path: "signup",
+            element: <SignUp />,
+          },
+        ],
       },
       {
-        element: <ProtectedRoute />, // Users must be logged in to access these routes.
+        element: <ProtectedRoute role="user" />, // Users must be logged in to access these routes.
         children: [
           {
             path: "profile",
@@ -152,6 +157,7 @@ const router = createBrowserRouter([
 
 function App() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function checkActiveUser() {
@@ -174,6 +180,8 @@ function App() {
           }
         } catch (e) {
           console.log("An error occured checking the token: ", e);
+        } finally {
+          setLoading(false);
         }
       }
     }
@@ -182,6 +190,10 @@ function App() {
   });
 
   console.log(user);
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <>

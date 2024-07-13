@@ -22,6 +22,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       resource.roles.push(role)
     end
     puts resource.inspect
+    resource.save
     # puts params["user"]["roles"] # to acces "roles" array in allowed params.
     # params["user"]["roles"].each do |role|
     #   self.roles.push(role)

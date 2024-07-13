@@ -31,4 +31,6 @@ productIDs = [1,2,3,4,5,6,7,8]
   MovementService.new(product).record_movement("ProductEdit", movement)
 end
 
-puts "4 Customers and 8 Products created, and inventory movements created."
+User.create(name: 'Admin', email: 'admin@test.com', password: "password", roles: ['user', 'manager', 'admin'])
+
+puts "1 admin user, 4 Customers and 8 Products created, and inventory movements created."

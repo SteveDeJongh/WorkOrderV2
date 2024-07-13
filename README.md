@@ -16,9 +16,12 @@ The app runs as a Rails API with a React front end.
 - Rails 7.1
 - Devise
 - JSON API serializer
+- JavaScript
+- TypeScript
 - React
 - React Query
 - React Hook Form
+- HTML/CSS
 
 ## Running the app.
 
