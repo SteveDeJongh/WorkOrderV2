@@ -10,7 +10,7 @@ function Profile() {
   return (
     <>
       <PageTitle title="Profile" />
-      {!user && <h2>No Customer Selected</h2>}
+      {!user && <h2>No Active User</h2>}
       {user && (
         <>
           <div id="main-pane-content">

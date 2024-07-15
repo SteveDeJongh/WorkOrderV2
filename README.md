@@ -42,3 +42,8 @@ add `VITE_API_URL="http://localhost:3000/api/v1"`
 run `npm install`  
 run `npm run dev` to start front end server  
 Navgiate to url listed in terminal window.
+
+### User Accounts
+
+admin@test.com
+password

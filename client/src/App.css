@@ -100,9 +100,85 @@ nav li:has(a.active) {
   align-items: center;
 }
 
-.user-nav {
+/* USER NAV */
+
+.hello-tag {
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+.off-screen-menu {
+  background-color: var(--main-black);
+  height: auto;
+  width: 100%;
+  max-width: 150px;
+  position:fixed;
+  top: 5vh;
+  right: -450px;
+  /* maybe don't wwant these? */
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  font-size: 1rem;
+  transition: .3s ease;
+}
+
+.off-screen-menu.active {
+  right: 0;
+}
+
+.ham-menu {
+  height: 30px;
+  width: 30px;
+  position: relative;
+}
+
+.ham-menu span {
+  height: 3px;
+  width: 100%;
+  background-color: white;
+  border-radius: 25px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: .3s ease;
+}
+
+.ham-menu span:nth-child(1) {
+  top: 25%;
+}
+
+.ham-menu span:nth-child(3) {
+  top: 75%;
+}
+
+.ham-menu.active span:nth-child(1) {
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(45deg); 
+}
+
+.ham-menu.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.ham-menu.active span:nth-child(3) {
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg); 
+}
+
+.off-screen-menu .user-nav-list { /* nav in tutorial or the whole nav bar?*/
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  padding: 20px;
+}
+.off-screen-menu .user-nav-list a {
+  width: 100%;
+  background-color: var(--main-black);
+  padding: 5px;
 }
 
 .user-nav li {

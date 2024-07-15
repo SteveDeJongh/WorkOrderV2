@@ -1,17 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
 import { destroySession } from "../services/userServices";
 import { useMutation } from "@tanstack/react-query";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import UserContext from "../contexts/user-context";
 
 function UserNav() {
   const navigate = useNavigate();
   const [user, setUser] = useContext(UserContext);
+  const [isActive, setActive] = useState(false);
 
   const { mutate: logOut } = useMutation({
     mutationFn: () => {
       let token = localStorage.getItem("authToken");
       localStorage.removeItem("authToken");
+      setActive(!isActive);
 
       console.log("Logging out...");
       return destroySession(token);
@@ -29,22 +31,7 @@ function UserNav() {
   });
 
   return (
-    <ul className="user-nav">
-      {user && (
-        <>
-          <Link to="/profile">
-            <li>My Profile</li>
-          </Link>
-          <Link>
-            <li onClick={() => logOut()}>Sign Out</li>
-          </Link>
-          {user.roles.includes("admin") && ( // Eventually turn this into a link to an admin panel?
-            <li>
-              <Link to="/signup">Create Account</Link>
-            </li>
-          )}
-        </>
-      )}
+    <>
       {!user && (
         <>
           <li>
@@ -52,7 +39,49 @@ function UserNav() {
           </li>
         </>
       )}
-    </ul>
+      {user && (
+        <>
+          <div className="hello-tag">
+            <p>Signed in as: {user.name}</p>
+          </div>
+          <div
+            className={isActive ? "ham-menu active" : "ham-menu"}
+            onClick={() => setActive(!isActive)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div
+            className={!isActive ? "off-screen-menu" : "off-screen-menu active"}
+          >
+            <ul className="user-nav-list">
+              {user && (
+                <>
+                  <Link to="/profile" onClick={() => setActive(!isActive)}>
+                    <li>My Profile</li>
+                  </Link>
+                  {/* <Link to="/profile">
+                <li>My Profile</li>
+              </Link>
+              <Link to="/profile">
+                <li>My Profile</li>
+              </Link> */}
+                  {user.roles.includes("admin") && ( // Eventually turn this into a link to an admin panel?
+                    <Link to="/signup" onClick={() => setActive(!isActive)}>
+                      <li>Create Account</li>
+                    </Link>
+                  )}
+                  <Link>
+                    <li onClick={() => logOut()}>Sign Out</li>
+                  </Link>
+                </>
+              )}
+            </ul>
+          </div>
+        </>
+      )}
+    </>
   );
 }
 
