@@ -1,8 +1,8 @@
 # WorkOrder
 
-## Under Construction
+### **Under Construction**
 
-A web hosted Point of Sale and Workorder app.
+A web hosted POS and Workorder tracking app.
 
 ## Features
 
