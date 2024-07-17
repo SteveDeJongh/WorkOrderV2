@@ -110,7 +110,7 @@ nav li:has(a.active) {
 .off-screen-menu {
   background-color: var(--main-black);
   height: auto;
-  width: 100%;
+  width: auto;
   max-width: 150px;
   position:fixed;
   top: 5vh;
@@ -173,12 +173,17 @@ nav li:has(a.active) {
   display: flex;
   flex-direction: column;
   height: auto;
-  padding: 20px;
+  padding: 10px 0;
+  border: 1px solid var(--light-border)
 }
 .off-screen-menu .user-nav-list a {
   width: 100%;
   background-color: var(--main-black);
-  padding: 5px;
+  padding: 10px 20px;
+}
+
+.off-screen-menu .user-nav-list a:hover {
+  background-color: var(--alt-black);
 }
 
 .user-nav li {

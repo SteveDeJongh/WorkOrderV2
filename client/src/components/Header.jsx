@@ -6,19 +6,19 @@ function Header() {
   return (
     <>
       <header>
-        <ul id="header-sections">
-          <li className="header-section header-left">
+        <div id="header-sections">
+          <div className="header-section header-left">
             <NavBar />
-          </li>
-          <li className="header-section header-mid">
+          </div>
+          <div className="header-section header-mid">
             <Link to="/">
               <h1>WorkOrder Logo</h1>
             </Link>
-          </li>
-          <li className="header-section header-right">
+          </div>
+          <div className="header-section header-right">
             <UserNav />
-          </li>
-        </ul>
+          </div>
+        </div>
       </header>
     </>
   );

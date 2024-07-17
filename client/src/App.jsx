@@ -28,6 +28,7 @@ import Invoices from "./components/Invoices/Invoices";
 import SignUp from "./components/Users/SignUp";
 import Login from "./components/Users/Login";
 import Profile from "./components/Users/Profile";
+import EditProfile from "./components/Users/EditProfile";
 import PageTitle from "./components/PageTitle";
 import { getUserByToken } from "./services/userServices";
 import ProtectedRoute from "./utils/ProtectedRoute";
@@ -65,6 +66,7 @@ const router = createBrowserRouter([
             path: "profile",
             element: <Profile />,
           },
+          { path: "profile/edit", element: <EditProfile /> },
           {
             path: "customers",
             element: (
@@ -183,6 +185,8 @@ function App() {
         } finally {
           setLoading(false);
         }
+      } else {
+        setLoading(false);
       }
     }
 

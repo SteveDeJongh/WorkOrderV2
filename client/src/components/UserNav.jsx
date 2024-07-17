@@ -34,9 +34,11 @@ function UserNav() {
     <>
       {!user && (
         <>
-          <li>
-            <Link to="/login">Sign In</Link>
-          </li>
+          <ul>
+            <li>
+              <Link to="/login">Sign In</Link>
+            </li>
+          </ul>
         </>
       )}
       {user && (
@@ -61,12 +63,6 @@ function UserNav() {
                   <Link to="/profile" onClick={() => setActive(!isActive)}>
                     <li>My Profile</li>
                   </Link>
-                  {/* <Link to="/profile">
-                <li>My Profile</li>
-              </Link>
-              <Link to="/profile">
-                <li>My Profile</li>
-              </Link> */}
                   {user.roles.includes("admin") && ( // Eventually turn this into a link to an admin panel?
                     <Link to="/signup" onClick={() => setActive(!isActive)}>
                       <li>Create Account</li>

@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { Link } from "react-router-dom";
 import UserContext from "../../contexts/user-context";
 import PageTitle from "../PageTitle";
 
@@ -50,6 +51,14 @@ function Profile() {
                       </div>
                     ))}
                   </div>
+                </div>
+              </div>
+            </div>
+            <div className="panel">
+              <h3>Profile Actions</h3>
+              <div className="panel-contents">
+                <div className="panel-contents-section">
+                  <Link to={"/profile/edit"}>Edit Profile</Link>
                 </div>
               </div>
             </div>

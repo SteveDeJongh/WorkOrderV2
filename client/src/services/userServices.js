@@ -59,6 +59,22 @@ async function destroySession(token) {
   return response.json();
 }
 
+async function editUser(userData) {
+  const response = await fetch(`${HOST_URL}/signup`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  })
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
+  return response.json();
+}
+
 async function getUserByToken(token) {
   const response = await fetch(`${HOST_URL}/current_user_details`, {
     headers: {
@@ -73,5 +89,4 @@ async function getUserByToken(token) {
   return response.json();
 }
 
-
-export { createUser, createSession, destroySession, getUserByToken}
+export { createUser, createSession, destroySession, editUser, getUserByToken}
