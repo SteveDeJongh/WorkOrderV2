@@ -5,6 +5,7 @@ import { createSession } from "../../services/userServices";
 import { useContext } from "react";
 import UserContext from "../../contexts/user-context";
 import PageTitle from "../PageTitle";
+import LoadingModal from "../../multiuse/LoadingModal";
 
 function Login() {
   const navigate = useNavigate();
@@ -45,6 +46,12 @@ function Login() {
     },
   });
 
+  // let isPending = true;
+  // let isError = false;
+  // function onSubmit() {
+  //   return "beep";
+  // }
+
   return (
     <>
       <PageTitle title="Sign In" />
@@ -61,6 +68,7 @@ function Login() {
           </div>
         </div>
       </div>
+      {isPending && <LoadingModal text={"Signing in..."} />}
       <form id="main-pane-content" onSubmit={handleSubmit(onSubmit)}>
         {isError && (
           <>

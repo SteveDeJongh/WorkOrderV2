@@ -180,11 +180,17 @@ function UserForm({ user, headerText, onSubmit, buttonText }) {
                   <label htmlFor="manager">Manager</label>
                   {errors.user && <p>{`${errors.user.message}`}</p>}
                 </div>
-                <div className="formPair">
-                  <input {...register("roles")} type="checkbox" value="admin" />
-                  <label htmlFor="admin">Admin</label>
-                  {errors.admin && <p>{`${errors.admin.message}`}</p>}
-                </div>
+                {user && user.roles?.includes("admin") && (
+                  <div className="formPair">
+                    <input
+                      {...register("roles")}
+                      type="checkbox"
+                      value="admin"
+                    />
+                    <label htmlFor="admin">Admin</label>
+                    {errors.admin && <p>{`${errors.admin.message}`}</p>}
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -115,7 +115,6 @@ nav li:has(a.active) {
   position:fixed;
   top: 5vh;
   right: -450px;
-  /* maybe don't wwant these? */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -169,7 +168,7 @@ nav li:has(a.active) {
   transform: translate(-50%, -50%) rotate(-45deg); 
 }
 
-.off-screen-menu .user-nav-list { /* nav in tutorial or the whole nav bar?*/
+.off-screen-menu .user-nav-list {
   display: flex;
   flex-direction: column;
   height: auto;
@@ -189,6 +188,142 @@ nav li:has(a.active) {
 .user-nav li {
   padding: 10px;
 }
+
+/* Loading Modal */
+
+.loading-modal-background {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  opacity: .25;
+  background-color: var(--light-border);
+  z-index: 1;
+}
+
+.loading-modal {
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: auto;
+  max-width: 500px;
+  height: auto;
+  background-color: var(--light-black);
+  border: 2px solid var(--light-selection);
+  border-radius: 5px;
+  padding: 20px;
+  z-index: 3;
+  opacity: 1;
+}
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  padding-right: 20px;
+}
+
+.container {
+  height: 40px;
+  width: 1px;
+  position: absolute;
+  animation:spin 3s linear infinite;
+}
+
+@keyframes spin{
+  from{
+    transform:rotate(-0deg);
+  }
+  to{
+    transform:rotate(-360deg);
+  }  
+}
+
+.container:nth-child(1) {
+  animation-delay: .3s;
+}
+.container:nth-child(2) {
+  animation-delay: .6s;
+}
+.container:nth-child(3) {
+  animation-delay: .9s;
+}
+.container:nth-child(4) {
+  animation-delay: 1.2s;
+}
+.container:nth-child(5) {
+  animation-delay: 1.5s;
+}
+.container:nth-child(6) {
+  animation-delay: 1.8s;
+}
+.container:nth-child(7) {
+  animation-delay: 2.1s;
+}
+.container:nth-child(8) {
+  animation-delay: 2.4s;
+}
+.container:nth-child(9) {
+  animation-delay: 2.7s;
+}
+.container:nth-child(10) {
+  animation-delay: 3s;
+}
+
+.container .dot {
+  height: 7px;
+  width: 7px;
+  background: black;
+  border-radius: 50%;
+  animation:dots 3s linear infinite;
+}
+
+@keyframes dots{
+  from{
+    background-color: black;
+  }
+  to{
+    background-color: white;
+  }  
+}
+
+.container:nth-child(1) .dot {
+  animation-delay: .3s;
+}
+.container:nth-child(2) .dot {
+  animation-delay: .6s;
+}
+.container:nth-child(3) .dot {
+  animation-delay: .9s;
+}
+.container:nth-child(4) .dot {
+  animation-delay: 1.2s;
+}
+.container:nth-child(5) .dot {
+  animation-delay: 1.5s;
+}
+.container:nth-child(6) .dot {
+  animation-delay: 1.8s;
+}
+.container:nth-child(7) .dot {
+  animation-delay: 2.1s;
+}
+.container:nth-child(8) .dot {
+  animation-delay: 2.4s;
+}
+.container:nth-child(9) .dot {
+  animation-delay: 2.7s;
+}
+.container:nth-child(10) .dot {
+  animation-delay: 3s;
+}
+
 
 /* PANES */
 

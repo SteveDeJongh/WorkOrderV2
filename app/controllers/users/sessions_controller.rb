@@ -11,9 +11,10 @@ class Users::SessionsController < Devise::SessionsController
   # end
 
   # POST /resource/sign_in
-  # def create
-  #   super
-  # end
+  def create
+    sleep 2 # For testing loading modal
+    super
+  end
 
   # DELETE /resource/sign_out
   # def destroy
@@ -28,7 +29,6 @@ class Users::SessionsController < Devise::SessionsController
   # end
 
   def current_user_details
-    sleep 1 # Debugging fetch current user on refresh
     if (current_user)
       user = UserSerializer.new(current_user).serializable_hash[:data][:attributes]
       puts user
