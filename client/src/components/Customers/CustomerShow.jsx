@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { useOutletContext } from "react-router-dom";
+import LoadingBox from "../../multiuse/LoadingBox";
 
 function CustomerShow() {
   // Main Pane states
@@ -38,7 +39,8 @@ function CustomerShow() {
   return (
     <>
       <div className="pane-inner">
-        {mainLoading && <p>Information loading...</p>}
+        {/* {mainLoading && <p>Information loading...</p>} */}
+        {mainLoading && <LoadingBox text="Loading Customer..." />}
         {mainError && <p>An error occured.</p>}
         {!mainLoading && (
           <>

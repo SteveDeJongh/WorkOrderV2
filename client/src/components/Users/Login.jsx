@@ -46,12 +46,6 @@ function Login() {
     },
   });
 
-  // let isPending = true;
-  // let isError = false;
-  // function onSubmit() {
-  //   return "beep";
-  // }
-
   return (
     <>
       <PageTitle title="Sign In" />

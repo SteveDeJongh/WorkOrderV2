@@ -3,6 +3,7 @@ import { destroySession } from "../services/userServices";
 import { useMutation } from "@tanstack/react-query";
 import { useContext, useState } from "react";
 import UserContext from "../contexts/user-context";
+import { CapitalizeFullName } from "../utils";
 
 function UserNav() {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ function UserNav() {
       {user && (
         <>
           <div className="hello-tag">
-            <p>Signed in as: {user.name}</p>
+            <p>Signed in as: {CapitalizeFullName(user.name)}</p>
           </div>
           <div
             className={isActive ? "ham-menu active" : "ham-menu"}

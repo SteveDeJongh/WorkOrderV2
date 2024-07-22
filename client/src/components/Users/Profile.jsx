@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { CapitalizeFullName } from "../../utils";
 import UserContext from "../../contexts/user-context";
 import PageTitle from "../PageTitle";
 
@@ -27,7 +28,9 @@ function Profile() {
                 <div className="panel-contents-section">
                   <div className="panel-section-desc">Name</div>
                   <div className="panel-section-data">
-                    <div className="data-item">{user.name}</div>
+                    <div className="data-item">
+                      {CapitalizeFullName(user.name)}
+                    </div>
                   </div>
                 </div>
                 <div className="panel-contents-section">
