@@ -189,10 +189,37 @@ nav li:has(a.active) {
   padding: 10px;
 }
 
+/* View Toggle */
+.views {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+}
+
+.view-choice {
+  height: 28px;
+  width: 28px;
+  border: 1px solid var(--main-black);
+  border-radius: 3px;
+  padding: 2px;
+  background-color: var(--light-selection);
+}
+
+.view-choice.active {
+  background-color: white;
+}
+
+.view-img {
+  width: 20px;
+  height: 20px;
+}
+
 /* Loading Box */
 .loading-box {
   margin: 30px auto;
   padding: 15px 30px;
+  /* width: 250px; */
   border: 1px solid black;
   border-radius: 5px;
   background-color: var(--light-black);
@@ -337,13 +364,18 @@ nav li:has(a.active) {
   animation-delay: 1s;
 }
 
-
 /* PANES */
 
 #panes {
   display: flex;
   flex-direction: row;
 }
+
+/* Full Pane */
+.pane-full {
+  width: 100%;
+}
+
 
 /* Left Pane */
 

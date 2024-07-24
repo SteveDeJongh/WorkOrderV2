@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchCustomerData } from "../../services/customerServices";
+import LoadingBox from "../../multiuse/LoadingBox";
 
 function CustomerProfile() {
   const [mainLoading, setMainLoading] = useState(false);
@@ -46,7 +47,7 @@ function CustomerProfile() {
 
   return (
     <>
-      {mainLoading && <p>Information loading...</p>}
+      {mainLoading && <LoadingBox text="Loading Profile..." />}
       {mainError && <p>An error occured.</p>}
       {!mainLoading && !mainError && (
         <>

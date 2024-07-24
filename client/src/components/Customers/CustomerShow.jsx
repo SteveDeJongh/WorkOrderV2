@@ -36,24 +36,24 @@ function CustomerShow() {
     loadCustomerData();
   }, [id]);
 
+  if (mainLoading) {
+    return <LoadingBox text="Loading Customer..." />;
+  }
+
   return (
     <>
-      <div className="pane-inner">
-        {/* {mainLoading && <p>Information loading...</p>} */}
-        {mainLoading && <LoadingBox text="Loading Customer..." />}
-        {mainError && <p>An error occured.</p>}
-        {!mainLoading && (
-          <>
-            <MainPaneNav
-              title={`${mainData.firstName} ${mainData.lastName}`}
-              id={mainData.id}
-              identifier={"Customer"}
-              pages={["Profile", "Edit", "Invoices", "Items", "WorkOrders"]}
-            />
-            <Outlet context={[selection, setSelection]} />
-          </>
-        )}
-      </div>
+      {mainError && <p>An error occured.</p>}
+      {!mainLoading && (
+        <>
+          <MainPaneNav
+            title={`${mainData.firstName} ${mainData.lastName}`}
+            id={mainData.id}
+            identifier={"Customer"}
+            pages={["Profile", "Edit", "Invoices", "Items", "WorkOrders"]}
+          />
+          <Outlet context={[selection, setSelection]} />
+        </>
+      )}
     </>
   );
 }
