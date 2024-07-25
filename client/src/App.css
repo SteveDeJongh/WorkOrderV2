@@ -376,6 +376,13 @@ nav li:has(a.active) {
   width: 100%;
 }
 
+.table-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: start;
+}
+
 
 /* Left Pane */
 
@@ -392,7 +399,7 @@ nav li:has(a.active) {
   flex-direction: column;
 }
 
-.pane-left h3 {
+h3.title {
   padding-bottom: 1vh;
   font-size: 3vh;
 }

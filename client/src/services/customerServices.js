@@ -11,7 +11,9 @@ async function fetchAllCustomers() {
       responseData = responseData.map((obj) => {
         return {
           id: obj.id,
-          fullName: `${obj.firstName} ${obj.lastName}`,
+          full_name: `${obj.firstName} ${obj.lastName}`,
+          first_name: obj.firstName,
+          last_name: obj.lastName,
         };
       });
       return responseData;
@@ -31,7 +33,9 @@ async function searchCustomers(query) {
     responseData = responseData.map((obj) => {
       return {
         id: obj.id,
-        fullName: `${obj.firstName} ${obj.lastName}`,
+        full_name: `${obj.firstName} ${obj.lastName}`,
+        first_name: obj.firstName,
+        last_name: obj.lastName,
       };
     });
     return responseData;

@@ -11,7 +11,7 @@ function ListItem({ resource, value, page, handleClick, selected }) {
             onClick={(e) => handleClick(e, value.id)}
             className={`single-col-li ${selected ? "selected" : ""}`}
           >
-            {value.fullName}
+            {value.full_name}
           </li>
         </Link>
       )}

@@ -40,7 +40,6 @@ function Customers() {
       )}
       {user && (
         <>
-          <ViewToggle view={view} setView={setView} />
           {view === "profile" && (
             <div id="panes">
               <div className="pane pane-left">
@@ -56,6 +55,7 @@ function Customers() {
               </div>
               <div className="pane pane-mid">
                 <div className="pane-inner">
+                  <ViewToggle view={view} setView={setView} />
                   {renderNoSelection ? (
                     <NoSelection item={"customer"} />
                   ) : (
@@ -67,7 +67,20 @@ function Customers() {
           )}
           {view === "table" && (
             <>
-              <FullWidthTable />
+              <div id="panes">
+                <div className="pane pane-full">
+                  <div className="pane-inner">
+                    <div className="table-top">
+                      <h3 className="title">Customers</h3>
+                      <ViewToggle view={view} setView={setView} />
+                    </div>
+                    <FullWidthTable
+                      title={"Customers"}
+                      fetcher={useCustomersData}
+                    />
+                  </div>
+                </div>
+              </div>
             </>
           )}
         </>
