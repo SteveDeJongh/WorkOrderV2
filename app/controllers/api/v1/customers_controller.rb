@@ -3,7 +3,7 @@ class Api::V1::CustomersController < ApplicationController
 
   # GET /customers
   def index
-    @customers = Customer.select(:id, :firstName, :lastName)
+    @customers = Customer.select(:id, :firstName, :lastName, :email, :phone, :address, :province, :country, :city)
 
     sleep 0.1
 

@@ -1,4 +1,17 @@
 import { API_URL } from "../constants";
+import { snakeCase } from "../utils";
+
+function mapResponseDataToKeys(data) {
+  let k = Object.keys(data[0]);
+  return data.map((obj) => {
+    let r = {};
+    k.forEach((key) => {
+      r[snakeCase(key)] = obj[key];
+    })
+    console.log(r)
+    return r;
+  });
+}
 
 async function fetchAllCustomers() {
     const response = await fetch(`${API_URL}/customers`, {
@@ -8,15 +21,7 @@ async function fetchAllCustomers() {
     });
     if (response.ok) {
       let responseData = await response.json();
-      responseData = responseData.map((obj) => {
-        return {
-          id: obj.id,
-          full_name: `${obj.firstName} ${obj.lastName}`,
-          first_name: obj.firstName,
-          last_name: obj.lastName,
-        };
-      });
-      return responseData;
+      return mapResponseDataToKeys(responseData);
     } else {
       throw new Error(response.statusText);
     }
@@ -30,15 +35,7 @@ async function searchCustomers(query) {
   });
   if (response.ok) {
     let responseData = await response.json();
-    responseData = responseData.map((obj) => {
-      return {
-        id: obj.id,
-        full_name: `${obj.firstName} ${obj.lastName}`,
-        first_name: obj.firstName,
-        last_name: obj.lastName,
-      };
-    });
-    return responseData;
+    return mapResponseDataToKeys(responseData);
   } else {
     throw new Error(response.statusText);
   }

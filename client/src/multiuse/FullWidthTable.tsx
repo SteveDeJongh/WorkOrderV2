@@ -65,18 +65,18 @@ function FullWidthTable({ title, fetcher }: Props) {
       header: "ID",
       accessorKey: "id",
     },
-    // Option 2 for defining a column, requires a "columnHelper"
-    columnHelper.accessor("full_name", { header: "Full Name" }),
-    columnHelper.accessor("first_name", { header: "First Name" }),
-    // Option 3 for defining a column
+    // Option 2 for defining a column
     {
-      accessorFn: (row) => row.last_name,
-      header: "Last Name",
+      accessorFn: (row) => `${row.first_name} ${row.last_name}`,
+      header: "Full Name",
     },
+    // Option 3 for defining a column, requires a "columnHelper"
+    columnHelper.accessor("first_name", { header: "First Name" }),
+    columnHelper.accessor("last_name", { header: "Last Name" }),
   ];
 
   // Memo columns and data for use in table.
-  const finalData = useMemo(() => data, []);
+  const finalData = useMemo(() => data, [data]);
   const finalColumDef = useMemo(() => columnDef, []);
 
   const table = useReactTable({
@@ -84,12 +84,6 @@ function FullWidthTable({ title, fetcher }: Props) {
     data: finalData,
     getCoreRowModel: getCoreRowModel(),
   });
-
-  // table
-  //   .getRowModel()
-  //   .rows.map((row) =>
-  //     console.log(row.getVisibleCells().map((cell) => console.log(cell)))
-  //   );
 
   return (
     <>
@@ -124,7 +118,10 @@ function FullWidthTable({ title, fetcher }: Props) {
                   <tr key={rowEl.id}>
                     {rowEl.getVisibleCells().map((cellEl) => (
                       <td key={cellEl.id}>
-                        {flexRender(cellEl.getValue(), cellEl.getContext())}
+                        {flexRender(
+                          cellEl.column.columnDef.cell,
+                          cellEl.getContext()
+                        )}
                       </td>
                     ))}
                   </tr>
