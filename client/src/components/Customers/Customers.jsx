@@ -46,7 +46,7 @@ function Customers() {
                 <div className="pane-inner">
                   <LeftListWithAction
                     title={"Customers"}
-                    page={"profile"}
+                    linkToPage={"profile"}
                     setSelection={setSelection}
                     selection={selection}
                     fetcher={useCustomersData}
