@@ -12,14 +12,16 @@ class Users::SessionsController < Devise::SessionsController
 
   # POST /resource/sign_in
   def create
+    puts("Current user at sign in", current_user.inspect)
     sleep 2 # For testing loading modal
     super
   end
 
   # DELETE /resource/sign_out
-  # def destroy
-  #   super
-  # end
+  def destroy
+    puts "here"
+    super
+  end
 
   # protected
 
@@ -31,7 +33,6 @@ class Users::SessionsController < Devise::SessionsController
   def current_user_details
     if (current_user)
       user = UserSerializer.new(current_user).serializable_hash[:data][:attributes]
-      puts user
       render json: {
         status: {code: 200, message: "User for token found."},
         data: user,

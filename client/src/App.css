@@ -126,6 +126,7 @@ nav li:has(a.active) {
 
 .off-screen-menu.active {
   right: 0;
+  z-index: 1;
 }
 
 .ham-menu {

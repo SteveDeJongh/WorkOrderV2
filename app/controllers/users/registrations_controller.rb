@@ -13,20 +13,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # POST /resource
   def create
     super
-    puts("Creating a user and we're here.") # To remove
-    puts("Self is", self) # To remove
-    puts params
-    puts resource.inspect
+    puts("Creating a user, self is", self) # To remove
 
     params["user"]["roles"].each do |role|
       resource.roles.push(role)
     end
-    puts resource.inspect
+
     resource.save
-    # puts params["user"]["roles"] # to acces "roles" array in allowed params.
-    # params["user"]["roles"].each do |role|
-    #   self.roles.push(role)
-    # end
   end
 
   # GET /resource/edit
