@@ -24,7 +24,7 @@ function Products() {
           <div className="pane-inner">
             <LeftListWithAction
               title={"Products"}
-              page={"view"}
+              linkToPage={"view"}
               setSelection={setSelection}
               selection={selection}
               fetcher={useProductsData}

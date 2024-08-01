@@ -2,11 +2,14 @@ import { Link } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
 import PropTypes from "prop-types";
 
-function ListItem({ resource, value, page, handleClick, selected }) {
+function ListItem({ resource, value, linkToPage, handleClick, selected }) {
   return (
     <>
       {resource === "customers" && (
-        <Link to={`/${resource}/${value.id}/${page}`} className="col-link">
+        <Link
+          to={`/${resource}/${value.id}/${linkToPage}`}
+          className="col-link"
+        >
           <li
             onClick={(e) => handleClick(e, value.id)}
             className={`single-col-li ${selected ? "selected" : ""}`}
@@ -16,7 +19,10 @@ function ListItem({ resource, value, page, handleClick, selected }) {
         </Link>
       )}
       {resource === "products" && (
-        <Link to={`/${resource}/${value.id}/${page}`} className="col-link">
+        <Link
+          to={`/${resource}/${value.id}/${linkToPage}`}
+          className="col-link"
+        >
           <li
             onClick={(e) => handleClick(e, value.id)}
             className={`single-col-li ${selected ? "selected" : ""}`}
@@ -47,7 +53,9 @@ function ListItem({ resource, value, page, handleClick, selected }) {
 }
 
 ListItem.propTypes = {
+  resource: PropTypes.string,
   value: PropTypes.object,
+  linkToPage: PropTypes.string,
   handleClick: PropTypes.func,
   selected: PropTypes.bool,
 };

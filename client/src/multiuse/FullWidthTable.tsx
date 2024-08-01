@@ -20,6 +20,12 @@ type Customer = {
   full_name: string;
   first_name: string;
   last_name: string;
+  phone: string;
+  email: string;
+  address: string;
+  city: string;
+  province: string;
+  country: string;
 };
 
 function FullWidthTable({ title, fetcher }: Props) {
@@ -47,11 +53,11 @@ function FullWidthTable({ title, fetcher }: Props) {
     }
   }, [fetchedData]);
 
-  function handleDebouncedSearchChange(searchValue) {
+  function handleDebouncedSearchChange(searchValue: string) {
     setDebouncedSearchTerm(searchValue);
   }
 
-  function handleImmediateSearchChange(searchValue) {
+  function handleImmediateSearchChange(searchValue: string) {
     setSearchTerm(searchValue);
   }
 
@@ -67,16 +73,22 @@ function FullWidthTable({ title, fetcher }: Props) {
     },
     // Option 2 for defining a column
     {
-      accessorFn: (row) => `${row.first_name} ${row.last_name}`,
+      accessorFn: (row: Customer) => `${row.first_name} ${row.last_name}`,
       header: "Full Name",
     },
     // Option 3 for defining a column, requires a "columnHelper"
     columnHelper.accessor("first_name", { header: "First Name" }),
     columnHelper.accessor("last_name", { header: "Last Name" }),
+    columnHelper.accessor("phone", { header: "Phone" }),
+    columnHelper.accessor("email", { header: "Email" }),
+    columnHelper.accessor("address", { header: "Address" }),
+    columnHelper.accessor("city", { header: "City" }),
+    columnHelper.accessor("province", { header: "Province" }),
+    columnHelper.accessor("country", { header: "Country" }),
   ];
 
   // Memo columns and data for use in table.
-  const finalData = useMemo(() => data, [data]);
+  const finalData = useMemo(() => data, [data, searchTerm]);
   const finalColumDef = useMemo(() => columnDef, []);
 
   const table = useReactTable({

@@ -3,29 +3,29 @@
 
 import { Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
-import UserContext from "../contexts/user-context";
-import Layout from "./Layout";
-import Customers from "./Customers/Customers";
-import CustomerProfile from "./Customers/CustomerProfile";
-import CustomerNew from "./Customers/CustomerNew";
-import CustomerShow from "./Customers/CustomerShow";
-import CustomerEdit from "./Customers/CustomerEdit";
-import CustomerInvoices from "./Customers/CustomerInvoices";
-import CustomerItems from "./Customers/CustomerItems";
-import CustomerWorkOrders from "./Customers/CustomerWorkOrders";
-import WorkOrders from "./WorkOrders/WorkOrders";
-import Products from "./Products/Products";
-import ProductShow from "./Products/ProductShow";
-import ProductView from "./Products/ProductView";
-import ProductMovements from "./Products/ProductMovements";
-import ProductEdit from "./Products/ProductEdit";
-import ProductNew from "./Products/ProductNew";
-import Invoices from "./Invoices/Invoices";
+import UserContext from "../../contexts/user-context";
+import Layout from "../Layout";
+import Customers from "../Customers/Customers";
+import CustomerProfile from "../Customers/CustomerProfile";
+import CustomerNew from "../Customers/CustomerNew";
+import CustomerShow from "../Customers/CustomerShow";
+import CustomerEdit from "../Customers/CustomerEdit";
+import CustomerInvoices from "../Customers/CustomerInvoices";
+import CustomerItems from "../Customers/CustomerItems";
+import CustomerWorkOrders from "../Customers/CustomerWorkOrders";
+import WorkOrders from "../WorkOrders/WorkOrders";
+import Products from "../Products/Products";
+import ProductShow from "../Products/ProductShow";
+import ProductView from "../Products/ProductView";
+import ProductMovements from "../Products/ProductMovements";
+import ProductEdit from "../Products/ProductEdit";
+import ProductNew from "../Products/ProductNew";
+import Invoices from "../Invoices/Invoices";
 
-import SignUp from "./Users/SignUp";
-import Login from "./Users/Login";
-import Profile from "./Users/Profile";
-import { getUserByToken } from "../services/userServices";
+import SignUp from "../Users/SignUp";
+import Login from "../Users/Login";
+import Profile from "../Users/Profile";
+import { getUserByToken } from "../../services/userServices";
 
 function AppRoutes() {
   const [user, setUser] = useState(null);
