@@ -13,6 +13,7 @@ import useCustomersData from "../../hooks/useCustomersData";
 import { useContext } from "react";
 import UserContext from "../../contexts/user-context";
 import ViewToggle from "../../multiuse/ViewToggle";
+import MainPaneModal from "../../multiuse/MainPaneModal";
 
 function Customers() {
   const [user, setUser] = useContext(UserContext);
@@ -28,6 +29,15 @@ function Customers() {
 
   if (selection && selection !== "undefined" && pathname === "/customers") {
     navigate(`/customers/${selection}/profile`);
+  }
+
+  // Table View specific state/functions
+  const [isOpen, setIsOpen] = useState(false);
+  const [clickedID, setClickedId] = useState(Number(useParams().id) || null);
+
+  function rowClick(id) {
+    setClickedId(id);
+    setIsOpen(true);
   }
 
   return (
@@ -77,10 +87,16 @@ function Customers() {
                     <FullWidthTable
                       title={"Customers"}
                       fetcher={useCustomersData}
+                      onRowClick={rowClick}
                     />
                   </div>
                 </div>
               </div>
+              <MainPaneModal
+                open={isOpen}
+                onClose={() => setIsOpen(false)}
+                resourceId={clickedID}
+              ></MainPaneModal>
             </>
           )}
         </>

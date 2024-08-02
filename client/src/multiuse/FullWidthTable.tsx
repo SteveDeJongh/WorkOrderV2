@@ -13,6 +13,7 @@ import { create } from "domain";
 type Props = {
   title: String;
   fetcher: Function;
+  onRowClick: Function;
 };
 
 type Customer = {
@@ -28,7 +29,7 @@ type Customer = {
   country: string;
 };
 
-function FullWidthTable({ title, fetcher }: Props) {
+function FullWidthTable({ title, fetcher, onRowClick }: Props) {
   // const { data, isError, error, isPending, isSuccess } = useQuery({
   //   queryKey: [resource],
   //   queryFn: () => useCustomersData(""),
@@ -97,6 +98,13 @@ function FullWidthTable({ title, fetcher }: Props) {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  function handleClick(id) {
+    onRowClick(id);
+  }
+
+  // To remove...
+  // table.getRowModel().rows.map((rowEl) => console.log(rowEl.original.id));
+
   return (
     <>
       {loading && <p>Information loading...</p>}
@@ -127,7 +135,10 @@ function FullWidthTable({ title, fetcher }: Props) {
               </thead>
               <tbody>
                 {table.getRowModel().rows.map((rowEl) => (
-                  <tr key={rowEl.id}>
+                  <tr
+                    key={rowEl.id}
+                    onClick={() => handleClick(rowEl.original.id)}
+                  >
                     {rowEl.getVisibleCells().map((cellEl) => (
                       <td key={cellEl.id}>
                         {flexRender(
