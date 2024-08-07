@@ -53,8 +53,8 @@ function SignUp() {
   return (
     <>
       <PageTitle title="Sign Up" />
-      <div id="main-pane-header">
-        <div id="main-pane-header-title">
+      <div className="main-pane-header">
+        <div className="main-pane-header-title">
           <h2>Create New User</h2>
           <div className="main-pane-form-actions">
             <button>
@@ -70,7 +70,11 @@ function SignUp() {
           </div>
         </div>
       </div>
-      <form id="main-pane-content" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        id="main-pane-content"
+        className="main-pane-content"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         {isError && (
           <>
             <h3>Unable to Create User.</h3>

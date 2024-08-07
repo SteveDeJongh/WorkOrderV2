@@ -37,8 +37,8 @@ function CustomerForm({ customer, headerText, onSubmit, buttonText }) {
 
   return (
     <>
-      <div id="main-pane-header">
-        <div id="main-pane-header-title">
+      <div className="main-pane-header">
+        <div className="main-pane-header-title">
           <h2>{headerText}</h2>
           <div className="main-pane-form-actions">
             <button type="button" onClick={() => navigate(-1)}>
@@ -54,7 +54,10 @@ function CustomerForm({ customer, headerText, onSubmit, buttonText }) {
           </div>
         </div>
       </div>
-      <form id="main-pane-content" onSubmit={handleSubmit(onSubmitHandler)}>
+      <form
+        className="main-pane-content"
+        onSubmit={handleSubmit(onSubmitHandler)}
+      >
         <div className="panel">
           <h3>Customer Details</h3>
           <div className="panel-contents-section">

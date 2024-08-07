@@ -49,8 +49,8 @@ function Login() {
   return (
     <>
       <PageTitle title="Sign In" />
-      <div id="main-pane-header">
-        <div id="main-pane-header-title">
+      <div className="main-pane-header">
+        <div className="main-pane-header-title">
           <h2>Sign In</h2>
           <div className="main-pane-form-actions">
             <button>
@@ -63,7 +63,11 @@ function Login() {
         </div>
       </div>
       {isPending && <LoadingModal text={"Signing in..."} />}
-      <form id="main-pane-content" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        id="main-pane-content"
+        className="main-pane-content"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         {isError && (
           <>
             <h3>Unable to log in.</h3>

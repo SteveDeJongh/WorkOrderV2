@@ -14,6 +14,7 @@ import { useContext } from "react";
 import UserContext from "../../contexts/user-context";
 import ViewToggle from "../../multiuse/ViewToggle";
 import MainPaneModal from "../../multiuse/MainPaneModal";
+import { fetchCustomerData } from "../../services/customerServices";
 
 function Customers() {
   const [user, setUser] = useContext(UserContext);
@@ -93,6 +94,8 @@ function Customers() {
                 </div>
               </div>
               <MainPaneModal
+                resource={"customers"}
+                dataGeter={() => fetchCustomerData(clickedID)}
                 open={isOpen}
                 onClose={() => setIsOpen(false)}
                 resourceId={clickedID}

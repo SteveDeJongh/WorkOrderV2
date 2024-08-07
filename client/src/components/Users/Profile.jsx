@@ -15,7 +15,7 @@ function Profile() {
       {!user && <h2>No Active User</h2>}
       {user && (
         <>
-          <div id="main-pane-content">
+          <div className="main-pane-content">
             <div className="panel">
               <h3>User Details</h3>
               <div className="panel-contents">

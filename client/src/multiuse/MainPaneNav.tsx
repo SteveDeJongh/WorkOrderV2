@@ -15,15 +15,15 @@ const MainPaneNav: React.FC<MainPaneNavProps> = ({
 }) => {
   return (
     <>
-      <div id="main-pane-header">
-        <div id="main-pane-header-title">
+      <div className="main-pane-header">
+        <div className="main-pane-header-title">
           <h2>{title}</h2>
           <div className="main-pane-id">
             {identifier} {id}
           </div>
         </div>
-        <div id="main-pane-nav">
-          <ul id="main-pane-profile-nav" className="mid-nav">
+        <div className="main-pane-nav">
+          <ul className="main-pane-nav mid-nav">
             {pages.map((page: string) => {
               return (
                 <li key={page} className="mid-nav-pill">

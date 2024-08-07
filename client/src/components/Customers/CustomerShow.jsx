@@ -6,7 +6,7 @@ import { Outlet } from "react-router-dom";
 import { useOutletContext } from "react-router-dom";
 import LoadingBox from "../../multiuse/LoadingBox";
 
-function CustomerShow(passedInId) {
+function CustomerShow() {
   // Main Pane states
   const [mainLoading, setMainLoading] = useState(false);
   const [mainError, setMainError] = useState(false);
@@ -34,7 +34,7 @@ function CustomerShow(passedInId) {
     }
 
     loadCustomerData();
-  }, [id, passedInId]);
+  }, [id]);
 
   if (mainLoading) {
     return <LoadingBox text="Loading Customer..." />;
