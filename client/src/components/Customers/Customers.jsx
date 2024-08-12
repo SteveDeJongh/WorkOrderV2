@@ -32,15 +32,6 @@ function Customers() {
     navigate(`/customers/${selection}/profile`);
   }
 
-  // Table View specific state/functions
-  const [isOpen, setIsOpen] = useState(false);
-  const [clickedID, setClickedId] = useState(Number(useParams().id) || null);
-
-  function rowClick(id) {
-    setClickedId(id);
-    setIsOpen(true);
-  }
-
   return (
     <>
       {!user && (
@@ -88,18 +79,10 @@ function Customers() {
                     <FullWidthTable
                       title={"Customers"}
                       fetcher={useCustomersData}
-                      onRowClick={rowClick}
                     />
                   </div>
                 </div>
               </div>
-              <MainPaneModal
-                resource={"customers"}
-                dataGeter={() => fetchCustomerData(clickedID)}
-                open={isOpen}
-                onClose={() => setIsOpen(false)}
-                resourceId={clickedID}
-              ></MainPaneModal>
             </>
           )}
         </>

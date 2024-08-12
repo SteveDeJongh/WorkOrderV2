@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,12 +8,13 @@ import {
 } from "@tanstack/react-table";
 import useURLSearchParam from "../hooks/useURLSearchParam";
 import SearchBar from "./SearchBar";
-import { create } from "domain";
+import { useParams } from "react-router-dom";
+import MainPaneModal from "./MainPaneModal";
+import { fetchCustomerData } from "../services/customerServices";
 
 type Props = {
   title: String;
   fetcher: Function;
-  onRowClick: Function;
 };
 
 type Customer = {
@@ -29,7 +30,7 @@ type Customer = {
   country: string;
 };
 
-function FullWidthTable({ title, fetcher, onRowClick }: Props) {
+function FullWidthTable({ title, fetcher }: Props) {
   // const { data, isError, error, isPending, isSuccess } = useQuery({
   //   queryKey: [resource],
   //   queryFn: () => useCustomersData(""),
@@ -99,11 +100,20 @@ function FullWidthTable({ title, fetcher, onRowClick }: Props) {
   });
 
   function handleClick(id) {
-    onRowClick(id);
+    rowClick(id);
   }
 
   // To remove...
   // table.getRowModel().rows.map((rowEl) => console.log(rowEl.original.id));
+
+  // For Modal
+  const [isOpen, setIsOpen] = useState(false);
+  const [clickedID, setClickedId] = useState(Number(useParams().id) || null);
+
+  function rowClick(id) {
+    setClickedId(id);
+    setIsOpen(true);
+  }
 
   return (
     <>
@@ -154,6 +164,14 @@ function FullWidthTable({ title, fetcher, onRowClick }: Props) {
           </div>
         </div>
       )}
+      <MainPaneModal
+        resource={"customers"}
+        dataGeter={() => fetchCustomerData(clickedID)}
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        resourceId={clickedID}
+        searchTerm={debouncedSearchTerm}
+      ></MainPaneModal>
     </>
   );
 }

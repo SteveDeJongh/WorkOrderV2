@@ -13,6 +13,16 @@ function mapResponseDataToKeys(data) {
   });
 }
 
+function mapSingleResponseDataToKeys(d) {
+  let k = Object.keys(d);
+  let r = {};
+  k.forEach((key) => {
+    r[snakeCase(key)] = d[key];
+  })
+  console.log(r)
+  return r;
+}
+
 async function fetchAllCustomers() {
     const response = await fetch(`${API_URL}/customers`, {
       headers: {
@@ -70,7 +80,8 @@ async function editCustomer(id, customerData) {
     throw new Error(response.statusText);
   }
 
-  return response.json();
+  let responseData = await response.json();
+  return mapSingleResponseDataToKeys(responseData);
 }
 
 async function fetchCustomerData(id) {
@@ -84,7 +95,8 @@ async function fetchCustomerData(id) {
     throw new Error(response.statusText);
   }
 
-  return response.json();
+  let responseData = await response.json();
+  return mapSingleResponseDataToKeys(responseData);
 }
 
 export { createCustomer, editCustomer, fetchCustomerData, fetchAllCustomers, searchCustomers };

@@ -1,5 +1,3 @@
-// retrieves information for product list in selectable column.
-
 import { fetchAllProducts, searchProducts } from "../services/productServices";
 import { useQuery } from "@tanstack/react-query";
 

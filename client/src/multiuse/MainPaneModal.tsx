@@ -5,6 +5,7 @@ import LoadingBox from "./LoadingBox";
 import CustomerForm from "../components/Customers/CustomerForm";
 import { editCustomer } from "../services/customerServices";
 import { objectToFormData } from "../utils/formDataHelper";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 type Props = {
   resource: String;
@@ -13,6 +14,7 @@ type Props = {
   children?: React.ReactNode;
   onClose: Function;
   resourceId: number;
+  searchTerm: String;
 };
 
 function MainPaneModal({
@@ -22,9 +24,8 @@ function MainPaneModal({
   children,
   onClose,
   resourceId,
+  searchTerm,
 }: Props) {
-  if (!open) return null;
-
   function handleClose(e) {
     if (e.target.className === "main-modal-background") {
       onClose();
@@ -43,6 +44,7 @@ function MainPaneModal({
       try {
         setMainLoading(true);
         const response = await dataGeter(resourceId);
+        console.log(response);
         setMainData(response);
       } catch (e) {
         setMainError("An error occured fetching the data.");
@@ -52,7 +54,9 @@ function MainPaneModal({
       }
     }
 
-    loadCustomerData();
+    if (open) {
+      loadCustomerData();
+    }
   }, [resourceId]);
 
   let entity = Object.keys(mainData).length < 1 ? false : mainData;
@@ -69,23 +73,30 @@ function MainPaneModal({
 
   let noticeCount = entity ? entity.notices.length : 0;
 
-  console.log("entity", entity);
-
   // Edit Tab
+  const queryClient = useQueryClient();
 
-  async function handleEditSubmit(rawData) {
-    try {
+  const { mutate, isPending, isError, isSuccess } = useMutation({
+    mutationFn: async (rawData) => {
       const formData = objectToFormData({ customer: rawData });
       await editCustomer(resourceId, formData);
-      const response = await dataGeter(resourceId);
-      setMainData(response);
+      return await dataGeter(resourceId);
+    },
+    onSuccess: (data) => {
+      setMainData(data);
+      console.log(data);
+      const oldData = queryClient.getQueryData(["customers", ""]);
+      let newData = oldData.map((entry) =>
+        entry.id === resourceId ? data : entry
+      );
+      queryClient.setQueryData(["customers", searchTerm], newData);
       setTab("Profile");
-    } catch (e) {
-      console.error("Failed to create customer: ", e);
-    }
-  }
+    },
+  });
 
   const pages = ["Profile", "Edit", "Invoices", "Items", "WorkOrders"];
+
+  if (!open) return null;
 
   return ReactDom.createPortal(
     <>
@@ -97,7 +108,7 @@ function MainPaneModal({
             <>
               <div className="modal-pane-header">
                 <div className="modal-pane-header-title">
-                  <h2>{`${mainData.firstName} ${mainData.lastName}`}</h2>
+                  <h2>{`${mainData.first_name} ${mainData.last_name}`}</h2>
                   <div className="modal-pane-id">Customer {mainData.id}</div>
                 </div>
                 <div className="modal-pane-nav">
@@ -177,7 +188,7 @@ function MainPaneModal({
                     customer={entity}
                     headerText={`Edit Customer`}
                     buttonText={"Save"}
-                    onSubmit={handleEditSubmit}
+                    onSubmit={mutate}
                   />
                 </>
               )}

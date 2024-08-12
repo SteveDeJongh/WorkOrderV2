@@ -18,8 +18,8 @@ function CustomerForm({
   } = useForm({
     defaultValues: customer
       ? {
-          firstName: customer.firstName,
-          lastName: customer.lastName,
+          firstName: customer.first_name,
+          lastName: customer.last_name,
           email: customer.email,
           phone: customer.phone,
           address: customer.address,
