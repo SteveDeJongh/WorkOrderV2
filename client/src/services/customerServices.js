@@ -2,13 +2,15 @@ import { API_URL } from "../constants";
 import { snakeCase } from "../utils";
 
 function mapResponseDataToKeys(data) {
+  if (data.length === 0) {
+    return "No results";
+  }
   let k = Object.keys(data[0]);
   return data.map((obj) => {
     let r = {};
     k.forEach((key) => {
       r[snakeCase(key)] = obj[key];
     })
-    console.log(r)
     return r;
   });
 }
@@ -19,7 +21,6 @@ function mapSingleResponseDataToKeys(d) {
   k.forEach((key) => {
     r[snakeCase(key)] = d[key];
   })
-  console.log(r)
   return r;
 }
 

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function CustomerForm({
   modalForm,
+  handleCancel,
   customer,
   headerText,
   onSubmit,
@@ -33,7 +34,6 @@ function CustomerForm({
   // const [selection, setSelection] = useOutletContext();
 
   async function onSubmitHandler(data) {
-    console.log(data);
     try {
       onSubmit(data);
     } catch (e) {
@@ -191,7 +191,7 @@ function CustomerForm({
       {modalForm && (
         <div className="main-modal-form-actions">
           <div className="main-pane-form-actions">
-            <button type="button" onClick={() => navigate(-1)}>
+            <button type="button" onClick={() => handleCancel()}>
               Cancel
             </button>
             <button

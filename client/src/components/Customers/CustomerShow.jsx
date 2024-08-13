@@ -46,7 +46,7 @@ function CustomerShow() {
       {!mainLoading && (
         <>
           <MainPaneNav
-            title={`${mainData.firstName} ${mainData.lastName}`}
+            title={`${mainData.first_name} ${mainData.last_name}`}
             id={mainData.id}
             identifier={"Customer"}
             pages={["Profile", "Edit", "Invoices", "Items", "WorkOrders"]}

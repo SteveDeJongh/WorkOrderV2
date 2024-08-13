@@ -16,7 +16,6 @@ import CustomerEdit from "./components/Customers/CustomerEdit";
 import CustomerInvoices from "./components/Customers/CustomerInvoices";
 import CustomerItems from "./components/Customers/CustomerItems";
 import CustomerWorkOrders from "./components/Customers/CustomerWorkOrders";
-import WorkOrders from "./components/WorkOrders/WorkOrders";
 import Products from "./components/Products/Products";
 import ProductIndex from "./components/Products/ProductIndex";
 import ProductShow from "./components/Products/ProductShow";
@@ -142,10 +141,6 @@ const router = createBrowserRouter([
                 element: <ProductNew />,
               },
             ],
-          },
-          {
-            path: "workorders",
-            element: <WorkOrders />,
           },
           {
             path: "invoices",

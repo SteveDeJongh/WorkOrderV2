@@ -25,6 +25,7 @@ function LeftListWithAction({
 
   useEffect(() => {
     if (fetchedData) {
+      console.log("fetched data", fetchedData);
       setData(fetchedData);
     }
   }, [fetchedData]);
@@ -73,7 +74,11 @@ function LeftListWithAction({
       />
       {loading && <p>Information loading...</p>}
       {error && <p>An error occured.</p>}
-      {!loading && !error && (
+      {!loading && !error && data === "No results" ? (
+        <ul>
+          <p>No Results</p>
+        </ul>
+      ) : (
         <ul>
           {data.map((data) => {
             return (

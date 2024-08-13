@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ReactDom from "react-dom";
 import LoadingBox from "./LoadingBox";
 import CustomerForm from "../components/Customers/CustomerForm";
@@ -44,7 +44,6 @@ function MainPaneModal({
       try {
         setMainLoading(true);
         const response = await dataGeter(resourceId);
-        console.log(response);
         setMainData(response);
       } catch (e) {
         setMainError("An error occured fetching the data.");
@@ -53,8 +52,7 @@ function MainPaneModal({
         setMainLoading(false);
       }
     }
-
-    if (open) {
+    if (resourceId) {
       loadCustomerData();
     }
   }, [resourceId]);
@@ -84,7 +82,6 @@ function MainPaneModal({
     },
     onSuccess: (data) => {
       setMainData(data);
-      console.log(data);
       const oldData = queryClient.getQueryData(["customers", ""]);
       let newData = oldData.map((entry) =>
         entry.id === resourceId ? data : entry
@@ -185,6 +182,7 @@ function MainPaneModal({
                 <>
                   <CustomerForm
                     modalForm={true}
+                    handleCancel={() => setTab("Profile")}
                     customer={entity}
                     headerText={`Edit Customer`}
                     buttonText={"Save"}

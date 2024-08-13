@@ -115,6 +115,8 @@ function FullWidthTable({ title, fetcher }: Props) {
     setIsOpen(true);
   }
 
+  console.log("Data is in FWT", data);
+
   return (
     <>
       {loading && <p>Information loading...</p>}
@@ -144,21 +146,29 @@ function FullWidthTable({ title, fetcher }: Props) {
                 ))}
               </thead>
               <tbody>
-                {table.getRowModel().rows.map((rowEl) => (
-                  <tr
-                    key={rowEl.id}
-                    onClick={() => handleClick(rowEl.original.id)}
-                  >
-                    {rowEl.getVisibleCells().map((cellEl) => (
-                      <td key={cellEl.id}>
-                        {flexRender(
-                          cellEl.column.columnDef.cell,
-                          cellEl.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+                <>
+                  {data === "No results" ? (
+                    <p>No Results</p>
+                  ) : (
+                    <>
+                      {table.getRowModel().rows.map((rowEl) => (
+                        <tr
+                          key={rowEl.id}
+                          onClick={() => handleClick(rowEl.original.id)}
+                        >
+                          {rowEl.getVisibleCells().map((cellEl) => (
+                            <td key={cellEl.id}>
+                              {flexRender(
+                                cellEl.column.columnDef.cell,
+                                cellEl.getContext()
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </>
+                  )}
+                </>
               </tbody>
             </table>
           </div>

@@ -34,7 +34,7 @@ function CustomerProfile() {
   let customer = Object.keys(customerData).length < 1 ? false : customerData;
 
   // Example Notices data, to be part of the customer data api fetch in the future.
-  if (customer && customer.firstName == "Steve") {
+  if (customer && customer.first_name == "Steve") {
     customer.notices = [
       { id: 1, notice: "This is notice 1." },
       { id: 2, notice: "This is notice 2." },
