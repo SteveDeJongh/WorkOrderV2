@@ -13,12 +13,15 @@ import useCustomersData from "../../hooks/useCustomersData";
 import { useContext } from "react";
 import UserContext from "../../contexts/user-context";
 import ViewToggle from "../../multiuse/ViewToggle";
-import MainPaneModal from "../../multiuse/MainPaneModal";
-import { fetchCustomerData } from "../../services/customerServices";
 
 function Customers() {
   const [user, setUser] = useContext(UserContext);
-  const [view, setView] = useState("profile");
+  const [view, setView] = useState(user.views?.customers || "profile");
+
+  function viewSetter(view) {
+    user.views["customers"] = view;
+    setView(view);
+  }
 
   let location = useLocation();
   let pathname = location.pathname;
@@ -57,7 +60,7 @@ function Customers() {
               </div>
               <div className="pane pane-mid">
                 <div className="pane-inner">
-                  <ViewToggle view={view} setView={setView} />
+                  <ViewToggle view={view} setView={viewSetter} />
                   {renderNoSelection ? (
                     <NoSelection item={"customer"} />
                   ) : (
@@ -74,7 +77,7 @@ function Customers() {
                   <div className="pane-inner">
                     <div className="table-top">
                       <h3 className="title">Customers</h3>
-                      <ViewToggle view={view} setView={setView} />
+                      <ViewToggle view={view} setView={viewSetter} />
                     </div>
                     <FullWidthTable
                       title={"Customers"}

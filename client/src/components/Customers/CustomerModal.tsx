@@ -1,31 +1,21 @@
 import React from "react";
 import { useState, useEffect, useContext } from "react";
 import ReactDom from "react-dom";
-import LoadingBox from "./LoadingBox";
-import CustomerForm from "../components/Customers/CustomerForm";
-import { editCustomer } from "../services/customerServices";
-import { objectToFormData } from "../utils/formDataHelper";
+import LoadingBox from "../../multiuse/LoadingBox";
+import CustomerForm from "./CustomerForm";
+import { editCustomer } from "../../services/customerServices";
+import { objectToFormData } from "../../utils/formDataHelper";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { fetchCustomerData } from "../../services/customerServices";
 
 type Props = {
-  resource: String;
-  dataGeter: Function;
   open: boolean;
-  children?: React.ReactNode;
   onClose: Function;
-  resourceId: number;
+  resourceId: number | null;
   searchTerm: String;
 };
 
-function MainPaneModal({
-  resource,
-  dataGeter,
-  open,
-  children,
-  onClose,
-  resourceId,
-  searchTerm,
-}: Props) {
+function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
   function handleClose(e) {
     if (e.target.className === "main-modal-background") {
       onClose();
@@ -43,7 +33,7 @@ function MainPaneModal({
     async function loadCustomerData() {
       try {
         setMainLoading(true);
-        const response = await dataGeter(resourceId);
+        const response = await fetchCustomerData(resourceId);
         setMainData(response);
       } catch (e) {
         setMainError("An error occured fetching the data.");
@@ -78,11 +68,11 @@ function MainPaneModal({
     mutationFn: async (rawData) => {
       const formData = objectToFormData({ customer: rawData });
       await editCustomer(resourceId, formData);
-      return await dataGeter(resourceId);
+      return await fetchCustomerData(resourceId);
     },
     onSuccess: (data) => {
       setMainData(data);
-      const oldData = queryClient.getQueryData(["customers", ""]);
+      const oldData = queryClient.getQueryData(["customers", searchTerm]);
       let newData = oldData.map((entry) =>
         entry.id === resourceId ? data : entry
       );
@@ -91,7 +81,7 @@ function MainPaneModal({
     },
   });
 
-  const pages = ["Profile", "Edit", "Invoices", "Items", "WorkOrders"];
+  const pages = ["Profile", "Edit", "Invoices"];
 
   if (!open) return null;
 
@@ -191,8 +181,6 @@ function MainPaneModal({
                 </>
               )}
               {tab === "Invoices" && <div>Invoices</div>}
-              {tab === "Items" && <div>Items</div>}
-              {tab === "WorkOrders" && <div>WorkOrders</div>}
             </>
           )}
         </div>
@@ -202,4 +190,4 @@ function MainPaneModal({
   );
 }
 
-export default MainPaneModal;
+export default CustomerModal;

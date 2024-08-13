@@ -9,8 +9,7 @@ import {
 import useURLSearchParam from "../hooks/useURLSearchParam";
 import SearchBar from "./SearchBar";
 import { useParams } from "react-router-dom";
-import MainPaneModal from "./MainPaneModal";
-import { fetchCustomerData } from "../services/customerServices";
+import CustomerModal from "../components/Customers/CustomerModal";
 
 type Props = {
   title: String;
@@ -31,16 +30,13 @@ type Customer = {
 };
 
 function FullWidthTable({ title, fetcher }: Props) {
-  // const { data, isError, error, isPending, isSuccess } = useQuery({
-  //   queryKey: [resource],
-  //   queryFn: () => useCustomersData(""),
-  //   staleTime: 1000, // overriding default staleTime
-  //   refetchOnWindowFocus: false, // won't refetch when switching tabs.
-  // });
+  let Modal = CustomerModal;
 
-  // if (isError) {
-  //   console.log(error);
-  // }
+  if (title === "Customers") {
+    Modal = CustomerModal;
+  } else if (title === "Products") {
+    // Todo...
+  }
 
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -64,30 +60,24 @@ function FullWidthTable({ title, fetcher }: Props) {
   }
 
   // Table Stuff
-
-  // Different ways to define columns.
-  const columnHelper = createColumnHelper<Customer>();
-  const columnDef = [
-    // Option 1 For defining a column.
-    {
-      header: "ID",
-      accessorKey: "id",
-    },
-    // Option 2 for defining a column
-    {
-      accessorFn: (row: Customer) => `${row.first_name} ${row.last_name}`,
-      header: "Full Name",
-    },
-    // Option 3 for defining a column, requires a "columnHelper"
-    columnHelper.accessor("first_name", { header: "First Name" }),
-    columnHelper.accessor("last_name", { header: "Last Name" }),
-    columnHelper.accessor("phone", { header: "Phone" }),
-    columnHelper.accessor("email", { header: "Email" }),
-    columnHelper.accessor("address", { header: "Address" }),
-    columnHelper.accessor("city", { header: "City" }),
-    columnHelper.accessor("province", { header: "Province" }),
-    columnHelper.accessor("country", { header: "Country" }),
+  const colums = [
+    { keys: ["id"], header: "ID" },
+    { keys: ["first_name", "last_name"], header: "Full Name" },
+    { keys: ["first_name"], header: "First Name" },
+    { keys: ["last_name"], header: "Last Name" },
+    { keys: ["phone"], header: "Phone" },
+    { keys: ["email"], header: "Email" },
+    { keys: ["address"], header: "Address" },
+    { keys: ["city"], header: "City" },
+    { keys: ["province"], header: "Province" },
+    { keys: ["country"], header: "Country" },
   ];
+  const columnDef = colums.map((col) => {
+    return {
+      header: col.header,
+      accessorFn: (row: Customer) => col.keys.map((key) => row[key]).join(" "),
+    };
+  });
 
   // Memo columns and data for use in table.
   const finalData = useMemo(() => data, [data, searchTerm]);
@@ -99,10 +89,6 @@ function FullWidthTable({ title, fetcher }: Props) {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  function handleClick(id) {
-    rowClick(id);
-  }
-
   // To remove...
   // table.getRowModel().rows.map((rowEl) => console.log(rowEl.original.id));
 
@@ -110,12 +96,10 @@ function FullWidthTable({ title, fetcher }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [clickedID, setClickedId] = useState(Number(useParams().id) || null);
 
-  function rowClick(id) {
+  function handleClick(id) {
     setClickedId(id);
     setIsOpen(true);
   }
-
-  console.log("Data is in FWT", data);
 
   return (
     <>
@@ -147,7 +131,7 @@ function FullWidthTable({ title, fetcher }: Props) {
               </thead>
               <tbody>
                 <>
-                  {data === "No results" ? (
+                  {data == "No results" ? (
                     <p>No Results</p>
                   ) : (
                     <>
@@ -174,14 +158,12 @@ function FullWidthTable({ title, fetcher }: Props) {
           </div>
         </div>
       )}
-      <MainPaneModal
-        resource={"customers"}
-        dataGeter={() => fetchCustomerData(clickedID)}
+      <Modal
         open={isOpen}
         onClose={() => setIsOpen(false)}
         resourceId={clickedID}
         searchTerm={debouncedSearchTerm}
-      ></MainPaneModal>
+      />
     </>
   );
 }

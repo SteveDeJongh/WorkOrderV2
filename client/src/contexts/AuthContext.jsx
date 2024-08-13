@@ -1,9 +1,13 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { getUserByToken, createSession, destroySession } from "../services/userServices";
+import {
+  getUserByToken,
+  createSession,
+  destroySession,
+} from "../services/userServices";
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({children}) => {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -26,6 +30,7 @@ export const AuthProvider = ({children}) => {
   const login = async (content) => {
     try {
       const response = await createSession(content);
+      response.data["views"] = {}; // To eventually come direct from API user call.
       setUser(response.data);
     } catch (error) {
       console.error(error);
@@ -48,7 +53,9 @@ export const AuthProvider = ({children}) => {
     logout,
   };
 
-  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {

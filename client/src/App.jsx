@@ -172,6 +172,7 @@ function App() {
             console.log("That's still a valid token, checking if user is set.");
             if (!user) {
               console.log("We didn't have a set user, so let's set it now.");
+              response.data["views"] = {}; // To eventually come direct from API user call.
               setUser(response.data);
             }
           }

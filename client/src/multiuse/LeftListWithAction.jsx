@@ -74,7 +74,7 @@ function LeftListWithAction({
       />
       {loading && <p>Information loading...</p>}
       {error && <p>An error occured.</p>}
-      {!loading && !error && data === "No results" ? (
+      {!loading && !error && data == "No results" ? (
         <ul>
           <p>No Results</p>
         </ul>

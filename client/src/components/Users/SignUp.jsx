@@ -41,6 +41,7 @@ function SignUp() {
     },
     onSuccess: (response) => {
       console.log("User created!");
+      response.data["views"] = {}; // To eventually come direct from API user call.
       setUser(response.data); // maybe don't need this if checking for user auth every time?
       navigate(`/`);
     },
