@@ -24,7 +24,7 @@ function ProductView() {
       {isError && <p>An error occured.</p>}
       {!isPending && !isError && (
         <>
-          <div id="main-pane-content">
+          <div className="main-pane-content">
             <div className="panel">
               <h3>Details</h3>
               <div className="panel-contents">

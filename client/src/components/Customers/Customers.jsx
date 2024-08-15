@@ -19,6 +19,8 @@ function Customers() {
   const [view, setView] = useState(user.views?.customers || "profile");
 
   function viewSetter(view) {
+    user.views ? user.views : (user.views = {});
+
     user.views["customers"] = view;
     setView(view);
   }
@@ -35,6 +37,18 @@ function Customers() {
     navigate(`/customers/${selection}/profile`);
   }
 
+  const columns = [
+    { keys: ["id"], header: "ID" },
+    { keys: ["first_name", "last_name"], header: "Full Name" },
+    { keys: ["first_name"], header: "First Name" },
+    { keys: ["last_name"], header: "Last Name" },
+    { keys: ["phone"], header: "Phone" },
+    { keys: ["email"], header: "Email" },
+    { keys: ["address"], header: "Address" },
+    { keys: ["city"], header: "City" },
+    { keys: ["province"], header: "Province" },
+    { keys: ["country"], header: "Country" },
+  ];
   return (
     <>
       {!user && (
@@ -82,6 +96,7 @@ function Customers() {
                     <FullWidthTable
                       title={"Customers"}
                       fetcher={useCustomersData}
+                      columns={columns}
                     />
                   </div>
                 </div>

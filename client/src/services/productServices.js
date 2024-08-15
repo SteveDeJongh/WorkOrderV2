@@ -1,4 +1,6 @@
 import { API_URL } from "../constants";
+import { mapResponseDataToKeys, mapSingleResponseDataToKeys } from "../utils";
+
 
 async function fetchAllProducts() {
     const response = await fetch(`${API_URL}/products`, {
@@ -8,16 +10,16 @@ async function fetchAllProducts() {
     });
     if (response.ok) {
       let responseData = await response.json();
-      responseData = responseData.map((obj) => {
-        return {
-          id: obj.id,
-          sku: obj.sku,
-          name: obj.name,
-          price: obj.price,
-          stock: obj.stock,
-        };
-      });
-      return responseData;
+      // responseData = responseData.map((obj) => {
+      //   return {
+      //     id: obj.id,
+      //     sku: obj.sku,
+      //     name: obj.name,
+      //     price: obj.price,
+      //     stock: obj.stock,
+      //   };
+      // });
+      return mapResponseDataToKeys(responseData);
     } else {
       throw new Error(response.statusText);
     }
@@ -31,16 +33,7 @@ async function searchProducts(query) {
   });
   if (response.ok) {
     let responseData = await response.json();
-    responseData = responseData.map((obj) => {
-      return {
-        id: obj.id,
-        sku: obj.sku,
-        name: obj.name,
-        price: obj.price,
-        stock: obj.stock,
-      };
-    });
-    return responseData;
+    return mapResponseDataToKeys(responseData);
   } else {
     throw new Error(response.statusText);
   }
@@ -73,7 +66,8 @@ async function createProduct(productData) {
     throw new Error(response.statusText);
   }
 
-  return response.json();
+  let responseData = await response.json();
+  return mapSingleResponseDataToKeys(responseData);
 }
 
 async function editProduct(id, productData) {

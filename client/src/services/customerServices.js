@@ -1,28 +1,5 @@
 import { API_URL } from "../constants";
-import { snakeCase } from "../utils";
-
-function mapResponseDataToKeys(data) {
-  if (data.length === 0) {
-    return "No results";
-  }
-  let k = Object.keys(data[0]);
-  return data.map((obj) => {
-    let r = {};
-    k.forEach((key) => {
-      r[snakeCase(key)] = obj[key];
-    })
-    return r;
-  });
-}
-
-function mapSingleResponseDataToKeys(d) {
-  let k = Object.keys(d);
-  let r = {};
-  k.forEach((key) => {
-    r[snakeCase(key)] = d[key];
-  })
-  return r;
-}
+import { mapResponseDataToKeys, mapSingleResponseDataToKeys } from "../utils";
 
 async function fetchAllCustomers() {
     const response = await fetch(`${API_URL}/customers`, {

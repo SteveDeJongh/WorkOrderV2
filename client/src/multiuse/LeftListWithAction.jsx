@@ -101,7 +101,7 @@ function LeftListWithAction({
             handleNewClick(false);
           }}
         >
-          <span>➕ New {title}</span>
+          <span>➕ New {title.slice(0, -1)}</span>
         </Link>
       </div>
     </>

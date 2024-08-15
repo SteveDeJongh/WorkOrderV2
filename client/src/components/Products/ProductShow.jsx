@@ -19,6 +19,8 @@ function ProductShow() {
     product = Object.keys(data).length < 1 ? false : data;
   }
 
+  console.log(product);
+
   return (
     <>
       <div className="pane pane-mid">

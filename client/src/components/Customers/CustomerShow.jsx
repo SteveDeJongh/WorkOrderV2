@@ -49,7 +49,7 @@ function CustomerShow() {
             title={`${mainData.first_name} ${mainData.last_name}`}
             id={mainData.id}
             identifier={"Customer"}
-            pages={["Profile", "Edit", "Invoices", "Items", "WorkOrders"]}
+            pages={["Profile", "Edit", "Invoices"]}
           />
           <Outlet context={[selection, setSelection]} />
         </>

@@ -24,7 +24,7 @@ function ProductMovements() {
 
   return (
     <>
-      <div id="main-pane-content">
+      <div className="main-pane-content">
         <div className="scrollable-table tall">
           <table>
             <thead>

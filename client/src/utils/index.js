@@ -14,3 +14,26 @@ export function snakeCase(val) {
     }
   }).join('');
 }
+
+export function mapResponseDataToKeys(data) {
+  if (data.length === 0) {
+    return "No results";
+  }
+  let k = Object.keys(data[0]);
+  return data.map((obj) => {
+    let r = {};
+    k.forEach((key) => {
+      r[snakeCase(key)] = obj[key];
+    })
+    return r;
+  });
+}
+
+export function mapSingleResponseDataToKeys(d) {
+  let k = Object.keys(d);
+  let r = {};
+  k.forEach((key) => {
+    r[snakeCase(key)] = d[key];
+  })
+  return r;
+}

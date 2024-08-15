@@ -2,7 +2,14 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-function ProductForm({ product, headerText, onSubmit, buttonText }) {
+function ProductForm({
+  modalForm,
+  handleCancel,
+  product,
+  headerText,
+  onSubmit,
+  buttonText,
+}) {
   const navigate = useNavigate();
   const [inventoried, setInventoried] = useState(
     product ? product.inventory : true
@@ -41,24 +48,30 @@ function ProductForm({ product, headerText, onSubmit, buttonText }) {
 
   return (
     <>
-      <div id="main-pane-header">
-        <div id="main-pane-header-title">
-          <h2>{headerText}</h2>
-          <div className="main-pane-form-actions">
-            <button type="button" onClick={() => navigate(-1)}>
-              Cancel
-            </button>
-            <button
-              form="main-pane-content"
-              disabled={isSubmitting}
-              type="submit"
-            >
-              {buttonText}
-            </button>
+      {!modalForm && (
+        <div className="main-pane-header">
+          <div className="main-pane-header-title">
+            <h2>{headerText}</h2>
+            <div className="main-pane-form-actions">
+              <button type="button" onClick={() => navigate(-1)}>
+                Cancel
+              </button>
+              <button
+                form="main-pane-content"
+                disabled={isSubmitting}
+                type="submit"
+              >
+                {buttonText}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <form id="main-pane-content" onSubmit={handleSubmit(onSubmitHandler)}>
+      )}
+      <form
+        id="main-pane-content"
+        className="main-pane-content"
+        onSubmit={handleSubmit(onSubmitHandler)}
+      >
         <div className="panel">
           <h3>Details</h3>
           <div className="panel-contents">
@@ -254,6 +267,22 @@ function ProductForm({ product, headerText, onSubmit, buttonText }) {
           {errors.max && <p className="error">{`${errors.max.message}`}</p>}
         </div>
       </form>
+      {modalForm && (
+        <div className="main-modal-form-actions">
+          <div className="main-pane-form-actions">
+            <button type="button" onClick={() => handleCancel()}>
+              Cancel
+            </button>
+            <button
+              form="main-pane-content"
+              disabled={isSubmitting}
+              type="submit"
+            >
+              {buttonText}
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -3,10 +3,12 @@ import { useState, useEffect, useContext } from "react";
 import ReactDom from "react-dom";
 import LoadingBox from "../../multiuse/LoadingBox";
 import CustomerForm from "./CustomerForm";
-import { editCustomer } from "../../services/customerServices";
+import {
+  editCustomer,
+  fetchCustomerData,
+} from "../../services/customerServices";
 import { objectToFormData } from "../../utils/formDataHelper";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { fetchCustomerData } from "../../services/customerServices";
 
 type Props = {
   open: boolean;
@@ -118,7 +120,7 @@ function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
               </div>
               {tab === "Profile" && (
                 <>
-                  <div className="main-pane-content">
+                  <div className="modal-content">
                     <div className="panel">
                       <h3>Details</h3>
                       <div className="panel-contents">

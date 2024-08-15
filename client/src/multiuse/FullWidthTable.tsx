@@ -10,10 +10,12 @@ import useURLSearchParam from "../hooks/useURLSearchParam";
 import SearchBar from "./SearchBar";
 import { useParams } from "react-router-dom";
 import CustomerModal from "../components/Customers/CustomerModal";
+import ProductModal from "../components/Products/ProductModal";
 
 type Props = {
   title: String;
   fetcher: Function;
+  columns: Array<Object>;
 };
 
 type Customer = {
@@ -29,15 +31,20 @@ type Customer = {
   country: string;
 };
 
-function FullWidthTable({ title, fetcher }: Props) {
-  let Modal = CustomerModal;
+type Product = {
+  id: Number;
+  sku: String;
+  upc: Number;
+  name: String;
+  description: String;
+  price: Number;
+  taxrate: Number;
+  stock: Number;
+  min: Number;
+  max: Number;
+};
 
-  if (title === "Customers") {
-    Modal = CustomerModal;
-  } else if (title === "Products") {
-    // Todo...
-  }
-
+function FullWidthTable({ title, fetcher, columns }: Props) {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
@@ -59,25 +66,19 @@ function FullWidthTable({ title, fetcher }: Props) {
     setSearchTerm(searchValue);
   }
 
-  // Table Stuff
-  const colums = [
-    { keys: ["id"], header: "ID" },
-    { keys: ["first_name", "last_name"], header: "Full Name" },
-    { keys: ["first_name"], header: "First Name" },
-    { keys: ["last_name"], header: "Last Name" },
-    { keys: ["phone"], header: "Phone" },
-    { keys: ["email"], header: "Email" },
-    { keys: ["address"], header: "Address" },
-    { keys: ["city"], header: "City" },
-    { keys: ["province"], header: "Province" },
-    { keys: ["country"], header: "Country" },
-  ];
-  const columnDef = colums.map((col) => {
+  let Modal;
+  const columnDef = columns.map((col) => {
     return {
       header: col.header,
-      accessorFn: (row: Customer) => col.keys.map((key) => row[key]).join(" "),
+      accessorFn: (row: Customer | Product) =>
+        col.keys.map((key) => row[key]).join(" "),
     };
   });
+  if (title === "Customers") {
+    Modal = CustomerModal;
+  } else if (title === "Products") {
+    Modal = ProductModal;
+  }
 
   // Memo columns and data for use in table.
   const finalData = useMemo(() => data, [data, searchTerm]);
@@ -88,9 +89,6 @@ function FullWidthTable({ title, fetcher }: Props) {
     data: finalData,
     getCoreRowModel: getCoreRowModel(),
   });
-
-  // To remove...
-  // table.getRowModel().rows.map((rowEl) => console.log(rowEl.original.id));
 
   // For Modal
   const [isOpen, setIsOpen] = useState(false);
