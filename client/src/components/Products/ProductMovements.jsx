@@ -9,7 +9,7 @@ function ProductMovements() {
     },
   } = useOutletContext();
 
-  const { data, isError, isPending, isSuccess } = useQuery({
+  const { data, isError, isPending } = useQuery({
     queryKey: ["productMovements", id],
     queryFn: () => fetchInventoryMovementsFor(id),
   });

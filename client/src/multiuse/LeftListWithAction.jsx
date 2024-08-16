@@ -25,7 +25,6 @@ function LeftListWithAction({
 
   useEffect(() => {
     if (fetchedData) {
-      console.log("fetched data", fetchedData);
       setData(fetchedData);
     }
   }, [fetchedData]);
@@ -72,28 +71,28 @@ function LeftListWithAction({
         onSearchChange={handleDebouncedSearchChange}
         onImmediateChange={handleImmediateSearchChange}
       />
-      {loading && <p>Information loading...</p>}
-      {error && <p>An error occured.</p>}
-      {!loading && !error && data == "No results" ? (
-        <ul>
+      <ul>
+        {loading && <p>Information loading...</p>}
+        {error && <p>An error occured.</p>}
+        {!loading && !error && data == "No results" ? (
           <p>No Results</p>
-        </ul>
-      ) : (
-        <ul>
-          {data.map((data) => {
-            return (
-              <ListItem
-                resource={title.toLowerCase()}
-                value={data}
-                linkToPage={linkToPage}
-                key={data.id}
-                handleClick={handleItemClick}
-                selected={data.id === selection}
-              />
-            );
-          })}
-        </ul>
-      )}
+        ) : (
+          <>
+            {data.map((data) => {
+              return (
+                <ListItem
+                  resource={title.toLowerCase()}
+                  value={data}
+                  linkToPage={linkToPage}
+                  key={data.id}
+                  handleClick={handleItemClick}
+                  selected={data.id === selection}
+                />
+              );
+            })}
+          </>
+        )}
+      </ul>
       <div id="single-col-bottom">
         <Link
           to={`/${title.toLowerCase()}/new`}

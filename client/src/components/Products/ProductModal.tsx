@@ -7,7 +7,10 @@ import { editProduct, fetchProductData } from "../../services/productServices";
 import { objectToFormData } from "../../utils/formDataHelper";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { NumericFormat } from "react-number-format";
-import { fetchLast3MovementsFor } from "../../services/movementServices";
+import {
+  fetchLast3MovementsFor,
+  fetchInventoryMovementsFor,
+} from "../../services/movementServices";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -53,12 +56,13 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
   let entity = Object.keys(mainData).length < 1 ? false : mainData;
 
   const {
-    data: movementData,
-    isError: movementError,
-    isPending: movementPending,
+    data: is3MovementsData,
+    isError: is3MovementsError,
+    isPending: is3MovementsPending,
   } = useQuery({
     queryKey: ["3productMovements", entity.id],
     queryFn: () => fetchLast3MovementsFor(entity.id),
+    enabled: !!entity,
   });
 
   // Edit Tab
@@ -79,6 +83,19 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
       queryClient.setQueryData(["products", searchTerm], newData);
       setTab("View");
     },
+  });
+
+  // Movements
+
+  const {
+    data: movementData,
+    isError: isMovementError,
+    isPending: isMovementPending,
+    isSuccess: isMovementSuccess,
+  } = useQuery({
+    queryKey: ["productMovements", entity.id],
+    queryFn: () => fetchInventoryMovementsFor(entity.id),
+    enabled: !!entity,
   });
 
   const pages = ["View", "Edit", "Movements"];
@@ -246,19 +263,19 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
                             </tr>
                           </thead>
                           <tbody>
-                            {movementPending && (
+                            {is3MovementsPending && (
                               <tr>
                                 <td>Loading...</td>
                               </tr>
                             )}
-                            {movementError && (
+                            {is3MovementsError && (
                               <tr>
                                 <td>Error...</td>
                               </tr>
                             )}
-                            {!movementPending &&
-                              !movementError &&
-                              movementData.map((movement) => {
+                            {!is3MovementsPending &&
+                              !is3MovementsError &&
+                              is3MovementsData.map((movement) => {
                                 return (
                                   <tr key={movement.id}>
                                     <td>{movement.id}</td>
@@ -306,7 +323,58 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
                   />
                 </>
               )}
-              {tab === "Movements" && <div>Movements</div>}
+              {tab === "Movements" && (
+                <>
+                  <div className="scrollable-table tall modal-content">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Movement ID</th>
+                          <th>relation</th>
+                          <th>Adjustment</th>
+                          <th>Change</th>
+                          <th>Stock</th>
+                          <th>ChangeType</th>
+                          <th>userId</th>
+                          <th>Time</th>
+                          <th>ProductID</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {isMovementPending && (
+                          <tr>
+                            <td>Loading...</td>
+                          </tr>
+                        )}
+                        {isMovementError && (
+                          <tr>
+                            <td>Error...</td>
+                          </tr>
+                        )}
+                        {!isMovementPending &&
+                          !isMovementError &&
+                          movementData.map((movement) => {
+                            return (
+                              <tr key={movement.id}>
+                                <td>{movement.id}</td>
+                                <td>{movement.relation}</td>
+                                <td>
+                                  {movement.adjustment ? "True" : "False"}
+                                </td>
+                                <td>{movement.change}</td>
+                                <td>{movement.stock}</td>
+                                <td>{movement.changeType}</td>
+                                <td>{movement.userID}</td>
+                                <td>{movement.created_at}</td>
+                                <td>{movement.productID}</td>
+                              </tr>
+                            );
+                          })}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>
