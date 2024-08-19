@@ -23,4 +23,10 @@ class Api::V1::SearchController < ApplicationController
 
     render json: @inventory_movements
   end
+
+  def invoices
+    @invoices = Invoice.where('id LIKE ?', "%#{params[:q]}%")
+
+    render json: @invoices
+  end
 end

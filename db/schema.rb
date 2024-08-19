@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_12_214510) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_19_195307) do
   create_table "customers", force: :cascade do |t|
     t.string "firstName"
     t.string "lastName"
@@ -51,6 +51,38 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_12_214510) do
     t.datetime "updated_at", null: false
     t.integer "productID"
     t.integer "stock"
+  end
+
+  create_table "invoice_lines", force: :cascade do |t|
+    t.integer "invoice_id"
+    t.integer "product_id"
+    t.integer "discount_percentage"
+    t.decimal "price"
+    t.integer "quantiy"
+    t.decimal "line_total"
+    t.integer "tax_rate"
+    t.decimal "line_tax"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.integer "customer_id"
+    t.integer "user_id"
+    t.decimal "total"
+    t.decimal "balance"
+    t.decimal "tax"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "status"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.string "method"
+    t.integer "invoice_id"
+    t.decimal "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "products", force: :cascade do |t|

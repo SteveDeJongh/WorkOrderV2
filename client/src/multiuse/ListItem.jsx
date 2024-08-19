@@ -28,9 +28,36 @@ function ListItem({ resource, value, linkToPage, handleClick, selected }) {
             className={`single-col-li ${selected ? "selected" : ""}`}
           >
             <div className="li-row li-top">
-              {" "}
-              <span>{value.name}</span>{" "}
+              <span>{value.name}</span>
               {/* trim this to x# of characters eventually. */}
+              <span>
+                {/* {value.price} */}
+                <NumericFormat
+                  value={Number(value.price).toFixed(2)}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  prefix={"$"}
+                />
+              </span>
+            </div>
+            <div className="li-row li-bottom">
+              <span>{value.sku}</span>
+              <span>{value.stock}</span>
+            </div>
+          </li>
+        </Link>
+      )}
+      {resource === "invoices" && (
+        <Link
+          to={`/${resource}/${value.id}/${linkToPage}`}
+          className="col-link"
+        >
+          <li
+            onClick={(e) => handleClick(e, value.id)}
+            className={`single-col-li ${selected ? "selected" : ""}`}
+          >
+            <div className="li-row li-top">
+              <span>{value.id}</span>
               <span>
                 {/* {value.price} */}
                 <NumericFormat

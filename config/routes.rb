@@ -24,10 +24,14 @@ Rails.application.routes.draw do
       get 'search/customers' # /api/v1/search/products?q=query
       resources :customers
       get 'search/products'
+      get 'search/invoices'
       resources :products
       resources :inventory_movements
       get 'search/inventory_movement'
       get 'search/last_3_inventory_movements'
+      resources :payments
+      resources :invoice_lines
+      resources :invoices
     end
   end
 end

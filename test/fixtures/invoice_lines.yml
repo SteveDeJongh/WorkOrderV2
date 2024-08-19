@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  invoice_id: 1
+  product_id: 1
+  discount_percentage: 1
+  price: 9.99
+  quantiy: 1
+  line_total: 9.99
+  tax_rate: 1
+  line_tax: 9.99
+
+two:
+  invoice_id: 1
+  product_id: 1
+  discount_percentage: 1
+  price: 9.99
+  quantiy: 1
+  line_total: 9.99
+  tax_rate: 1
+  line_tax: 9.99

@@ -11,6 +11,7 @@ import SearchBar from "./SearchBar";
 import { useParams } from "react-router-dom";
 import CustomerModal from "../components/Customers/CustomerModal";
 import ProductModal from "../components/Products/ProductModal";
+import InvoiceModal from "../components/Invoices/InvoiceModal";
 
 type Props = {
   title: String;
@@ -78,6 +79,8 @@ function FullWidthTable({ title, fetcher, columns }: Props) {
     Modal = CustomerModal;
   } else if (title === "Products") {
     Modal = ProductModal;
+  } else if (title === "Invoices") {
+    Modal = InvoiceModal;
   }
 
   // Memo columns and data for use in table.
