@@ -15,7 +15,6 @@ function LeftListWithAction({
 }) {
   const [lastSelection, setLastSelection] = useState(null);
 
-  // Customers List Data
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =

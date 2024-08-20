@@ -28,21 +28,16 @@ function Invoices() {
   let renderNoSelection = "/invoices" === pathname && !selection;
 
   if (selection && selection !== "undefined" && pathname === "/invoices") {
-    navigate(`/invoices/${selection}/view`);
+    setSelection(null);
+    navigate(`/invoices`);
   }
 
   const columns = [
     { keys: ["id"], header: "ID" },
     // { keys: ["sku"], header: "SKU" },
-    // { keys: ["upc"], header: "UPC" },
-    // { keys: ["name"], header: "Name" },
-    // { keys: ["description"], header: "Description" },
-    // { keys: ["price"], header: "Price" },
-    // { keys: ["taxrate"], header: "TaxRate" },
-    // { keys: ["stock"], header: "stock" },
-    // { keys: ["min"], header: "Min" },
-    // { keys: ["max"], header: "Max" },
   ];
+
+  console.log("Invoices is re-rendering");
 
   return (
     <>
@@ -52,7 +47,7 @@ function Invoices() {
             <div className="pane-inner">
               <LeftListWithAction
                 title={"Invoices"}
-                linkToPage={"view"}
+                linkToPage={""}
                 setSelection={setSelection}
                 selection={selection}
                 fetcher={useInvoicesData}

@@ -10,6 +10,7 @@ class Api::V1::InvoicesController < ApplicationController
 
   # GET /invoices/1
   def show
+    sleep 2
     render json: @invoice
   end
 

@@ -8,7 +8,6 @@ import UserContext from "./contexts/user-context";
 import Layout from "./components/Layout";
 import Index from "./components/Index";
 import Customers from "./components/Customers/Customers";
-import CustomerIndex from "./components/Customers/CustomerIndex";
 import CustomerProfile from "./components/Customers/CustomerProfile";
 import CustomerNew from "./components/Customers/CustomerNew";
 import CustomerShow from "./components/Customers/CustomerShow";
@@ -17,7 +16,7 @@ import CustomerInvoices from "./components/Customers/CustomerInvoices";
 import CustomerItems from "./components/Customers/CustomerItems";
 import CustomerWorkOrders from "./components/Customers/CustomerWorkOrders";
 import Products from "./components/Products/Products";
-import ProductIndex from "./components/Products/ProductIndex";
+import PageIndex from "./multiuse/PageIndex";
 import ProductShow from "./components/Products/ProductShow";
 import ProductView from "./components/Products/ProductView";
 import ProductMovements from "./components/Products/ProductMovements";
@@ -31,6 +30,9 @@ import EditProfile from "./components/Users/EditProfile";
 import PageTitle from "./components/PageTitle";
 import { getUserByToken } from "./services/userServices";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import InvoiceShow from "./components/Invoices/InvoiceShow";
+// import InvoiceEdit from "./components/Invoices/InvoiceEdit";
+import InvoiceNew from "./components/Invoices/InvoiceNew";
 
 const router = createBrowserRouter([
   {
@@ -75,7 +77,7 @@ const router = createBrowserRouter([
               </>
             ),
             children: [
-              { index: true, element: <CustomerIndex /> },
+              { index: true, element: <PageIndex title="customer" /> },
               {
                 path: ":id",
                 element: <CustomerShow />,
@@ -117,7 +119,7 @@ const router = createBrowserRouter([
               </>
             ),
             children: [
-              { index: true, element: <ProductIndex /> },
+              { index: true, element: <PageIndex title="product" /> },
               {
                 path: ":id",
                 element: <ProductShow />,
@@ -144,7 +146,23 @@ const router = createBrowserRouter([
           },
           {
             path: "invoices",
-            element: <Invoices />,
+            element: (
+              <>
+                <PageTitle title="Invoices" />
+                <Invoices />
+              </>
+            ),
+            children: [
+              { index: true, element: <PageIndex /> },
+              {
+                path: ":id",
+                element: <InvoiceShow />,
+              },
+              {
+                path: "new",
+                element: <InvoiceNew />,
+              },
+            ],
           },
         ],
       },

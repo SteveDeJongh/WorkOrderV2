@@ -58,19 +58,27 @@ function ListItem({ resource, value, linkToPage, handleClick, selected }) {
           >
             <div className="li-row li-top">
               <span>{value.id}</span>
+              <span>{value.status}</span>
+            </div>
+            <div className="li-row li-bottom">
               <span>
-                {/* {value.price} */}
+                B:{" "}
                 <NumericFormat
-                  value={Number(value.price).toFixed(2)}
+                  value={Number(value.total).toFixed(2)}
                   displayType={"text"}
                   thousandSeparator={true}
                   prefix={"$"}
                 />
               </span>
-            </div>
-            <div className="li-row li-bottom">
-              <span>{value.sku}</span>
-              <span>{value.stock}</span>
+              <span>
+                Total:{" "}
+                <NumericFormat
+                  value={Number(value.total).toFixed(2)}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  prefix={"$"}
+                />
+              </span>
             </div>
           </li>
         </Link>
