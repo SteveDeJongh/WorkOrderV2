@@ -38,6 +38,7 @@ function InvoiceShow() {
   const navigate = useNavigate();
 
   async function handleEditSubmit(rawData) {
+    console.log(rawData);
     try {
       const formData = objectToFormData({ invoice: rawData });
       await editInvoice(id, formData);
@@ -61,7 +62,7 @@ function InvoiceShow() {
               data={mainData}
               headerText={`Invoice ${mainData.id}`}
               buttonText={"Save"}
-              onSubmit={handleEditSubmit}
+              onSubmit={(newData) => handleEditSubmit(newData)}
               handleCancel={() => navigate("/invoices")}
             />
           </div>

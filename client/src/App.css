@@ -600,8 +600,15 @@ flex-direction: column;;
   background-color: var(--dark-selection);
 }
 
-.main-pane-content > .panel > h3, .modal-content > .panel > h3 {
+.main-pane-content > .panel > .panel-heading > h3, .modal-content > .panel > h3 {
   font-size: 20px;
+  padding-bottom: 10px;
+}
+
+.main-pane-content > .panel > .panel-heading, .modal-content > .panel > h3 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   padding-bottom: 10px;
 }
 

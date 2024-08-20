@@ -40,8 +40,6 @@ function Invoices() {
     { keys: ["status"], header: "Status" },
   ];
 
-  console.log("Invoices is re-rendering");
-
   return (
     <>
       {view === "profile" && (

@@ -61,8 +61,6 @@ function LeftListWithAction({
     setData(nextData);
   }
 
-  console.log(data);
-
   return (
     <>
       <h3 className="title">{title}</h3>
