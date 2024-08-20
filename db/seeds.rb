@@ -8,13 +8,13 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-Customer.create(firstName: 'Steve', lastName: 'Maestro', email: 'cust@hotmail.com', phone: "111-111-1111", address:"123 street", postal: "A1B 2C3", country:"Canada", province:"British Columbia", city: 'Vancouver')
-Customer.create(firstName: 'John', lastName: 'Roberts', email: 'cust@gmail.com', phone: "222-222-2222", city: 'Montreal')
-Customer.create(firstName: 'Bob', lastName: 'Gee', email: 'cust@yahoo.com', phone: "333-333-3333", city: 'Calgary')
-Customer.create(firstName: 'Rob', lastName: 'Jones', email: 'cust@google.com', phone: "444-444-4444", city: 'New York')
+Customer.create(first_name: 'Steve', last_name: 'Maestro', email: 'cust@hotmail.com', phone: "111-111-1111", address:"123 street", postal: "A1B 2C3", country:"Canada", province:"British Columbia", city: 'Vancouver')
+Customer.create(first_name: 'John', last_name: 'Roberts', email: 'cust@gmail.com', phone: "222-222-2222", city: 'Montreal')
+Customer.create(first_name: 'Bob', last_name: 'Gee', email: 'cust@yahoo.com', phone: "333-333-3333", city: 'Calgary')
+Customer.create(first_name: 'Rob', last_name: 'Jones', email: 'cust@google.com', phone: "444-444-4444", city: 'New York')
 
 (1..8).each do |x|
-  p = Product.create(name: "Product #{x}" ,description: "This is product #{x}" ,sku: "PR000#{x}" , upc: (x.to_s * 12).to_i, price: (x * 10) , cost: x, stock: x, min: x, max: (x * 10), inventory: true, taxrate: 1,)
+  p = Product.create(name: "Product #{x}" ,description: "This is product #{x}" ,sku: "PR000#{x}" , upc: (x.to_s * 12).to_i, price: (x * 10) , cost: x, stock: x, min: x, max: (x * 10), inventory: true, tax_rate: 1,)
   MovementService.new(p).record_movement("ProductCreation", x)
 end
 

@@ -12,7 +12,7 @@ class CustomersControllerTest < ActionDispatch::IntegrationTest
 
   test "should create customer" do
     assert_difference("Customer.count") do
-      post customers_url, params: { customer: { firstName: @customer.firstName, lastName: @customer.lastName } }, as: :json
+      post customers_url, params: { customer: { first_name: @customer.first_name, last_name: @customer.last_name } }, as: :json
     end
 
     assert_response :created
@@ -24,7 +24,7 @@ class CustomersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update customer" do
-    patch customer_url(@customer), params: { customer: { firstName: @customer.firstName, lastName: @customer.lastName } }, as: :json
+    patch customer_url(@customer), params: { customer: { first_name: @customer.first_name, last_name: @customer.last_name } }, as: :json
     assert_response :success
   end
 

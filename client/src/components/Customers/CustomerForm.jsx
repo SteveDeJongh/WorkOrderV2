@@ -19,8 +19,8 @@ function CustomerForm({
   } = useForm({
     defaultValues: customer
       ? {
-          firstName: customer.first_name,
-          lastName: customer.last_name,
+          first_name: customer.first_name,
+          last_name: customer.last_name,
           email: customer.email,
           phone: customer.phone,
           address: customer.address,
@@ -71,30 +71,30 @@ function CustomerForm({
           <h3>Customer Details</h3>
           <div className="panel-contents-section">
             <div className="formPair half">
-              <label htmlFor="firstName">First name:</label>
+              <label htmlFor="first_name">First name:</label>
               <input
-                {...register("firstName", {
+                {...register("first_name", {
                   required: "First Name is required.",
                 })}
                 type="text"
-                id="firstName"
-                name="firstName"
+                id="first_name"
+                name="first_name"
                 placeholder="First Name"
               />
-              {errors.firstName && <p>{`${errors.firstName.message}`}</p>}
+              {errors.first_name && <p>{`${errors.first_name.message}`}</p>}
             </div>
             <div className="formPair half">
-              <label htmlFor="lastName">Last name:</label>
+              <label htmlFor="last_name">Last name:</label>
               <input
-                {...register("lastName", {
+                {...register("last_name", {
                   required: "Last Name is required.",
                 })}
                 type="text"
-                id="lastName"
-                name="lastName"
+                id="last_name"
+                name="last_name"
                 placeholder="Last Name"
               />
-              {errors.lastName && <p>{`${errors.lastName.message}`}</p>}
+              {errors.last_name && <p>{`${errors.last_name.message}`}</p>}
             </div>
           </div>
         </div>

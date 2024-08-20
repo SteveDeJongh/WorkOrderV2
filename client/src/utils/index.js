@@ -23,7 +23,7 @@ export function mapResponseDataToKeys(data) {
   return data.map((obj) => {
     let r = {};
     k.forEach((key) => {
-      r[snakeCase(key)] = obj[key];
+      r[key] = obj[key];
     })
     return r;
   });
@@ -33,7 +33,7 @@ export function mapSingleResponseDataToKeys(d) {
   let k = Object.keys(d);
   let r = {};
   k.forEach((key) => {
-    r[snakeCase(key)] = d[key];
+    r[key] = d[key];
   })
   return r;
 }

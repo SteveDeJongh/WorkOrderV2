@@ -52,7 +52,7 @@ function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
   let entity = Object.keys(mainData).length < 1 ? false : mainData;
 
   // Example Notices data, to be part of the customer data api fetch in the future.
-  if (entity && entity.firstName == "Steve") {
+  if (entity && entity.first_name == "Steve") {
     entity.notices = [
       { id: 1, notice: "This is notice 1." },
       { id: 2, notice: "This is notice 2." },

@@ -12,7 +12,7 @@ class InventoryMovementsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create inventory_movement" do
     assert_difference("InventoryMovement.count") do
-      post inventory_movements_url, params: { inventory_movement: { adjustment: @inventory_movement.adjustment, change: @inventory_movement.change, relation: @inventory_movement.relation, type: @inventory_movement.type, userID: @inventory_movement.userID } }, as: :json
+      post inventory_movements_url, params: { inventory_movement: { adjustment: @inventory_movement.adjustment, change: @inventory_movement.change, relation: @inventory_movement.relation, type: @inventory_movement.type, user_id: @inventory_movement.user_id } }, as: :json
     end
 
     assert_response :created
@@ -24,7 +24,7 @@ class InventoryMovementsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update inventory_movement" do
-    patch inventory_movement_url(@inventory_movement), params: { inventory_movement: { adjustment: @inventory_movement.adjustment, change: @inventory_movement.change, relation: @inventory_movement.relation, type: @inventory_movement.type, userID: @inventory_movement.userID } }, as: :json
+    patch inventory_movement_url(@inventory_movement), params: { inventory_movement: { adjustment: @inventory_movement.adjustment, change: @inventory_movement.change, relation: @inventory_movement.relation, type: @inventory_movement.type, user_id: @inventory_movement.user_id } }, as: :json
     assert_response :success
   end
 

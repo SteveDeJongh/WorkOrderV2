@@ -12,7 +12,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create product" do
     assert_difference("Product.count") do
-      post products_url, params: { product: { cost: @product.cost, description: @product.description, inventory: @product.inventory, max: @product.max, min: @product.min, name: @product.name, price: @product.price, sku: @product.sku, stock: @product.stock, taxrate: @product.taxrate, upc: @product.upc } }, as: :json
+      post products_url, params: { product: { cost: @product.cost, description: @product.description, inventory: @product.inventory, max: @product.max, min: @product.min, name: @product.name, price: @product.price, sku: @product.sku, stock: @product.stock, tax_rate: @product.tax_rate, upc: @product.upc } }, as: :json
     end
 
     assert_response :created
@@ -24,7 +24,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update product" do
-    patch product_url(@product), params: { product: { cost: @product.cost, description: @product.description, inventory: @product.inventory, max: @product.max, min: @product.min, name: @product.name, price: @product.price, sku: @product.sku, stock: @product.stock, taxrate: @product.taxrate, upc: @product.upc } }, as: :json
+    patch product_url(@product), params: { product: { cost: @product.cost, description: @product.description, inventory: @product.inventory, max: @product.max, min: @product.min, name: @product.name, price: @product.price, sku: @product.sku, stock: @product.stock, tax_rate: @product.tax_rate, upc: @product.upc } }, as: :json
     assert_response :success
   end
 

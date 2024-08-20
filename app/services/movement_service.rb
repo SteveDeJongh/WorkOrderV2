@@ -4,6 +4,6 @@ class MovementService
   end
 
   def record_movement(type, change)
-    InventoryMovement.create(productID: @resource.id, relation: "adj", adjustment: true, change: change, stock: @resource.stock, changeType: type, userID: 1)
+    InventoryMovement.create(product_id: @resource.id, relation: "adj", adjustment: true, change: change, stock: @resource.stock, change_type: type, user_id: 1)
   end
 end

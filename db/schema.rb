@@ -10,10 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_19_195307) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_20_182336) do
   create_table "customers", force: :cascade do |t|
-    t.string "firstName"
-    t.string "lastName"
+    t.string "first_name"
+    t.string "last_name"
     t.string "email"
     t.string "phone"
     t.string "address"
@@ -45,11 +45,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_19_195307) do
     t.string "relation"
     t.boolean "adjustment"
     t.integer "change"
-    t.string "changeType"
-    t.integer "userID"
+    t.string "change_type"
+    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "productID"
+    t.integer "product_id"
     t.integer "stock"
   end
 
@@ -96,7 +96,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_19_195307) do
     t.integer "min"
     t.integer "max"
     t.boolean "inventory"
-    t.integer "taxrate"
+    t.integer "tax_rate"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

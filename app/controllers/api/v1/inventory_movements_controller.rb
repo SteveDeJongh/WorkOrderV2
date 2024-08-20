@@ -46,6 +46,6 @@ class Api::V1::InventoryMovementsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def inventory_movement_params
-      params.require(:inventory_movement).permit(:productID, :relation, :adjustment, :change, :type, :userID)
+      params.require(:inventory_movement).permit(:product_id, :relation, :adjustment, :change, :change_type, :user_id)
     end
 end

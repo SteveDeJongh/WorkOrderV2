@@ -34,7 +34,10 @@ function Invoices() {
 
   const columns = [
     { keys: ["id"], header: "ID" },
-    // { keys: ["sku"], header: "SKU" },
+    { keys: ["customer_id"], header: "Customer_ID" },
+    { keys: ["total"], header: "Total" },
+    { keys: ["balance"], header: "Balance" },
+    { keys: ["status"], header: "Status" },
   ];
 
   console.log("Invoices is re-rendering");
