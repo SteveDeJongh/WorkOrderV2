@@ -7,10 +7,16 @@ import LoadingBox from "../../multiuse/LoadingBox";
 type props = {
   modalForm: boolean;
   handleCancel: Function;
-  data: invoice;
+  data: invoiceData;
   headerText: string;
   onSubmit: Function;
   buttonText: string;
+};
+
+type invoiceData = {
+  invoice: invoice;
+  lines: Array<invoiceLine>;
+  payments: Array<invoicePayments>;
 };
 
 type invoice = {
@@ -25,7 +31,30 @@ type invoice = {
   status: string;
 };
 
-function InvoiceForm({
+type invoiceLine = {
+  id: number;
+  invoice_id: number;
+  product_id: number;
+  discount_percentage: number;
+  price: number;
+  created_at: string;
+  updated_at: string;
+  line_tax: number;
+  line_total: number;
+  quantity: number;
+  tax_rate: number;
+};
+
+type invoicePayments = {
+  amount: number;
+  created_at: string;
+  updated_at: string;
+  id: number;
+  invoice_id: number;
+  method: string;
+};
+
+function InvoiceFormAlt({
   modalForm,
   handleCancel,
   data,
@@ -34,62 +63,60 @@ function InvoiceForm({
   buttonText,
 }: props) {
   const [customerModal, setCustomerModal] = useState(false);
-  const [customerID, setCustomerID] = useState(
-    data?.customer_id ? data.customer_id : ""
-  );
-  const [customer, setCustomer] = useState(false);
+  const [customer, setCustomer] = useState("");
+  const customerID = useRef(0);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    setValue,
   } = useForm({
     defaultValues: data
       ? {
-          id: data.id,
-          customer_id: data.customer_id,
-          user_id: data.user_id,
-          total: data.total,
-          balance: data.balance,
-          tax: data.tax,
-          created_at: data.created_at,
-          updated_at: data.updated_at,
-          status: data.status,
+          id: data.invoice.id,
+          customer_id: data.invoice.customer_id,
+          user_id: data.invoice.user_id,
+          total: data.invoice.total,
+          balance: data.invoice.balance,
+          tax: data.invoice.tax,
+          created_at: data.invoice.created_at,
+          updated_at: data.invoice.updated_at,
+          status: data.invoice.status,
         }
       : undefined,
   });
 
-  async function onSubmitHandler(data) {
+  async function onSubmitHandler(rawFormData) {
+    console.log("Form data within the form", rawFormData);
     try {
-      onSubmit(data);
+      onSubmit(rawFormData);
     } catch (e) {
       console.log("failed!");
     }
   }
 
+  // Get the customer data if the passed in invoice data has a customerID.
   useEffect(() => {
-    if (!customerID) return;
-    console.log("Getting it");
-
-    async function loadCustomerData(customerID) {
+    if (!data.invoice.customer_id) return;
+    customerID.current = data.invoice.customer_id;
+    async function loadCustomerData(id) {
       try {
-        const response = await fetchCustomerData(customerID);
+        const response = await fetchCustomerData(id);
         setCustomer(response);
-        setValue("customer_id", customerID);
       } catch (e) {
         console.error(e);
       }
     }
 
-    loadCustomerData(customerID);
-  }, [customerID]);
+    loadCustomerData(customerID.current);
+  }, [data]);
 
+  // When a new customer is selected in the modal, close the modal and refetch the customer data by the new customerID
   function handleCustomerChange(id) {
     setCustomerModal(false);
     async function loadCustomerData() {
       try {
-        setCustomer(null);
+        setCustomer(false);
         const response = await fetchCustomerData(id);
         setCustomer(response);
       } catch (e) {
@@ -133,7 +160,9 @@ function InvoiceForm({
               className="panel-action"
               onClick={() => setCustomerModal(true)}
             >
-              <button>{customerID ? "Change" : "Add"} Customer</button>
+              <button type="button">
+                {customerID ? "Change" : "Add"} Customer
+              </button>
             </div>
           </div>
           {/******   More to do here ... ********/}
@@ -144,7 +173,7 @@ function InvoiceForm({
               type="number"
               id="customer_id"
               name="customer_id"
-              value={customerID}
+              value={customerID.current}
             />
           </div>
           {/******   More to do here ... ********/}
@@ -192,24 +221,22 @@ function InvoiceForm({
             open={customerModal}
             onClose={() => setCustomerModal(false)}
             onSave={(id) => handleCustomerChange(id)}
+            customer_id={customerID}
           />
         </div>
 
         <div className="panel">
-          <h3>Invoice Details</h3>
+          <h3>Invoice Lines</h3>
           <div className="panel-contents-section">
             <div className="formPair half">
-              <label htmlFor="id">ID:</label>
+              <label htmlFor="total">ID:</label>
               <input
-                {...register("id", {
-                  required: "First Name is required.",
-                })}
+                {...register("total")}
                 type="text"
-                id="id"
-                name="id"
-                placeholder="First Name"
+                id="total"
+                name="total"
+                value={"woohoo"}
               />
-              {errors.id && <p>{`${errors.id.message}`}</p>}
             </div>
           </div>
         </div>
@@ -218,4 +245,4 @@ function InvoiceForm({
   );
 }
 
-export default InvoiceForm;
+export default InvoiceFormAlt;

@@ -110,7 +110,7 @@ LeftListWithAction.propTypes = {
   title: PropTypes.string,
   linkToPage: PropTypes.string,
   setSelection: PropTypes.func,
-  selection: PropTypes.number,
+  selection: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   fetcher: PropTypes.func,
 };
 

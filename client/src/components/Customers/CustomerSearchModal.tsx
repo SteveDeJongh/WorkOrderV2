@@ -13,9 +13,10 @@ type Props = {
   open: boolean;
   onClose: Function;
   onSave: Function;
+  customer_id: number | string;
 };
 
-function CustomerSearchModal({ open, onClose, onSave }: Props) {
+function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
   function handleClose(e) {
     if (e.target.className === "main-modal-background") {
       onClose();
@@ -23,7 +24,7 @@ function CustomerSearchModal({ open, onClose, onSave }: Props) {
   }
 
   // Main Pane states
-  const [selection, setSelection] = useState(0);
+  const [selection, setSelection] = useState(customer_id);
   const [data, setMainData] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =

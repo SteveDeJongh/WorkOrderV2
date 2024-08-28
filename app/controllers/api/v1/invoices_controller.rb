@@ -11,7 +11,12 @@ class Api::V1::InvoicesController < ApplicationController
   # GET /invoices/1
   def show
     sleep 0.2
-    render json: @invoice
+
+    @invoiceLines = InvoiceLine.where('invoice_id LIKE ?', @invoice.id)
+    @payments = Payment.where('invoice_id LIKE ?', @invoice.id)
+    # Returns an array of invoice lines associated with the invoice.
+
+    render json: {invoice: @invoice, lines: @invoiceLines, payments: @payments}
   end
 
   # POST /invoices

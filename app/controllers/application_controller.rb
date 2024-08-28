@@ -1,8 +1,8 @@
 class ApplicationController < ActionController::API
   before_action :authenticate_user!
-  before_action :say_hi
+  # before_action :say_hi
   # before_action :set_current_user
-  after_action :say_bye
+  # after_action :say_bye
 
   private
 

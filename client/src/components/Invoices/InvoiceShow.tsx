@@ -1,29 +1,29 @@
 import { fetchInvoiceData, editInvoice } from "../../services/invoiceServices";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useOutletContext } from "react-router-dom";
+import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import LoadingBox from "../../multiuse/LoadingBox";
 import InvoiceForm from "./InvoiceForm";
+import InvoiceFormAlt from "./InvoiceFormAlt";
+
 import { objectToFormData } from "../../utils/formDataHelper";
 
 function InvoiceShow() {
   // Main Pane states
-  const [mainLoading, setMainLoading] = useState(false);
+  const [mainLoading, setMainLoading] = useState(true);
   const [mainError, setMainError] = useState("");
   const [mainData, setMainData] = useState({});
-  // const [selection, setSelection] = useOutletContext();
-
-  let { id } = useParams();
+  let { id: invoiceID } = useParams();
+  const [selection, setSelection] = useOutletContext();
 
   useEffect(() => {
     async function loadInvoiceData() {
-      if (!id) {
+      if (!invoiceID) {
         setMainData({});
         return;
       }
       try {
         setMainLoading(true);
-        const response = await fetchInvoiceData(id);
+        const response = await fetchInvoiceData(invoiceID);
         setMainData(response);
       } catch (e) {
         setMainError("An error occured fetching the invoice.");
@@ -34,15 +34,15 @@ function InvoiceShow() {
     }
 
     loadInvoiceData();
-  }, [id]);
+  }, [invoiceID]);
+
   const navigate = useNavigate();
 
-  async function handleEditSubmit(rawData) {
-    console.log(rawData);
+  async function handleEditSubmit(rawFormData) {
     try {
-      const formData = objectToFormData({ invoice: rawData });
-      await editInvoice(id, formData);
-      navigate(`/invoices/${id}`);
+      const formData = objectToFormData({ invoice: rawFormData });
+      await editInvoice(invoiceID, formData);
+      navigate(`/invoices/${invoiceID}`);
     } catch (e) {
       console.error("Failed to save invoice: ", e);
     }
@@ -58,12 +58,12 @@ function InvoiceShow() {
       {!mainLoading && (
         <>
           <div className="pane-inner">
-            <InvoiceForm
+            <InvoiceFormAlt
               data={mainData}
               headerText={`Invoice ${mainData.id}`}
               buttonText={"Save"}
               onSubmit={(newData) => handleEditSubmit(newData)}
-              handleCancel={() => navigate("/invoices")}
+              handleCancel={() => setSelection("")}
             />
           </div>
         </>

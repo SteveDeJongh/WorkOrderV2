@@ -1,6 +1,6 @@
 import LeftListWithAction from "../../multiuse/LeftListWithAction";
 import { Outlet, useParams, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NoSelection from "../NoSelection";
 import FullWidthTable from "../../multiuse/FullWidthTable";
 import { useContext } from "react";
@@ -23,14 +23,15 @@ function Invoices() {
   let pathname = location.pathname;
   let navigate = useNavigate();
 
-  const [selection, setSelection] = useState(Number(useParams().id) || null);
+  const [selection, setSelection] = useState(Number(useParams().id) || "");
 
-  let renderNoSelection = "/invoices" === pathname && !selection;
+  useEffect(() => {
+    if (!selection) {
+      navigate(`/invoices`);
+    }
+  }, [selection]);
 
-  if (selection && selection !== "undefined" && pathname === "/invoices") {
-    setSelection(null);
-    navigate(`/invoices`);
-  }
+  console.log("Re-rendering Invoices, selection is:", selection);
 
   const columns = [
     { keys: ["id"], header: "ID" },
@@ -58,7 +59,7 @@ function Invoices() {
           <div className="pane pane-mid">
             <div className="pane-inner">
               <ViewToggle view={view} setView={viewSetter} />
-              {renderNoSelection ? (
+              {!selection ? (
                 <NoSelection item={"invoice"} />
               ) : (
                 <Outlet context={[selection, setSelection]} />

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_20_182336) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_21_213314) do
   create_table "customers", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -58,7 +58,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_20_182336) do
     t.integer "product_id"
     t.integer "discount_percentage"
     t.decimal "price"
-    t.integer "quantiy"
+    t.integer "quantity"
     t.decimal "line_total"
     t.integer "tax_rate"
     t.decimal "line_tax"

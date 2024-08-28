@@ -57,6 +57,7 @@ async function fetchInvoiceData(id) {
   }
 
   let responseData = await response.json();
+  console.log("Response in fetchInvoiceData", responseData)
   return mapSingleResponseDataToKeys(responseData);
 }
 
