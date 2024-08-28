@@ -50,7 +50,8 @@ async function fetchProductData(id) {
     throw new Error(response.statusText);
   }
 
-  return response.json();
+  let responseData = await response.json();
+  return mapSingleResponseDataToKeys(responseData);
 }
 
 async function createProduct(productData) {

@@ -2,7 +2,7 @@ class CreateInvoiceLines < ActiveRecord::Migration[7.1]
   def change
     create_table :invoice_lines do |t|
       t.integer :invoice_id
-      t.integer :product_id
+      t.references :product
       t.integer :discount_percentage
       t.decimal :price
       t.integer :quantiy

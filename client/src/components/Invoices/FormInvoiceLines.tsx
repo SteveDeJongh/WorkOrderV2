@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect } from "react";
+import { fetchProductData } from "../../services/productServices";
+
 // import CustomerSearchModal from "../Customers/CustomerSearchModal";
 // import { fetchCustomerData } from "../../services/customerServices";
 import LoadingBox from "../../multiuse/LoadingBox";
+import InvoiceLine from "./InvoiceLine";
 
 type props = {
   dataLogger: customerRef;
@@ -14,28 +17,33 @@ type customerRef = {
 
 export default function FormInvoiceLines({ dataLogger, invoiceLines }: props) {
   const [lineModal, setlineModal] = useState(false);
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(true);
   const [lines, setLines] = useState(invoiceLines || []);
+  const refLines = useRef([]);
 
-  // // Get the customer data if the passed in invoice data has a dataLogger.
-  // useEffect(() => {
-  //   console.log("dataID from useEffect", dataID, !dataLogger.current);
-  //   if (!dataID) return;
-  //   setloading(true);
-  //   dataLogger.current = dataID;
-  //   async function loadCustomerData(id: number) {
-  //     try {
-  //       const response = await fetchCustomerData(id);
-  //       setCustomer(response);
-  //     } catch (e) {
-  //       console.error(e);
-  //     } finally {
-  //       setloading(false);
-  //     }
-  //   }
+  // Get the product data for each line if the invoice has existing lines.
+  useEffect(() => {
+    if (!invoiceLines) return;
+    setloading(true);
+    async function loadProductData(lines) {
+      let fullLines = await Promise.all(
+        lines.map(async (line) => {
+          try {
+            const response = await fetchProductData(line.product_id);
+            let merged = { ...line, ...response };
+            return merged;
+          } catch (e) {
+            console.error(e);
+          }
+        })
+      );
 
-  //   loadCustomerData(dataLogger.current);
-  // }, []);
+      setloading(false);
+      refLines.current = fullLines;
+    }
+
+    loadProductData(invoiceLines);
+  }, []);
 
   // When a new customer is selected in the modal, close the modal and refetch the customer data by the new customerID
   // function handleCustomerChange(id) {
@@ -57,27 +65,38 @@ export default function FormInvoiceLines({ dataLogger, invoiceLines }: props) {
   //   loadCustomerData();
   // }
 
+  console.log(invoiceLines);
+  console.log(lines);
+
   return (
     <div className="panel">
       <div className="panel-heading">
         <h3>Invoice Details</h3>
         <div className="panel-action"></div>
       </div>
-      {loading && (
-        <div className="panel-contents-section">
-          <LoadingBox text="Loading customer..." />
-        </div>
-      )}
-      {!lines && !dataLogger.current && (
-        <div className="panel-contents-section">
-          <div className="panel-hero">
-            <div className="hero-text">No lines Assigned</div>
-          </div>
-        </div>
-      )}
-      {lines && (
+      {loading && <div>loading</div>}
+      {refLines.current && !loading && (
         <div className="panel-contents">
-          <div className="panel-contents-section">{lines}</div>
+          <div className="panel-contents-section">
+            <table>
+              <thead>
+                <tr>
+                  <th>Line ID</th>
+                  <th>SKU</th>
+                  <th>Description</th>
+                  <th>Quantity</th>
+                  <th>Discount Percentage</th>
+                  <th>Price</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {refLines.current.map((line) => (
+                  <InvoiceLine key={line.id} line={line} />
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

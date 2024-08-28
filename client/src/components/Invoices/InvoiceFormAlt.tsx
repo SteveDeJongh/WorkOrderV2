@@ -166,7 +166,7 @@ function InvoiceForm({
           dataLogger={dataLogger}
           dataID={data.invoice.customer_id}
         />
-        <FormInvoiceLines />
+        <FormInvoiceLines dataLogger={dataLogger} invoiceLines={data.lines} />
       </form>
     </>
   );

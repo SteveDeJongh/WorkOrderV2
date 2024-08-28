@@ -32,5 +32,22 @@ productIDs = [1,2,3,4,5,6,7,8]
 end
 
 User.create(name: 'Admin', email: 'admin@test.com', password: "password", roles: ['user', 'manager', 'admin'])
+User.create(name: 'Manager', email: 'manager@test.com', password: "password", roles: ['user', 'manager'])
+
+
+Invoice.new(customer_id: 1, user_id: 1, total: 10.50, balance: 10.50, tax: 1, status: "open").save
+Invoice.new(customer_id: 2, user_id: 1, total: 52.50, balance: 52.50, tax: 1, status: "open").save
+Invoice.new(customer_id: 3, user_id: 1, total: 21.00, balance: 0.00, tax: 1, status: "closed").save
+
+InvoiceLine.new(invoice_id: 1, product_id: 1, discount_percentage: 0, price: 10.00, quantity: 1, line_total: 10.00,
+ tax_rate: 1, line_tax: 0.50).save
+InvoiceLine.new(invoice_id: 2, product_id: 2, discount_percentage: 0, price: 20.00, quantity: 1, line_total: 20.00,
+tax_rate: 1, line_tax: 1.00).save
+InvoiceLine.new(invoice_id: 2, product_id: 3, discount_percentage: 0, price: 30.00, quantity: 1, line_total: 30.00,
+tax_rate: 1, line_tax: 1.50).save
+InvoiceLine.new(invoice_id: 3, product_id: 2, discount_percentage: 0, price: 20.00, quantity: 1, line_total: 20.00,
+tax_rate: 1, line_tax: 1.00).save
+
+Payment.new(method: "Cash", invoice_id: 3, amount: 21.00).save
 
 puts "1 admin user, 4 Customers and 8 Products created, and inventory movements created."

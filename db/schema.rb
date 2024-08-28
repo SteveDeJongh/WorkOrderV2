@@ -64,6 +64,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_21_213314) do
     t.decimal "line_tax"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_invoice_lines_on_product_id"
   end
 
   create_table "invoices", force: :cascade do |t|
