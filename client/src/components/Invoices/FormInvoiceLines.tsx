@@ -17,33 +17,9 @@ type customerRef = {
 
 export default function FormInvoiceLines({ dataLogger, invoiceLines }: props) {
   const [lineModal, setlineModal] = useState(false);
-  const [loading, setloading] = useState(true);
-  const [lines, setLines] = useState(invoiceLines || []);
-  const refLines = useRef([]);
-
-  // Get the product data for each line if the invoice has existing lines.
-  useEffect(() => {
-    if (!invoiceLines) return;
-    setloading(true);
-    async function loadProductData(lines) {
-      let fullLines = await Promise.all(
-        lines.map(async (line) => {
-          try {
-            const response = await fetchProductData(line.product_id);
-            let merged = { ...line, ...response };
-            return merged;
-          } catch (e) {
-            console.error(e);
-          }
-        })
-      );
-
-      setloading(false);
-      refLines.current = fullLines;
-    }
-
-    loadProductData(invoiceLines);
-  }, []);
+  const [loading, setloading] = useState(false);
+  const [lines, setLines] = useState(invoiceLines);
+  const refLines = useRef(invoiceLines);
 
   // When a new customer is selected in the modal, close the modal and refetch the customer data by the new customerID
   // function handleCustomerChange(id) {
@@ -85,7 +61,8 @@ export default function FormInvoiceLines({ dataLogger, invoiceLines }: props) {
                   <th>SKU</th>
                   <th>Description</th>
                   <th>Quantity</th>
-                  <th>Discount Percentage</th>
+                  <th>Discount %</th>
+                  <th>MSRP</th>
                   <th>Price</th>
                   <th>Total</th>
                 </tr>

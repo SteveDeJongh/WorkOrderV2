@@ -1,3 +1,4 @@
 class InvoiceLine < ApplicationRecord
-  has_one :product
+  belongs_to :invoice
+  belongs_to :product
 end

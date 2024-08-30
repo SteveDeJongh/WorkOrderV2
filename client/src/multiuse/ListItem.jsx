@@ -64,7 +64,7 @@ function ListItem({ resource, value, linkToPage, handleClick, selected }) {
               <span>
                 B:{" "}
                 <NumericFormat
-                  value={Number(value.total).toFixed(2)}
+                  value={Number(value.balance).toFixed(2)}
                   displayType={"text"}
                   thousandSeparator={true}
                   prefix={"$"}

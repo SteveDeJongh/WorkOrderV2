@@ -1,5 +1,6 @@
 import { fetchProductData } from "../../services/productServices";
 import { useRef, useState } from "react";
+import { NumericFormat } from "react-number-format";
 
 type props = {
   line: object;
@@ -7,6 +8,7 @@ type props = {
 
 type tableFormCellProps = {
   editable: boolean;
+  showAsDollars: boolean;
   type: string;
   val: string;
   inputName: string;
@@ -16,18 +18,42 @@ type tableFormCellProps = {
 function TableFormCell({
   editable,
   type,
+  showAsDollars,
   val,
   inputName,
-  onChange,
+  onImmediateChange,
+  onDelayedChange,
 }: tableFormCellProps) {
+  const changeRef = useRef<null | NodeJS.Timeout>(null);
+  const [inputValue, setInputValue] = useState(val);
+
+  function handleChange(e) {
+    let label = e.target.name;
+    let value =
+      e.target.type === "number" ? Number(e.target.value) : e.target.value;
+    const change = { [inputName]: value };
+    setInputValue(value);
+
+    onImmediateChange(change);
+
+    if (changeRef.current) {
+      clearTimeout(changeRef.current);
+    }
+
+    changeRef.current = setTimeout(() => {
+      onDelayedChange(change);
+    }, 500);
+  }
+
+  val = showAsDollars ? `$${Number(val).toFixed(2)}` : val;
   return (
     <td>
       {editable && (
         <input
           name={inputName}
           type={type}
-          defaultValue={val}
-          onChange={onChange}
+          value={inputValue}
+          onChange={handleChange}
         />
       )}
       {!editable && <div>{val}</div>}
@@ -36,53 +62,114 @@ function TableFormCell({
 }
 
 export default function InvoiceLine({ line }: props) {
-  // const refLine = useRef(line);
-
-  // function handleChange(e) {
-  //   refLine.current[e.target.name] = e.target.value;
-  // }
-
   const [stateLine, setStateLine] = useState(line);
+  const refLine = useRef(stateLine);
+
+  function onImmediateChange(change) {
+    refLine.current = { ...refLine.current, ...change };
+  }
+
+  function onDelayedChange(change) {
+    let changedLine = recalculateLine(refLine.current);
+    refLine.current = changedLine;
+    setStateLine(changedLine);
+  }
 
   function recalculateLine(line) {
-    line.total =
-      line.quantity * Number(line.price) -
-      (line.quantity * Number(line.price) * line.discount_percentage) / 100;
+    console.log("Recalculating");
+    line.line_total =
+      line.quantity * Number(line.product.price) -
+      (line.quantity * Number(line.product.price) * line.discount_percentage) /
+        100;
+    line.price =
+      Number(line.product.price) -
+      Number(line.product.price) * (line.discount_percentage / 100);
     return line;
   }
 
-  function handleChange(e) {
-    console.log(e.target);
-    let label = e.target.name;
-    let value =
-      e.target.type === "number" ? Number(e.target.value) : e.target.value;
-    let changed = { ...stateLine, [label]: value };
-    changed = recalculateLine(changed);
-    setStateLine(changed);
-  }
-
-  console.log(line);
   let columns = [
-    { name: "id", editable: false, type: "number" },
-    { name: "sku", editable: false, type: "text" },
-    { name: "description", editable: false, type: "text" },
-    { name: "quantity", editable: true, type: "number" },
-    { name: "discount_percentage", editable: true, type: "number" },
-    { name: "price", editable: false, type: "text" },
-    { name: "line_total", editable: false, type: "text" },
+    {
+      keyName: "id",
+      productValue: false,
+      editable: false,
+      type: "number",
+      showAsDollars: false,
+    },
+    {
+      keyName: "sku",
+      productValue: true,
+      editable: false,
+      type: "text",
+      showAsDollars: false,
+    },
+    {
+      keyName: "description",
+      productValue: true,
+      editable: false,
+      type: "text",
+      showAsDollars: false,
+    },
+    {
+      keyName: "quantity",
+      productValue: false,
+      editable: true,
+      type: "number",
+      showAsDollars: false,
+    },
+    {
+      keyName: "discount_percentage",
+      productValue: false,
+      editable: true,
+      type: "number",
+      showAsDollars: false,
+    },
+    {
+      keyName: "price",
+      productValue: true,
+      editable: false,
+      type: "test",
+      showAsDollars: true,
+    },
+    {
+      keyName: "price",
+      productValue: false,
+      editable: false,
+      type: "text",
+      showAsDollars: true,
+    },
+    {
+      keyName: "line_total",
+      productValue: false,
+      editable: false,
+      type: "text",
+      showAsDollars: true,
+    },
   ];
 
   console.log("line", line);
+  console.log("stateLine", stateLine);
+  console.log("refline", refLine.current);
 
   return (
     <tr>
       {columns.map((col) => (
         <TableFormCell
-          key={col.name + stateLine.id}
-          inputName={col.name}
+          onImmediateChange={onImmediateChange}
+          onDelayedChange={onDelayedChange}
           editable={col.editable}
+          showAsDollars={col.showAsDollars}
+          key={
+            col.productValue
+              ? `Product${[col.keyName]}${refLine.current.id}`
+              : `${[col.keyName]}${refLine.current.id}`
+          }
+          inputName={col.keyName}
           type={col.type}
-          val={stateLine[col.name]}
+          val={
+            col.productValue
+              ? refLine.current["product"][col.keyName]
+              : refLine.current[col.keyName]
+          }
           onChange={(e) => handleChange(e)}
         />
       ))}

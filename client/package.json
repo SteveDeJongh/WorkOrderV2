@@ -10,21 +10,22 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.3.4",
     "@tanstack/react-query": "^5.51.11",
     "@tanstack/react-table": "^8.19.3",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.12",
     "bootstrap": "^5.3.3",
     "dotenv": "^16.4.5",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.51.4",
     "react-number-format": "^5.3.4",
     "react-router-dom": "^6.23.0",
     "sass": "^1.76.0",
     "typescript": "^5.4.5",
-    "@hookform/resolvers": "^3.3.4",
-    "react-hook-form": "^7.51.4",
     "zod": "^3.23.7"
   },
   "devDependencies": {
