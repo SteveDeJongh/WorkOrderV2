@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { destroySession } from "../services/userServices";
 import { useMutation } from "@tanstack/react-query";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import UserContext from "../contexts/user-context";
 import { CapitalizeFullName } from "../utils";
 
@@ -9,6 +9,7 @@ function UserNav() {
   const navigate = useNavigate();
   const [user, setUser] = useContext(UserContext);
   const [isActive, setActive] = useState(false);
+  const menuRef = useRef();
 
   const { mutate: logOut } = useMutation({
     mutationFn: () => {
@@ -29,6 +30,20 @@ function UserNav() {
       console.log("An Error occured logging out:", error.status);
       navigate("/");
     },
+  });
+
+  useEffect(() => {
+    function handler(e) {
+      if (!menuRef.current.contains(e.target)) {
+        setActive(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handler);
+
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
   });
 
   return (
@@ -56,6 +71,7 @@ function UserNav() {
             <span></span>
           </div>
           <div
+            ref={menuRef}
             className={!isActive ? "off-screen-menu" : "off-screen-menu active"}
           >
             <ul className="user-nav-list">

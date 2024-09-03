@@ -16,6 +16,7 @@ function ProductView() {
   } = useQuery({
     queryKey: ["3productMovements", product.id],
     queryFn: () => fetchLast3MovementsFor(product.id),
+    staleTime: 0,
   });
 
   return (
@@ -162,7 +163,7 @@ function ProductView() {
                             <td>{movement.change}</td>
                             <td>{movement.stock}</td>
                             <td>{movement.changeType}</td>
-                            <td>{movement.userID}</td>
+                            <td>{movement.user_id}</td>
                             <td>{movement.created_at}</td>
                             <td>{movement.productID}</td>
                           </tr>

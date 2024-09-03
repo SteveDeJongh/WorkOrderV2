@@ -17,7 +17,7 @@ class Api::V1::ProductsController < ApplicationController
   def create
     @product = Product.new(product_params)
     if @product.save
-      MovementService.new(@product).record_movement("ProductCreation", @product.stock)
+      MovementService.new(@product).record_movement("ProductCreation", @product.stock, @user)
       render json: @product, status: :created
     else
       render json: @product.errors, status: :unprocessable_entity
@@ -30,7 +30,7 @@ class Api::V1::ProductsController < ApplicationController
 
     if @product.update(product_params)
       if (stockChange != 0)
-        MovementService.new(@product).record_movement("ProductEdit", stockChange)
+        MovementService.new(@product).record_movement("ProductEdit", stockChange, @user)
       end
       render json: @product
     else

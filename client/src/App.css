@@ -12,6 +12,20 @@
   box-sizing: border-box;
 }
 
+/* Number Inputs Hiding arrows */
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 body {
   color: rgb(230, 237, 243);
   background-color: var(--alt-black);

@@ -4,6 +4,7 @@ import { NumericFormat } from "react-number-format";
 
 type props = {
   line: object;
+  updateLine: Function;
 };
 
 type tableFormCellProps = {
@@ -12,7 +13,8 @@ type tableFormCellProps = {
   type: string;
   val: string;
   inputName: string;
-  onChange: React.ChangeEventHandler;
+  onImmediateChange: Function;
+  onDelayedChange: Function;
 };
 
 function TableFormCell({
@@ -61,22 +63,22 @@ function TableFormCell({
   );
 }
 
-export default function InvoiceLine({ line }: props) {
+export default function InvoiceLine({ line, updateLine }: props) {
   const [stateLine, setStateLine] = useState(line);
   const refLine = useRef(stateLine);
 
-  function onImmediateChange(change) {
-    refLine.current = { ...refLine.current, ...change };
+  function onImmediateChange(change: object) {
+    refLine.current = { ...refLine.current, ...change, changed: true };
   }
 
-  function onDelayedChange(change) {
+  function onDelayedChange(change: object) {
     let changedLine = recalculateLine(refLine.current);
     refLine.current = changedLine;
+    updateLine(changedLine);
     setStateLine(changedLine);
   }
 
-  function recalculateLine(line) {
-    console.log("Recalculating");
+  function recalculateLine(line: object) {
     line.line_total =
       line.quantity * Number(line.product.price) -
       (line.quantity * Number(line.product.price) * line.discount_percentage) /
@@ -146,9 +148,9 @@ export default function InvoiceLine({ line }: props) {
     },
   ];
 
-  console.log("line", line);
-  console.log("stateLine", stateLine);
-  console.log("refline", refLine.current);
+  // console.log("line", line);
+  // console.log("stateLine", stateLine);
+  // console.log("refline", refLine.current);
 
   return (
     <tr>
