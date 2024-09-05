@@ -5,6 +5,7 @@ import { createUser } from "../../services/userServices";
 import { useContext } from "react";
 import UserContext from "../../contexts/user-context";
 import PageTitle from "../PageTitle";
+import Button from "../../multiuse/Button";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -58,16 +59,13 @@ function SignUp() {
         <div className="main-pane-header-title">
           <h2>Create New User</h2>
           <div className="main-pane-form-actions">
-            <button>
-              <Link to={`/`}>Cancel</Link>
-            </button>
-            <button
+            <Button onClick={() => navigate("/")} text={"Cancel"} />
+            <Button
               form="main-pane-content"
               disabled={isSubmitting}
               type="submit"
-            >
-              Create User
-            </button>
+              text={"Create User"}
+            />
           </div>
         </div>
       </div>

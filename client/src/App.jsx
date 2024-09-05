@@ -13,8 +13,8 @@ import CustomerNew from "./components/Customers/CustomerNew";
 import CustomerShow from "./components/Customers/CustomerShow";
 import CustomerEdit from "./components/Customers/CustomerEdit";
 import CustomerInvoices from "./components/Customers/CustomerInvoices";
-import CustomerItems from "./components/Customers/CustomerItems";
-import CustomerWorkOrders from "./components/Customers/CustomerWorkOrders";
+// import CustomerItems from "./components/Customers/CustomerItems";
+// import CustomerWorkOrders from "./components/Customers/CustomerWorkOrders";
 import Products from "./components/Products/Products";
 import PageIndex from "./multiuse/PageIndex";
 import ProductShow from "./components/Products/ProductShow";
@@ -90,14 +90,14 @@ const router = createBrowserRouter([
                     path: "invoices",
                     element: <CustomerInvoices />,
                   },
-                  {
-                    path: "items",
-                    element: <CustomerItems />,
-                  },
-                  {
-                    path: "workorders",
-                    element: <CustomerWorkOrders />,
-                  },
+                  // {
+                  //   path: "items",
+                  //   element: <CustomerItems />,
+                  // },
+                  // {
+                  //   path: "workorders",
+                  //   element: <CustomerWorkOrders />,
+                  // },
                 ],
               },
               {

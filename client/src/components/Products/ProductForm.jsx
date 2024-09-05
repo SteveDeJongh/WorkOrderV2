@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Button from "../../multiuse/Button";
 
 function ProductForm({
   modalForm,
@@ -53,16 +54,13 @@ function ProductForm({
           <div className="main-pane-header-title">
             <h2>{headerText}</h2>
             <div className="main-pane-form-actions">
-              <button type="button" onClick={() => navigate(-1)}>
-                Cancel
-              </button>
-              <button
+              <Button onClick={() => navigate(-1)} text={"Cancel"} />
+              <Button
                 form="main-pane-content"
                 disabled={isSubmitting}
                 type="submit"
-              >
-                {buttonText}
-              </button>
+                text={buttonText}
+              />
             </div>
           </div>
         </div>
@@ -270,16 +268,13 @@ function ProductForm({
       {modalForm && (
         <div className="main-modal-form-actions">
           <div className="main-pane-form-actions">
-            <button type="button" onClick={() => handleCancel()}>
-              Cancel
-            </button>
-            <button
+            <Button onClick={() => handleCancel()} text={"Cancel"} />
+            <Button
               form="main-pane-content"
               disabled={isSubmitting}
               type="submit"
-            >
-              {buttonText}
-            </button>
+              text={buttonText}
+            />
           </div>
         </div>
       )}

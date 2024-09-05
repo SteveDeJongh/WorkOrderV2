@@ -1,3 +1,5 @@
+import Button from "./Button";
+
 function ViewToggle({ view, setView }) {
   function onBtnClick(v) {
     setView(v);
@@ -7,18 +9,23 @@ function ViewToggle({ view, setView }) {
     <>
       <div className="views">
         <h3>View:</h3>
-        <button
+        <Button
           className={view === "profile" ? "view-choice active" : "view-choice"}
           onClick={() => onBtnClick("profile")}
-        >
-          <img className="view-img" src="../../public/icons/profile.png"></img>
-        </button>
-        <button
+          text={
+            <img
+              className="view-img"
+              src="../../public/icons/profile.png"
+            ></img>
+          }
+        />
+        <Button
           className={view === "table" ? "view-choice active" : "view-choice"}
           onClick={() => onBtnClick("table")}
-        >
-          <img className="view-img" src="../../public/icons/cells.png"></img>
-        </button>
+          text={
+            <img className="view-img" src="../../public/icons/cells.png"></img>
+          }
+        />
       </div>
     </>
   );

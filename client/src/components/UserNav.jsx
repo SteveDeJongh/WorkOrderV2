@@ -34,7 +34,7 @@ function UserNav() {
 
   useEffect(() => {
     function handler(e) {
-      if (!menuRef.current.contains(e.target)) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
         setActive(false);
       }
     }

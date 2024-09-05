@@ -2,7 +2,7 @@ import { fetchInvoiceData, editInvoice } from "../../services/invoiceServices";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import LoadingBox from "../../multiuse/LoadingBox";
-import InvoiceForm from "./InvoiceForm";
+import InvoiceForm from "../Unused/InvoiceForm";
 import InvoiceFormAlt from "./InvoiceFormAlt";
 
 import { objectToFormData } from "../../utils/formDataHelper";

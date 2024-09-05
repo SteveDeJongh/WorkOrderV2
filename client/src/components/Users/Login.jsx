@@ -7,6 +7,8 @@ import UserContext from "../../contexts/user-context";
 import PageTitle from "../PageTitle";
 import LoadingModal from "../../multiuse/LoadingModal";
 
+import Button from "../../multiuse/Button";
+
 function Login() {
   const navigate = useNavigate();
   const [user, setUser] = useContext(UserContext);
@@ -53,12 +55,17 @@ function Login() {
         <div className="main-pane-header-title">
           <h2>Sign In</h2>
           <div className="main-pane-form-actions">
-            <button>
-              <Link to={`/`}>Cancel</Link>
-            </button>
-            <button form="main-pane-content" disabled={isPending} type="submit">
-              Sign In
-            </button>
+            <Button
+              onClick={() => navigate("/")}
+              text="Cancel"
+              className={""}
+            />
+            <Button
+              form={"main-pane-content"}
+              disabled={isPending}
+              type="submit"
+              text={"Sign In"}
+            />
           </div>
         </div>
       </div>

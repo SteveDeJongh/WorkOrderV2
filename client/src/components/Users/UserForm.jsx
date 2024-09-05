@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createUser } from "../../services/userServices";
 import { useContext } from "react";
 import UserContext from "../../contexts/user-context";
+import Button from "../../multiuse/Button";
 
 function UserForm({ user, headerText, onSubmit, buttonText }) {
   const navigate = useNavigate();
@@ -61,16 +62,13 @@ function UserForm({ user, headerText, onSubmit, buttonText }) {
         <div id="main-pane-header-title">
           <h2>{headerText}</h2>
           <div className="main-pane-form-actions">
-            <button>
-              <Link to={`/`}>Cancel</Link>
-            </button>
-            <button
+            <Button onClick={() => navigate(`/`)} text={"Cancel"} />
+            <Button
               form="main-pane-content"
               disabled={isSubmitting}
               type="submit"
-            >
-              {buttonText}
-            </button>
+              text={buttonText}
+            />
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-// import { useOutletContext } from "react-router-dom";
+import Button from "../../multiuse/Button";
 
 function CustomerForm({
   modalForm,
@@ -31,8 +31,6 @@ function CustomerForm({
       : undefined,
   });
 
-  // const [selection, setSelection] = useOutletContext();
-
   async function onSubmitHandler(data) {
     try {
       onSubmit(data);
@@ -48,16 +46,12 @@ function CustomerForm({
           <div className="main-pane-header-title">
             <h2>{headerText}</h2>
             <div className="main-pane-form-actions">
-              <button type="button" onClick={() => navigate(-1)}>
-                Cancel
-              </button>
-              <button
-                form="main-pane-content"
-                disabled={isSubmitting}
-                type="submit"
-              >
-                {buttonText}
-              </button>
+              <Button onClick={() => navigate(-1)} text={"Cancel"} />
+              <Button
+                type={"submit"}
+                form={"main-pane-content"}
+                text={buttonText}
+              />
             </div>
           </div>
         </div>
@@ -191,16 +185,13 @@ function CustomerForm({
       {modalForm && (
         <div className="main-modal-form-actions">
           <div className="main-pane-form-actions">
-            <button type="button" onClick={() => handleCancel()}>
-              Cancel
-            </button>
-            <button
+            <Button onClick={() => handleCancel()} text="Cancel" />
+            <Button
               form="main-pane-content"
               disabled={isSubmitting}
               type="submit"
-            >
-              {buttonText}
-            </button>
+              text={buttonText}
+            />
           </div>
         </div>
       )}

@@ -11,8 +11,8 @@ import {
   fetchLast3MovementsFor,
   fetchInventoryMovementsFor,
 } from "../../services/movementServices";
-
 import { useQuery } from "@tanstack/react-query";
+import Button from "../../multiuse/Button";
 
 type Props = {
   open: boolean;
@@ -296,12 +296,11 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
                           <tfoot>
                             <tr>
                               <td colSpan="100%">
-                                <button
+                                <Button
                                   onClick={() => setTab("Movements")}
                                   className="inLineLink"
-                                >
-                                  View Full Movement History
-                                </button>
+                                  text={"View Full Movement History"}
+                                />
                               </td>
                             </tr>
                           </tfoot>

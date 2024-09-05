@@ -8,6 +8,7 @@ import useURLSearchParam from "../../hooks/useURLSearchParam";
 import { objectToFormData } from "../../utils/formDataHelper";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import SelectableListItem from "../../multiuse/SelectableListItem";
+import Button from "../../multiuse/Button";
 
 type Props = {
   open: boolean;
@@ -88,8 +89,8 @@ function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
             )}
           </ul>
           <div className="controls">
-            <button onClick={() => onSave(selection)}>Save</button>
-            <button onClick={() => onClose()}>Cancel</button>
+            <Button onClick={() => onSave(selection)} text={"Save"} />
+            <Button onClick={() => onClose()} text={"Cancel"} />
           </div>
         </div>
       </div>

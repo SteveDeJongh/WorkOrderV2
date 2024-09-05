@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import CustomerSearchModal from "../Customers/CustomerSearchModal";
 import { fetchCustomerData } from "../../services/customerServices";
 import LoadingBox from "../../multiuse/LoadingBox";
+import Button from "../../multiuse/Button";
 
 type props = {
   modalForm: boolean;
@@ -134,16 +135,13 @@ function InvoiceFormAlt({
           <div className="main-pane-header-title">
             <h2>{headerText}</h2>
             <div className="main-pane-form-actions">
-              <button type="button" onClick={() => handleCancel()}>
-                Cancel
-              </button>
-              <button
+              <Button onClick={() => handleCancel()} text={"Cancel"} />
+              <Button
                 form="main-pane-content"
                 disabled={isSubmitting}
                 type="submit"
-              >
-                {buttonText}
-              </button>
+                text={buttonText}
+              />
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import CustomerSearchModal from "../Customers/CustomerSearchModal";
 import { fetchCustomerData } from "../../services/customerServices";
 import LoadingBox from "../../multiuse/LoadingBox";
+import Button from "../../multiuse/Button";
 
 type ref = {
   current: invoice;
@@ -82,13 +83,12 @@ export default function FormCustomerSection({ dataLogger, dataID }: props) {
         <h3>Customer Details</h3>
         <div className="panel-action">
           {customer && (
-            <button type="button" onClick={() => removeCustomer()}>
-              Remove Customer
-            </button>
+            <Button onClick={() => removeCustomer()} text={"Remove Customer"} />
           )}
-          <button type="button" onClick={() => setCustomerModal(true)}>
-            {dataLogger ? "Change" : "Add"} Customer
-          </button>
+          <Button
+            onClick={() => setCustomerModal(true)}
+            text={dataLogger ? "Change Customer" : "Add Customer"}
+          />
         </div>
       </div>
       {loading && (
