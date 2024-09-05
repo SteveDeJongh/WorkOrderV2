@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createSession } from "../../services/userServices";
@@ -6,8 +6,26 @@ import { useContext } from "react";
 import UserContext from "../../contexts/user-context";
 import PageTitle from "../PageTitle";
 import LoadingModal from "../../multiuse/LoadingModal";
-
 import Button from "../../multiuse/Button";
+import { User } from "../../types/users";
+
+type NestedUser = {
+  user: SignInUser;
+};
+
+type SignInUser = {
+  email: string;
+  pass: string;
+};
+
+type UserResponse = {
+  data: User;
+  status: { code: number; message: string };
+};
+
+type UserResponseError = {
+  status: number;
+};
 
 function Login() {
   const navigate = useNavigate();
@@ -24,25 +42,27 @@ function Login() {
     isPending,
     isError,
   } = useMutation({
-    mutationFn: (rawData) => {
+    mutationFn: (rawData: SignInUser) => {
+      console.log(rawData);
       const allowed = ["email", "password"];
-      let content = { user: {} };
+      let content: NestedUser = { user: { email: "", pass: "" } };
 
       Object.keys(rawData)
         .filter((key) => allowed.includes(key))
         .forEach((key) => {
-          content["user"][key] = rawData[key];
+          content["user"][key as keyof SignInUser] =
+            rawData[key as keyof SignInUser];
         });
 
       console.log("Logging in...");
       return createSession(content);
     },
-    onSuccess: (response) => {
+    onSuccess: (response: UserResponse) => {
       console.log("Logged in!");
       setUser(response.data);
       navigate(`/`);
     },
-    onError: (error) => {
+    onError: (error: UserResponseError) => {
       console.log("An Error occured logging in:", error.status);
       navigate("/Login");
     },
@@ -61,6 +81,7 @@ function Login() {
               className={""}
             />
             <Button
+              onClick={onSubmit}
               form={"main-pane-content"}
               disabled={isPending}
               type="submit"

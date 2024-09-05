@@ -1,7 +1,12 @@
 import Button from "./Button";
 
-function ViewToggle({ view, setView }) {
-  function onBtnClick(v) {
+type props = {
+  view: string;
+  setView: Function;
+};
+
+function ViewToggle({ view, setView }: props) {
+  function onBtnClick(v: string) {
     setView(v);
   }
 
@@ -13,18 +18,13 @@ function ViewToggle({ view, setView }) {
           className={view === "profile" ? "view-choice active" : "view-choice"}
           onClick={() => onBtnClick("profile")}
           text={
-            <img
-              className="view-img"
-              src="../../public/icons/profile.png"
-            ></img>
+            <img className="view-img" src="../../public/icons/profile.png" />
           }
         />
         <Button
           className={view === "table" ? "view-choice active" : "view-choice"}
           onClick={() => onBtnClick("table")}
-          text={
-            <img className="view-img" src="../../public/icons/cells.png"></img>
-          }
+          text={<img className="view-img" src="../../public/icons/cells.png" />}
         />
       </div>
     </>

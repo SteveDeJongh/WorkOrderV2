@@ -1,12 +1,12 @@
-import React from "react";
+import React, { ReactElement } from "react";
 
 type props = {
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
-  text: string;
-  type: "submit" | "reset" | "button" | undefined;
-  form: string;
-  disabled: boolean;
-  className: string;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  text: string | ReactElement<HTMLImageElement>;
+  type?: "submit" | "reset" | "button" | undefined;
+  form?: string;
+  disabled?: boolean;
+  className?: string;
 };
 
 function Button({
