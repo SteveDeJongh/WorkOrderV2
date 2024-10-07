@@ -61,14 +61,13 @@ async function fetchInvoiceData(id) {
   return mapSingleResponseDataToKeys(responseData);
 }
 
-// More to do here...
-async function editInvoice(id, customerData) {
-  const response = await fetch(`${API_URL}/customers/${id}`, {
+async function editInvoice(id, invoiceData) {
+  const response = await fetch(`${API_URL}/invoices/${id}`, {
     method: "PATCH",
     headers: {
       "Authorization": localStorage.getItem("authToken"),
     },
-    body: customerData,
+    body: invoiceData,
   })
 
   if (!response.ok) {

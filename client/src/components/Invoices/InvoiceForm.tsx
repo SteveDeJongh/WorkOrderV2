@@ -6,6 +6,7 @@ import LoadingBox from "../../multiuse/LoadingBox";
 import FormCustomerSection from "./FormCustomerSection";
 import FormInvoiceLines from "./FormInvoiceLines";
 import Button from "../../multiuse/Button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type props = {
   modalForm: boolean;
@@ -92,7 +93,7 @@ function InvoiceForm({
           status: null,
         }
   );
-  console.log("From invoiceForm ALT", customer, dataLogger);
+  console.log("From invoiceForm", customer, dataLogger);
 
   const {
     register,
@@ -115,19 +116,30 @@ function InvoiceForm({
   });
 
   async function onSubmitHandler(rawFormData) {
-    console.log("Form data within the form", rawFormData);
-    console.log(dataLogger.current);
-    outputCurrentData();
-    // try {
-    //   onSubmit(rawFormData);
-    // } catch (e) {
-    //   console.log("failed!");
-    // }
+    recalculateInvoice(dataLogger.current.id);
+    try {
+      onSubmit(rawFormData, dataLogger.current);
+    } catch (e) {
+      console.log("failed!");
+    }
   }
 
   function outputCurrentData() {
     console.log("dataLogger", dataLogger);
     console.log("data", data);
+  }
+
+  function recalculateInvoice(id) {
+    // Run calculations for total, balance, and tax for the invoice.
+    // Re assign dataLogger.current props with new values as strings.
+    console.log("Recalculating invoice totals, temp value 10");
+    let payments = 0;
+    let total = 20;
+    let tax = 1;
+    let balance = total + tax - payments;
+    dataLogger.current.total = total;
+    dataLogger.current.tax = tax;
+    dataLogger.current.balance = balance;
   }
 
   console.log(data);
@@ -161,10 +173,19 @@ function InvoiceForm({
         onSubmit={handleSubmit(onSubmitHandler)}
       >
         <FormCustomerSection
-          dataLogger={dataLogger}
+          dataLogger={dataLogger.current}
           dataID={data.invoice.customer_id}
         />
-        <FormInvoiceLines dataLogger={dataLogger} invoiceLines={data.lines} />
+        <FormInvoiceLines
+          dataLogger={dataLogger.current}
+          invoiceLines={data.lines}
+        />
+        {/* <FormPaymentLines 
+        />
+        <FormTotalDetails /> */}
+        <div>Total is {dataLogger.current.total}</div>
+        <div>Tax is {dataLogger.current.tax}</div>
+        <div>Balance is {dataLogger.current.balance}</div>
       </form>
     </>
   );

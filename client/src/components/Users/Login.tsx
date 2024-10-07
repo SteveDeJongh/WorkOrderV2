@@ -43,7 +43,6 @@ function Login() {
     isError,
   } = useMutation({
     mutationFn: (rawData: SignInUser) => {
-      console.log(rawData);
       const allowed = ["email", "password"];
       let content: NestedUser = { user: { email: "", pass: "" } };
 

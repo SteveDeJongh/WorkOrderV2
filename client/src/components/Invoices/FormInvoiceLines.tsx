@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { fetchProductData } from "../../services/productServices";
 import LoadingBox from "../../multiuse/LoadingBox";
 import InvoiceLine from "./InvoiceLine";
+import NewInvoiceLine from "./NewInvoiceLine";
 
 type props = {
   dataLogger: customerRef;
@@ -19,6 +20,9 @@ export default function FormInvoiceLines({ dataLogger, invoiceLines }: props) {
   const refLines = useRef(invoiceLines);
 
   function updateLine(updatedLine: object) {
+    console.log("In update line");
+    console.log("dl lines", dataLogger);
+    // Should I call the API here and update the invoice line before the user clicks to save the invoice?
     refLines.current = refLines.current.map((line) => {
       if (line.id === updatedLine.id) {
         return updatedLine;
@@ -63,6 +67,7 @@ export default function FormInvoiceLines({ dataLogger, invoiceLines }: props) {
                     updateLine={updateLine}
                   />
                 ))}
+                <NewInvoiceLine />
               </tbody>
             </table>
           </div>

@@ -44,7 +44,7 @@ function TableFormCell({
 
     changeRef.current = setTimeout(() => {
       onDelayedChange(change);
-    }, 500);
+    }, 1500);
   }
 
   val = showAsDollars ? `$${Number(val).toFixed(2)}` : val;

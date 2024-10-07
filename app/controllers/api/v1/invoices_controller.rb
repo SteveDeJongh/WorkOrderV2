@@ -31,7 +31,10 @@ class Api::V1::InvoicesController < ApplicationController
 
   # PATCH/PUT /invoices/1
   def update
+    puts "Made it to update invoice"
     if @invoice.update(invoice_params)
+      puts invoice_params
+      puts "Those are the invoice params."
       render json: @invoice
     else
       render json: @invoice.errors, status: :unprocessable_entity
@@ -46,11 +49,12 @@ class Api::V1::InvoicesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_invoice
+      puts params[:id], "params id"
       @invoice = Invoice.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def invoice_params
-      params.require(:invoice).permit(:customer_id, :user_id, :total, :balance, :tax)
+      params.require(:invoice).permit(:id, :customer_id, :user_id, :total, :balance, :tax)
     end
 end

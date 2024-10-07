@@ -1,6 +1,17 @@
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Button from "../../multiuse/Button";
+import { Customer, EditableCustomerCata } from "../../types/customers";
+
+type props = {
+  modalForm: boolean;
+  handleCancel: Function;
+  customer: Customer;
+  headerText: string;
+  onSubmit: Function;
+  buttonText: string;
+};
 
 function CustomerForm({
   modalForm,
@@ -9,7 +20,7 @@ function CustomerForm({
   headerText,
   onSubmit,
   buttonText,
-}) {
+}: props) {
   const navigate = useNavigate();
   const {
     register,
@@ -27,11 +38,12 @@ function CustomerForm({
           city: customer.city,
           province: customer.province,
           country: customer.country,
+          postal: customer.postal,
         }
       : undefined,
   });
 
-  async function onSubmitHandler(data) {
+  async function onSubmitHandler(data: EditableCustomerCata) {
     try {
       onSubmit(data);
     } catch (e) {
@@ -178,6 +190,19 @@ function CustomerForm({
                 placeholder="Canada"
               />
               {errors.country && <p>{`${errors.country.message}`}</p>}
+            </div>
+          </div>
+          <div className="panel-contents-section">
+            <div className="formPair half">
+              <label htmlFor="province">Province:</label>
+              <input
+                {...register("postal")}
+                type="string"
+                id="postal"
+                name="postal"
+                placeholder="A1A 1A1"
+              />
+              {errors.postal && <p>{`${errors.postal.message}`}</p>}
             </div>
           </div>
         </div>

@@ -1,8 +1,7 @@
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { editUser, getUserByToken } from "../../services/userServices";
 import { useContext } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 import UserContext from "../../contexts/user-context";
 import UserForm from "./UserForm";
@@ -10,15 +9,6 @@ import UserForm from "./UserForm";
 function EditProfile() {
   const navigate = useNavigate();
   const [user, setUser] = useContext(UserContext);
-
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors, isSubmitting },
-  //   watch,
-  // } = useForm({
-  //   defaultValues: { roles: [] },
-  // });
 
   const {
     data: userData,
