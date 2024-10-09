@@ -62,10 +62,17 @@ function InvoiceShow() {
     isError,
     isSuccess,
   } = useMutation({
-    mutationFn: (rawFormData, dldata) => {
-      console.log("dldata", dldata);
-      const formData = objectToFormData({ invoice: dldata });
-      console.log("formData.invoice", formData.invoice);
+    mutationFn: (dldata) => {
+      const allowed = ["customer_id", "user_id", "total", "balance", "tax"];
+
+      let allowedParams = {};
+      Object.keys(dldata)
+        .filter((key) => allowed.includes(key))
+        .forEach((key) => {
+          allowedParams[key] = dldata[key];
+        });
+
+      const formData = objectToFormData({ invoice: allowedParams });
       console.log("Updating invoice...");
       return editInvoice(invoiceID, formData);
     },
@@ -75,7 +82,7 @@ function InvoiceShow() {
       // queryClient.setQueryData(["products"], (oldProducts) => {
       //   [...oldProducts, newProduct];
       // });
-      navigate(`/products/${updatedInvoice.id}`);
+      navigate(`/invoices/${updatedInvoice.id}`);
     },
   });
 
@@ -93,7 +100,7 @@ function InvoiceShow() {
               data={mainData}
               headerText={`Invoice ${mainData.id}`}
               buttonText={"Save"}
-              onSubmit={(newData, b) => handleEditSubmit(newData, b)}
+              onSubmit={(b) => handleEditSubmit(b)}
               handleCancel={() => setSelection("")}
             />
           </div>

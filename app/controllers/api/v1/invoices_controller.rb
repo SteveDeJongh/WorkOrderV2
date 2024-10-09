@@ -33,8 +33,6 @@ class Api::V1::InvoicesController < ApplicationController
   def update
     puts "Made it to update invoice"
     if @invoice.update(invoice_params)
-      puts invoice_params
-      puts "Those are the invoice params."
       render json: @invoice
     else
       render json: @invoice.errors, status: :unprocessable_entity

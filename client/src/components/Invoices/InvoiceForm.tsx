@@ -6,6 +6,7 @@ import LoadingBox from "../../multiuse/LoadingBox";
 import FormCustomerSection from "./FormCustomerSection";
 import FormInvoiceLines from "./FormInvoiceLines";
 import Button from "../../multiuse/Button";
+import FormPaymentLines from "./FormPaymentLines";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type props = {
@@ -117,8 +118,9 @@ function InvoiceForm({
 
   async function onSubmitHandler(rawFormData) {
     recalculateInvoice(dataLogger.current.id);
+    console.log("Called onsubmithandler");
     try {
-      onSubmit(rawFormData, dataLogger.current);
+      onSubmit(dataLogger.current);
     } catch (e) {
       console.log("failed!");
     }
@@ -132,6 +134,7 @@ function InvoiceForm({
   function recalculateInvoice(id) {
     // Run calculations for total, balance, and tax for the invoice.
     // Re assign dataLogger.current props with new values as strings.
+    // This should really come from the back end in order to guarantee sync.
     console.log("Recalculating invoice totals, temp value 10");
     let payments = 0;
     let total = 20;
@@ -180,9 +183,11 @@ function InvoiceForm({
           dataLogger={dataLogger.current}
           invoiceLines={data.lines}
         />
-        {/* <FormPaymentLines 
+        <FormPaymentLines
+          dataLogger={dataLogger.current}
+          payments={data.payments}
         />
-        <FormTotalDetails /> */}
+        {/* <FormTotalDetails /> */}
         <div>Total is {dataLogger.current.total}</div>
         <div>Tax is {dataLogger.current.tax}</div>
         <div>Balance is {dataLogger.current.balance}</div>
