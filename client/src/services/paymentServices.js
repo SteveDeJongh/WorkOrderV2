@@ -78,4 +78,14 @@ async function editPayment(id, PaymentData) {
   return mapSingleResponseDataToKeys(responseData);
 }
 
-export { createPayment, editPayment, fetchAllPayments, fetchPaymentData, searchPayments } 
+async function savePayment(id, paymentData) {
+  if (id === "") {
+    console.log("creating");
+    return createPayment(paymentData);
+  } else {
+    console.log("editing");
+    return editPayment(id, paymentData);
+  }
+}
+
+export { fetchAllPayments, fetchPaymentData, savePayment, searchPayments} 

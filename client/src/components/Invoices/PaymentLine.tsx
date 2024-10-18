@@ -8,40 +8,16 @@ type props = {
   // updateLine: Function;
 };
 
-type tableFormCellProps = {
+type dataCellProps = {
   showAsDollars: boolean;
   val: string;
 };
 
-function TableFormCell({
-  showAsDollars,
-  val,
-}: // inputName,
-// onImmediateChange,
-// onDelayedChange,
-tableFormCellProps) {
+function DataCell({ showAsDollars, val }: dataCellProps) {
   const changeRef = useRef<null | NodeJS.Timeout>(null);
   const [inputValue, setInputValue] = useState(val);
 
-  // function handleChange(e) {
-  //   let label = e.target.name;
-  //   let value =
-  //     e.target.type === "number" ? Number(e.target.value) : e.target.value;
-  //   const change = { [inputName]: value };
-  //   setInputValue(value);
-
-  //   onImmediateChange(change);
-
-  //   if (changeRef.current) {
-  //     clearTimeout(changeRef.current);
-  //   }
-
-  //   changeRef.current = setTimeout(() => {
-  //     onDelayedChange(change);
-  //   }, 1500);
-  // }
-
-  // val = showAsDollars ? `$${Number(val).toFixed(2)}` : val;
+  val = showAsDollars ? `$${Number(val).toFixed(2)}` : val;
   return (
     <td>
       <div>{val}</div>
@@ -77,7 +53,7 @@ export default function PaymentLine({ line, lineClick }: props) {
   return (
     <tr onClick={(id) => lineClick(id)}>
       {columns.map((col) => (
-        <TableFormCell
+        <DataCell
           showAsDollars={col.showAsDollars}
           key={`${[col.keyName]}${refLine.current.id}`}
           val={refLine.current[col.keyName]}

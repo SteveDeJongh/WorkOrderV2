@@ -98,7 +98,7 @@ function InvoiceShow() {
           <div className="pane-inner">
             <InvoiceForm
               data={mainData}
-              headerText={`Invoice ${mainData.id}`}
+              headerText={`Invoice ${mainData.invoice.id}`}
               buttonText={"Save"}
               onSubmit={(b) => handleEditSubmit(b)}
               handleCancel={() => setSelection("")}

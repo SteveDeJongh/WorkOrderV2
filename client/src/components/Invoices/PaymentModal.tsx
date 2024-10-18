@@ -3,18 +3,18 @@ import { useState, useEffect, useContext } from "react";
 import ReactDom from "react-dom";
 import LoadingBox from "../../multiuse/LoadingBox";
 import { objectToFormData } from "../../utils/formDataHelper";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { useQuery } from "@tanstack/react-query";
-import Button from "../../multiuse/Button";
-import { fetchPaymentData } from "../../services/paymentServices";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { fetchPaymentData, savePayment } from "../../services/paymentServices";
+import PaymentForm from "./PaymentForm";
 
 type Props = {
   open: boolean;
   onClose: Function;
   paymentID: number | null;
+  balance: number;
 };
 
-function PaymentModal({ open, onClose, paymentID }: Props) {
+function PaymentModal({ open, onClose, paymentID, dataLogger }: Props) {
   function handleClose(e) {
     if (e.target.className === "main-modal-background") {
       onClose();
@@ -25,12 +25,11 @@ function PaymentModal({ open, onClose, paymentID }: Props) {
   const [mainLoading, setMainLoading] = useState(false);
   const [mainError, setMainError] = useState("");
   const [mainData, setMainData] = useState({});
-  const [tab, setTab] = useState("Profile");
 
-  // Profile Tab
+  // Fetches payment data if passed in a payment ID. (editing) Should this info just be passed in? Ie: payment is clicked from a list so the data is already loaded.
   useEffect(() => {
     console.log("trig");
-    async function loadProductData() {
+    async function loadPaymentData() {
       try {
         setMainLoading(true);
         const response = await fetchPaymentData(paymentID);
@@ -43,13 +42,31 @@ function PaymentModal({ open, onClose, paymentID }: Props) {
       }
     }
     if (paymentID) {
-      loadProductData();
+      loadPaymentData();
+    } else {
+      setMainData(false);
     }
-  }, [paymentID]);
+  }, [open]);
 
   let entity = Object.keys(mainData).length < 1 ? false : mainData;
 
+  const { mutate, isPending, isError, isSuccess } = useMutation({
+    mutationFn: (rawData) => {
+      console.log("From payment modal", rawData);
+      console.log("Submitting console");
+      const formData = objectToFormData({ payment: rawData });
+
+      savePayment(rawData.id, formData);
+    },
+    onSuccess: (newPayment) => {
+      console.log("new payment or edited payment!"); // to do...
+    },
+  });
+
   if (!open) return null;
+
+  console.log("ID from modal", paymentID);
+  console.log("entity", entity);
 
   return ReactDom.createPortal(
     <>
@@ -59,7 +76,13 @@ function PaymentModal({ open, onClose, paymentID }: Props) {
           {mainError && <p>An error occured.</p>}
           {!mainLoading && !mainError && (
             <>
-              <div>Woohoo!</div>
+              <PaymentForm
+                handleCancel={() => onClose()}
+                payment={entity}
+                onSubmit={mutate}
+                buttonText={"Save"}
+                invoice_id={dataLogger.id}
+              />
             </>
           )}
         </div>

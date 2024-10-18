@@ -170,10 +170,10 @@ function InvoiceForm({
         Log it!
       </button>
       {/* To Remove */}
-      <form
+      <div
         id="main-pane-content"
         className="main-pane-content"
-        onSubmit={handleSubmit(onSubmitHandler)}
+        // onSubmit={handleSubmit(onSubmitHandler)}
       >
         <FormCustomerSection
           dataLogger={dataLogger.current}
@@ -191,7 +191,7 @@ function InvoiceForm({
         <div>Total is {dataLogger.current.total}</div>
         <div>Tax is {dataLogger.current.tax}</div>
         <div>Balance is {dataLogger.current.balance}</div>
-      </form>
+      </div>
     </>
   );
 }
