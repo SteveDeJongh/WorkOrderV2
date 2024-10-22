@@ -5,6 +5,7 @@ import { fetchCustomerData } from "../../services/customerServices";
 import LoadingBox from "../../multiuse/LoadingBox";
 import FormCustomerSection from "./FormCustomerSection";
 import FormInvoiceLines from "./FormInvoiceLines";
+import FormTotalDetails from "./FormTotalDetails";
 import Button from "../../multiuse/Button";
 import FormPaymentLines from "./FormPaymentLines";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -188,6 +189,7 @@ function InvoiceForm({
           payments={data.payments}
         />
         {/* <FormTotalDetails /> */}
+        <FormTotalDetails dataLogger={dataLogger.current} />
         <div>Total is {dataLogger.current.total}</div>
         <div>Tax is {dataLogger.current.tax}</div>
         <div>Balance is {dataLogger.current.balance}</div>

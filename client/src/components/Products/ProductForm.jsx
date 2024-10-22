@@ -33,7 +33,7 @@ function ProductForm({
           min: product.min,
           max: product.max,
           inventory: product.inventory,
-          tax_rate: product.tax_rate,
+          tax_rate_id: product.tax_rate_id,
         }
       : undefined,
   });
@@ -182,16 +182,16 @@ function ProductForm({
             </div>
             <div className="panel-contents-section">
               <div className="formPair">
-                <label htmlFor="tax_rate">Tax rate:</label>
+                <label htmlFor="tax_rate_id">Tax rate:</label>
                 <input
-                  {...register("tax_rate")}
+                  {...register("tax_rate_id")}
                   type="string"
-                  id="tax_rate"
-                  name="tax_rate"
+                  id="tax_rate_id"
+                  name="tax_rate_id"
                   placeholder="1"
                 />
-                {errors.tax_rate && (
-                  <p className="error">{`${errors.tax_rate.message}`}</p>
+                {errors.tax_rate_id && (
+                  <p className="error">{`${errors.tax_rate_id.message}`}</p>
                 )}
               </div>
             </div>

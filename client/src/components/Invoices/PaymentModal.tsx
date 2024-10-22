@@ -28,7 +28,7 @@ function PaymentModal({ open, onClose, paymentID, dataLogger }: Props) {
 
   // Fetches payment data if passed in a payment ID. (editing) Should this info just be passed in? Ie: payment is clicked from a list so the data is already loaded.
   useEffect(() => {
-    console.log("trig");
+    console.log("Triggered useEffect in Payment Modal");
     async function loadPaymentData() {
       try {
         setMainLoading(true);
@@ -52,14 +52,12 @@ function PaymentModal({ open, onClose, paymentID, dataLogger }: Props) {
 
   const { mutate, isPending, isError, isSuccess } = useMutation({
     mutationFn: (rawData) => {
-      console.log("From payment modal", rawData);
-      console.log("Submitting console");
       const formData = objectToFormData({ payment: rawData });
-
-      savePayment(rawData.id, formData);
+      return savePayment(rawData.id, formData);
     },
-    onSuccess: (newPayment) => {
-      console.log("new payment or edited payment!"); // to do...
+    onSuccess: (payment) => {
+      console.log("Payment saved or edited successfully");
+      onClose(payment);
     },
   });
 

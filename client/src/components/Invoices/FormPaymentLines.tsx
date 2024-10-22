@@ -32,7 +32,8 @@ export default function FormPaymentLines({ dataLogger, payments }: props) {
     setIsOpen(true);
   }
 
-  function handleClose() {
+  function handleClose(data) {
+    console.log("Data from handleClose", data);
     clickedID.current = null;
     setIsOpen(false);
   }
@@ -74,7 +75,7 @@ export default function FormPaymentLines({ dataLogger, payments }: props) {
       </div>
       <PaymentModal
         open={isOpen}
-        onClose={() => handleClose()}
+        onClose={(data) => handleClose(data)}
         paymentID={clickedID.current}
         dataLogger={dataLogger}
       />

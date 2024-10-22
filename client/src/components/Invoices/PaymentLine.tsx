@@ -48,8 +48,6 @@ export default function PaymentLine({ line, lineClick }: props) {
     },
   ];
 
-  console.log("Payment line", line);
-
   return (
     <tr onClick={(id) => lineClick(id)}>
       {columns.map((col) => (

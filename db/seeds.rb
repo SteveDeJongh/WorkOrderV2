@@ -14,7 +14,7 @@ Customer.create(first_name: 'Bob', last_name: 'Gee', email: 'cust@yahoo.com', ph
 Customer.create(first_name: 'Rob', last_name: 'Jones', email: 'cust@google.com', phone: "444-444-4444", city: 'New York')
 
 (1..8).each do |x|
-  p = Product.create(name: "Product #{x}" ,description: "This is product #{x}" ,sku: "PR000#{x}" , upc: (x.to_s * 12).to_i, price: (x * 10) , cost: x, stock: x, min: x, max: (x * 10), inventory: true, tax_rate: 1,)
+  p = Product.create(name: "Product #{x}" ,description: "This is product #{x}" ,sku: "PR000#{x}" , upc: (x.to_s * 12).to_i, price: (x * 10) , cost: x, stock: x, min: x, max: (x * 10), inventory: true, tax_rate_id: 1,)
   MovementService.new(p).record_movement("ProductCreation", x)
 end
 
@@ -40,14 +40,17 @@ Invoice.new(customer_id: 2, user_id: 1, total: 52.50, balance: 52.50, tax: 1, st
 Invoice.new(customer_id: 3, user_id: 1, total: 21.00, balance: 0.00, tax: 1, status: "closed").save
 
 InvoiceLine.new(invoice_id: 1, product_id: 1, discount_percentage: 0, price: 10.00, quantity: 1, line_total: 10.00,
- tax_rate: 1, line_tax: 0.50).save
+ tax_rate_id: 1, line_tax: 0.50).save
 InvoiceLine.new(invoice_id: 2, product_id: 2, discount_percentage: 0, price: 20.00, quantity: 1, line_total: 20.00,
-tax_rate: 1, line_tax: 1.00).save
+tax_rate_id: 1, line_tax: 1.00).save
 InvoiceLine.new(invoice_id: 2, product_id: 3, discount_percentage: 0, price: 30.00, quantity: 1, line_total: 30.00,
-tax_rate: 1, line_tax: 1.50).save
+tax_rate_id: 1, line_tax: 1.50).save
 InvoiceLine.new(invoice_id: 3, product_id: 2, discount_percentage: 0, price: 20.00, quantity: 1, line_total: 20.00,
-tax_rate: 1, line_tax: 1.00).save
+tax_rate_id: 1, line_tax: 1.00).save
 
 Payment.new(method: "Cash", invoice_id: 3, amount: 21.00).save
+
+# Add a default tax rate for "1" of 15%
+TaxRate.new(percentage: 0.15).save
 
 puts "1 admin user, 4 Customers and 8 Products created, and inventory movements created."

@@ -51,7 +51,7 @@ class Api::V1::ProductsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def product_params
-      params.require(:product).permit(:id, :name, :description, :sku, :upc, :price, :cost, :stock, :min, :max, :inventory, :tax_rate)
+      params.require(:product).permit(:id, :name, :description, :sku, :upc, :price, :cost, :stock, :min, :max, :inventory, :tax_rate_id)
     end
 
     def determineStockDifference()

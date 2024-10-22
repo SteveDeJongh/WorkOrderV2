@@ -12,7 +12,7 @@ class InvoiceLinesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create invoice_line" do
     assert_difference("InvoiceLine.count") do
-      post invoice_lines_url, params: { invoice_line: { discount_percentage: @invoice_line.discount_percentage, invoice_id: @invoice_line.invoice_id, line_tax: @invoice_line.line_tax, line_total: @invoice_line.line_total, price: @invoice_line.price, product_id: @invoice_line.product_id, quantiy: @invoice_line.quantiy, tax_rate: @invoice_line.tax_rate } }, as: :json
+      post invoice_lines_url, params: { invoice_line: { discount_percentage: @invoice_line.discount_percentage, invoice_id: @invoice_line.invoice_id, line_tax: @invoice_line.line_tax, line_total: @invoice_line.line_total, price: @invoice_line.price, product_id: @invoice_line.product_id, quantiy: @invoice_line.quantiy, tax_rate_id: @invoice_line.tax_rate_id } }, as: :json
     end
 
     assert_response :created
@@ -24,7 +24,7 @@ class InvoiceLinesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update invoice_line" do
-    patch invoice_line_url(@invoice_line), params: { invoice_line: { discount_percentage: @invoice_line.discount_percentage, invoice_id: @invoice_line.invoice_id, line_tax: @invoice_line.line_tax, line_total: @invoice_line.line_total, price: @invoice_line.price, product_id: @invoice_line.product_id, quantiy: @invoice_line.quantiy, tax_rate: @invoice_line.tax_rate } }, as: :json
+    patch invoice_line_url(@invoice_line), params: { invoice_line: { discount_percentage: @invoice_line.discount_percentage, invoice_id: @invoice_line.invoice_id, line_tax: @invoice_line.line_tax, line_total: @invoice_line.line_total, price: @invoice_line.price, product_id: @invoice_line.product_id, quantiy: @invoice_line.quantiy, tax_rate_id: @invoice_line.tax_rate_id } }, as: :json
     assert_response :success
   end
 
