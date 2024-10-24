@@ -76,6 +76,7 @@ class Api::V1::InvoicesController < ApplicationController
       @invoice.tax = tax_total
       @invoice.balance = invoice_total - payment_total
 
+      puts @invoice.inspect
       @invoice.save
     end
 end

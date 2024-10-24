@@ -1,8 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import CustomerSearchModal from "../Customers/CustomerSearchModal";
-import { fetchCustomerData } from "../../services/customerServices";
-import LoadingBox from "../../multiuse/LoadingBox";
 import FormCustomerSection from "./FormCustomerSection";
 import FormInvoiceLines from "./FormInvoiceLines";
 import FormTotalDetails from "./FormTotalDetails";

@@ -156,7 +156,7 @@ const router = createBrowserRouter([
               { index: true, element: <PageIndex /> },
               {
                 path: ":id",
-                element: <InvoiceShow />,
+                element: <InvoiceShow modalForm={false} buttonText="Save" />,
               },
               {
                 path: "new",

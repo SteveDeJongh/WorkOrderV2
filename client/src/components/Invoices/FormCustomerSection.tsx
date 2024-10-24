@@ -4,9 +4,6 @@ import { fetchCustomerData } from "../../services/customerServices";
 import LoadingBox from "../../multiuse/LoadingBox";
 import Button from "../../multiuse/Button";
 
-type ref = {
-  current: invoice;
-};
 type invoice = {
   id: number;
   customer_id: number;
@@ -24,20 +21,19 @@ type props = {
   dataID: number;
 };
 
-type customerRef = {
-  current: number;
-};
-
 export default function FormCustomerSection({ dataLogger, dataID }: props) {
   const [customerModal, setCustomerModal] = useState(false);
   const [loading, setloading] = useState(false);
   const [customer, setCustomer] = useState("");
 
+  console.log("datalogger in customer section", dataLogger);
+  console.log("dataID in customer section", dataID);
+
   // Get the customer data if the passed in invoice data has a dataLogger.
   useEffect(() => {
     if (!dataID) return;
     setloading(true);
-    dataLogger.customer_id = dataID;
+    dataLogger.invoice.customer_id = dataID;
     async function loadCustomerData(id: number) {
       try {
         const response = await fetchCustomerData(id);
@@ -49,7 +45,7 @@ export default function FormCustomerSection({ dataLogger, dataID }: props) {
       }
     }
 
-    loadCustomerData(dataLogger.customer_id);
+    loadCustomerData(dataLogger.invoice.customer_id);
   }, []);
 
   // When a new customer is selected in the modal, close the modal and refetch the customer data by the new customerID
@@ -60,7 +56,7 @@ export default function FormCustomerSection({ dataLogger, dataID }: props) {
         setCustomer(false);
         setloading(true);
         const response = await fetchCustomerData(id);
-        dataLogger.customer_id = response.id;
+        dataLogger.invoice.customer_id = response.id;
         setCustomer(response);
       } catch (e) {
         console.error(e);
@@ -73,7 +69,7 @@ export default function FormCustomerSection({ dataLogger, dataID }: props) {
   }
 
   function removeCustomer() {
-    dataLogger.customer_id = 0;
+    dataLogger.invoice.customer_id = 0;
     setCustomer("");
   }
 
@@ -96,7 +92,7 @@ export default function FormCustomerSection({ dataLogger, dataID }: props) {
           <LoadingBox text="Loading customer..." />
         </div>
       )}
-      {!customer && !dataLogger.customer_id && (
+      {!customer && !dataLogger.invoice.customer_id && (
         <div className="panel-contents-section">
           <div className="panel-hero">
             <div className="hero-text">No Customer Assigned</div>
@@ -135,7 +131,7 @@ export default function FormCustomerSection({ dataLogger, dataID }: props) {
         open={customerModal}
         onClose={() => setCustomerModal(false)}
         onSave={(id) => handleCustomerChange(id)}
-        customer_id={dataLogger.customer_id}
+        customer_id={dataLogger.invoice.customer_id}
       />
     </div>
   );
