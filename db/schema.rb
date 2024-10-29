@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_22_211031) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_28_221741) do
   create_table "customers", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -97,7 +97,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_22_211031) do
     t.integer "min"
     t.integer "max"
     t.boolean "inventory"
-    t.integer "tax_rate"
+    t.integer "tax_rate_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

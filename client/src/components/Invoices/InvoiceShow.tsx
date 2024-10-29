@@ -89,6 +89,8 @@ function InvoiceShow({ modalForm, buttonText }: props) {
   const [dataLogger, setDataLogger] = useState<invoiceData | {}>({});
   const [headerText, setHeaderText] = useState("New Invoice");
   let { id: invoiceID } = useParams();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   // Fetches invoice data on initial render and whenever invoiceID changes.
   useEffect(() => {
@@ -116,60 +118,63 @@ function InvoiceShow({ modalForm, buttonText }: props) {
     loadInvoiceData();
   }, [invoiceID]);
 
-  console.log(
-    "mainData and initial data in main invoiceshow scope: ",
-    mainData,
-    dataLogger
-  );
+  // const {
+  //   mutate: handleEditSubmit,
+  //   isPending,
+  //   isError,
+  //   isSuccess,
+  // } = useMutation({
+  //   mutationFn: (dldata) => {
+  //     const allowed = ["customer_id", "user_id", "total", "balance", "tax"];
 
-  const navigate = useNavigate();
+  //     let allowedParams = {};
+  //     Object.keys(dldata)
+  //       .filter((key) => allowed.includes(key))
+  //       .forEach((key) => {
+  //         allowedParams[key] = dldata[key];
+  //       });
 
-  const queryClient = useQueryClient();
+  //     const formData = objectToFormData({ invoice: allowedParams });
+  //     console.log("Updating invoice...");
+  //     return editInvoice(invoiceID, formData);
+  //   },
+  //   onSuccess: (updatedInvoice) => {
+  //     console.log("Invoice updated!");
+  //     console.log(updatedInvoice);
+  //     // queryClient.setQueryData(["products"], (oldProducts) => {
+  //     //   [...oldProducts, newProduct];
+  //     // });
+  //     navigate(`/invoices/${updatedInvoice.id}`);
+  //   },
+  // });
 
-  const {
-    mutate: handleEditSubmit,
-    isPending,
-    isError,
-    isSuccess,
-  } = useMutation({
-    mutationFn: (dldata) => {
-      const allowed = ["customer_id", "user_id", "total", "balance", "tax"];
+  // Checks to see if the invoice has changed.
+  function invoiceHasChanges(): boolean {
+    return JSON.stringify(mainData) !== JSON.stringify(dataLogger);
+  }
 
-      let allowedParams = {};
-      Object.keys(dldata)
-        .filter((key) => allowed.includes(key))
-        .forEach((key) => {
-          allowedParams[key] = dldata[key];
-        });
-
-      const formData = objectToFormData({ invoice: allowedParams });
-      console.log("Updating invoice...");
-      return editInvoice(invoiceID, formData);
-    },
-    onSuccess: (updatedInvoice) => {
-      console.log("Invoice updated!");
-      console.log(updatedInvoice);
-      // queryClient.setQueryData(["products"], (oldProducts) => {
-      //   [...oldProducts, newProduct];
-      // });
-      navigate(`/invoices/${updatedInvoice.id}`);
+  const { mutate, isPending, isError, isSuccess } = useMutation({
+    mutationFn: (invoiceData: invoiceData) => {
+      if (invoiceID) {
+        console.log("invoideData on mutate", invoiceData);
+        console.log("invoiceID on mutate", invoiceID);
+        return editInvoice(
+          invoiceID,
+          objectToFormData({ invoiceData: invoiceData })
+        );
+      }
     },
   });
 
-  async function onSubmitHandler(rawFormData) {
-    recalculateInvoice(dataLogger.current.id);
-    console.log("Called onsubmithandler");
-    try {
-      onSubmit(dataLogger.current);
-    } catch (e) {
-      console.log("failed!");
-    }
-  }
-
-  function outputCurrentData() {
-    console.log("dataLogger", dataLogger);
-    console.log("mainData", mainData);
-  }
+  // async function onSubmitHandler(rawFormData) {
+  //   recalculateInvoice(dataLogger.current.id);
+  //   console.log("Called onsubmithandler");
+  //   try {
+  //     onSubmit(dataLogger.current);
+  //   } catch (e) {
+  //     console.log("failed!");
+  //   }
+  // }
 
   // function recalculateInvoice(id) {
   //   // Run calculations for total, balance, and tax for the invoice.
@@ -185,10 +190,18 @@ function InvoiceShow({ modalForm, buttonText }: props) {
   //   dataLogger.current.balance = balance;
   // }
 
-  /////
+  // For Debugging, to be removed.
+  function outputCurrentData() {
+    console.log("dataLogger", dataLogger);
+    console.log("mainData", mainData);
+  }
 
   if (mainLoading) {
     return <LoadingBox text="Loading Invoice..." />;
+  }
+
+  if (mainError) {
+    return <div>{mainError}</div>;
   }
 
   return (
@@ -203,7 +216,7 @@ function InvoiceShow({ modalForm, buttonText }: props) {
                 disabled={false}
                 type="button"
                 text={buttonText}
-                onClick={() => console.log("Saving!")}
+                onClick={() => mutate(dataLogger)}
               />
             </div>
           </div>

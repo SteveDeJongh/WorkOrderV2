@@ -32,12 +32,34 @@ class Api::V1::InvoicesController < ApplicationController
 
   # PATCH/PUT /invoices/1
   def update
-    puts "Made it to update invoice"
-    if @invoice.update(invoice_params)
-      render json: @invoice
-    else
-      render json: @invoice.errors, status: :unprocessable_entity
+    puts "Made it to update invoice, here are invoice_params"
+    puts invoice_params[:invoice]
+    # puts @invoice.inspect
+
+    invoice_params[:lines].each do |idx, line|
+      puts "Here's invoices lines:"
+      puts InvoiceLine.find(line[:id]).inspect
+      puts "Before select"
+      puts line.inspect
+      puts line[:product_id] = line[:product][:id]
+      line = line.select do |key|
+        !["product", "tax_rate"].include?(key)
+      end
+      puts "After select"
+      puts line.inspect
+      # InvoiceLine.find(line[:id]).update(line)
     end
+
+    # Update each payment
+    invoice_params[:payments].each do |idx, payment|
+      Payment.find(payment[:id]).update(payment)
+    end
+
+    # if @invoice.update(invoice_params)
+    #   render json: {invoice: @invoice, lines: @invoiceLines.as_json(include: [:product, :tax_rate]), payments: @payments}
+    # else
+    #   render json: @invoice.errors, status: :unprocessable_entity
+    # end
   end
 
   # DELETE /invoices/1
@@ -53,7 +75,46 @@ class Api::V1::InvoicesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def invoice_params
-      params.require(:invoice).permit(:id, :customer_id, :user_id, :total, :balance, :tax)
+      # params.require(:invoice).permit(:id, :customer_id, :user_id, :total, :balance, :tax)
+      params.require(:invoiceData).permit(
+      invoice: [:id, :customer_id, :total, :balance, :tax, :created_at, :updated_at, :status, :user_id],
+      lines: [
+        :invoice_id,
+        :line_tax,
+        :product_id,
+        :tax_rate_id,
+        :id,
+        :discount_percentage,
+        :price,
+        :quantity,
+        :line_total,
+        :created_at,
+        :updated_at,
+        product: [
+          :id,
+          :name,
+          :description,
+          :sku,
+          :upc,
+          :price,
+          :cost,
+          :stock,
+          :min,
+          :max,
+          :inventory,
+          :tax_rate_id,
+          :created_at,
+          :updated_at
+          ],
+        tax_rate: [
+          :id,
+          :percentage,
+          :created_at,
+          :updated_at
+          ]
+        ],
+       payments: [:id, :method, :invoice_id, :amount, :created_at, :updated_at]
+       )
     end
 
     def calculateTotals
