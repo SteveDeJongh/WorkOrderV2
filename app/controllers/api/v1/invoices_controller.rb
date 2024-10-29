@@ -14,7 +14,7 @@ class Api::V1::InvoicesController < ApplicationController
 
     @invoiceLines = @invoice.invoice_lines
     @payments = @invoice.payments
-    calculateTotals()
+    calculateInvoiceTotals()
 
     render json: {invoice: @invoice, lines: @invoiceLines.as_json(include: [:product, :tax_rate]), payments: @payments}
   end
@@ -32,34 +32,35 @@ class Api::V1::InvoicesController < ApplicationController
 
   # PATCH/PUT /invoices/1
   def update
-    puts "Made it to update invoice, here are invoice_params"
-    puts invoice_params[:invoice]
-    # puts @invoice.inspect
+    puts "Updating invoice"
 
-    invoice_params[:lines].each do |idx, line|
-      puts "Here's invoices lines:"
-      puts InvoiceLine.find(line[:id]).inspect
-      puts "Before select"
-      puts line.inspect
-      puts line[:product_id] = line[:product][:id]
-      line = line.select do |key|
-        !["product", "tax_rate"].include?(key)
+    # Update Invoice Lines
+    if invoice_params[:lines]
+      invoice_params[:lines].each do |idx, line|
+        recalculateInvoiceLine(line);
+        # Removing extra properties on line for update.
+        line = line.select do |key|
+          !["product", "tax_rate", "updated_at"].include?(key)
+        end
+        # Update each invoice line.
+        InvoiceLine.find(line[:id]).update(line)
       end
-      puts "After select"
-      puts line.inspect
-      # InvoiceLine.find(line[:id]).update(line)
     end
 
-    # Update each payment
-    invoice_params[:payments].each do |idx, payment|
-      Payment.find(payment[:id]).update(payment)
+    # Update payment if there are payments
+    if invoice_params[:payments]
+      invoice_params[:payments].each do |idx, payment|
+        Payment.find(payment[:id]).update(payment)
+      end
     end
 
-    # if @invoice.update(invoice_params)
-    #   render json: {invoice: @invoice, lines: @invoiceLines.as_json(include: [:product, :tax_rate]), payments: @payments}
-    # else
-    #   render json: @invoice.errors, status: :unprocessable_entity
-    # end
+    calculateInvoiceTotals()
+
+    if @invoice.save
+      render json: {invoice: @invoice, lines: @invoiceLines.as_json(include: [:product, :tax_rate]), payments: @payments}
+    else
+      render json: @invoice.errors, status: :unprocessable_entity
+    end
   end
 
   # DELETE /invoices/1
@@ -117,27 +118,29 @@ class Api::V1::InvoicesController < ApplicationController
        )
     end
 
-    def calculateTotals
+    def calculateInvoiceTotals
       puts "We're calling calculate totals"
       invoice_total = 0;
       tax_total = 0;
-      @invoiceLines.each do |line|
-        line.line_tax = line.line_total.to_f * line.tax_rate.percentage
-        line.save
+      @invoice.invoice_lines.each do |line|
         invoice_total += line.line_total.to_f
         tax_total += line.line_tax.to_f
       end
       payment_total = 0;
 
-      @payments.each do |payment|
+      @invoice.payments.each do |payment|
         payment_total += payment.amount.to_f
       end
 
       @invoice.total = invoice_total
       @invoice.tax = tax_total
       @invoice.balance = invoice_total - payment_total
+    end
 
-      puts @invoice.inspect
-      @invoice.save
+    def recalculateInvoiceLine(line)
+      subtotal = line[:product][:price].to_f
+      discountDollars = (line[:product][:price].to_f * line[:discount_percentage].to_f/100)
+      line[:line_total] = (subtotal - discountDollars) * line[:quantity].to_f
+      line[:line_tax] = line[:lineTotal].to_f * line[:tax_rate][:percentage].to_f
     end
 end
