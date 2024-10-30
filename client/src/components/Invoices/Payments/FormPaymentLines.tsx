@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import LoadingBox from "../../multiuse/LoadingBox";
+import LoadingBox from "../../../multiuse/LoadingBox";
 import PaymentLine from "./PaymentLine";
-import Button from "../../multiuse/Button";
+import Button from "../../../multiuse/Button";
 import PaymentModal from "./PaymentModal";
 
 type props = {
@@ -16,8 +16,8 @@ type customerRef = {
 export default function FormPaymentLines({ dataLogger, payments }: props) {
   const [lineModal, setlineModal] = useState(false);
   const [loading, setloading] = useState(false);
-  const [lines, setLines] = useState(payments);
-  const refLines = useRef(payments);
+  const [lines, setLines] = useState(dataLogger.payments);
+  const refLines = useRef(dataLogger.payments);
 
   console.log(payments);
   console.log(lines);

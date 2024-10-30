@@ -1,10 +1,13 @@
 import React from "react";
 import { useState, useEffect, useContext } from "react";
 import ReactDom from "react-dom";
-import LoadingBox from "../../multiuse/LoadingBox";
-import { objectToFormData } from "../../utils/formDataHelper";
+import LoadingBox from "../../../multiuse/LoadingBox";
+import { objectToFormData } from "../../../utils/formDataHelper";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { fetchPaymentData, savePayment } from "../../services/paymentServices";
+import {
+  fetchPaymentData,
+  savePayment,
+} from "../../../services/paymentServices";
 import PaymentForm from "./PaymentForm";
 
 type Props = {
@@ -50,16 +53,32 @@ function PaymentModal({ open, onClose, paymentID, dataLogger }: Props) {
 
   let entity = Object.keys(mainData).length < 1 ? false : mainData;
 
-  const { mutate, isPending, isError, isSuccess } = useMutation({
-    mutationFn: (rawData) => {
-      const formData = objectToFormData({ payment: rawData });
-      return savePayment(rawData.id, formData);
-    },
-    onSuccess: (payment) => {
-      console.log("Payment saved or edited successfully");
-      onClose(payment);
-    },
-  });
+  // const { mutate, isPending, isError, isSuccess } = useMutation({
+  //   mutationFn: (rawData) => {
+  //     const formData = objectToFormData({ payment: rawData });
+  //     return savePayment(rawData.id, formData);
+  //   },
+  //   onSuccess: (payment) => {
+  //     console.log("Payment saved or edited successfully");
+  //     onClose(payment);
+  //   },
+  // });
+
+  function addPayment(data) {
+    console.log(data);
+    if (data.id) {
+      let idx = dataLogger.payments.findIndex((x) => x.id === data.id);
+      if (idx > -1) {
+        Object.assign(dataLogger.payments[idx], data);
+      }
+    } else {
+      dataLogger.payments.push(data);
+    }
+
+    console.log("dataLogger.payment");
+    console.log(dataLogger.payments);
+    onClose();
+  }
 
   if (!open) return null;
 
@@ -77,9 +96,9 @@ function PaymentModal({ open, onClose, paymentID, dataLogger }: Props) {
               <PaymentForm
                 handleCancel={() => onClose()}
                 payment={entity}
-                onSubmit={mutate}
+                onSubmit={addPayment}
                 buttonText={"Save"}
-                invoice_id={dataLogger.id}
+                invoice_id={dataLogger.invoice.id}
               />
             </>
           )}

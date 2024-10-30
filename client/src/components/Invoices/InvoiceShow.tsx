@@ -8,7 +8,7 @@ import FormCustomerSection from "./FormCustomerSection";
 import FormInvoiceLines from "./FormInvoiceLines";
 import FormTotalDetails from "./FormTotalDetails";
 import Button from "../../multiuse/Button";
-import FormPaymentLines from "./FormPaymentLines";
+import FormPaymentLines from "./Payments/FormPaymentLines";
 
 type props = {
   modalForm: boolean;

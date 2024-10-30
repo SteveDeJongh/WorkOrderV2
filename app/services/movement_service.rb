@@ -4,8 +4,6 @@ class MovementService
   end
 
   def record_movement(type, change, user)
-    puts "user in movement Service", user
-
     InventoryMovement.create(product_id: @resource.id, relation: "adj", adjustment: true, change: change, stock: @resource.stock, change_type: type, user_id: user.id)
   end
 end

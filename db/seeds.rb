@@ -13,9 +13,14 @@ Customer.create(first_name: 'John', last_name: 'Roberts', email: 'cust@gmail.com
 Customer.create(first_name: 'Bob', last_name: 'Gee', email: 'cust@yahoo.com', phone: "333-333-3333", city: 'Calgary')
 Customer.create(first_name: 'Rob', last_name: 'Jones', email: 'cust@google.com', phone: "444-444-4444", city: 'New York')
 
+User.create(name: 'Admin', email: 'admin@test.com', password: "password", roles: ['user', 'manager', 'admin'])
+User.create(name: 'Manager', email: 'manager@test.com', password: "password", roles: ['user', 'manager'])
+
+@user = User.first
+
 (1..8).each do |x|
   p = Product.create(name: "Product #{x}" ,description: "This is product #{x}" ,sku: "PR000#{x}" , upc: (x.to_s * 12).to_i, price: (x * 10) , cost: x, stock: x, min: x, max: (x * 10), inventory: true, tax_rate_id: 1,)
-  MovementService.new(p).record_movement("ProductCreation", x)
+  MovementService.new(p).record_movement("ProductCreation", x, @user)
 end
 
 productIDs = [1,2,3,4,5,6,7,8]
@@ -28,29 +33,28 @@ productIDs = [1,2,3,4,5,6,7,8]
   product.stock = product.stock + movement
   product.save
 
-  MovementService.new(product).record_movement("ProductEdit", movement)
+  MovementService.new(product).record_movement("ProductEdit", movement, @user)
 end
-
-User.create(name: 'Admin', email: 'admin@test.com', password: "password", roles: ['user', 'manager', 'admin'])
-User.create(name: 'Manager', email: 'manager@test.com', password: "password", roles: ['user', 'manager'])
-
 
 Invoice.new(customer_id: 1, user_id: 1, total: 10.50, balance: 10.50, tax: 1, status: "open").save
 Invoice.new(customer_id: 2, user_id: 1, total: 52.50, balance: 52.50, tax: 1, status: "open").save
 Invoice.new(customer_id: 3, user_id: 1, total: 21.00, balance: 0.00, tax: 1, status: "closed").save
 
-InvoiceLine.new(invoice_id: 1, product_id: 1, discount_percentage: 0, price: 10.00, quantity: 1, line_total: 10.00,
- tax_rate_id: 1, line_tax: 0.50).save
-InvoiceLine.new(invoice_id: 2, product_id: 2, discount_percentage: 0, price: 20.00, quantity: 1, line_total: 20.00,
-tax_rate_id: 1, line_tax: 1.00).save
-InvoiceLine.new(invoice_id: 2, product_id: 3, discount_percentage: 0, price: 30.00, quantity: 1, line_total: 30.00,
-tax_rate_id: 1, line_tax: 1.50).save
-InvoiceLine.new(invoice_id: 3, product_id: 2, discount_percentage: 0, price: 20.00, quantity: 1, line_total: 20.00,
-tax_rate_id: 1, line_tax: 1.00).save
-
-Payment.new(method: "Cash", invoice_id: 3, amount: 21.00).save
-
 # Add a default tax rate for "1" of 15%
 TaxRate.new(percentage: 0.15).save
 
+InvoiceLine.new(invoice_id: 1, product_id: 1, discount_percentage: 0, price: 10.00, quantity: 1, line_total: 10.00, tax_rate_id: 1, line_tax: 0.50).save
+InvoiceLine.new(invoice_id: 2, product_id: 2, discount_percentage: 0, price: 20.00, quantity: 1, line_total: 20.00, tax_rate_id: 1, line_tax: 1.00).save
+InvoiceLine.new(invoice_id: 2, product_id: 3, discount_percentage: 0, price: 30.00, quantity: 1, line_total: 30.00, tax_rate_id: 1, line_tax: 1.50).save
+InvoiceLine.new(invoice_id: 3, product_id: 2, discount_percentage: 0, price: 20.00, quantity: 1, line_total: 20.00, tax_rate_id: 1, line_tax: 1.00).save
+
+Payment.new(method: "Cash", invoice_id: 3, amount: 21.00).save
+Payment.new(method: "Cash", invoice_id: 1, amount: 5.00).save
+
+
 puts "1 admin user, 4 Customers and 8 Products created, and inventory movements created."
+
+
+# Extras for testing in console.
+
+# Invoice.new(customer_id: 1, user_id: 1, status: "open", invoice_lines_attributes: [{invoice_id: 1, product_id: 1, discount_percentage: 0, price: 10.00, quantity: 1, line_total: 10.00, tax_rate_id: 1, line_tax: 0.50 }]).save

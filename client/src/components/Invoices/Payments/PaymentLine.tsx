@@ -1,7 +1,7 @@
-import { fetchProductData } from "../../services/productServices";
+import { fetchProductData } from "../../../services/productServices";
 import { useRef, useState } from "react";
 import { NumericFormat } from "react-number-format";
-import Button from "../../multiuse/Button";
+import Button from "../../../multiuse/Button";
 
 type props = {
   line: object;
