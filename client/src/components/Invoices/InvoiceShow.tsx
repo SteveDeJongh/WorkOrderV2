@@ -10,18 +10,12 @@ import FormTotalDetails from "./FormTotalDetails";
 import Button from "../../multiuse/Button";
 import FormPaymentLines from "./Payments/FormPaymentLines";
 
-type props = {
+type Props = {
   modalForm: boolean;
   buttonText: string;
 };
 
-type invoiceData = {
-  invoice: invoice;
-  lines: Array<invoiceLine>;
-  payments: Array<invoicePayments>;
-};
-
-type invoice = {
+type Invoice = {
   id: number;
   customer_id: number;
   user_id: number;
@@ -31,9 +25,11 @@ type invoice = {
   created_at: string;
   updated_at: string;
   status: string;
+  invoice_lines_attributes?: Array<InvoiceLine>;
+  payments_attributes?: Array<Payments>;
 };
 
-type invoiceLine = {
+type InvoiceLine = {
   id: number;
   invoice_id: number;
   product_id: number;
@@ -44,11 +40,11 @@ type invoiceLine = {
   line_tax: number;
   line_total: number;
   quantity: number;
-  tax_rate: tax_rate;
-  product: product;
+  tax_rate: Tax_rate;
+  product: Product;
 };
 
-type product = {
+type Product = {
   cost: string;
   created_at: string;
   description: string;
@@ -65,14 +61,14 @@ type product = {
   updated_at: string;
 };
 
-type tax_rate = {
+type Tax_rate = {
   created_at: string;
   id: number;
   percentage: number;
   updated_at: string;
 };
 
-type invoicePayments = {
+type Payments = {
   amount: number;
   created_at: string;
   updated_at: string;
@@ -81,12 +77,12 @@ type invoicePayments = {
   method: string;
 };
 
-function InvoiceShow({ modalForm, buttonText }: props) {
+function InvoiceShow({ modalForm, buttonText }: Props) {
   // Main Pane states
   const [mainLoading, setMainLoading] = useState(true);
   const [mainError, setMainError] = useState("");
-  const [mainData, setMainData] = useState<invoiceData | {}>({});
-  const [dataLogger, setDataLogger] = useState<invoiceData | {}>({});
+  const [mainData, setMainData] = useState<Invoice | {}>({});
+  const [dataLogger, setDataLogger] = useState<Invoice | {}>({});
   const [headerText, setHeaderText] = useState("New Invoice");
   let { id: invoiceID } = useParams();
   const navigate = useNavigate();
@@ -104,6 +100,7 @@ function InvoiceShow({ modalForm, buttonText }: props) {
         setHeaderText(`Invoice ${invoiceID}`);
         const response = await fetchInvoiceData(invoiceID);
         setMainData(response);
+        console.log("response is", response);
         // Creating a deep copy of the intial response to not alter mainData for comparison later.
         setDataLogger(JSON.parse(JSON.stringify(response)));
       } catch (e) {
@@ -154,9 +151,9 @@ function InvoiceShow({ modalForm, buttonText }: props) {
   }
 
   const { mutate, isPending, isError, isSuccess } = useMutation({
-    mutationFn: (invoiceData: invoiceData) => {
+    mutationFn: (invoiceData: Invoice) => {
       if (invoiceID) {
-        console.log("invoideData on mutate", invoiceData);
+        console.log("invoiceData on mutate", invoiceData);
         console.log("invoiceID on mutate", invoiceID);
         return editInvoice(
           invoiceID,
@@ -234,21 +231,21 @@ function InvoiceShow({ modalForm, buttonText }: props) {
       >
         <FormCustomerSection
           dataLogger={dataLogger}
-          dataID={mainData.invoice.customer_id}
+          dataID={mainData.customer_id}
         />
         <FormInvoiceLines
           dataLogger={dataLogger}
-          invoiceLines={mainData.lines}
+          invoiceLines={mainData.invoice_lines_attributes}
         />
         <FormPaymentLines
           dataLogger={dataLogger}
-          payments={mainData.payments}
+          payments={mainData.payments_attributes}
         />
         {/* <FormTotalDetails /> */}
         <FormTotalDetails dataLogger={dataLogger} />
-        <div>Total is {dataLogger.invoice.total}</div>
-        <div>Tax is {dataLogger.invoice.tax}</div>
-        <div>Balance is {dataLogger.invoice.balance}</div>
+        <div>Total is {dataLogger.total}</div>
+        <div>Tax is {dataLogger.tax}</div>
+        <div>Balance is {dataLogger.balance}</div>
       </div>
     </>
   );

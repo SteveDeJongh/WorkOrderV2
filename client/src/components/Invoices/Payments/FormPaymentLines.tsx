@@ -5,21 +5,16 @@ import Button from "../../../multiuse/Button";
 import PaymentModal from "./PaymentModal";
 
 type props = {
-  dataLogger: customerRef;
-  payments: Array<object>;
-};
-
-type customerRef = {
-  current: number;
+  dataLogger: Object;
+  payments: Array<Payments>;
 };
 
 export default function FormPaymentLines({ dataLogger, payments }: props) {
   const [lineModal, setlineModal] = useState(false);
   const [loading, setloading] = useState(false);
-  const [lines, setLines] = useState(dataLogger.payments);
-  const refLines = useRef(dataLogger.payments);
+  const [lines, setLines] = useState(dataLogger.payments_attributes);
+  const refLines = useRef(dataLogger.payments_attributes);
 
-  console.log(payments);
   console.log(lines);
   console.log("dataLogger", dataLogger);
 
@@ -59,9 +54,9 @@ export default function FormPaymentLines({ dataLogger, payments }: props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {refLines.current.map((line) => (
+                  {refLines.current.map((line, idx) => (
                     <PaymentLine
-                      key={line.id}
+                      key={line.id ? line.id : `new${idx}`}
                       line={line}
                       lineClick={() => handleClick(line.id)}
                     />

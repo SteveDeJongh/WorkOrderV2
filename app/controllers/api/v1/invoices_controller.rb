@@ -10,8 +10,37 @@ class Api::V1::InvoicesController < ApplicationController
 
   # GET /invoices/1
   def show
-    render json: {invoice: @invoice, lines: @invoice.invoice_lines.as_json(include: [:product, :tax_rate]), payments: @invoice.payments}
+      # render json: {invoice: @invoice, invoice_lines_attributes: @invoice.invoice_lines.as_json(include: [:product, :tax_rate]), payments_attributes: @invoice.payments}
+      # puts "render results"
+      # puts @invoice.as_json(include: [{
+      #                                 invoice_lines: {
+      #                                   include: [:product, :tax_rate]
+      #                                 }
+      #                                 }, {
+      #                                   payments: {}
+      #                                   }
+      #                                ])
+      # puts "After render Results"
+      render json: @invoice.as_json(include: [{
+        invoice_lines: {
+          include: [:product, :tax_rate]
+        }
+        }, {
+          payments: {}
+          }
+       ])
   end
+
+  # @invoice.as_json(include: {
+  #   invoice_lines: {
+  #     include: [:product, :tax_rate]
+  #   }
+  # })
+
+  # user.as_json(include: { posts: {
+  #                          include: { comments: {
+  #                                         only: :body } },
+  #                          only: :title } })
 
   # POST /invoices
   def create
@@ -20,7 +49,7 @@ class Api::V1::InvoicesController < ApplicationController
     InvoiceService.new(@invoice).calculateInvoiceTotals
 
     if @invoice.save
-      render json: {invoice: @invoice, lines: @invoice.invoice_lines.as_json(include: [:product, :tax_rate]), payments: @invoice.payments}
+      render json: {invoice: @invoice, invoice_lines_attributes: @invoice.invoice_lines.as_json(include: [:product, :tax_rate]), payments_attributes: @invoice.payments}
     else
       render json: @invoice.errors, status: :unprocessable_entity
     end
@@ -29,8 +58,10 @@ class Api::V1::InvoicesController < ApplicationController
   # PATCH/PUT /invoices/1
   def update
     # Update Invoice Lines
-    if invoice_params[:lines]
-      invoice_params[:lines].each do |idx, line|
+    puts "Invoice Params"
+    puts invoice_params();
+    if invoice_params[:invoice_lines_attributes]
+      invoice_params[:invoice_lines_attributes].each do |idx, line|
         line = recalculateInvoiceLine(line);
         # Removing extra properties on line for update.
         line = removeExtraProps(line, ["product", "tax_rate", "updated_at"])
@@ -40,8 +71,8 @@ class Api::V1::InvoicesController < ApplicationController
     end
 
     # Update payment if there are payments
-    if invoice_params[:payments]
-      invoice_params[:payments].each do |idx, payment|
+    if invoice_params[:payments_attributes]
+      invoice_params[:payments_attributes].each do |idx, payment|
         puts "payment"
         puts payment.inspect
         payment = removeExtraProps(payment, ["created_at", "updated_at"])
@@ -49,15 +80,12 @@ class Api::V1::InvoicesController < ApplicationController
       end
     end
 
-    puts "Inspecting invocie params"
-    puts invoice_params[:payments]["1"].inspect
-
     # calculateInvoiceTotals()
     InvoiceService.new(@invoice).calculateInvoiceTotals
 
     if @invoice.save
       puts "We in here"
-      render json: {invoice: @invoice, lines: @invoice.invoice_lines.as_json(include: [:product, :tax_rate]), payments: @invoice.payments}
+      render json: {invoice: @invoice, invoice_lines_attributes: @invoice.invoice_lines.as_json(include: [:product, :tax_rate]), payments_attributes: @invoice.payments}
     else
       render json: @invoice.errors, status: :unprocessable_entity
     end
@@ -76,8 +104,7 @@ class Api::V1::InvoicesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def invoice_params
-      params.require(:invoiceData).permit(
-      :invoice => [
+      params.require(:invoice).permit(
         :id,
         :customer_id,
         :total,
@@ -86,9 +113,8 @@ class Api::V1::InvoicesController < ApplicationController
         :created_at,
         :updated_at,
         :status,
-        :user_id
-        ],
-      :lines => [
+        :user_id,
+      :invoice_lines_attributes => [
         :invoice_id,
         :line_tax,
         :product_id,
@@ -123,7 +149,7 @@ class Api::V1::InvoicesController < ApplicationController
           :updated_at
           ]
         ],
-       :payments => [:id, :method, :invoice_id, :amount, :created_at, :updated_at]
+       :payments_attributes => [:id, :method, :invoice_id, :amount, :created_at, :updated_at]
        )
     end
 

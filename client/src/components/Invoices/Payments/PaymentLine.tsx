@@ -43,7 +43,7 @@ export default function PaymentLine({ line, lineClick }: props) {
       showAsDollars: true,
     },
     {
-      keyName: "updated_at",
+      keyName: "created_at",
       showAsDollars: false,
     },
   ];

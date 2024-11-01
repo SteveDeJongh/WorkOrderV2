@@ -33,7 +33,7 @@ export default function FormCustomerSection({ dataLogger, dataID }: props) {
   useEffect(() => {
     if (!dataID) return;
     setloading(true);
-    dataLogger.invoice.customer_id = dataID;
+    dataLogger.customer_id = dataID;
     async function loadCustomerData(id: number) {
       try {
         const response = await fetchCustomerData(id);
@@ -45,7 +45,7 @@ export default function FormCustomerSection({ dataLogger, dataID }: props) {
       }
     }
 
-    loadCustomerData(dataLogger.invoice.customer_id);
+    loadCustomerData(dataLogger.customer_id);
   }, []);
 
   // When a new customer is selected in the modal, close the modal and refetch the customer data by the new customerID
@@ -56,7 +56,7 @@ export default function FormCustomerSection({ dataLogger, dataID }: props) {
         setCustomer(false);
         setloading(true);
         const response = await fetchCustomerData(id);
-        dataLogger.invoice.customer_id = response.id;
+        dataLogger.customer_id = response.id;
         setCustomer(response);
       } catch (e) {
         console.error(e);
@@ -69,7 +69,7 @@ export default function FormCustomerSection({ dataLogger, dataID }: props) {
   }
 
   function removeCustomer() {
-    dataLogger.invoice.customer_id = 0;
+    dataLogger.customer_id = 0;
     setCustomer("");
   }
 
@@ -92,7 +92,7 @@ export default function FormCustomerSection({ dataLogger, dataID }: props) {
           <LoadingBox text="Loading customer..." />
         </div>
       )}
-      {!customer && !dataLogger.invoice.customer_id && (
+      {!customer && !dataLogger.customer_id && (
         <div className="panel-contents-section">
           <div className="panel-hero">
             <div className="hero-text">No Customer Assigned</div>
@@ -131,7 +131,7 @@ export default function FormCustomerSection({ dataLogger, dataID }: props) {
         open={customerModal}
         onClose={() => setCustomerModal(false)}
         onSave={(id) => handleCustomerChange(id)}
-        customer_id={dataLogger.invoice.customer_id}
+        customer_id={dataLogger.customer_id}
       />
     </div>
   );

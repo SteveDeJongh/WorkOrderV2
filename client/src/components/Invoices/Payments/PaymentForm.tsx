@@ -37,7 +37,7 @@ function PaymentForm({
     try {
       onSubmit(data);
     } catch (e) {
-      console.log("failed!");
+      console.log("failed!", e);
     }
   }
 

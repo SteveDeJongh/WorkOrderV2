@@ -37,3 +37,10 @@ export function mapSingleResponseDataToKeys(d) {
   })
   return r;
 }
+
+export function formDataLogger(formData) {
+  formData.entries().forEach((pair) => {
+    console.log("key", pair[0]);
+    console.log("value", pair[1]);
+  })
+}

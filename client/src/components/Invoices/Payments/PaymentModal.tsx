@@ -67,16 +67,21 @@ function PaymentModal({ open, onClose, paymentID, dataLogger }: Props) {
   function addPayment(data) {
     console.log(data);
     if (data.id) {
-      let idx = dataLogger.payments.findIndex((x) => x.id === data.id);
+      let idx = dataLogger.payments_attributes.findIndex(
+        (x) => x.id === data.id
+      );
       if (idx > -1) {
         Object.assign(dataLogger.payments[idx], data);
       }
     } else {
-      dataLogger.payments.push(data);
+      dataLogger.payments_attributes.push({
+        ...data,
+        created_at: new Date(Date.now()).toISOString(),
+      });
     }
 
-    console.log("dataLogger.payment");
-    console.log(dataLogger.payments);
+    console.log("dataLogger.payments_attributes");
+    console.log(dataLogger.payments_attributes);
     onClose();
   }
 
