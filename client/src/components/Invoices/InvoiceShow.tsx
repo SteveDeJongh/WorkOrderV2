@@ -9,6 +9,7 @@ import FormInvoiceLines from "./FormInvoiceLines";
 import FormTotalDetails from "./FormTotalDetails";
 import Button from "../../multiuse/Button";
 import FormPaymentLines from "./Payments/FormPaymentLines";
+import { privateDecrypt } from "crypto";
 
 type Props = {
   modalForm: boolean;
@@ -152,20 +153,26 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
 
   const { mutate, isPending, isError, isSuccess } = useMutation({
     mutationFn: (invoiceData: Invoice) => {
-      let refreshed = Object.assign({}, invoiceData);
-      refreshed.invoice_lines_attributes = refreshed.invoice_lines;
-      delete refreshed.invoice_lines;
-      refreshed.payments_attributes = refreshed.payments;
-      delete refreshed.payments;
-
       if (invoiceID) {
-        console.log("invoiceData on mutate", invoiceData);
-        console.log("refreshed on mutate", refreshed);
-        console.log("invoiceID on mutate", invoiceID);
-        return editInvoice(invoiceID, { invoice: refreshed });
+        return editInvoice(invoiceID, {
+          invoice: renamePropsToAttributes(invoiceData),
+        });
       }
     },
   });
+
+  function renamePropsToAttributes(intakeObject) {
+    let {
+      invoice_lines: invoice_lines_attributes,
+      payments: payments_attributes,
+      ...rest
+    } = intakeObject;
+    return {
+      invoice_lines_attributes,
+      payments_attributes,
+      ...rest,
+    };
+  }
 
   // async function onSubmitHandler(rawFormData) {
   //   recalculateInvoice(dataLogger.current.id);

@@ -37,6 +37,8 @@ class Api::V1::InvoicesController < ApplicationController
   # PATCH/PUT /invoices/1
   def update
     workingParams = invoice_params()
+    puts "Working params"
+    puts workingParams
 
     # Update Invoice Lines
     if workingParams[:invoice_lines_attributes]
