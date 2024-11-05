@@ -25,8 +25,8 @@ type Invoice = {
   created_at: string;
   updated_at: string;
   status: string;
-  invoice_lines_attributes?: Array<InvoiceLine>;
-  payments_attributes?: Array<Payments>;
+  invoice_lines?: Array<InvoiceLine>;
+  payments?: Array<Payments>;
 };
 
 type InvoiceLine = {
@@ -152,13 +152,17 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
 
   const { mutate, isPending, isError, isSuccess } = useMutation({
     mutationFn: (invoiceData: Invoice) => {
+      let refreshed = Object.assign({}, invoiceData);
+      refreshed.invoice_lines_attributes = refreshed.invoice_lines;
+      delete refreshed.invoice_lines;
+      refreshed.payments_attributes = refreshed.payments;
+      delete refreshed.payments;
+
       if (invoiceID) {
         console.log("invoiceData on mutate", invoiceData);
+        console.log("refreshed on mutate", refreshed);
         console.log("invoiceID on mutate", invoiceID);
-        return editInvoice(
-          invoiceID,
-          objectToFormData({ invoiceData: invoiceData })
-        );
+        return editInvoice(invoiceID, { invoice: refreshed });
       }
     },
   });
@@ -235,11 +239,11 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
         />
         <FormInvoiceLines
           dataLogger={dataLogger}
-          invoiceLines={mainData.invoice_lines_attributes}
+          invoiceLines={mainData.invoice_lines}
         />
         <FormPaymentLines
           dataLogger={dataLogger}
-          payments={mainData.payments_attributes}
+          payments={mainData.payments}
         />
         {/* <FormTotalDetails /> */}
         <FormTotalDetails dataLogger={dataLogger} />

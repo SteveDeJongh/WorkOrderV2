@@ -12,8 +12,8 @@ type props = {
 export default function FormPaymentLines({ dataLogger, payments }: props) {
   const [lineModal, setlineModal] = useState(false);
   const [loading, setloading] = useState(false);
-  const [lines, setLines] = useState(dataLogger.payments_attributes);
-  const refLines = useRef(dataLogger.payments_attributes);
+  const [lines, setLines] = useState(dataLogger.payments);
+  const refLines = useRef(dataLogger.payments);
 
   console.log(lines);
   console.log("dataLogger", dataLogger);

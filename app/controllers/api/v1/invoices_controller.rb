@@ -11,16 +11,6 @@ class Api::V1::InvoicesController < ApplicationController
   # GET /invoices/1
   def show
       # render json: {invoice: @invoice, invoice_lines_attributes: @invoice.invoice_lines.as_json(include: [:product, :tax_rate]), payments_attributes: @invoice.payments}
-      # puts "render results"
-      # puts @invoice.as_json(include: [{
-      #                                 invoice_lines: {
-      #                                   include: [:product, :tax_rate]
-      #                                 }
-      #                                 }, {
-      #                                   payments: {}
-      #                                   }
-      #                                ])
-      # puts "After render Results"
       render json: @invoice.as_json(include: [{
         invoice_lines: {
           include: [:product, :tax_rate]
@@ -30,17 +20,6 @@ class Api::V1::InvoicesController < ApplicationController
           }
        ])
   end
-
-  # @invoice.as_json(include: {
-  #   invoice_lines: {
-  #     include: [:product, :tax_rate]
-  #   }
-  # })
-
-  # user.as_json(include: { posts: {
-  #                          include: { comments: {
-  #                                         only: :body } },
-  #                          only: :title } })
 
   # POST /invoices
   def create
@@ -57,34 +36,28 @@ class Api::V1::InvoicesController < ApplicationController
 
   # PATCH/PUT /invoices/1
   def update
+    workingParams = invoice_params()
+
     # Update Invoice Lines
-    puts "Invoice Params"
-    puts invoice_params();
-    if invoice_params[:invoice_lines_attributes]
-      invoice_params[:invoice_lines_attributes].each do |idx, line|
+    if workingParams[:invoice_lines_attributes]
+      workingParams[:invoice_lines_attributes].map! do |line|
         line = recalculateInvoiceLine(line);
         # Removing extra properties on line for update.
-        line = removeExtraProps(line, ["product", "tax_rate", "updated_at"])
-        # Update each invoice line.
-        # InvoiceLine.find(line[:id]).update(line)
+        removeExtraProps(line, ["product", "tax_rate", "updated_at", "created_at"])
       end
     end
 
     # Update payment if there are payments
-    if invoice_params[:payments_attributes]
-      invoice_params[:payments_attributes].each do |idx, payment|
-        puts "payment"
-        puts payment.inspect
-        payment = removeExtraProps(payment, ["created_at", "updated_at"])
-        # Payment.find(payment[:id]).update(payment)
+    if workingParams[:payments_attributes]
+      workingParams[:payments_attributes].map! do |payment|
+        removeExtraProps(payment, ["created_at", "updated_at"])
       end
     end
 
-    # calculateInvoiceTotals()
-    InvoiceService.new(@invoice).calculateInvoiceTotals
-
-    if @invoice.save
-      puts "We in here"
+    if @invoice.update(workingParams)
+      # Update Invoice total amounts.
+      InvoiceService.new(@invoice).calculateInvoiceTotals
+      @invoice.save
       render json: {invoice: @invoice, invoice_lines_attributes: @invoice.invoice_lines.as_json(include: [:product, :tax_rate]), payments_attributes: @invoice.payments}
     else
       render json: @invoice.errors, status: :unprocessable_entity
@@ -114,7 +87,7 @@ class Api::V1::InvoicesController < ApplicationController
         :updated_at,
         :status,
         :user_id,
-      :invoice_lines_attributes => [
+      invoice_lines_attributes: [
         :invoice_id,
         :line_tax,
         :product_id,
@@ -149,7 +122,7 @@ class Api::V1::InvoicesController < ApplicationController
           :updated_at
           ]
         ],
-       :payments_attributes => [:id, :method, :invoice_id, :amount, :created_at, :updated_at]
+       payments_attributes: [:id, :method, :invoice_id, :amount, :created_at, :updated_at]
        )
     end
 
