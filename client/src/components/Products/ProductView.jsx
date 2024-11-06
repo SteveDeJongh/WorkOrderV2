@@ -2,6 +2,7 @@ import { useOutletContext, Link } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
 import { fetchLast3MovementsFor } from "../../services/movementServices";
 import { useQuery } from "@tanstack/react-query";
+import { dateTimeFormatter } from "../../utils";
 
 function ProductView() {
   const {
@@ -162,10 +163,10 @@ function ProductView() {
                             <td>{movement.adjustment ? "True" : "False"}</td>
                             <td>{movement.change}</td>
                             <td>{movement.stock}</td>
-                            <td>{movement.changeType}</td>
+                            <td>{movement.change_type}</td>
                             <td>{movement.user_id}</td>
-                            <td>{movement.created_at}</td>
-                            <td>{movement.productID}</td>
+                            <td>{dateTimeFormatter(movement.created_at)}</td>
+                            <td>{movement.product_id}</td>
                           </tr>
                         );
                       })}

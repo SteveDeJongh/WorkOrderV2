@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import Button from "../../../multiuse/Button";
 import { Invoice, Payment } from "../../../types/invoiceTypes";
+import { dateRegExp, dateTimeFormatter } from "../../../utils/index";
 
 type props = {
   paymentData: Payment;
@@ -12,6 +13,7 @@ type props = {
 type dataCellProps = {
   showAsDollars: boolean;
   val: string | number | undefined;
+  deleted?: boolean;
 };
 
 type columnProps = {
@@ -19,14 +21,20 @@ type columnProps = {
   showAsDollars: boolean;
 };
 
-function DataCell({ showAsDollars, val }: dataCellProps) {
+function DataCell({ showAsDollars, val, deleted }: dataCellProps) {
   const changeRef = useRef<null | NodeJS.Timeout>(null);
   const [inputValue, setInputValue] = useState(val);
 
   val = showAsDollars ? `$${Number(val).toFixed(2)}` : val;
+  val = dateRegExp.test(val) ? dateTimeFormatter(val) : val;
   return (
     <td>
-      <div>{val}</div>
+      {deleted && (
+        <del>
+          <div>{val}</div>
+        </del>
+      )}
+      {!deleted && <div>{val}</div>}
     </td>
   );
 }
@@ -40,10 +48,6 @@ export default function PaymentLine({
   const [payment, setPayment] = useState(paymentData);
 
   let columns: Array<columnProps> = [
-    {
-      keyName: "id",
-      showAsDollars: false,
-    },
     {
       keyName: "method",
       showAsDollars: false,
@@ -65,12 +69,13 @@ export default function PaymentLine({
           showAsDollars={col.showAsDollars}
           key={`${[col.keyName]}${payment.id}`}
           val={payment[col.keyName]}
+          deleted={payment._destroy}
         />
       ))}
       {adminActions && (
         <td className="pad">
-          <Button
-            text="Delete"
+          <input
+            type="checkbox"
             onClick={() => deletePayment(payment.id, payment.created_at)}
           />
         </td>

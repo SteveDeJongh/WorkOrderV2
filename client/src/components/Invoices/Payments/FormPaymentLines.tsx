@@ -16,26 +16,12 @@ export default function FormPaymentLines({
   adminActions,
 }: props) {
   const [lines, setLines] = useState(dataLogger.payments);
-  const [loading, setLoading] = useState(true);
-  const [shownLines, setShownLines] = useState<Array<Payment>>();
 
-  useEffect(() => {
-    setShownLines(
-      lines?.filter((payment) => {
-        return payment._destroy == undefined || payment._destroy == false;
-      })
-    );
-    setLoading(false);
-  }, [lines]);
-
-  function deletePayment(
-    paymentID: string | number,
-    created_at: string | Date
-  ) {
+  function toggleDelete(paymentID: string | number, created_at: string | Date) {
     setLines(
       lines?.map((payment) => {
         if (payment.id == paymentID && payment.created_at == created_at) {
-          payment._destroy = true;
+          payment._destroy = !payment._destroy;
         }
         return payment;
       })
@@ -48,7 +34,7 @@ export default function FormPaymentLines({
   const clickedID = useRef<Number | String>();
 
   function handleClick(id: Number | String, e: React.MouseEvent) {
-    if ((e.target as HTMLInputElement).tagName !== "BUTTON") {
+    if ((e.target as HTMLInputElement).tagName !== "INPUT") {
       clickedID.current = id;
       setIsOpen(true);
     }
@@ -58,10 +44,6 @@ export default function FormPaymentLines({
     clickedID.current = undefined;
     recalculateInvoice();
     setIsOpen(false);
-  }
-
-  if (loading) {
-    return <div>Loading!</div>;
   }
 
   return (
@@ -74,32 +56,33 @@ export default function FormPaymentLines({
         {lines && (
           <div className="panel-contents">
             <div className="panel-contents-section">
-              <table>
-                <thead>
-                  <tr>
-                    <th>payment ID</th>
-                    <th>Method</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                    {adminActions && <th>Delete</th>}
-                  </tr>
-                </thead>
-                <tbody>
-                  {shownLines?.map((line, idx) => {
-                    return (
-                      <PaymentLine
-                        key={line.id ? line.id : `new${idx}`}
-                        paymentData={line}
-                        lineClick={(e: React.MouseEvent) =>
-                          handleClick(line.id, e)
-                        }
-                        adminActions={adminActions}
-                        deletePayment={deletePayment}
-                      />
-                    );
-                  })}
-                </tbody>
-              </table>
+              <div className="scrollable-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Method</th>
+                      <th>Amount</th>
+                      <th>Date</th>
+                      {adminActions && <th>Delete</th>}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {lines?.map((line, idx) => {
+                      return (
+                        <PaymentLine
+                          key={line.id ? line.id : `new${idx}`}
+                          paymentData={line}
+                          lineClick={(e: React.MouseEvent) =>
+                            handleClick(line.id, e)
+                          }
+                          adminActions={adminActions}
+                          deletePayment={toggleDelete}
+                        />
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
             <Button text="Add Payment" onClick={() => setIsOpen(true)} />
           </div>
