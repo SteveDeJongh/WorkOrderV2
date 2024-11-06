@@ -3,21 +3,10 @@ import CustomerSearchModal from "../Customers/CustomerSearchModal";
 import { fetchCustomerData } from "../../services/customerServices";
 import LoadingBox from "../../multiuse/LoadingBox";
 import Button from "../../multiuse/Button";
-
-type invoice = {
-  id: number;
-  customer_id: number;
-  user_id: number;
-  total: number;
-  balance: number;
-  tax: number;
-  created_at: string;
-  updated_at: string;
-  status: string;
-};
+import { Invoice } from "../../types/invoiceTypes";
 
 type props = {
-  dataLogger: object;
+  dataLogger: Invoice;
   dataID: number;
 };
 

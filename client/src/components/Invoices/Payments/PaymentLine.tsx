@@ -1,16 +1,22 @@
-import { fetchProductData } from "../../../services/productServices";
 import { useRef, useState } from "react";
-import { NumericFormat } from "react-number-format";
 import Button from "../../../multiuse/Button";
+import { Invoice, Payment } from "../../../types/invoiceTypes";
 
 type props = {
-  line: object;
-  // updateLine: Function;
+  paymentData: Payment;
+  lineClick: Function;
+  adminActions: Boolean;
+  deletePayment: Function;
 };
 
 type dataCellProps = {
   showAsDollars: boolean;
-  val: string;
+  val: string | number | undefined;
+};
+
+type columnProps = {
+  keyName: "id" | "method" | "amount" | "created_at";
+  showAsDollars: boolean;
 };
 
 function DataCell({ showAsDollars, val }: dataCellProps) {
@@ -25,11 +31,15 @@ function DataCell({ showAsDollars, val }: dataCellProps) {
   );
 }
 
-export default function PaymentLine({ line, lineClick }: props) {
-  const [stateLine, setStateLine] = useState(line);
-  const refLine = useRef(stateLine);
+export default function PaymentLine({
+  paymentData,
+  lineClick,
+  adminActions,
+  deletePayment,
+}: props) {
+  const [payment, setPayment] = useState(paymentData);
 
-  let columns = [
+  let columns: Array<columnProps> = [
     {
       keyName: "id",
       showAsDollars: false,
@@ -49,14 +59,22 @@ export default function PaymentLine({ line, lineClick }: props) {
   ];
 
   return (
-    <tr onClick={(id) => lineClick(id)}>
+    <tr onClick={(e) => lineClick(e)}>
       {columns.map((col) => (
         <DataCell
           showAsDollars={col.showAsDollars}
-          key={`${[col.keyName]}${refLine.current.id}`}
-          val={refLine.current[col.keyName]}
+          key={`${[col.keyName]}${payment.id}`}
+          val={payment[col.keyName]}
         />
       ))}
+      {adminActions && (
+        <td className="pad">
+          <Button
+            text="Delete"
+            onClick={() => deletePayment(payment.id, payment.created_at)}
+          />
+        </td>
+      )}
     </tr>
   );
 }

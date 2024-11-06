@@ -28,7 +28,14 @@ class Api::V1::InvoicesController < ApplicationController
     InvoiceService.new(@invoice).calculateInvoiceTotals
 
     if @invoice.save
-      render json: {invoice: @invoice, invoice_lines_attributes: @invoice.invoice_lines.as_json(include: [:product, :tax_rate]), payments_attributes: @invoice.payments}
+      render json: @invoice.as_json(include: [{
+        invoice_lines: {
+          include: [:product, :tax_rate]
+        }
+        }, {
+          payments: {}
+          }
+       ])
     else
       render json: @invoice.errors, status: :unprocessable_entity
     end
@@ -60,7 +67,14 @@ class Api::V1::InvoicesController < ApplicationController
       # Update Invoice total amounts.
       InvoiceService.new(@invoice).calculateInvoiceTotals
       @invoice.save
-      render json: {invoice: @invoice, invoice_lines_attributes: @invoice.invoice_lines.as_json(include: [:product, :tax_rate]), payments_attributes: @invoice.payments}
+      render json: @invoice.as_json(include: [{
+        invoice_lines: {
+          include: [:product, :tax_rate]
+        }
+        }, {
+          payments: {}
+          }
+       ])
     else
       render json: @invoice.errors, status: :unprocessable_entity
     end
@@ -124,7 +138,7 @@ class Api::V1::InvoicesController < ApplicationController
           :updated_at
           ]
         ],
-       payments_attributes: [:id, :method, :invoice_id, :amount, :created_at, :updated_at]
+       payments_attributes: [:id, :method, :invoice_id, :amount, :created_at, :updated_at, :_destroy]
        )
     end
 

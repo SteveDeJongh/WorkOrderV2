@@ -1,36 +1,67 @@
 import { useState, useRef, useEffect } from "react";
-import LoadingBox from "../../../multiuse/LoadingBox";
 import PaymentLine from "./PaymentLine";
 import Button from "../../../multiuse/Button";
 import PaymentModal from "./PaymentModal";
+import { Invoice, Payment } from "../../../types/invoiceTypes";
 
 type props = {
-  dataLogger: Object;
-  payments: Array<Payments>;
+  dataLogger: Invoice;
+  recalculateInvoice: Function;
+  adminActions: Boolean;
 };
 
-export default function FormPaymentLines({ dataLogger, payments }: props) {
-  const [lineModal, setlineModal] = useState(false);
-  const [loading, setloading] = useState(false);
+export default function FormPaymentLines({
+  dataLogger,
+  recalculateInvoice,
+  adminActions,
+}: props) {
   const [lines, setLines] = useState(dataLogger.payments);
-  const refLines = useRef(dataLogger.payments);
+  const [loading, setLoading] = useState(true);
+  const [shownLines, setShownLines] = useState<Array<Payment>>();
 
-  console.log(lines);
-  console.log("dataLogger", dataLogger);
+  useEffect(() => {
+    setShownLines(
+      lines?.filter((payment) => {
+        return payment._destroy == undefined || payment._destroy == false;
+      })
+    );
+    setLoading(false);
+  }, [lines]);
+
+  function deletePayment(
+    paymentID: string | number,
+    created_at: string | Date
+  ) {
+    setLines(
+      lines?.map((payment) => {
+        if (payment.id == paymentID && payment.created_at == created_at) {
+          payment._destroy = true;
+        }
+        return payment;
+      })
+    );
+    recalculateInvoice();
+  }
 
   // For Modal
   const [isOpen, setIsOpen] = useState(false);
-  const clickedID = useRef(null);
+  const clickedID = useRef<Number | String>();
 
-  function handleClick(id) {
-    clickedID.current = id;
-    setIsOpen(true);
+  function handleClick(id: Number | String, e: React.MouseEvent) {
+    if ((e.target as HTMLInputElement).tagName !== "BUTTON") {
+      clickedID.current = id;
+      setIsOpen(true);
+    }
   }
 
-  function handleClose(data) {
-    console.log("Data from handleClose", data);
-    clickedID.current = null;
+  function handleClose(data: Payment | undefined) {
+    clickedID.current = undefined;
+    recalculateInvoice();
     setIsOpen(false);
+  }
+
+  if (loading) {
+    return <div>Loading!</div>;
   }
 
   return (
@@ -40,8 +71,7 @@ export default function FormPaymentLines({ dataLogger, payments }: props) {
           <h3>Payments</h3>
           <div className="panel-action"></div>
         </div>
-        {loading && <div>loading</div>}
-        {refLines.current && !loading && (
+        {lines && (
           <div className="panel-contents">
             <div className="panel-contents-section">
               <table>
@@ -51,16 +81,23 @@ export default function FormPaymentLines({ dataLogger, payments }: props) {
                     <th>Method</th>
                     <th>Amount</th>
                     <th>Date</th>
+                    {adminActions && <th>Delete</th>}
                   </tr>
                 </thead>
                 <tbody>
-                  {refLines.current.map((line, idx) => (
-                    <PaymentLine
-                      key={line.id ? line.id : `new${idx}`}
-                      line={line}
-                      lineClick={() => handleClick(line.id)}
-                    />
-                  ))}
+                  {shownLines?.map((line, idx) => {
+                    return (
+                      <PaymentLine
+                        key={line.id ? line.id : `new${idx}`}
+                        paymentData={line}
+                        lineClick={(e: React.MouseEvent) =>
+                          handleClick(line.id, e)
+                        }
+                        adminActions={adminActions}
+                        deletePayment={deletePayment}
+                      />
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -70,7 +107,7 @@ export default function FormPaymentLines({ dataLogger, payments }: props) {
       </div>
       <PaymentModal
         open={isOpen}
-        onClose={(data) => handleClose(data)}
+        onClose={(data: Payment | undefined) => handleClose(data)}
         paymentID={clickedID.current}
         dataLogger={dataLogger}
       />

@@ -2,6 +2,15 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Button from "../../../multiuse/Button";
+import { Payment } from "../../../types/invoiceTypes";
+
+type Props = {
+  handleCancel: Function;
+  payment: Payment;
+  onSubmit: Function;
+  buttonText: string;
+  invoice_id: Number;
+};
 
 function PaymentForm({
   handleCancel,
@@ -9,7 +18,7 @@ function PaymentForm({
   onSubmit,
   buttonText,
   invoice_id,
-}) {
+}: Props) {
   const navigate = useNavigate();
 
   const {

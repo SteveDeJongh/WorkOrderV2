@@ -44,3 +44,19 @@ export function formDataLogger(formData) {
     console.log("value", pair[1]);
   })
 }
+
+export function sumAProp(collection, prop, unlessOpts) {
+  return collection.reduce((acc, x) => {
+    if (unlessOpts) {
+      let ok = true;
+      Object.entries(unlessOpts).forEach(([k, v]) => {
+        if(x[k] == v) {
+          ok = false;
+        }
+      })
+      return ok ? acc + parseFloat(x[prop]) : acc;
+    } else {
+      return acc + parseFloat(x[prop])
+    }
+  }, 0.0)
+}

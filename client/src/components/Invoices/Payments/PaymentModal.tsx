@@ -2,19 +2,15 @@ import React from "react";
 import { useState, useEffect, useContext } from "react";
 import ReactDom from "react-dom";
 import LoadingBox from "../../../multiuse/LoadingBox";
-import { objectToFormData } from "../../../utils/formDataHelper";
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import {
-  fetchPaymentData,
-  savePayment,
-} from "../../../services/paymentServices";
+import { fetchPaymentData } from "../../../services/paymentServices";
 import PaymentForm from "./PaymentForm";
+import { Invoice, Payment } from "../../../types/invoiceTypes";
 
 type Props = {
   open: boolean;
   onClose: Function;
-  paymentID: number | null;
-  balance: number;
+  paymentID: Number | String | undefined;
+  dataLogger: Invoice;
 };
 
 function PaymentModal({ open, onClose, paymentID, dataLogger }: Props) {
@@ -53,26 +49,15 @@ function PaymentModal({ open, onClose, paymentID, dataLogger }: Props) {
 
   let entity = Object.keys(mainData).length < 1 ? false : mainData;
 
-  // const { mutate, isPending, isError, isSuccess } = useMutation({
-  //   mutationFn: (rawData) => {
-  //     const formData = objectToFormData({ payment: rawData });
-  //     return savePayment(rawData.id, formData);
-  //   },
-  //   onSuccess: (payment) => {
-  //     console.log("Payment saved or edited successfully");
-  //     onClose(payment);
-  //   },
-  // });
-
-  function addPayment(data) {
+  function savePayment(data: Payment) {
     console.log(data);
-    if (data.id) {
+    if (data.id && dataLogger.payments) {
       let idx = dataLogger.payments.findIndex((x) => x.id === data.id);
       if (idx > -1) {
         Object.assign(dataLogger.payments[idx], data);
       }
     } else {
-      dataLogger.payments.push({
+      dataLogger.payments?.push({
         ...data,
         created_at: new Date(Date.now()).toISOString(),
       });
@@ -99,7 +84,7 @@ function PaymentModal({ open, onClose, paymentID, dataLogger }: Props) {
               <PaymentForm
                 handleCancel={() => onClose()}
                 payment={entity}
-                onSubmit={addPayment}
+                onSubmit={savePayment}
                 buttonText={"Save"}
                 invoice_id={dataLogger.id}
               />

@@ -1,89 +1,33 @@
-import { fetchInvoiceData, editInvoice } from "../../services/invoiceServices";
-import { useState, useRef, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useParams, useNavigate, useOutletContext } from "react-router-dom";
-import LoadingBox from "../../multiuse/LoadingBox";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { objectToFormData } from "../../utils/formDataHelper";
+import { fetchInvoiceData, editInvoice } from "../../services/invoiceServices";
+import { sumAProp } from "../../utils/index";
 import FormCustomerSection from "./FormCustomerSection";
 import FormInvoiceLines from "./FormInvoiceLines";
-import FormTotalDetails from "./FormTotalDetails";
-import Button from "../../multiuse/Button";
 import FormPaymentLines from "./Payments/FormPaymentLines";
-import { privateDecrypt } from "crypto";
+import FormTotalDetails from "./FormTotalDetails";
+import LoadingBox from "../../multiuse/LoadingBox";
+import Button from "../../multiuse/Button";
+import { Invoice, Total } from "../../types/invoiceTypes";
+import UserContext from "../../contexts/user-context";
 
 type Props = {
   modalForm: boolean;
   buttonText: string;
 };
 
-type Invoice = {
-  id: number;
-  customer_id: number;
-  user_id: number;
-  total: number;
-  balance: number;
-  tax: number;
-  created_at: string;
-  updated_at: string;
-  status: string;
-  invoice_lines?: Array<InvoiceLine>;
-  payments?: Array<Payments>;
-};
-
-type InvoiceLine = {
-  id: number;
-  invoice_id: number;
-  product_id: number;
-  discount_percentage: number;
-  price: number;
-  created_at: string;
-  updated_at: string;
-  line_tax: number;
-  line_total: number;
-  quantity: number;
-  tax_rate: Tax_rate;
-  product: Product;
-};
-
-type Product = {
-  cost: string;
-  created_at: string;
-  description: string;
-  id: number;
-  inventory: true;
-  max: number;
-  min: number;
-  name: string;
-  price: string;
-  sku: string;
-  stock: number;
-  tax_rate: number;
-  upc: number;
-  updated_at: string;
-};
-
-type Tax_rate = {
-  created_at: string;
-  id: number;
-  percentage: number;
-  updated_at: string;
-};
-
-type Payments = {
-  amount: number;
-  created_at: string;
-  updated_at: string;
-  id: number;
-  invoice_id: number;
-  method: string;
-};
-
 function InvoiceShow({ modalForm, buttonText }: Props) {
+  // User
+  const [user, setUser] = useContext(UserContext);
+  const adminActions = user.roles.includes("admin");
+
   // Main Pane states
   const [mainLoading, setMainLoading] = useState(true);
   const [mainError, setMainError] = useState("");
-  const [mainData, setMainData] = useState<Invoice | {}>({});
-  const [dataLogger, setDataLogger] = useState<Invoice | {}>({});
+  const [mainData, setMainData] = useState<Invoice>();
+  const [dataLogger, setDataLogger] = useState<Invoice>();
+  const [totals, setTotals] = useState<Total>({ total: 0, tax: 0, balance: 0 });
   const [headerText, setHeaderText] = useState("New Invoice");
   let { id: invoiceID } = useParams();
   const navigate = useNavigate();
@@ -101,56 +45,30 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
         setHeaderText(`Invoice ${invoiceID}`);
         const response = await fetchInvoiceData(invoiceID);
         setMainData(response);
-        console.log("response is", response);
         // Creating a deep copy of the intial response to not alter mainData for comparison later.
         setDataLogger(JSON.parse(JSON.stringify(response)));
+        setTotals({
+          total: response.total,
+          tax: response.tax,
+          balance: response.balance,
+        });
       } catch (e) {
         setMainError("An error occured fetching the invoice.");
         console.error(e);
       } finally {
         setMainLoading(false);
-        console.log("mainData in finally: ", mainData);
       }
     }
 
     loadInvoiceData();
   }, [invoiceID]);
 
-  // const {
-  //   mutate: handleEditSubmit,
-  //   isPending,
-  //   isError,
-  //   isSuccess,
-  // } = useMutation({
-  //   mutationFn: (dldata) => {
-  //     const allowed = ["customer_id", "user_id", "total", "balance", "tax"];
-
-  //     let allowedParams = {};
-  //     Object.keys(dldata)
-  //       .filter((key) => allowed.includes(key))
-  //       .forEach((key) => {
-  //         allowedParams[key] = dldata[key];
-  //       });
-
-  //     const formData = objectToFormData({ invoice: allowedParams });
-  //     console.log("Updating invoice...");
-  //     return editInvoice(invoiceID, formData);
-  //   },
-  //   onSuccess: (updatedInvoice) => {
-  //     console.log("Invoice updated!");
-  //     console.log(updatedInvoice);
-  //     // queryClient.setQueryData(["products"], (oldProducts) => {
-  //     //   [...oldProducts, newProduct];
-  //     // });
-  //     navigate(`/invoices/${updatedInvoice.id}`);
-  //   },
-  // });
-
   // Checks to see if the invoice has changed.
   function invoiceHasChanges(): boolean {
     return JSON.stringify(mainData) !== JSON.stringify(dataLogger);
   }
 
+  // Submits invoice Data. TODO: Add new invoice creation. (if no invoiceID exists)
   const { mutate, isPending, isError, isSuccess } = useMutation({
     mutationFn: (invoiceData: Invoice) => {
       if (invoiceID) {
@@ -159,9 +77,15 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
         });
       }
     },
+    onSuccess: (returnedData: Invoice) => {
+      console.log("In the on success!");
+      setMainData(returnedData);
+      setDataLogger(returnedData);
+      console.log("DL after onSuccess", dataLogger);
+    },
   });
 
-  function renamePropsToAttributes(intakeObject) {
+  function renamePropsToAttributes(intakeObject: Invoice) {
     let {
       invoice_lines: invoice_lines_attributes,
       payments: payments_attributes,
@@ -174,29 +98,26 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
     };
   }
 
-  // async function onSubmitHandler(rawFormData) {
-  //   recalculateInvoice(dataLogger.current.id);
-  //   console.log("Called onsubmithandler");
-  //   try {
-  //     onSubmit(dataLogger.current);
-  //   } catch (e) {
-  //     console.log("failed!");
-  //   }
-  // }
+  function recalculateInvoice() {
+    // Run calculations for total, balance, and tax for the invoice.
+    // Re assign dataLogger.current props with new values as strings.
+    // This should really come from the back end in order to guarantee sync.
+    console.log("Recalculating invoice totals.");
+    let payments = sumAProp(dataLogger.payments, "amount", { _destroy: true });
+    let total = sumAProp(dataLogger.invoice_lines, "line_total");
+    let tax = sumAProp(dataLogger.invoice_lines, "line_tax");
+    let balance = total + tax - payments;
+    setTotals({
+      total: total,
+      tax: tax,
+      balance: balance,
+    });
+  }
 
-  // function recalculateInvoice(id) {
-  //   // Run calculations for total, balance, and tax for the invoice.
-  //   // Re assign dataLogger.current props with new values as strings.
-  //   // This should really come from the back end in order to guarantee sync.
-  //   console.log("Recalculating invoice totals, temp value 10");
-  //   let payments = 0;
-  //   let total = 20;
-  //   let tax = 1;
-  //   let balance = total + tax - payments;
-  //   dataLogger.current.total = total;
-  //   dataLogger.current.tax = tax;
-  //   dataLogger.current.balance = balance;
-  // }
+  // TODO More to do here...
+  function handleCancel() {
+    if (invoiceHasChanges()) alert("The invoice has unsaved changes.");
+  }
 
   // For Debugging, to be removed.
   function outputCurrentData() {
@@ -250,13 +171,10 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
         />
         <FormPaymentLines
           dataLogger={dataLogger}
-          payments={mainData.payments}
+          recalculateInvoice={recalculateInvoice}
+          adminActions={adminActions}
         />
-        {/* <FormTotalDetails /> */}
-        <FormTotalDetails dataLogger={dataLogger} />
-        <div>Total is {dataLogger.total}</div>
-        <div>Tax is {dataLogger.tax}</div>
-        <div>Balance is {dataLogger.balance}</div>
+        <FormTotalDetails totals={totals} />
       </div>
     </>
   );
