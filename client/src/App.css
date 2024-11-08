@@ -755,3 +755,15 @@ tbody > tr:hover {
 .inLineLink:hover {
   color: var(--light-border)
 }
+
+/* Search Results List for product selection in invoices. */
+
+.results-list {
+  width: 100%;
+  background-color: red;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 0px 8px #ddd;
+  max-height: 100px;
+  overflow-y: scroll;
+}

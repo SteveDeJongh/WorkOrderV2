@@ -27,7 +27,6 @@ function PaymentModal({ open, onClose, paymentID, dataLogger }: Props) {
 
   // Fetches payment data if passed in a payment ID. (editing) Should this info just be passed in? Ie: payment is clicked from a list so the data is already loaded.
   useEffect(() => {
-    console.log("Triggered useEffect in Payment Modal");
     async function loadPaymentData() {
       try {
         setMainLoading(true);
@@ -50,7 +49,6 @@ function PaymentModal({ open, onClose, paymentID, dataLogger }: Props) {
   let entity = Object.keys(mainData).length < 1 ? false : mainData;
 
   function savePayment(data: Payment) {
-    console.log(data);
     if (data.id && dataLogger.payments) {
       let idx = dataLogger.payments.findIndex((x) => x.id === data.id);
       if (idx > -1) {
@@ -62,16 +60,10 @@ function PaymentModal({ open, onClose, paymentID, dataLogger }: Props) {
         created_at: new Date(Date.now()).toISOString(),
       });
     }
-
-    console.log("dataLogger.payments");
-    console.log(dataLogger.payments);
     onClose();
   }
 
   if (!open) return null;
-
-  console.log("ID from modal", paymentID);
-  console.log("entity", entity);
 
   return ReactDom.createPortal(
     <>

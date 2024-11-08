@@ -24,6 +24,7 @@
     "react-hook-form": "^7.51.4",
     "react-number-format": "^5.3.4",
     "react-router-dom": "^6.23.0",
+    "react-select": "^5.8.2",
     "sass": "^1.76.0",
     "typescript": "^5.4.5",
     "zod": "^3.23.7"

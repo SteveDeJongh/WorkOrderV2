@@ -4,12 +4,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchInvoiceData, editInvoice } from "../../services/invoiceServices";
 import { sumAProp } from "../../utils/index";
 import FormCustomerSection from "./FormCustomerSection";
-import FormInvoiceLines from "./FormInvoiceLines";
+import FormInvoiceLines from "./InvoiceLines/FormInvoiceLines";
 import FormPaymentLines from "./Payments/FormPaymentLines";
 import FormTotalDetails from "./FormTotalDetails";
 import LoadingBox from "../../multiuse/LoadingBox";
 import Button from "../../multiuse/Button";
 import { Invoice, Total } from "../../types/invoiceTypes";
+import { User } from "../../types/users";
 import UserContext from "../../contexts/user-context";
 
 type Props = {
@@ -19,7 +20,7 @@ type Props = {
 
 function InvoiceShow({ modalForm, buttonText }: Props) {
   // User
-  const [user, setUser] = useContext(UserContext);
+  const [user, setUser] = useContext<User>(UserContext);
   const adminActions = user.roles.includes("admin");
 
   // Main Pane states
@@ -37,7 +38,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   useEffect(() => {
     async function loadInvoiceData() {
       if (!invoiceID) {
-        setMainData({});
+        setMainData(undefined);
         return;
       }
       try {
@@ -103,9 +104,9 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
     // Re assign dataLogger.current props with new values as strings.
     // This should really come from the back end in order to guarantee sync.
     console.log("Recalculating invoice totals.");
-    let payments = sumAProp(dataLogger.payments, "amount", { _destroy: true });
-    let total = sumAProp(dataLogger.invoice_lines, "line_total");
-    let tax = sumAProp(dataLogger.invoice_lines, "line_tax");
+    let payments = sumAProp(dataLogger?.payments, "amount", { _destroy: true });
+    let total = sumAProp(dataLogger?.invoice_lines, "line_total");
+    let tax = sumAProp(dataLogger?.invoice_lines, "line_tax");
     let balance = total + tax - payments;
     setTotals({
       total: total,
@@ -117,6 +118,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   // TODO More to do here...
   function handleCancel() {
     if (invoiceHasChanges()) alert("The invoice has unsaved changes.");
+    navigate("/invoices");
   }
 
   // For Debugging, to be removed.
@@ -153,7 +155,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
       )}
       {/* To Remove */}
       <button type="button" onClick={() => outputCurrentData()}>
-        Log it!
+        Log it! (To remove)
       </button>
       {/* To Remove */}
       <div
@@ -167,7 +169,8 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
         />
         <FormInvoiceLines
           dataLogger={dataLogger}
-          invoiceLines={mainData.invoice_lines}
+          recalculateInvoice={recalculateInvoice}
+          adminActions={adminActions}
         />
         <FormPaymentLines
           dataLogger={dataLogger}

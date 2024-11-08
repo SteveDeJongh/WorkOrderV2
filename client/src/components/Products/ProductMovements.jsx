@@ -43,7 +43,6 @@ function ProductMovements() {
             </thead>
             <tbody>
               {data.map((movement) => {
-                console.log(movement);
                 return (
                   <tr key={movement.id}>
                     <td>{movement.id}</td>

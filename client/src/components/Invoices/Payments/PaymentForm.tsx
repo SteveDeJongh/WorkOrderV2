@@ -41,12 +41,11 @@ function PaymentForm({
         },
   });
 
-  async function onSubmitHandler(data) {
-    console.log("In the onsbumithandler in Payment Form, data is: ", data);
+  async function onSubmitHandler(data: Payment) {
     try {
       onSubmit(data);
     } catch (e) {
-      console.log("failed!", e);
+      console.error("Failed to submit payment", e);
     }
   }
 
