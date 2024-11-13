@@ -1,16 +1,17 @@
 import { useState, useRef, useEffect } from "react";
-import { fetchProductData } from "../../services/productServices";
+import { fetchProductData } from "../../../services/productServices";
 import InvoiceLine from "./InvoiceLine";
 import NewInvoiceLine from "./NewInvoiceLine";
+import {
+  Invoice,
+  InvoiceLine as TInvoiceLine,
+  Product,
+} from "../../../types/invoiceTypes";
 
 type props = {
-  dataLogger: customerRef;
+  dataLogger: Invoice;
   recalculateInvoice: Function;
   adminActions: boolean;
-};
-
-type customerRef = {
-  current: number;
 };
 
 export default function FormInvoiceLines({
@@ -18,9 +19,12 @@ export default function FormInvoiceLines({
   recalculateInvoice,
   adminActions,
 }: props) {
-  const [lines, setLines] = useState(dataLogger.invoice_lines);
+  const [lines, setLines] = useState<Array<TInvoiceLine>>(
+    dataLogger.invoice_lines
+  );
+  const [val, setVal] = useState(1);
 
-  function updateLine(updatedLine: object) {
+  function updateLine(updatedLine: TInvoiceLine) {
     setLines(
       lines?.map((line) => {
         if (line.id === updatedLine.id) {
@@ -30,10 +34,55 @@ export default function FormInvoiceLines({
         }
       })
     );
-    // TODO: more updating line logic needed to trigger a line save and recalculate invoicen totals.
+    // TODO: more updating line logic needed to trigger a line save and recalculate invoice totals.
     recalculateInvoice();
-    console.log(lines.current);
+    console.log(lines);
   }
+
+  async function addLine(selectedProduct: Product) {
+    const productData = await fetchProductData(selectedProduct.id, {
+      tax_rate: true,
+    });
+
+    let trimmedProductData = Object.assign({}, productData);
+    delete trimmedProductData["tax_rate"];
+
+    console.log(trimmedProductData);
+
+    const newLine = {
+      created_at: new Date(Date.now()).toISOString(),
+      discount_percentage: 0,
+      id: undefined,
+      invoice_id: dataLogger.id,
+      line_tax: "0",
+      line_total: "0",
+      price: productData.price,
+      product: trimmedProductData,
+      product_id: productData.id,
+      quantity: 1,
+      tax_rate: productData.tax_rate,
+      tax_rate_id: productData.tax_rate_id,
+      updated_at: new Date(Date.now()).toISOString(),
+    };
+
+    let line = recalculateLine(newLine);
+
+    dataLogger.invoice_lines.push(line);
+    recalculateInvoice();
+  }
+
+  function recalculateLine(line: InvoiceLine) {
+    line.line_total =
+      line.quantity * Number(line.product.price) -
+      (line.quantity * Number(line.product.price) * line.discount_percentage) /
+        100;
+    line.price =
+      Number(line.product.price) -
+      Number(line.product.price) * (line.discount_percentage / 100);
+    return line;
+  }
+
+  console.log("lines", lines);
 
   return (
     <div className="panel">
@@ -59,11 +108,12 @@ export default function FormInvoiceLines({
               </thead>
               {lines && (
                 <tbody>
-                  {lines.map((line) => (
+                  {lines.map((line, idx) => (
                     <InvoiceLine
-                      key={line.id}
+                      key={line.id ? line.id : `new${idx}`}
                       line={line}
                       updateLine={updateLine}
+                      recalculateLine={recalculateLine}
                     />
                   ))}
                 </tbody>
@@ -71,7 +121,7 @@ export default function FormInvoiceLines({
             </table>
           </div>
         </div>
-        <NewInvoiceLine />
+        <NewInvoiceLine addLine={(id) => addLine(id)} />
       </div>
     </div>
   );

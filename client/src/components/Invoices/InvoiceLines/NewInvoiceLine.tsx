@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import useProductsData from "../../../hooks/useProductsData";
 import useURLSearchParam from "../../../hooks/useURLSearchParam";
 import SearchBar from "../../../multiuse/SearchBar";
@@ -7,17 +7,26 @@ import SearchResultsList from "./SearchResultsList";
 
 type props = {};
 
-export default function NewInvoiceLine() {
+export default function NewInvoiceLine({ addLine }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
     useURLSearchParam("productSearch");
   const [data, setData] = useState();
+  const [isOpen, setIsOpen] = useState(false);
 
   const {
     data: fetchedData,
     loading,
     error,
   } = useProductsData(debouncedSearchTerm);
+
+  useEffect(() => {
+    if (searchTerm) {
+      setIsOpen(true);
+    } else {
+      setIsOpen(false);
+    }
+  }, [searchTerm]);
 
   useEffect(() => {
     if (fetchedData) {
@@ -33,19 +42,31 @@ export default function NewInvoiceLine() {
     setSearchTerm(searchValue);
   }
 
-  console.log("searchTerm", searchTerm);
-  console.log(data);
+  function handleSelection(id) {
+    console.log("id selected", id);
+    setSearchTerm("");
+    setIsOpen(false);
+    addLine(id);
+  }
 
   return (
-    <div>
-      <SearchBar
-        title={"products"}
-        value={searchTerm}
-        onSearchChange={handleDebouncedSearchChange}
-        onImmediateChange={handleImmediateSearchChange}
-      />
-      <Button text={"Add Product"} />
-      {data && searchTerm && <SearchResultsList results={data} />}
+    <div className="searchContainer">
+      <div id="search-actions">
+        <SearchBar
+          title={"products"}
+          value={searchTerm}
+          onSearchChange={handleDebouncedSearchChange}
+          onImmediateChange={handleImmediateSearchChange}
+        />
+        <Button text={"Add Product"} />
+      </div>
+      {/* {data && searchTerm && <SearchResultsList results={data} />} */}
+      {isOpen && (
+        <SearchResultsList
+          results={data}
+          handleSelection={(id) => handleSelection(id)}
+        />
+      )}
     </div>
   );
 }

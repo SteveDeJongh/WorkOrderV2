@@ -10,7 +10,7 @@ class Api::V1::ProductsController < ApplicationController
 
   # GET /products/1
   def show
-    render json: @product
+    render json: @product.as_json(include: :tax_rate);
   end
 
   # POST /products

@@ -8,7 +8,7 @@ type Invoice = {
   created_at: string;
   updated_at: string;
   status: string;
-  invoice_lines?: Array<InvoiceLine>;
+  invoice_lines: Array<InvoiceLine> | Array<null>; // changed from an optional property.
   payments?: Array<Payment>;
 };
 

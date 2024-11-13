@@ -39,7 +39,7 @@ async function searchProducts(query) {
   }
 }
 
-async function fetchProductData(id) {
+async function fetchProductData(id, options = {tax_rate: false}) {
   const response = await fetch(`${API_URL}/products/${id}`, {
     headers: {
       "Authorization": localStorage.getItem("authToken"),
@@ -51,6 +51,14 @@ async function fetchProductData(id) {
   }
 
   let responseData = await response.json();
+  
+  // Remove additional associations unless told not to.
+  for (const [key, value] of Object.entries(options)) {
+    if (!value) {
+      delete responseData[key];
+    }
+  }
+  
   return mapSingleResponseDataToKeys(responseData);
 }
 

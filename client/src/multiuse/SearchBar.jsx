@@ -19,7 +19,7 @@ function SearchBar({ title, value, onSearchChange, onImmediateChange }) {
   }
 
   return (
-    <div id="searchBar">
+    <div className="searchBar">
       <input
         type="text"
         name="searchBar"
