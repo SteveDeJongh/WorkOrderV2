@@ -80,9 +80,11 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
     },
     onSuccess: (returnedData: Invoice) => {
       console.log("In the on success!");
-      setMainData(returnedData);
+      // console.log("Returned Data", returnedData);
       setDataLogger(returnedData);
-      console.log("DL after onSuccess", dataLogger);
+      setMainData(returnedData);
+      // console.log("mainData after onSuccess", mainData);
+      // console.log("DL after onSuccess", dataLogger);
     },
   });
 
@@ -101,8 +103,6 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
 
   function recalculateInvoice() {
     // Run calculations for total, balance, and tax for the invoice.
-    // Re assign dataLogger.current props with new values as strings.
-    // This should really come from the back end in order to guarantee sync.
     console.log("Recalculating invoice totals.");
     let payments = sumAProp(dataLogger?.payments, "amount", { _destroy: true });
     let total = sumAProp(dataLogger?.invoice_lines, "line_total");

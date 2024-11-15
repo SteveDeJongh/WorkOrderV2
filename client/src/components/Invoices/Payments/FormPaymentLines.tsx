@@ -18,34 +18,35 @@ export default function FormPaymentLines({
   const [lines, setLines] = useState(dataLogger.payments);
 
   function toggleDelete(paymentID: string | number, created_at: string | Date) {
-    setLines(
-      lines?.map((payment) => {
-        if (payment.id == paymentID && payment.created_at == created_at) {
-          payment._destroy = !payment._destroy;
-        }
-        return payment;
-      })
-    );
+    dataLogger.payments?.map((payment) => {
+      if (payment.id == paymentID && payment.created_at == created_at) {
+        payment._destroy = !payment._destroy;
+      }
+      return payment;
+    });
+    setLines(dataLogger.payments);
     recalculateInvoice();
   }
 
   // For Modal
+  const [payment, setPayment] = useState<Payment | undefined>();
   const [isOpen, setIsOpen] = useState(false);
-  const clickedID = useRef<Number | String>();
 
-  function handleClick(id: Number | String, e: React.MouseEvent) {
+  function handleClick(line: Payment, e: React.MouseEvent): void {
     if ((e.target as HTMLInputElement).tagName !== "INPUT") {
-      clickedID.current = id;
+      setPayment(line);
       setIsOpen(true);
     }
   }
 
   function handleClose(data: Payment | undefined) {
-    clickedID.current = undefined;
     recalculateInvoice();
+    setPayment(undefined);
     setIsOpen(false);
   }
 
+  console.log("datalogger in payment lines", dataLogger);
+  console.log("lines in payment lines", lines);
   return (
     <>
       <div className="panel">
@@ -73,7 +74,7 @@ export default function FormPaymentLines({
                           key={line.id ? line.id : `new${idx}`}
                           paymentData={line}
                           lineClick={(e: React.MouseEvent) =>
-                            handleClick(line.id, e)
+                            handleClick(line, e)
                           }
                           adminActions={adminActions}
                           deletePayment={toggleDelete}
@@ -91,8 +92,8 @@ export default function FormPaymentLines({
       <PaymentModal
         open={isOpen}
         onClose={(data: Payment | undefined) => handleClose(data)}
-        paymentID={clickedID.current}
         dataLogger={dataLogger}
+        payment={payment}
       />
     </>
   );
