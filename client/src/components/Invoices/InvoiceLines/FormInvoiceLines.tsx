@@ -44,6 +44,15 @@ export default function FormInvoiceLines({
       tax_rate: true,
     });
 
+    // Run checks for inventory before adding line.
+    productData.stock > 0
+      ? addConfirmedLine(selectedProduct)
+      : confirm("This product has 0 stock, are you sure you want to continue?")
+      ? addConfirmedLine(selectedProduct)
+      : null;
+  }
+
+  function addConfirmedLine(productData: Product) {
     let trimmedProductData = Object.assign({}, productData);
     delete trimmedProductData["tax_rate"];
 
@@ -82,7 +91,7 @@ export default function FormInvoiceLines({
     return line;
   }
 
-  console.log("lines", lines);
+  // console.log("lines", lines);
 
   return (
     <div className="panel">

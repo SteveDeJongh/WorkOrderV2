@@ -5,9 +5,11 @@ import SearchBar from "../../../multiuse/SearchBar";
 import Button from "../../../multiuse/Button";
 import SearchResultsList from "./SearchResultsList";
 
-type props = {};
+type props = {
+  addLine: Function;
+};
 
-export default function NewInvoiceLine({ addLine }) {
+export default function NewInvoiceLine({ addLine }: props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
     useURLSearchParam("productSearch");

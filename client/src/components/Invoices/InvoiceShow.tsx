@@ -28,7 +28,12 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   const [mainError, setMainError] = useState("");
   const [mainData, setMainData] = useState<Invoice>();
   const [dataLogger, setDataLogger] = useState<Invoice>();
-  const [totals, setTotals] = useState<Total>({ total: 0, tax: 0, balance: 0 });
+  const [totals, setTotals] = useState<Total>({
+    total: 0,
+    tax: 0,
+    balance: 0,
+    status: "open",
+  });
   const [headerText, setHeaderText] = useState("New Invoice");
   let { id: invoiceID } = useParams();
   const navigate = useNavigate();
@@ -52,6 +57,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
           total: response.total,
           tax: response.tax,
           balance: response.balance,
+          status: response.status,
         });
       } catch (e) {
         setMainError("An error occured fetching the invoice.");
@@ -72,6 +78,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   // Submits invoice Data. TODO: Add new invoice creation. (if no invoiceID exists)
   const { mutate, isPending, isError, isSuccess } = useMutation({
     mutationFn: (invoiceData: Invoice) => {
+      setMainLoading(true);
       if (invoiceID) {
         return editInvoice(invoiceID, {
           invoice: renamePropsToAttributes(invoiceData),
@@ -83,8 +90,17 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
       // console.log("Returned Data", returnedData);
       setDataLogger(returnedData);
       setMainData(returnedData);
+      setTotals({
+        total: returnedData.total,
+        tax: returnedData.tax,
+        balance: returnedData.balance,
+        status: returnedData.status,
+      });
       // console.log("mainData after onSuccess", mainData);
       // console.log("DL after onSuccess", dataLogger);
+    },
+    onSettled: () => {
+      setMainLoading(false);
     },
   });
 
@@ -112,6 +128,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
       total: total,
       tax: tax,
       balance: balance,
+      status: "open",
     });
   }
 

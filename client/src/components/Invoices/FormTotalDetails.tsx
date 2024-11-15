@@ -28,6 +28,11 @@ export default function FormTotalDetails({ totals }: props) {
                 <div>Balance is {totals.balance}</div>
               </div>
             </div>
+            <div className="panel-section-desc">
+              <div className="panel-section-data">
+                <div>Status is {totals.status}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -45,8 +45,8 @@ export default function FormPaymentLines({
     setIsOpen(false);
   }
 
-  console.log("datalogger in payment lines", dataLogger);
-  console.log("lines in payment lines", lines);
+  // console.log("datalogger in payment lines", dataLogger);
+  // console.log("lines in payment lines", lines);
   return (
     <>
       <div className="panel">

@@ -1,6 +1,7 @@
 class InvoiceService
-  def initialize(resource)
+  def initialize(resource, has_lines)
     @resource = resource
+    @has_lines = has_lines
   end
 
   def calculateInvoiceTotals
@@ -25,5 +26,8 @@ class InvoiceService
     @resource.total = invoice_total
     @resource.tax = tax_total
     @resource.balance = invoice_total + tax_total - payment_total
+    if (@has_lines)
+      @resource.status = @resource.balance == 0 ? "closed" : "open";
+    end
   end
 end

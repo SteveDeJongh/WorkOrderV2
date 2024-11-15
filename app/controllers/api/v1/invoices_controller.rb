@@ -61,9 +61,11 @@ class Api::V1::InvoicesController < ApplicationController
       end
     end
 
+    has_lines = !workingParams[:invoice_lines_attributes].empty? || !workingParams[:payments_attributes].empty?
+
     if @invoice.update(workingParams)
       # Update Invoice total amounts.
-      InvoiceService.new(@invoice).calculateInvoiceTotals
+      InvoiceService.new(@invoice, has_lines).calculateInvoiceTotals
       @invoice.save
       render json: @invoice.as_json(include: [{
         invoice_lines: {

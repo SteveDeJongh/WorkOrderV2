@@ -7,7 +7,7 @@ type Invoice = {
   tax: number;
   created_at: string;
   updated_at: string;
-  status: string;
+  status: "open" | "closed";
   invoice_lines: Array<InvoiceLine> | Array<null>; // changed from an optional property.
   payments?: Array<Payment>;
 };
@@ -65,6 +65,7 @@ type Total = {
   total: number;
   tax: number;
   balance: number;
+  status: "open" | "closed";
 };
 
 export { Invoice, InvoiceLine, Product, Tax_rate, Payment, Total }
