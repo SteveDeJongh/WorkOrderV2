@@ -77,4 +77,18 @@ async function fetchCustomerData(id) {
   return mapSingleResponseDataToKeys(responseData);
 }
 
-export { createCustomer, editCustomer, fetchCustomerData, fetchAllCustomers, searchCustomers };
+async function fetchCustomerInvoices(id) {
+  const response = await fetch(`${API_URL}/search/customerInvoices/?q=${id}`, {
+    headers: {
+      "Authorization": localStorage.getItem("authToken"),
+    }
+  })
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
+  return response.json();
+}
+
+export { createCustomer, editCustomer, fetchCustomerData, fetchAllCustomers, fetchCustomerInvoices, searchCustomers };

@@ -5,6 +5,12 @@ class Api::V1::SearchController < ApplicationController
     render json: @customers
   end
 
+  def customerInvoices
+    @invoices = Invoice.all.select {|i| i.customer_id == params[:q].to_i}
+
+    render json: @invoices
+  end
+
   def products
     @products = Product.where('name LIKE ? OR sku LIKE ?', "%#{params[:q]}%", "%#{params[:q]}%")
 

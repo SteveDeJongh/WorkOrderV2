@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchInventoryMovementsFor } from "../../services/movementServices";
 import { useOutletContext } from "react-router-dom";
-import { dateTimeFormatter } from "../../utils";
+import ScrollableTableTable from "../../multiuse/ScrollableTableTall";
 
 function ProductMovements() {
   const {
@@ -15,6 +15,17 @@ function ProductMovements() {
     queryFn: () => fetchInventoryMovementsFor(id),
   });
 
+  const columns = [
+    { name: "Movement ID", propName: "id" },
+    { name: "relation", propName: "relation" },
+    { name: "Adjustment", propName: "adjustment", returnBoolean: true },
+    { name: "Change", propName: "change" },
+    { name: "Stock", propName: "stock" },
+    { name: "ChangeType", propName: "change_type" },
+    { name: "Time", propName: "created_at" },
+    { name: "userId", propName: "user_id" },
+  ];
+
   if (isPending) {
     return <h1>Loading...</h1>;
   }
@@ -25,42 +36,7 @@ function ProductMovements() {
 
   return (
     <>
-      <div className="main-pane-content">
-        <div className="scrollable-table tall">
-          <table>
-            <thead>
-              <tr>
-                <th>Movement ID</th>
-                <th>relation</th>
-                <th>Adjustment</th>
-                <th>Change</th>
-                <th>Stock</th>
-                <th>ChangeType</th>
-                <th>userId</th>
-                <th>Time</th>
-                <th>ProductID</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((movement) => {
-                return (
-                  <tr key={movement.id}>
-                    <td>{movement.id}</td>
-                    <td>{movement.relation}</td>
-                    <td>{movement.adjustment ? "True" : "False"}</td>
-                    <td>{movement.change}</td>
-                    <td>{movement.stock}</td>
-                    <td>{movement.change_type}</td>
-                    <td>{movement.user_id}</td>
-                    <td>{dateTimeFormatter(movement.created_at)}</td>
-                    <td>{movement.product_id}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <ScrollableTableTable columns={columns} data={data} />
     </>
   );
 }

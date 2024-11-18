@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get 'search/customers' # /api/v1/search/products?q=query
+      get 'search/customerInvoices'
       resources :customers
       get 'search/products'
       get 'search/invoices'
