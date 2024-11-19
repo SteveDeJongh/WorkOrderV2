@@ -10,6 +10,7 @@ function CustomerInvoices() {
   const { data, isError, isPending } = useQuery({
     queryKey: ["customerInvoices", customerId],
     queryFn: () => fetchCustomerInvoices(customerId),
+    gcTime: 0,
   });
 
   if (isPending) {

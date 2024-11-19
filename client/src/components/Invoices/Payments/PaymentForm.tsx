@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import Button from "../../../multiuse/Button";
 import { Payment } from "../../../types/invoiceTypes";
+import { useEffect, useState } from "react";
 
 type Props = {
   handleCancel: Function;
@@ -8,6 +9,7 @@ type Props = {
   onSubmit: Function;
   buttonText: string;
   invoice_id: Number;
+  balance: number;
 };
 
 function PaymentForm({
@@ -16,11 +18,14 @@ function PaymentForm({
   onSubmit,
   buttonText,
   invoice_id,
+  balance,
 }: Props) {
   const {
     register,
+    unregister,
     handleSubmit,
     formState: { errors, isSubmitting },
+    watch,
   } = useForm({
     defaultValues: payment
       ? {
@@ -36,6 +41,27 @@ function PaymentForm({
           amount: undefined,
         },
   });
+
+  const watchAmount = watch("amount");
+  const watchMethod = watch("method");
+  const [change, setChange] = useState(0);
+  const [showChange, setShowChange] = useState(
+    payment?.method == "Cash" ? true : payment ? false : true
+  );
+
+  useEffect(() => {
+    if (watchMethod === "Cash") {
+      if (watchAmount && watchAmount < 0) {
+        setChange(0);
+      } else {
+        setChange(Number(watchAmount) - balance);
+      }
+      setShowChange(true);
+    } else {
+      setChange(0);
+      setShowChange(false);
+    }
+  }, [watchMethod, watchAmount]);
 
   async function onSubmitHandler(data: Payment) {
     try {
@@ -93,12 +119,31 @@ function PaymentForm({
                   id="amount"
                   name="amount"
                   placeholder="amount"
+                  defaultValue={balance}
                 />
                 {errors.amount && (
                   <p className="error">{`${errors.amount.message}`}</p>
                 )}
               </div>
             </div>
+            {showChange && (
+              <div className="panel-contents-section">
+                <div className="formPair">
+                  <label htmlFor="amount">Change Due:</label>
+                  <input
+                    {...register("change")}
+                    type="text"
+                    id="change"
+                    name="change"
+                    disabled={true}
+                    value={change}
+                  />
+                  {errors.amount && (
+                    <p className="error">{`${errors.amount.message}`}</p>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </form>

@@ -8,12 +8,14 @@ type props = {
   dataLogger: Invoice;
   recalculateInvoice: Function;
   adminActions: Boolean;
+  balance: Number;
 };
 
 export default function FormPaymentLines({
   dataLogger,
   recalculateInvoice,
   adminActions,
+  balance,
 }: props) {
   const [lines, setLines] = useState(dataLogger.payments);
 
@@ -94,6 +96,7 @@ export default function FormPaymentLines({
         onClose={(data: Payment | undefined) => handleClose(data)}
         dataLogger={dataLogger}
         payment={payment}
+        balance={balance}
       />
     </>
   );

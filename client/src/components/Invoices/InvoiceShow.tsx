@@ -193,6 +193,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
           dataLogger={dataLogger}
           recalculateInvoice={recalculateInvoice}
           adminActions={adminActions}
+          balance={totals.balance}
         />
         <FormTotalDetails totals={totals} />
       </div>

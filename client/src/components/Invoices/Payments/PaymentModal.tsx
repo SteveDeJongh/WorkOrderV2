@@ -8,9 +8,10 @@ type Props = {
   onClose: Function;
   dataLogger: Invoice;
   payment?: Payment;
+  balance: Number;
 };
 
-function PaymentModal({ open, onClose, dataLogger, payment }: Props) {
+function PaymentModal({ open, onClose, dataLogger, payment, balance }: Props) {
   function handleClose(e) {
     if (e.target.className === "main-modal-background") {
       onClose();
@@ -18,6 +19,7 @@ function PaymentModal({ open, onClose, dataLogger, payment }: Props) {
   }
 
   function savePayment(data: Payment) {
+    console.log(data);
     if (data.id && dataLogger.payments) {
       let idx = dataLogger.payments.findIndex((x) => x.id === data.id);
       if (idx > -1) {
@@ -45,6 +47,7 @@ function PaymentModal({ open, onClose, dataLogger, payment }: Props) {
               onSubmit={savePayment}
               buttonText={"Save"}
               invoice_id={dataLogger.id}
+              balance={balance}
             />
           </>
         </div>
