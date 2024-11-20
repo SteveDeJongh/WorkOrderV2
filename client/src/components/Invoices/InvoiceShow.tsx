@@ -1,6 +1,6 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import { useParams, useNavigate, useOutletContext } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchInvoiceData, editInvoice } from "../../services/invoiceServices";
 import { sumAProp } from "../../utils/index";
 import FormCustomerSection from "./FormCustomerSection";
@@ -38,6 +38,16 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   let { id: invoiceID } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    console.log({ dataLogger });
+  }, [dataLogger]);
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["fetchInvoiceData", { invoiceID }],
+    queryFn: () => fetchInvoiceData(invoiceID),
+    enabled: Boolean(invoiceID),
+  });
 
   // Fetches invoice data on initial render and whenever invoiceID changes.
   useEffect(() => {
@@ -78,7 +88,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   // Submits invoice Data. TODO: Add new invoice creation. (if no invoiceID exists)
   const { mutate, isPending, isError, isSuccess } = useMutation({
     mutationFn: (invoiceData: Invoice) => {
-      setMainLoading(true);
+      // setMainLoading(true);
       if (invoiceID) {
         return editInvoice(invoiceID, {
           invoice: renamePropsToAttributes(invoiceData),
@@ -100,7 +110,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
       // console.log("DL after onSuccess", dataLogger);
     },
     onSettled: () => {
-      setMainLoading(false);
+      // setMainLoading(false);
     },
   });
 
@@ -117,9 +127,9 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
     };
   }
 
-  function recalculateInvoice() {
-    // Run calculations for total, balance, and tax for the invoice.
-    console.log("Recalculating invoice totals.");
+  const recalculateInvoice = useCallback(() => {
+    console.log("*** recalculate payments");
+
     let payments = sumAProp(dataLogger?.payments, "amount", { _destroy: true });
     let total = sumAProp(dataLogger?.invoice_lines, "line_total");
     let tax = sumAProp(dataLogger?.invoice_lines, "line_tax");
@@ -130,13 +140,31 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
       balance: balance,
       status: "open",
     });
-  }
+  }, []);
+  // function recalculateInvoice() {
+  //   // Run calculations for total, balance, and tax for the invoice.
+  //   console.log("Recalculating invoice totals.");
+  //   let payments = sumAProp(dataLogger?.payments, "amount", { _destroy: true });
+  //   let total = sumAProp(dataLogger?.invoice_lines, "line_total");
+  //   let tax = sumAProp(dataLogger?.invoice_lines, "line_tax");
+  //   let balance = total + tax - payments;
+  //   setTotals({
+  //     total: total,
+  //     tax: tax,
+  //     balance: balance,
+  //     status: "open",
+  //   });
+  // }
 
   // TODO More to do here...
   function handleCancel() {
     if (invoiceHasChanges()) alert("The invoice has unsaved changes.");
     navigate("/invoices");
   }
+
+  useEffect(() => {
+    console.log("*** data logger changed");
+  }, [dataLogger]);
 
   // For Debugging, to be removed.
   function outputCurrentData() {
@@ -190,10 +218,11 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
           adminActions={adminActions}
         />
         <FormPaymentLines
-          dataLogger={dataLogger}
+          payments={dataLogger.payments}
+          setDataLogger={setDataLogger}
           recalculateInvoice={recalculateInvoice}
           adminActions={adminActions}
-          balance={totals.balance}
+          // balance={totals.balance}
         />
         <FormTotalDetails totals={totals} />
       </div>

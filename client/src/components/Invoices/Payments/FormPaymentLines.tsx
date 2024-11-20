@@ -5,28 +5,42 @@ import PaymentModal from "./PaymentModal";
 import { Invoice, Payment } from "../../../types/invoiceTypes";
 
 type props = {
-  dataLogger: Invoice;
+  payments: Invoice["payments"];
   recalculateInvoice: Function;
   adminActions: Boolean;
   balance: Number;
+  setDataLogger: React.Dispatch<React.SetStateAction<Invoice | undefined>>;
 };
 
 export default function FormPaymentLines({
-  dataLogger,
+  payments = [],
   recalculateInvoice,
   adminActions,
   balance,
+  setDataLogger,
 }: props) {
-  const [lines, setLines] = useState(dataLogger.payments);
+  const [lines, setLines] = useState(payments);
+
+  useEffect(() => {
+    console.log("*** payments changed ", payments);
+    setLines(payments);
+  }, [payments]);
+
+  console.log("*** payments rerender");
 
   function toggleDelete(paymentID: string | number, created_at: string | Date) {
-    dataLogger.payments?.map((payment) => {
-      if (payment.id == paymentID && payment.created_at == created_at) {
+    const newPayments = payments.map((payment) => {
+      if (payment.id === paymentID && payment.created_at === created_at) {
         payment._destroy = !payment._destroy;
       }
       return payment;
     });
-    setLines(dataLogger.payments);
+
+    setDataLogger((s) => {
+      if (!s) return s;
+      return { ...s, payments: newPayments };
+    });
+    setLines(payments);
     recalculateInvoice();
   }
 
@@ -91,13 +105,13 @@ export default function FormPaymentLines({
           </div>
         )}
       </div>
-      <PaymentModal
+      {/* <PaymentModal
         open={isOpen}
         onClose={(data: Payment | undefined) => handleClose(data)}
         dataLogger={dataLogger}
         payment={payment}
         balance={balance}
-      />
+      /> */}
     </>
   );
 }
