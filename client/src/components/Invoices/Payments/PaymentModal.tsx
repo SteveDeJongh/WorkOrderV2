@@ -5,33 +5,40 @@ import { Invoice, Payment } from "../../../types/invoiceTypes";
 
 type Props = {
   open: boolean;
-  onClose: Function;
-  dataLogger: Invoice;
+  closeModal: Function;
   payment?: Payment;
-  balance: Number;
+  balance: number;
+  invoice_id: number;
+  dispatch: Function;
 };
 
-function PaymentModal({ open, onClose, dataLogger, payment, balance }: Props) {
+function PaymentModal({
+  open,
+  closeModal,
+  payment,
+  balance,
+  invoice_id,
+  dispatch,
+}: Props) {
   function handleClose(e) {
     if (e.target.className === "main-modal-background") {
-      onClose();
+      closeModal();
     }
   }
 
   function savePayment(data: Payment) {
-    console.log(data);
-    if (data.id && dataLogger.payments) {
-      let idx = dataLogger.payments.findIndex((x) => x.id === data.id);
-      if (idx > -1) {
-        Object.assign(dataLogger.payments[idx], data);
-      }
+    if (data.id || data.created_at) {
+      dispatch({ type: "updatePayment", payment: data });
     } else {
-      dataLogger.payments?.push({
-        ...data,
-        created_at: new Date(Date.now()).toISOString(),
+      dispatch({
+        type: "createPayment",
+        payment: {
+          ...data,
+          created_at: new Date(Date.now()).toISOString(),
+        },
       });
     }
-    onClose();
+    closeModal();
   }
 
   if (!open) return null;
@@ -42,11 +49,11 @@ function PaymentModal({ open, onClose, dataLogger, payment, balance }: Props) {
         <div className="main-modal">
           <>
             <PaymentForm
-              handleCancel={() => onClose()}
+              handleCancel={() => closeModal()}
               payment={payment}
               onSubmit={savePayment}
               buttonText={"Save"}
-              invoice_id={dataLogger.id}
+              invoice_id={invoice_id}
               balance={balance}
             />
           </>

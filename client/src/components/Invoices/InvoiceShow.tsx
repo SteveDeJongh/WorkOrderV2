@@ -127,34 +127,17 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
     };
   }
 
-  const recalculateInvoice = useCallback(() => {
-    console.log("*** recalculate payments");
-
-    let payments = sumAProp(invoice?.payments, "amount", { _destroy: true });
-    let total = sumAProp(invoice?.invoice_lines, "line_total");
-    let tax = sumAProp(invoice?.invoice_lines, "line_tax");
-    let balance = total + tax - payments;
-    setTotals({
-      total: total,
-      tax: tax,
-      balance: balance,
-      status: "open",
+  function recalculateInvoice() {
+    // console.log("*** recalculate invoice");
+    // let payments = sumAProp(invoice?.payments, "amount", { _destroy: true });
+    // let total = sumAProp(invoice?.invoice_lines, "line_total");
+    // let tax = sumAProp(invoice?.invoice_lines, "line_tax");
+    // let balance = total + tax - payments;
+    dispatch({
+      type: "setTotals",
+      // data: { total: total, tax: tax, balance: balance, status: "open" },
     });
-  }, []);
-  // function recalculateInvoice() {
-  //   // Run calculations for total, balance, and tax for the invoice.
-  //   console.log("Recalculating invoice totals.");
-  //   let payments = sumAProp(invoice?.payments, "amount", { _destroy: true });
-  //   let total = sumAProp(invoice?.invoice_lines, "line_total");
-  //   let tax = sumAProp(invoice?.invoice_lines, "line_tax");
-  //   let balance = total + tax - payments;
-  //   setTotals({
-  //     total: total,
-  //     tax: tax,
-  //     balance: balance,
-  //     status: "open",
-  //   });
-  // }
+  }
 
   // TODO More to do here...
   function handleCancel() {
@@ -210,20 +193,19 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
           dispatch={dispatch}
         />
         {/* <FormInvoiceLines
-          dataLogger={dataLogger}
-          recalculateInvoice={recalculateInvoice}
+          invoice_lines={invoice.invoice_lines}
           adminActions={adminActions}
-        />
-        */}
+          invoice_id={invoice.id}
+          dispatch={dispatch}
+        />*/}
         <FormPaymentLines
           payments={invoice.payments}
-          // setDataLogger={setDataLogger}
-          recalculateInvoice={recalculateInvoice}
           adminActions={adminActions}
           balance={invoice.balance}
+          invoice_id={invoice.id}
           dispatch={dispatch}
         />
-        <InvoiceTotalDetails dataLogger={invoice} />
+        <InvoiceTotalDetails invoice={invoice} />
       </div>
     </>
   );
@@ -231,19 +213,35 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
 
 type Action =
   | { type: "setInvoice"; data: Invoice }
+  | { type: "recaculateInvoice" }
   | { type: "updateCustomer"; customerId: number }
   | { type: "removeCustomer" }
   | { type: "saveInvoiceLine"; invoiceLine: InvoiceLine }
   | { type: "togglePaymentDelete"; paymentId: Number; created_at: string }
-  | { type: "savePayment"; payment: Payment };
+  | { type: "updatePayment"; payment: Payment }
+  | { type: "createPayment"; payment: Payment };
 
 function invoiceReducer(invoice: Invoice, action: Action): Invoice {
   switch (action.type) {
     case "setInvoice": {
       return { ...action.data };
     }
+    case "recaculateInvoice": {
+      console.log("Recalculating and Setting Invoice Totals");
+      let payments = sumAProp(invoice?.payments, "amount", { _destroy: true });
+      let total = sumAProp(invoice?.invoice_lines, "line_total");
+      let tax = sumAProp(invoice?.invoice_lines, "line_tax");
+      let balance = total + tax - payments;
+      return {
+        ...invoice,
+        total: total,
+        tax: tax,
+        balance: balance,
+        status: balance <= 0 ? "closed" : "open",
+      };
+    }
     case "updateCustomer": {
-      console.log("Updated customer!", action.customerId);
+      console.log("Updated customer!");
       return { ...invoice, customer_id: action.customerId };
     }
     case "removeCustomer": {
@@ -262,24 +260,27 @@ function invoiceReducer(invoice: Invoice, action: Action): Invoice {
         }
         return payment;
       });
-
-      console.log(newPayments);
       return { ...invoice, payments: newPayments };
     }
-    case "savePayment": {
+    case "updatePayment": {
+      console.log("Updating Payment");
+      const newPayments = invoice.payments.map((payment) => {
+        if (
+          payment.id === action.payment.id &&
+          payment?.created_at === action.payment.created_at
+        ) {
+          return action.payment;
+        } else {
+          return payment;
+        }
+      });
+      return { ...invoice, payments: newPayments };
+    }
+    case "createPayment": {
+      console.log("Created Payment");
+      console.log("New payment", action.payment);
+      invoice.payments.push(action.payment);
       return invoice;
-      // if (action.payment?.id && invoice.payments) {
-      //   let idx = invoice.payments.findIndex((x) => x.id === action.payment.id);
-      //   if (idx > -1) {
-      //     Object.assign(invoice.payments[idx], action.payment);
-      //   }
-      // } else {
-      //   invoice.payments?.push({
-      //     ...action.payment,
-      //     created_at: new Date(Date.now()).toISOString(),
-      //   });
-      // }
-      // return invoice;
     }
   }
   return invoice;

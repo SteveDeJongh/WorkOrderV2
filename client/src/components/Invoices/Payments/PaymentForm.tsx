@@ -30,12 +30,14 @@ function PaymentForm({
     defaultValues: payment
       ? {
           id: payment.id,
+          created_at: payment.created_at,
           invoice_id: payment.invoice_id,
           method: payment.method,
           amount: payment.amount,
         }
       : {
           id: undefined,
+          created_at: undefined,
           invoice_id: invoice_id,
           method: undefined,
           amount: undefined,
@@ -79,6 +81,13 @@ function PaymentForm({
         onSubmit={handleSubmit(onSubmitHandler)}
       >
         <input {...register("id")} type="hidden" id="id" name="id" />
+        <input
+          {...register("id")}
+          type="hidden"
+          id="created_at"
+          name="created_at"
+        />
+
         <input
           {...register("invoice_id")}
           type="hidden"

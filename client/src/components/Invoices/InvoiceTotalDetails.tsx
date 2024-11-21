@@ -1,10 +1,19 @@
 import { Invoice } from "../../types/invoiceTypes";
+import { useState, useEffect } from "react";
 
 type props = {
-  dataLogger: Invoice;
+  invoice: Invoice;
 };
 
-export default function InvoiceTotalDetails({ dataLogger }: props) {
+export default function InvoiceTotalDetails({ invoice }: props) {
+  // const [details, setDetails] = useState(invoice);
+
+  // useEffect(() => {
+  //   setDetails(invoice);
+  // }, [invoice]);
+
+  console.log("*** Re rendering invoice totals details section.");
+
   return (
     <>
       <div className="panel">
@@ -15,22 +24,22 @@ export default function InvoiceTotalDetails({ dataLogger }: props) {
           <div className="panel-contents-section">
             <div className="panel-section-desc">
               <div className="panel-section-data">
-                <div>Total is {dataLogger.total}</div>
+                <div>Total is {invoice.total}</div>
               </div>
             </div>
             <div className="panel-section-desc">
               <div className="panel-section-data">
-                <div>Tax is {dataLogger.tax}</div>
+                <div>Tax is {invoice.tax}</div>
               </div>
             </div>
             <div className="panel-section-desc">
               <div className="panel-section-data">
-                <div>Balance is {dataLogger.balance}</div>
+                <div>Balance is {invoice.balance}</div>
               </div>
             </div>
             <div className="panel-section-desc">
               <div className="panel-section-data">
-                <div>Status is {dataLogger.status}</div>
+                <div>Status is {invoice.status}</div>
               </div>
             </div>
           </div>

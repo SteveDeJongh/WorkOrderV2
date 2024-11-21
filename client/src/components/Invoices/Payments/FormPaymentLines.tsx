@@ -6,10 +6,9 @@ import { Invoice, Payment } from "../../../types/invoiceTypes";
 
 type props = {
   payments: Invoice["payments"];
-  recalculateInvoice: Function;
   adminActions: Boolean;
   balance: Number;
-  // setDataLogger: React.Dispatch<React.SetStateAction<Invoice | undefined>>;
+  invoice_id: Number;
   dispatch: Dispatch<{
     type: string;
     paymentID?: number;
@@ -20,10 +19,9 @@ type props = {
 
 export default function FormPaymentLines({
   payments = [],
-  recalculateInvoice,
   adminActions,
   balance,
-  // setDataLogger,
+  invoice_id,
   dispatch,
 }: props) {
   const [lines, setLines] = useState(payments);
@@ -35,21 +33,14 @@ export default function FormPaymentLines({
 
   console.log("*** payments rerender");
 
-  function toggleDelete(paymentID: string | number, created_at: string | Date) {
-    // const newPayments = payments.map((payment) => {
-    //   if (payment.id === paymentID && payment.created_at === created_at) {
-    //     payment._destroy = !payment._destroy;
-    //   }
-    //   return payment;
-    // });
+  function toggleDelete(paymentId: string | number, created_at: string | Date) {
+    dispatch({
+      type: "togglePaymentDelete",
+      paymentId: paymentId,
+      created_at: created_at,
+    });
 
-    // setDataLogger((s) => {
-    //   if (!s) return s;
-    //   return { ...s, payments: newPayments };
-    // });
-    // setLines(payments);
-
-    recalculateInvoice();
+    dispatch({ type: "recaculateInvoice" });
   }
 
   // For Modal
@@ -64,13 +55,11 @@ export default function FormPaymentLines({
   }
 
   function handleClose(data: Payment | undefined) {
-    recalculateInvoice();
+    dispatch({ type: "recaculateInvoice" });
     setPayment(undefined);
     setIsOpen(false);
   }
 
-  // console.log("datalogger in payment lines", dataLogger);
-  // console.log("lines in payment lines", lines);
   return (
     <>
       <div className="panel">
@@ -115,10 +104,11 @@ export default function FormPaymentLines({
       </div>
       <PaymentModal
         open={isOpen}
-        onClose={(data: Payment | undefined) => handleClose(data)}
-        payments={payments}
+        closeModal={(data: Payment | undefined) => handleClose(data)}
         payment={payment}
         balance={balance}
+        invoice_id={invoice_id}
+        dispatch={dispatch}
       />
     </>
   );
