@@ -1,10 +1,10 @@
-import { Total } from "../../types/invoiceTypes";
+import { Invoice } from "../../types/invoiceTypes";
 
 type props = {
-  totals: Total;
+  dataLogger: Invoice;
 };
 
-export default function FormTotalDetails({ totals }: props) {
+export default function InvoiceTotalDetails({ dataLogger }: props) {
   return (
     <>
       <div className="panel">
@@ -15,22 +15,22 @@ export default function FormTotalDetails({ totals }: props) {
           <div className="panel-contents-section">
             <div className="panel-section-desc">
               <div className="panel-section-data">
-                <div>Total is {totals.total}</div>
+                <div>Total is {dataLogger.total}</div>
               </div>
             </div>
             <div className="panel-section-desc">
               <div className="panel-section-data">
-                <div>Tax is {totals.tax}</div>
+                <div>Tax is {dataLogger.tax}</div>
               </div>
             </div>
             <div className="panel-section-desc">
               <div className="panel-section-data">
-                <div>Balance is {totals.balance}</div>
+                <div>Balance is {dataLogger.balance}</div>
               </div>
             </div>
             <div className="panel-section-desc">
               <div className="panel-section-data">
-                <div>Status is {totals.status}</div>
+                <div>Status is {dataLogger.status}</div>
               </div>
             </div>
           </div>

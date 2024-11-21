@@ -1,12 +1,9 @@
 import React from "react";
 import { useState, useEffect, useContext } from "react";
 import ReactDom from "react-dom";
-import LoadingBox from "../../multiuse/LoadingBox";
 import SearchBar from "../../multiuse/SearchBar";
 import useCustomersData from "../../hooks/useCustomersData";
 import useURLSearchParam from "../../hooks/useURLSearchParam";
-import { objectToFormData } from "../../utils/formDataHelper";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
 import SelectableListItem from "../../multiuse/SelectableListItem";
 import Button from "../../multiuse/Button";
 
@@ -26,7 +23,7 @@ function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
 
   // Main Pane states
   const [selection, setSelection] = useState(customer_id);
-  const [data, setMainData] = useState({});
+  const [data, setMainData] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
     useURLSearchParam("search");
@@ -36,6 +33,10 @@ function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
     loading,
     error,
   } = useCustomersData(debouncedSearchTerm);
+
+  useEffect(() => {
+    setSelection(customer_id);
+  }, [customer_id]);
 
   useEffect(() => {
     if (fetchedData) {
@@ -70,7 +71,7 @@ function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
           <ul>
             {loading && <p>Information loading...</p>}
             {error && <p>An error occured.</p>}
-            {!loading && !error && data == "No results" ? (
+            {!loading && !error && data === "No results" ? (
               <p>No Results</p>
             ) : (
               <>

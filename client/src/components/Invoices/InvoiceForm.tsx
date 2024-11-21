@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import FormCustomerSection from "./FormCustomerSection";
 import FormInvoiceLines from "./FormInvoiceLines";
-import FormTotalDetails from "./FormTotalDetails";
+import FormTotalDetails from "./InvoiceTotalDetails";
 import Button from "../../multiuse/Button";
 import FormPaymentLines from "./Payments/FormPaymentLines";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

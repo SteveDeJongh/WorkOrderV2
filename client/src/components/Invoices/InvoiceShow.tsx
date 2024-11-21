@@ -1,15 +1,21 @@
-import { useState, useContext, useEffect, useCallback } from "react";
-import { useParams, useNavigate, useOutletContext } from "react-router-dom";
+import {
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+  useReducer,
+} from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchInvoiceData, editInvoice } from "../../services/invoiceServices";
 import { sumAProp } from "../../utils/index";
 import FormCustomerSection from "./FormCustomerSection";
 import FormInvoiceLines from "./InvoiceLines/FormInvoiceLines";
 import FormPaymentLines from "./Payments/FormPaymentLines";
-import FormTotalDetails from "./FormTotalDetails";
+import InvoiceTotalDetails from "./InvoiceTotalDetails";
 import LoadingBox from "../../multiuse/LoadingBox";
 import Button from "../../multiuse/Button";
-import { Invoice, Total } from "../../types/invoiceTypes";
+import { Invoice, Payment, InvoiceLine } from "../../types/invoiceTypes";
 import { User } from "../../types/users";
 import UserContext from "../../contexts/user-context";
 
@@ -23,25 +29,33 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   const [user, setUser] = useContext<User>(UserContext);
   const adminActions = user.roles.includes("admin");
 
+  // New Invoice
+  let newInvoice = {
+    id: 0,
+    customer_id: 0,
+    user_id: 0,
+    total: 0,
+    balance: 0,
+    tax: 0,
+    created_at: new Date(Date.now()).toISOString(),
+    updated_at: new Date(Date.now()).toISOString(),
+    status: "open",
+    invoice_lines: [],
+    payments: [],
+  };
+
+  // Reducer
+  const [invoice, dispatch] = useReducer(invoiceReducer, newInvoice);
+
   // Main Pane states
   const [mainLoading, setMainLoading] = useState(true);
   const [mainError, setMainError] = useState("");
   const [mainData, setMainData] = useState<Invoice>();
-  const [dataLogger, setDataLogger] = useState<Invoice>();
-  const [totals, setTotals] = useState<Total>({
-    total: 0,
-    tax: 0,
-    balance: 0,
-    status: "open",
-  });
+  // const [dataLogger, setDataLogger] = useState<Invoice>();
   const [headerText, setHeaderText] = useState("New Invoice");
   let { id: invoiceID } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    console.log({ dataLogger });
-  }, [dataLogger]);
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["fetchInvoiceData", { invoiceID }],
@@ -61,14 +75,9 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
         setHeaderText(`Invoice ${invoiceID}`);
         const response = await fetchInvoiceData(invoiceID);
         setMainData(response);
+        dispatch({ type: "setInvoice", data: response });
         // Creating a deep copy of the intial response to not alter mainData for comparison later.
-        setDataLogger(JSON.parse(JSON.stringify(response)));
-        setTotals({
-          total: response.total,
-          tax: response.tax,
-          balance: response.balance,
-          status: response.status,
-        });
+        // setDataLogger(JSON.parse(JSON.stringify(response)));
       } catch (e) {
         setMainError("An error occured fetching the invoice.");
         console.error(e);
@@ -82,7 +91,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
 
   // Checks to see if the invoice has changed.
   function invoiceHasChanges(): boolean {
-    return JSON.stringify(mainData) !== JSON.stringify(dataLogger);
+    return JSON.stringify(mainData) !== JSON.stringify(invoice);
   }
 
   // Submits invoice Data. TODO: Add new invoice creation. (if no invoiceID exists)
@@ -96,18 +105,9 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
       }
     },
     onSuccess: (returnedData: Invoice) => {
-      console.log("In the on success!");
-      // console.log("Returned Data", returnedData);
-      setDataLogger(returnedData);
+      // setDataLogger(returnedData);
+      dispatch({ type: "setInvoice", data: returnedData });
       setMainData(returnedData);
-      setTotals({
-        total: returnedData.total,
-        tax: returnedData.tax,
-        balance: returnedData.balance,
-        status: returnedData.status,
-      });
-      // console.log("mainData after onSuccess", mainData);
-      // console.log("DL after onSuccess", dataLogger);
     },
     onSettled: () => {
       // setMainLoading(false);
@@ -130,9 +130,9 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   const recalculateInvoice = useCallback(() => {
     console.log("*** recalculate payments");
 
-    let payments = sumAProp(dataLogger?.payments, "amount", { _destroy: true });
-    let total = sumAProp(dataLogger?.invoice_lines, "line_total");
-    let tax = sumAProp(dataLogger?.invoice_lines, "line_tax");
+    let payments = sumAProp(invoice?.payments, "amount", { _destroy: true });
+    let total = sumAProp(invoice?.invoice_lines, "line_total");
+    let tax = sumAProp(invoice?.invoice_lines, "line_tax");
     let balance = total + tax - payments;
     setTotals({
       total: total,
@@ -144,9 +144,9 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   // function recalculateInvoice() {
   //   // Run calculations for total, balance, and tax for the invoice.
   //   console.log("Recalculating invoice totals.");
-  //   let payments = sumAProp(dataLogger?.payments, "amount", { _destroy: true });
-  //   let total = sumAProp(dataLogger?.invoice_lines, "line_total");
-  //   let tax = sumAProp(dataLogger?.invoice_lines, "line_tax");
+  //   let payments = sumAProp(invoice?.payments, "amount", { _destroy: true });
+  //   let total = sumAProp(invoice?.invoice_lines, "line_total");
+  //   let tax = sumAProp(invoice?.invoice_lines, "line_tax");
   //   let balance = total + tax - payments;
   //   setTotals({
   //     total: total,
@@ -162,14 +162,11 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
     navigate("/invoices");
   }
 
-  useEffect(() => {
-    console.log("*** data logger changed");
-  }, [dataLogger]);
-
   // For Debugging, to be removed.
   function outputCurrentData() {
-    console.log("dataLogger", dataLogger);
+    // console.log("dataLogger", dataLogger);
     console.log("mainData", mainData);
+    console.log("invoice", invoice);
   }
 
   if (mainLoading) {
@@ -192,7 +189,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
                 disabled={false}
                 type="button"
                 text={buttonText}
-                onClick={() => mutate(dataLogger)}
+                onClick={() => mutate(invoice)}
               />
             </div>
           </div>
@@ -209,25 +206,83 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
         // onSubmit={handleSubmit(onSubmitHandler)}
       >
         <FormCustomerSection
-          dataLogger={dataLogger}
-          dataID={mainData.customer_id}
+          customerId={invoice?.customer_id}
+          dispatch={dispatch}
         />
-        <FormInvoiceLines
+        {/* <FormInvoiceLines
           dataLogger={dataLogger}
           recalculateInvoice={recalculateInvoice}
           adminActions={adminActions}
         />
+        */}
         <FormPaymentLines
-          payments={dataLogger.payments}
-          setDataLogger={setDataLogger}
+          payments={invoice.payments}
+          // setDataLogger={setDataLogger}
           recalculateInvoice={recalculateInvoice}
           adminActions={adminActions}
-          // balance={totals.balance}
+          balance={invoice.balance}
+          dispatch={dispatch}
         />
-        <FormTotalDetails totals={totals} />
+        <InvoiceTotalDetails dataLogger={invoice} />
       </div>
     </>
   );
+}
+
+type Action =
+  | { type: "setInvoice"; data: Invoice }
+  | { type: "updateCustomer"; customerId: number }
+  | { type: "removeCustomer" }
+  | { type: "saveInvoiceLine"; invoiceLine: InvoiceLine }
+  | { type: "togglePaymentDelete"; paymentId: Number; created_at: string }
+  | { type: "savePayment"; payment: Payment };
+
+function invoiceReducer(invoice: Invoice, action: Action): Invoice {
+  switch (action.type) {
+    case "setInvoice": {
+      return { ...action.data };
+    }
+    case "updateCustomer": {
+      console.log("Updated customer!", action.customerId);
+      return { ...invoice, customer_id: action.customerId };
+    }
+    case "removeCustomer": {
+      console.log("removing customer!");
+      return { ...invoice, customer_id: undefined };
+    }
+    case "togglePaymentDelete": {
+      console.log("Toggling Delete!");
+      const newPayments = invoice.payments.map((payment) => {
+        if (
+          payment &&
+          payment.id === action.paymentId &&
+          payment.created_at === action.created_at
+        ) {
+          payment._destroy = !payment._destroy;
+        }
+        return payment;
+      });
+
+      console.log(newPayments);
+      return { ...invoice, payments: newPayments };
+    }
+    case "savePayment": {
+      return invoice;
+      // if (action.payment?.id && invoice.payments) {
+      //   let idx = invoice.payments.findIndex((x) => x.id === action.payment.id);
+      //   if (idx > -1) {
+      //     Object.assign(invoice.payments[idx], action.payment);
+      //   }
+      // } else {
+      //   invoice.payments?.push({
+      //     ...action.payment,
+      //     created_at: new Date(Date.now()).toISOString(),
+      //   });
+      // }
+      // return invoice;
+    }
+  }
+  return invoice;
 }
 
 export default InvoiceShow;

@@ -1,6 +1,6 @@
 type Invoice = {
   id: number;
-  customer_id: number;
+  customer_id: number | undefined;
   user_id: number;
   total: number;
   balance: number;
@@ -9,7 +9,7 @@ type Invoice = {
   updated_at: string;
   status: "open" | "closed";
   invoice_lines: Array<InvoiceLine> | Array<null>; // changed from an optional property.
-  payments?: Array<Payment>;
+  payments: Array<Payment> | Array<null>;
 };
 
 type InvoiceLine = {

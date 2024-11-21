@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { Dispatch, useState, useRef, useEffect } from "react";
 import PaymentLine from "./PaymentLine";
 import Button from "../../../multiuse/Button";
 import PaymentModal from "./PaymentModal";
@@ -9,7 +9,13 @@ type props = {
   recalculateInvoice: Function;
   adminActions: Boolean;
   balance: Number;
-  setDataLogger: React.Dispatch<React.SetStateAction<Invoice | undefined>>;
+  // setDataLogger: React.Dispatch<React.SetStateAction<Invoice | undefined>>;
+  dispatch: Dispatch<{
+    type: string;
+    paymentID?: number;
+    paymentData?: Payment;
+    created_at?: string;
+  }>;
 };
 
 export default function FormPaymentLines({
@@ -17,7 +23,8 @@ export default function FormPaymentLines({
   recalculateInvoice,
   adminActions,
   balance,
-  setDataLogger,
+  // setDataLogger,
+  dispatch,
 }: props) {
   const [lines, setLines] = useState(payments);
 
@@ -29,18 +36,19 @@ export default function FormPaymentLines({
   console.log("*** payments rerender");
 
   function toggleDelete(paymentID: string | number, created_at: string | Date) {
-    const newPayments = payments.map((payment) => {
-      if (payment.id === paymentID && payment.created_at === created_at) {
-        payment._destroy = !payment._destroy;
-      }
-      return payment;
-    });
+    // const newPayments = payments.map((payment) => {
+    //   if (payment.id === paymentID && payment.created_at === created_at) {
+    //     payment._destroy = !payment._destroy;
+    //   }
+    //   return payment;
+    // });
 
-    setDataLogger((s) => {
-      if (!s) return s;
-      return { ...s, payments: newPayments };
-    });
-    setLines(payments);
+    // setDataLogger((s) => {
+    //   if (!s) return s;
+    //   return { ...s, payments: newPayments };
+    // });
+    // setLines(payments);
+
     recalculateInvoice();
   }
 
@@ -105,13 +113,13 @@ export default function FormPaymentLines({
           </div>
         )}
       </div>
-      {/* <PaymentModal
+      <PaymentModal
         open={isOpen}
         onClose={(data: Payment | undefined) => handleClose(data)}
-        dataLogger={dataLogger}
+        payments={payments}
         payment={payment}
         balance={balance}
-      /> */}
+      />
     </>
   );
 }
