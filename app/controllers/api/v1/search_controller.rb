@@ -14,7 +14,7 @@ class Api::V1::SearchController < ApplicationController
   def products
     @products = Product.where('name LIKE ? OR sku LIKE ?', "%#{params[:q]}%", "%#{params[:q]}%")
 
-    render json: @products
+    render json: @products.as_json(include: :tax_rate)
   end
 
   def inventory_movement

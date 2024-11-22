@@ -3,12 +3,12 @@ import CustomerSearchModal from "../Customers/CustomerSearchModal";
 import { fetchCustomerData } from "../../services/customerServices";
 import LoadingBox from "../../multiuse/LoadingBox";
 import Button from "../../multiuse/Button";
-import { Invoice } from "../../types/invoiceTypes";
+import { Action } from "../../types/invoiceTypes";
 import { Customer } from "../../types/customers";
 
 type props = {
   customerId?: number;
-  dispatch: Dispatch<{ type: string; customerId?: number }>;
+  dispatch: React.Dispatch<Action>;
 };
 
 export default function FormCustomerSection({ customerId, dispatch }: props) {
@@ -122,7 +122,7 @@ export default function FormCustomerSection({ customerId, dispatch }: props) {
       <CustomerSearchModal
         open={customerModal}
         onClose={() => setCustomerModal(false)}
-        onSave={(id) => handleCustomerChange(id)}
+        onSave={(id: number) => handleCustomerChange(id)}
         customer_id={customerId}
       />
     </div>

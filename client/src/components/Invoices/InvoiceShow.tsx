@@ -1,10 +1,4 @@
-import {
-  useState,
-  useContext,
-  useEffect,
-  useCallback,
-  useReducer,
-} from "react";
+import { useState, useContext, useEffect, useReducer } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchInvoiceData, editInvoice } from "../../services/invoiceServices";
@@ -15,7 +9,7 @@ import FormPaymentLines from "./Payments/FormPaymentLines";
 import InvoiceTotalDetails from "./InvoiceTotalDetails";
 import LoadingBox from "../../multiuse/LoadingBox";
 import Button from "../../multiuse/Button";
-import { Invoice, Payment, InvoiceLine } from "../../types/invoiceTypes";
+import { Action, Invoice } from "../../types/invoiceTypes";
 import { User } from "../../types/users";
 import UserContext from "../../contexts/user-context";
 
@@ -30,7 +24,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   const adminActions = user.roles.includes("admin");
 
   // New Invoice
-  let newInvoice = {
+  let newInvoice: Invoice = {
     id: 0,
     customer_id: 0,
     user_id: 0,
@@ -97,7 +91,6 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   // Submits invoice Data. TODO: Add new invoice creation. (if no invoiceID exists)
   const { mutate, isPending, isError, isSuccess } = useMutation({
     mutationFn: (invoiceData: Invoice) => {
-      // setMainLoading(true);
       if (invoiceID) {
         return editInvoice(invoiceID, {
           invoice: renamePropsToAttributes(invoiceData),
@@ -105,12 +98,8 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
       }
     },
     onSuccess: (returnedData: Invoice) => {
-      // setDataLogger(returnedData);
       dispatch({ type: "setInvoice", data: returnedData });
       setMainData(returnedData);
-    },
-    onSettled: () => {
-      // setMainLoading(false);
     },
   });
 
@@ -127,27 +116,21 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
     };
   }
 
-  function recalculateInvoice() {
-    // console.log("*** recalculate invoice");
-    // let payments = sumAProp(invoice?.payments, "amount", { _destroy: true });
-    // let total = sumAProp(invoice?.invoice_lines, "line_total");
-    // let tax = sumAProp(invoice?.invoice_lines, "line_tax");
-    // let balance = total + tax - payments;
-    dispatch({
-      type: "setTotals",
-      // data: { total: total, tax: tax, balance: balance, status: "open" },
-    });
-  }
-
   // TODO More to do here...
   function handleCancel() {
-    if (invoiceHasChanges()) alert("The invoice has unsaved changes.");
-    navigate("/invoices");
+    if (invoiceHasChanges()) {
+      if (confirm("The invoice has unsaved changes. Proceed without saving?")) {
+        navigate("/invoices");
+      } else {
+        console.log("Staying here!");
+      }
+    } else {
+      navigate("/invoices");
+    }
   }
 
   // For Debugging, to be removed.
   function outputCurrentData() {
-    // console.log("dataLogger", dataLogger);
     console.log("mainData", mainData);
     console.log("invoice", invoice);
   }
@@ -192,12 +175,12 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
           customerId={invoice?.customer_id}
           dispatch={dispatch}
         />
-        {/* <FormInvoiceLines
+        <FormInvoiceLines
           invoice_lines={invoice.invoice_lines}
           adminActions={adminActions}
           invoice_id={invoice.id}
           dispatch={dispatch}
-        />*/}
+        />
         <FormPaymentLines
           payments={invoice.payments}
           adminActions={adminActions}
@@ -211,16 +194,6 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   );
 }
 
-type Action =
-  | { type: "setInvoice"; data: Invoice }
-  | { type: "recaculateInvoice" }
-  | { type: "updateCustomer"; customerId: number }
-  | { type: "removeCustomer" }
-  | { type: "saveInvoiceLine"; invoiceLine: InvoiceLine }
-  | { type: "togglePaymentDelete"; paymentId: Number; created_at: string }
-  | { type: "updatePayment"; payment: Payment }
-  | { type: "createPayment"; payment: Payment };
-
 function invoiceReducer(invoice: Invoice, action: Action): Invoice {
   switch (action.type) {
     case "setInvoice": {
@@ -228,9 +201,9 @@ function invoiceReducer(invoice: Invoice, action: Action): Invoice {
     }
     case "recaculateInvoice": {
       console.log("Recalculating and Setting Invoice Totals");
-      let payments = sumAProp(invoice?.payments, "amount", { _destroy: true });
-      let total = sumAProp(invoice?.invoice_lines, "line_total");
-      let tax = sumAProp(invoice?.invoice_lines, "line_tax");
+      let payments = sumAProp(invoice.payments, "amount", { _destroy: true });
+      let total = sumAProp(invoice.invoice_lines, "line_total");
+      let tax = sumAProp(invoice.invoice_lines, "line_tax");
       let balance = total + tax - payments;
       return {
         ...invoice,
@@ -247,6 +220,25 @@ function invoiceReducer(invoice: Invoice, action: Action): Invoice {
     case "removeCustomer": {
       console.log("removing customer!");
       return { ...invoice, customer_id: undefined };
+    }
+    case "createInvoiceLine": {
+      console.log("Creating Invoice Line!");
+      invoice.invoice_lines.push(action.invoice_line);
+      return invoice;
+    }
+    case "updateInvoiceLine": {
+      console.log("Updating Invoice Line");
+      const NewInvoiceLines = invoice.invoice_lines.map((line) => {
+        if (
+          line.id === action.invoice_line.id &&
+          line.created_at === action.invoice_line.created_at
+        ) {
+          return action.invoice_line;
+        } else {
+          return line;
+        }
+      });
+      return { ...invoice, invoice_lines: NewInvoiceLines };
     }
     case "togglePaymentDelete": {
       console.log("Toggling Delete!");
@@ -278,7 +270,6 @@ function invoiceReducer(invoice: Invoice, action: Action): Invoice {
     }
     case "createPayment": {
       console.log("Created Payment");
-      console.log("New payment", action.payment);
       invoice.payments.push(action.payment);
       return invoice;
     }

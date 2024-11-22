@@ -1,3 +1,14 @@
+type Action =
+  | { type: "setInvoice"; data: Invoice }
+  | { type: "recaculateInvoice" }
+  | { type: "updateCustomer"; customerId: number }
+  | { type: "removeCustomer" }
+  | { type: "createInvoiceLine"; invoice_line: InvoiceLine}
+  | { type: "updateInvoiceLine"; invoice_line: InvoiceLine }
+  | { type: "togglePaymentDelete"; paymentId: number | string; created_at: string | Date }
+  | { type: "updatePayment"; payment: Payment }
+  | { type: "createPayment"; payment: Payment };
+
 type Invoice = {
   id: number;
   customer_id: number | undefined;
@@ -8,12 +19,12 @@ type Invoice = {
   created_at: string;
   updated_at: string;
   status: "open" | "closed";
-  invoice_lines: Array<InvoiceLine> | Array<null>; // changed from an optional property.
-  payments: Array<Payment> | Array<null>;
+  invoice_lines: InvoiceLine[]; // changed from an optional property.
+  payments: Payment[];
 };
 
 type InvoiceLine = {
-  id: number;
+  id?: number;
   invoice_id: number;
   product_id: number;
   discount_percentage: number;
@@ -24,7 +35,9 @@ type InvoiceLine = {
   line_total: number;
   quantity: number;
   tax_rate: Tax_rate;
+  tax_rate_id: number;
   product: Product;
+  changed?: boolean;
 };
 
 type Product = {
@@ -39,7 +52,8 @@ type Product = {
   price: string;
   sku: string;
   stock: number;
-  tax_rate: number;
+  tax_rate: Tax_rate;
+  tax_rate_id: number;
   upc: number;
   updated_at: string;
 };
@@ -68,4 +82,4 @@ type Total = {
   status: "open" | "closed";
 };
 
-export { Invoice, InvoiceLine, Product, Tax_rate, Payment, Total }
+export { Action, Invoice, InvoiceLine, Product, Tax_rate, Payment, Total }

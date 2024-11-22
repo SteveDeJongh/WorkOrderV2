@@ -2,19 +2,14 @@ import { Dispatch, useState, useRef, useEffect } from "react";
 import PaymentLine from "./PaymentLine";
 import Button from "../../../multiuse/Button";
 import PaymentModal from "./PaymentModal";
-import { Invoice, Payment } from "../../../types/invoiceTypes";
+import { Action, Payment } from "../../../types/invoiceTypes";
 
 type props = {
-  payments: Invoice["payments"];
-  adminActions: Boolean;
-  balance: Number;
-  invoice_id: Number;
-  dispatch: Dispatch<{
-    type: string;
-    paymentID?: number;
-    paymentData?: Payment;
-    created_at?: string;
-  }>;
+  payments: Payment[];
+  adminActions: boolean;
+  balance: number;
+  invoice_id: number;
+  dispatch: React.Dispatch<Action>;
 };
 
 export default function FormPaymentLines({

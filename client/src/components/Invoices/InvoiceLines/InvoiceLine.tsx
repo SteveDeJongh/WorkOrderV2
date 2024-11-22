@@ -131,6 +131,13 @@ export default function InvoiceLine({
       type: "text",
       showAsDollars: true,
     },
+    {
+      keyName: "line_tax",
+      productValue: false,
+      editable: false,
+      type: "text",
+      showAsDollars: true,
+    },
   ];
 
   return (

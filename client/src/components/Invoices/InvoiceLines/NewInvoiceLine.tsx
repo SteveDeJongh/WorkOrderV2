@@ -44,11 +44,11 @@ export default function NewInvoiceLine({ addLine }: props) {
     setSearchTerm(searchValue);
   }
 
-  function handleSelection(id) {
-    console.log("id selected", id);
+  function handleSelection(product) {
+    console.log("product selected", product);
     setSearchTerm("");
     setIsOpen(false);
-    addLine(id);
+    addLine(product);
   }
 
   return (
@@ -66,7 +66,7 @@ export default function NewInvoiceLine({ addLine }: props) {
       {isOpen && (
         <SearchResultsList
           results={data}
-          handleSelection={(id) => handleSelection(id)}
+          handleSelection={(product) => handleSelection(product)}
         />
       )}
     </div>

@@ -3,40 +3,36 @@ import { fetchProductData } from "../../../services/productServices";
 import InvoiceLine from "./InvoiceLine";
 import NewInvoiceLine from "./NewInvoiceLine";
 import {
-  Invoice,
+  Action,
   InvoiceLine as TInvoiceLine,
   Product,
 } from "../../../types/invoiceTypes";
 
 type props = {
-  dataLogger: Invoice;
-  recalculateInvoice: Function;
+  invoice_lines: TInvoiceLine[];
   adminActions: boolean;
+  invoice_id: number;
+  dispatch: React.Dispatch<Action>;
 };
 
 export default function FormInvoiceLines({
-  dataLogger,
-  recalculateInvoice,
+  invoice_lines = [],
   adminActions,
+  invoice_id,
+  dispatch,
 }: props) {
-  const [lines, setLines] = useState<Array<TInvoiceLine>>(
-    dataLogger.invoice_lines
-  );
-  const [val, setVal] = useState(1);
+  const [lines, setLines] = useState<TInvoiceLine[]>(invoice_lines);
+
+  useEffect(() => {
+    console.log("*** invoice_lines changed ", invoice_lines);
+    setLines(invoice_lines);
+  }, [invoice_lines]);
+
+  console.log("*** invoice_lines rerender", lines);
 
   function updateLine(updatedLine: TInvoiceLine) {
-    setLines(
-      lines?.map((line) => {
-        if (line.id === updatedLine.id) {
-          return updatedLine;
-        } else {
-          return line;
-        }
-      })
-    );
-    // TODO: more updating line logic needed to trigger a line save and recalculate invoice totals.
-    recalculateInvoice();
-    console.log(lines);
+    dispatch({ type: "updateInvoiceLine", invoice_line: updatedLine });
+    dispatch({ type: "recaculateInvoice" });
   }
 
   async function addLine(selectedProduct: Product) {
@@ -53,21 +49,19 @@ export default function FormInvoiceLines({
   }
 
   function addConfirmedLine(productData: Product) {
-    let trimmedProductData = Object.assign({}, productData);
-    delete trimmedProductData["tax_rate"];
+    let productDataCopy = Object.assign({}, productData);
+    const { tax_rate, ...trimmedProductData } = productDataCopy;
 
-    console.log(trimmedProductData);
-
-    const newLine = {
+    const newLine: TInvoiceLine = {
+      id: undefined,
+      invoice_id: invoice_id,
+      product_id: productData.id,
       created_at: new Date(Date.now()).toISOString(),
       discount_percentage: 0,
-      id: undefined,
-      invoice_id: dataLogger.id,
-      line_tax: "0",
-      line_total: "0",
-      price: productData.price,
-      product: trimmedProductData,
-      product_id: productData.id,
+      line_tax: 0,
+      line_total: 0,
+      price: Number(productData.price),
+      product: trimmedProductData, // How should i structure invoice lines? Any reason to have tax_rate under the invoice_line rather than with the product it's tied too?
       quantity: 1,
       tax_rate: productData.tax_rate,
       tax_rate_id: productData.tax_rate_id,
@@ -76,11 +70,11 @@ export default function FormInvoiceLines({
 
     let line = recalculateLine(newLine);
 
-    dataLogger.invoice_lines.push(line);
-    recalculateInvoice();
+    dispatch({ type: "createInvoiceLine", invoice_line: line });
+    dispatch({ type: "recaculateInvoice" });
   }
 
-  function recalculateLine(line: InvoiceLine) {
+  function recalculateLine(line: TInvoiceLine) {
     line.line_total =
       line.quantity * Number(line.product.price) -
       (line.quantity * Number(line.product.price) * line.discount_percentage) /
@@ -88,10 +82,10 @@ export default function FormInvoiceLines({
     line.price =
       Number(line.product.price) -
       Number(line.product.price) * (line.discount_percentage / 100);
+    console.log(line, line.line_total, line.tax_rate.percentage);
+    line.line_tax = Number(line.line_total) * Number(line.tax_rate.percentage);
     return line;
   }
-
-  // console.log("lines", lines);
 
   return (
     <div className="panel">
@@ -113,6 +107,7 @@ export default function FormInvoiceLines({
                   <th>MSRP</th>
                   <th>Price</th>
                   <th>Total</th>
+                  <th>Line Tax</th>
                 </tr>
               </thead>
               {lines && (
@@ -130,7 +125,7 @@ export default function FormInvoiceLines({
             </table>
           </div>
         </div>
-        <NewInvoiceLine addLine={(id) => addLine(id)} />
+        <NewInvoiceLine addLine={(product: Product) => addLine(product)} />
       </div>
     </div>
   );

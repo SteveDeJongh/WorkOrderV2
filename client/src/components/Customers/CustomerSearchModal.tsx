@@ -11,7 +11,7 @@ type Props = {
   open: boolean;
   onClose: Function;
   onSave: Function;
-  customer_id: number | string;
+  customer_id?: number | string;
 };
 
 function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
