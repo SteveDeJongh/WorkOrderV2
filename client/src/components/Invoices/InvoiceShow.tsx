@@ -100,6 +100,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
     onSuccess: (returnedData: Invoice) => {
       dispatch({ type: "setInvoice", data: returnedData });
       setMainData(returnedData);
+      queryClient.invalidateQueries({ queryKey: ["invoices"] });
     },
   });
 
@@ -148,7 +149,16 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
       {!modalForm && (
         <div className="main-pane-header">
           <div className="main-pane-header-title">
-            <h2>{headerText}</h2>
+            <h2>
+              {headerText}
+              <span
+                className={`invoice-status ${
+                  invoice.status === "open" ? "open" : "closed"
+                }`}
+              >
+                {invoice.status}
+              </span>
+            </h2>
             <div className="main-pane-form-actions">
               <Button onClick={() => handleCancel()} text={"Cancel"} />
               <Button
@@ -202,15 +212,16 @@ function invoiceReducer(invoice: Invoice, action: Action): Invoice {
     case "recaculateInvoice": {
       console.log("Recalculating and Setting Invoice Totals");
       let payments = sumAProp(invoice.payments, "amount", { _destroy: true });
-      let total = sumAProp(invoice.invoice_lines, "line_total");
+      let sub_total = sumAProp(invoice.invoice_lines, "line_total");
       let tax = sumAProp(invoice.invoice_lines, "line_tax");
-      let balance = total + tax - payments;
+      let total = sub_total + tax;
+      let balance = total - payments;
       return {
         ...invoice,
+        sub_total: sub_total,
         total: total,
         tax: tax,
         balance: balance,
-        status: balance <= 0 ? "closed" : "open",
       };
     }
     case "updateCustomer": {

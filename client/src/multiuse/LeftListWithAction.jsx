@@ -71,11 +71,17 @@ function LeftListWithAction({
         onImmediateChange={handleImmediateSearchChange}
       />
       <ul>
-        {loading && <p>Information loading...</p>}
+        {loading && (
+          <>
+            <p>Information loading...</p>
+          </>
+        )}
         {error && <p>An error occured.</p>}
         {!loading && !error && data == "No results" ? (
-          <p>No Results</p>
-        ) : (
+          <>
+            <p>No Results</p>
+          </>
+        ) : !loading && !error ? (
           <>
             {data.map((data) => {
               return (
@@ -90,7 +96,7 @@ function LeftListWithAction({
               );
             })}
           </>
-        )}
+        ) : null}
       </ul>
       <div id="single-col-bottom">
         <Link

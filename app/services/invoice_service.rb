@@ -6,13 +6,13 @@ class InvoiceService
 
   def calculateInvoiceTotals
     puts "We're calculating!"
-    invoice_total = 0;
+    sub_total = 0;
     tax_total = 0;
     payment_total = 0;
 
     if @resource.invoice_lines
         @resource.invoice_lines.each do |line|
-          invoice_total += line.line_total.to_f;
+          sub_total += line.line_total.to_f;
           tax_total += line.line_tax.to_f;
         end
     end
@@ -23,9 +23,10 @@ class InvoiceService
       end
     end
 
-    @resource.total = invoice_total
+    @resource.sub_total = sub_total
     @resource.tax = tax_total
-    @resource.balance = invoice_total + tax_total - payment_total
+    @resource.total = sub_total + tax_total
+    @resource.balance = sub_total + tax_total - payment_total
     if (@has_lines)
       @resource.status = @resource.balance == 0 ? "closed" : "open";
     end

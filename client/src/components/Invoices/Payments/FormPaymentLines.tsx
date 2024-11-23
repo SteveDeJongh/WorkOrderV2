@@ -26,7 +26,7 @@ export default function FormPaymentLines({
     setLines(payments);
   }, [payments]);
 
-  console.log("*** payments rerender");
+  console.log("*** FormPaymentLines rerender");
 
   function toggleDelete(paymentId: string | number, created_at: string | Date) {
     dispatch({

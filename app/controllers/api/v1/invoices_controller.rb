@@ -97,6 +97,7 @@ class Api::V1::InvoicesController < ApplicationController
         :id,
         :customer_id,
         :total,
+        :sub_total,
         :balance,
         :tax,
         :created_at,

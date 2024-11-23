@@ -28,7 +28,7 @@ export default function FormInvoiceLines({
     setLines(invoice_lines);
   }, [invoice_lines]);
 
-  console.log("*** invoice_lines rerender", lines);
+  console.log("*** FormIvnoiceLines rerender", lines);
 
   function updateLine(updatedLine: TInvoiceLine) {
     dispatch({ type: "updateInvoiceLine", invoice_line: updatedLine });
@@ -82,7 +82,6 @@ export default function FormInvoiceLines({
     line.price =
       Number(line.product.price) -
       Number(line.product.price) * (line.discount_percentage / 100);
-    console.log(line, line.line_total, line.tax_rate.percentage);
     line.line_tax = Number(line.line_total) * Number(line.tax_rate.percentage);
     return line;
   }

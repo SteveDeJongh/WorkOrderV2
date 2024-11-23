@@ -31,7 +31,6 @@ import PageTitle from "./components/PageTitle";
 import { getUserByToken } from "./services/userServices";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import InvoiceShow from "./components/Invoices/InvoiceShow";
-// import InvoiceEdit from "./components/Invoices/InvoiceEdit";
 import InvoiceNew from "./components/Invoices/InvoiceNew";
 
 const router = createBrowserRouter([

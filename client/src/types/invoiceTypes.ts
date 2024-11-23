@@ -14,6 +14,7 @@ type Invoice = {
   customer_id: number | undefined;
   user_id: number;
   total: number;
+  sub_total: number;
   balance: number;
   tax: number;
   created_at: string;

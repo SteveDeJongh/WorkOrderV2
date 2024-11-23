@@ -12,7 +12,7 @@ export default function InvoiceTotalDetails({ invoice }: props) {
   //   setDetails(invoice);
   // }, [invoice]);
 
-  console.log("*** Re rendering invoice totals details section.");
+  console.log("*** InvoiceTotalDetails rerender");
 
   return (
     <>
@@ -24,12 +24,17 @@ export default function InvoiceTotalDetails({ invoice }: props) {
           <div className="panel-contents-section">
             <div className="panel-section-desc">
               <div className="panel-section-data">
-                <div>Total is {invoice.total}</div>
+                <div>Sub Total is {invoice.sub_total}</div>
               </div>
             </div>
             <div className="panel-section-desc">
               <div className="panel-section-data">
                 <div>Tax is {invoice.tax}</div>
+              </div>
+            </div>
+            <div className="panel-section-desc">
+              <div className="panel-section-data">
+                <div>Total is {invoice.total}</div>
               </div>
             </div>
             <div className="panel-section-desc">

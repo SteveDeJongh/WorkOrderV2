@@ -57,8 +57,10 @@ function ListItem({ resource, value, linkToPage, handleClick, selected }) {
             className={`single-col-li ${selected ? "selected" : ""}`}
           >
             <div className="li-row li-top">
-              <span>{value.id}</span>
-              <span>{value.status}</span>
+              <span>Invoice: {value.id}</span>
+              <span className={`product-span ${value.status}`}>
+                {value.status}
+              </span>
             </div>
             <div className="li-row li-bottom">
               <span>
@@ -71,7 +73,7 @@ function ListItem({ resource, value, linkToPage, handleClick, selected }) {
                 />
               </span>
               <span>
-                Total:{" "}
+                T:{" "}
                 <NumericFormat
                   value={Number(value.total).toFixed(2)}
                   displayType={"text"}
