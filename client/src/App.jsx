@@ -1,4 +1,3 @@
-import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./whitespace-resets.css";
 import "./App.css";
@@ -31,7 +30,6 @@ import PageTitle from "./components/PageTitle";
 import { getUserByToken } from "./services/userServices";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import InvoiceShow from "./components/Invoices/InvoiceShow";
-import InvoiceNew from "./components/Invoices/InvoiceNew";
 
 const router = createBrowserRouter([
   {
@@ -159,7 +157,7 @@ const router = createBrowserRouter([
               },
               {
                 path: "new",
-                element: <InvoiceNew />,
+                element: <InvoiceShow modalForm={false} buttonText="Save" />,
               },
             ],
           },

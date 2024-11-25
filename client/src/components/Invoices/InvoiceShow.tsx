@@ -1,8 +1,12 @@
 import { useState, useContext, useEffect, useReducer } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchInvoiceData, editInvoice } from "../../services/invoiceServices";
-import { sumAProp } from "../../utils/index";
+import {
+  createInvoice,
+  fetchInvoiceData,
+  editInvoice,
+} from "../../services/invoiceServices";
+import { CapitalizeFullName, sumAProp } from "../../utils/index";
 import FormCustomerSection from "./FormCustomerSection";
 import FormInvoiceLines from "./InvoiceLines/FormInvoiceLines";
 import FormPaymentLines from "./Payments/FormPaymentLines";
@@ -25,10 +29,11 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
 
   // New Invoice
   let newInvoice: Invoice = {
-    id: 0,
+    id: null,
     customer_id: 0,
     user_id: 0,
     total: 0,
+    sub_total: 0,
     balance: 0,
     tax: 0,
     created_at: new Date(Date.now()).toISOString(),
@@ -61,7 +66,9 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   useEffect(() => {
     async function loadInvoiceData() {
       if (!invoiceID) {
-        setMainData(undefined);
+        setMainData(newInvoice);
+        dispatch({ type: "setInvoice", data: newInvoice });
+        setMainLoading(false);
         return;
       }
       try {
@@ -70,8 +77,6 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
         const response = await fetchInvoiceData(invoiceID);
         setMainData(response);
         dispatch({ type: "setInvoice", data: response });
-        // Creating a deep copy of the intial response to not alter mainData for comparison later.
-        // setDataLogger(JSON.parse(JSON.stringify(response)));
       } catch (e) {
         setMainError("An error occured fetching the invoice.");
         console.error(e);
@@ -95,6 +100,8 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
         return editInvoice(invoiceID, {
           invoice: renamePropsToAttributes(invoiceData),
         });
+      } else {
+        return createInvoice({ invoice: renamePropsToAttributes(invoiceData) });
       }
     },
     onSuccess: (returnedData: Invoice) => {
@@ -120,7 +127,9 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   // TODO More to do here...
   function handleCancel() {
     if (invoiceHasChanges()) {
-      if (confirm("The invoice has unsaved changes. Proceed without saving?")) {
+      if (
+        confirm("The invoice has unsaved changes. Continue without saving?")
+      ) {
         navigate("/invoices");
       } else {
         console.log("Staying here!");
@@ -156,7 +165,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
                   invoice.status === "open" ? "open" : "closed"
                 }`}
               >
-                {invoice.status}
+                {CapitalizeFullName(invoice.status)}
               </span>
             </h2>
             <div className="main-pane-form-actions">
@@ -176,11 +185,7 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
         Log it! (To remove)
       </button>
       {/* To Remove */}
-      <div
-        id="main-pane-content"
-        className="main-pane-content"
-        // onSubmit={handleSubmit(onSubmitHandler)}
-      >
+      <div id="main-pane-content" className="main-pane-content">
         <FormCustomerSection
           customerId={invoice?.customer_id}
           dispatch={dispatch}

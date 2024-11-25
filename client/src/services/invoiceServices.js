@@ -34,8 +34,9 @@ async function createInvoice(invoiceData) {
     method: "POST",
     headers: {
       "Authorization": localStorage.getItem("authToken"),
+      "Content-Type": "application/json",
     },
-    body: invoiceData,
+    body: JSON.stringify(invoiceData),
   })
 
   if (!response.ok) {

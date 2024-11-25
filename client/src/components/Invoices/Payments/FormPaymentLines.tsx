@@ -8,7 +8,7 @@ type props = {
   payments: Payment[];
   adminActions: boolean;
   balance: number;
-  invoice_id: number;
+  invoice_id: number | null;
   dispatch: React.Dispatch<Action>;
 };
 

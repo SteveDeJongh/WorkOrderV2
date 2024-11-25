@@ -31,4 +31,9 @@ class InvoiceService
       @resource.status = @resource.balance == 0 ? "closed" : "open";
     end
   end
+
+  def createInvoiceLineMovements
+    lines = @resource.invoice_lines
+    puts("Lines are", lines);
+  end
 end

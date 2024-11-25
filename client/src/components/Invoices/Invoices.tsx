@@ -12,7 +12,7 @@ function Invoices() {
   const [user, setUser] = useContext(UserContext);
   const [view, setView] = useState(user.views?.invoices || "profile");
 
-  function viewSetter(view) {
+  function viewSetter(view: string) {
     user.views ? user.views : (user.views = {});
 
     user.views["invoices"] = view;
@@ -25,13 +25,28 @@ function Invoices() {
 
   const [selection, setSelection] = useState(Number(useParams().id) || "");
 
+  // useEffect(() => {
+  //   if (pathname == "/invoices/new" || pathname === "/invoices") {
+  //     setSelection("");
+  //   }
+  // }, [pathname]);
+
   useEffect(() => {
-    if (!selection) {
+    if (
+      (selection && pathname === "/invoices/new") ||
+      pathname === "/invoices"
+    ) {
+      setSelection("");
+    } else if (
+      !selection &&
+      pathname !== "/invoices/new" &&
+      pathname !== "/invoices"
+    ) {
       navigate(`/invoices`);
     }
-  }, [selection]);
+  }, [selection, pathname]);
 
-  console.log("Re-rendering Invoices, selection is:", selection);
+  console.log("Re-rendering Invoices, selection is:", selection, pathname);
 
   const columns = [
     { keys: ["id"], header: "ID" },
@@ -59,10 +74,10 @@ function Invoices() {
           <div className="pane pane-mid">
             <div className="pane-inner">
               <ViewToggle view={view} setView={viewSetter} />
-              {!selection ? (
+              {!selection && pathname !== "/invoices/new" ? (
                 <NoSelection item={"invoice"} />
               ) : (
-                <Outlet context={[selection, setSelection]} />
+                <Outlet />
               )}
             </div>
           </div>

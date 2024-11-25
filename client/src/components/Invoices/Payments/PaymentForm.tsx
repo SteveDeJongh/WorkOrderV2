@@ -8,7 +8,7 @@ type Props = {
   payment?: Payment;
   onSubmit: Function;
   buttonText: string;
-  invoice_id: Number;
+  invoice_id: Number | null;
   balance: number;
 };
 

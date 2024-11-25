@@ -23,9 +23,29 @@ class Api::V1::InvoicesController < ApplicationController
 
   # POST /invoices
   def create
-    @invoice = Invoice.new(invoice_params)
+    workingParams = invoice_params;
 
-    InvoiceService.new(@invoice).calculateInvoiceTotals
+    # Update Invoice Lines
+    if workingParams[:invoice_lines_attributes]
+      workingParams[:invoice_lines_attributes].map! do |line|
+        line = recalculateInvoiceLine(line);
+        # Removing extra properties on line for update.
+        removeExtraProps(line, ["product", "tax_rate", "updated_at", "created_at"])
+      end
+    end
+
+    # Update payment if there are payments
+    if workingParams[:payments_attributes]
+      workingParams[:payments_attributes].map! do |payment|
+        removeExtraProps(payment, ["created_at", "updated_at"])
+      end
+    end
+
+    @invoice = Invoice.new(workingParams)
+
+    has_lines = !workingParams[:invoice_lines_attributes].empty? || !workingParams[:payments_attributes].empty?
+
+    InvoiceService.new(@invoice, has_lines).calculateInvoiceTotals
 
     if @invoice.save
       render json: @invoice.as_json(include: [{
@@ -66,6 +86,9 @@ class Api::V1::InvoicesController < ApplicationController
     if @invoice.update(workingParams)
       # Update Invoice total amounts.
       InvoiceService.new(@invoice, has_lines).calculateInvoiceTotals
+      if @invoice.balance == 0.0;
+        InvoiceService.new(@invoice, has_lines).createInvoiceLineMovements
+      end
       @invoice.save
       render json: @invoice.as_json(include: [{
         invoice_lines: {

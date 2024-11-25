@@ -11,7 +11,7 @@ import {
 type props = {
   invoice_lines: TInvoiceLine[];
   adminActions: boolean;
-  invoice_id: number;
+  invoice_id: number | null;
   dispatch: React.Dispatch<Action>;
 };
 
@@ -53,7 +53,7 @@ export default function FormInvoiceLines({
     const { tax_rate, ...trimmedProductData } = productDataCopy;
 
     const newLine: TInvoiceLine = {
-      id: undefined,
+      id: null,
       invoice_id: invoice_id,
       product_id: productData.id,
       created_at: new Date(Date.now()).toISOString(),

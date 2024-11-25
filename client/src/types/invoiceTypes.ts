@@ -10,7 +10,7 @@ type Action =
   | { type: "createPayment"; payment: Payment };
 
 type Invoice = {
-  id: number;
+  id: number | null;
   customer_id: number | undefined;
   user_id: number;
   total: number;
@@ -25,8 +25,8 @@ type Invoice = {
 };
 
 type InvoiceLine = {
-  id?: number;
-  invoice_id: number;
+  id: number | null;
+  invoice_id: number | null;
   product_id: number;
   discount_percentage: number;
   price: number;

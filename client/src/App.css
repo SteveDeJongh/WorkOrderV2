@@ -600,6 +600,7 @@ flex-direction: column;;
   color: var(--light-selection);
   border-radius: 5px;
   margin-left: 5px;
+  padding: 0 5px;
 }
 
 .main-pane-header-title h2 span.invoice-status.open{

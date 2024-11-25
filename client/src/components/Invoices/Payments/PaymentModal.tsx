@@ -1,14 +1,14 @@
 import React from "react";
 import ReactDom from "react-dom";
 import PaymentForm from "./PaymentForm";
-import { Invoice, Payment } from "../../../types/invoiceTypes";
+import { Payment } from "../../../types/invoiceTypes";
 
 type Props = {
   open: boolean;
   closeModal: Function;
   payment?: Payment;
   balance: number;
-  invoice_id: number;
+  invoice_id: number | null;
   dispatch: Function;
 };
 
@@ -20,8 +20,9 @@ function PaymentModal({
   invoice_id,
   dispatch,
 }: Props) {
-  function handleClose(e) {
-    if (e.target.className === "main-modal-background") {
+  function handleClose(e: React.MouseEvent<HTMLElement, MouseEvent>) {
+    const target = e.target as HTMLElement;
+    if (target.className === "main-modal-background") {
       closeModal();
     }
   }
@@ -60,7 +61,7 @@ function PaymentModal({
         </div>
       </div>
     </>,
-    document.getElementById("portal")
+    document.getElementById("portal")!
   );
 }
 
