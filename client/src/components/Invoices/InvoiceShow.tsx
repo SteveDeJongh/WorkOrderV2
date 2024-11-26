@@ -50,38 +50,40 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   const [mainLoading, setMainLoading] = useState(true);
   const [mainError, setMainError] = useState("");
   const [mainData, setMainData] = useState<Invoice>();
-  // const [dataLogger, setDataLogger] = useState<Invoice>();
   const [headerText, setHeaderText] = useState("New Invoice");
   let { id: invoiceID } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["fetchInvoiceData", { invoiceID }],
-    queryFn: () => fetchInvoiceData(invoiceID),
-    enabled: Boolean(invoiceID),
-  });
+  // const { data, error, isLoading } = useQuery({
+  //   queryKey: ["fetchInvoiceData", { invoiceID }],
+  //   queryFn: () => fetchInvoiceData(invoiceID),
+  //   enabled: Boolean(invoiceID),
+  // });
 
   // Fetches invoice data on initial render and whenever invoiceID changes.
   useEffect(() => {
     async function loadInvoiceData() {
       if (!invoiceID) {
+        console.log("&&& No invoice ID");
         setMainData(newInvoice);
         dispatch({ type: "setInvoice", data: newInvoice });
+        setHeaderText("New Invoice");
         setMainLoading(false);
         return;
-      }
-      try {
-        setMainLoading(true);
-        setHeaderText(`Invoice ${invoiceID}`);
-        const response = await fetchInvoiceData(invoiceID);
-        setMainData(response);
-        dispatch({ type: "setInvoice", data: response });
-      } catch (e) {
-        setMainError("An error occured fetching the invoice.");
-        console.error(e);
-      } finally {
-        setMainLoading(false);
+      } else {
+        try {
+          setMainLoading(true);
+          setHeaderText(`Invoice ${invoiceID}`);
+          const response = await fetchInvoiceData(invoiceID);
+          setMainData(response);
+          dispatch({ type: "setInvoice", data: response });
+        } catch (e) {
+          setMainError("An error occured fetching the invoice.");
+          console.error(e);
+        } finally {
+          setMainLoading(false);
+        }
       }
     }
 

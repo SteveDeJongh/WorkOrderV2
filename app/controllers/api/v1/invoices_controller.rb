@@ -10,15 +10,19 @@ class Api::V1::InvoicesController < ApplicationController
 
   # GET /invoices/1
   def show
-      # render json: {invoice: @invoice, invoice_lines_attributes: @invoice.invoice_lines.as_json(include: [:product, :tax_rate]), payments_attributes: @invoice.payments}
-      render json: @invoice.as_json(include: [{
-        invoice_lines: {
-          include: [:product, :tax_rate]
+    render json: @invoice.as_json(include: [{
+      invoice_lines: {
+        include: [{
+          product: {
+            include:
+              [:tax_rate]
+            }
+          }]
         }
         }, {
-          payments: {}
-          }
-       ])
+        payments: {}
+        }
+      ])
   end
 
   # POST /invoices
@@ -30,7 +34,7 @@ class Api::V1::InvoicesController < ApplicationController
       workingParams[:invoice_lines_attributes].map! do |line|
         line = recalculateInvoiceLine(line);
         # Removing extra properties on line for update.
-        removeExtraProps(line, ["product", "tax_rate", "updated_at", "created_at"])
+        removeExtraProps(line, ["product", "updated_at", "created_at"])
       end
     end
 
@@ -50,12 +54,17 @@ class Api::V1::InvoicesController < ApplicationController
     if @invoice.save
       render json: @invoice.as_json(include: [{
         invoice_lines: {
-          include: [:product, :tax_rate]
-        }
-        }, {
+          include: [{
+            product: {
+              include:
+                [:tax_rate]
+              }
+            }]
+          }
+          }, {
           payments: {}
           }
-       ])
+        ])
     else
       render json: @invoice.errors, status: :unprocessable_entity
     end
@@ -86,18 +95,28 @@ class Api::V1::InvoicesController < ApplicationController
     if @invoice.update(workingParams)
       # Update Invoice total amounts.
       InvoiceService.new(@invoice, has_lines).calculateInvoiceTotals
-      if @invoice.balance == 0.0;
+      # if @invoice.balance == 0.0;
+      #   InvoiceService.new(@invoice, has_lines).createInvoiceLineMovements
+      # end
+      if (@invoice.status === "closed" && has_lines)
+        puts "Invoice is closed, creating movements"
         InvoiceService.new(@invoice, has_lines).createInvoiceLineMovements
       end
+
       @invoice.save
       render json: @invoice.as_json(include: [{
         invoice_lines: {
-          include: [:product, :tax_rate]
-        }
-        }, {
+          include: [{
+            product: {
+              include:
+                [:tax_rate]
+              }
+            }]
+          }
+          }, {
           payments: {}
           }
-       ])
+        ])
     else
       render json: @invoice.errors, status: :unprocessable_entity
     end
@@ -151,16 +170,16 @@ class Api::V1::InvoicesController < ApplicationController
           :min,
           :max,
           :inventory,
+          :created_at,
+          :updated_at,
           :tax_rate_id,
-          :created_at,
-          :updated_at
+          :tax_rate => [
+            :id,
+            :percentage,
+            :created_at,
+            :updated_at
+            ],
           ],
-        :tax_rate => [
-          :id,
-          :percentage,
-          :created_at,
-          :updated_at
-          ]
         ],
        payments_attributes: [:id, :method, :invoice_id, :amount, :created_at, :updated_at, :_destroy]
        )
@@ -170,7 +189,7 @@ class Api::V1::InvoicesController < ApplicationController
       subtotal = line[:product][:price].to_f
       discountDollars = line[:product][:price].to_f * (line[:discount_percentage].to_f/100)
       line[:line_total] = (subtotal - discountDollars) * line[:quantity].to_f
-      line[:line_tax] = line[:line_total].to_f * line[:tax_rate][:percentage].to_f
+      line[:line_tax] = line[:line_total].to_f * line[:product][:tax_rate][:percentage].to_f
       return line
     end
 

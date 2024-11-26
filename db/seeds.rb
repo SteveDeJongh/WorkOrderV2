@@ -43,10 +43,10 @@ Invoice.new(customer_id: 1, user_id: 1, sub_total: 10.00, tax: 1.50, total: 11.5
 Invoice.new(customer_id: 2, user_id: 1, sub_total: 50.00, tax: 7.50, total: 57.50, balance: 57.50, status: "open").save
 Invoice.new(customer_id: 3, user_id: 1, sub_total: 20.00, tax: 3.0, total: 23.00, balance: 2.00, status: "open").save
 
-InvoiceLine.new(invoice_id: 1, product_id: 1, discount_percentage: 0, price: 10.00, quantity: 1, line_total: 10.00, tax_rate_id: 1, line_tax: 1.50).save
-InvoiceLine.new(invoice_id: 2, product_id: 2, discount_percentage: 0, price: 20.00, quantity: 1, line_total: 20.00, tax_rate_id: 1, line_tax: 3.00).save
-InvoiceLine.new(invoice_id: 2, product_id: 3, discount_percentage: 0, price: 30.00, quantity: 1, line_total: 30.00, tax_rate_id: 1, line_tax: 4.50).save
-InvoiceLine.new(invoice_id: 3, product_id: 2, discount_percentage: 0, price: 20.00, quantity: 1, line_total: 20.00, tax_rate_id: 1, line_tax: 3.00).save
+InvoiceLine.new(invoice_id: 1, product_id: 1, discount_percentage: 0, price: 10.00, quantity: 1, line_total: 10.00, line_tax: 1.50).save
+InvoiceLine.new(invoice_id: 2, product_id: 2, discount_percentage: 0, price: 20.00, quantity: 1, line_total: 20.00, line_tax: 3.00).save
+InvoiceLine.new(invoice_id: 2, product_id: 3, discount_percentage: 0, price: 30.00, quantity: 1, line_total: 30.00, line_tax: 4.50).save
+InvoiceLine.new(invoice_id: 3, product_id: 2, discount_percentage: 0, price: 20.00, quantity: 1, line_total: 20.00, line_tax: 3.00).save
 
 Payment.new(method: "Cash", invoice_id: 1, amount: 5.00).save
 Payment.new(method: "Cash", invoice_id: 3, amount: 21.00).save

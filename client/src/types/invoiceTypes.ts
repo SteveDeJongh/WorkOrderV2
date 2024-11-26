@@ -35,8 +35,6 @@ type InvoiceLine = {
   line_tax: number;
   line_total: number;
   quantity: number;
-  tax_rate: Tax_rate;
-  tax_rate_id: number;
   product: Product;
   changed?: boolean;
 };

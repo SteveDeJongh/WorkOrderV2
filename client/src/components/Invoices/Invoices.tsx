@@ -25,12 +25,6 @@ function Invoices() {
 
   const [selection, setSelection] = useState(Number(useParams().id) || "");
 
-  // useEffect(() => {
-  //   if (pathname == "/invoices/new" || pathname === "/invoices") {
-  //     setSelection("");
-  //   }
-  // }, [pathname]);
-
   useEffect(() => {
     if (
       (selection && pathname === "/invoices/new") ||
@@ -46,7 +40,7 @@ function Invoices() {
     }
   }, [selection, pathname]);
 
-  console.log("Re-rendering Invoices, selection is:", selection, pathname);
+  console.log("&&& Re-rendering Invoices, selection is:", selection, pathname);
 
   const columns = [
     { keys: ["id"], header: "ID" },

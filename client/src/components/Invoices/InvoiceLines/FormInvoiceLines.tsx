@@ -28,7 +28,7 @@ export default function FormInvoiceLines({
     setLines(invoice_lines);
   }, [invoice_lines]);
 
-  console.log("*** FormIvnoiceLines rerender", lines);
+  console.log("*** FormInvoiceLines rerender", lines);
 
   function updateLine(updatedLine: TInvoiceLine) {
     dispatch({ type: "updateInvoiceLine", invoice_line: updatedLine });
@@ -49,9 +49,6 @@ export default function FormInvoiceLines({
   }
 
   function addConfirmedLine(productData: Product) {
-    let productDataCopy = Object.assign({}, productData);
-    const { tax_rate, ...trimmedProductData } = productDataCopy;
-
     const newLine: TInvoiceLine = {
       id: null,
       invoice_id: invoice_id,
@@ -61,10 +58,8 @@ export default function FormInvoiceLines({
       line_tax: 0,
       line_total: 0,
       price: Number(productData.price),
-      product: trimmedProductData, // How should i structure invoice lines? Any reason to have tax_rate under the invoice_line rather than with the product it's tied too?
+      product: productData,
       quantity: 1,
-      tax_rate: productData.tax_rate,
-      tax_rate_id: productData.tax_rate_id,
       updated_at: new Date(Date.now()).toISOString(),
     };
 
@@ -82,7 +77,8 @@ export default function FormInvoiceLines({
     line.price =
       Number(line.product.price) -
       Number(line.product.price) * (line.discount_percentage / 100);
-    line.line_tax = Number(line.line_total) * Number(line.tax_rate.percentage);
+    line.line_tax =
+      Number(line.line_total) * Number(line.product.tax_rate.percentage);
     return line;
   }
 

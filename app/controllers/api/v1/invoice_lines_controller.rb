@@ -46,6 +46,6 @@ class Api::V1::InvoiceLinesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def invoice_line_params
-      params.require(:invoice_line).permit(:invoice_id, :product_id, :discount_percentage, :price, :quantity, :line_total, :tax_rate_id, :line_tax)
+      params.require(:invoice_line).permit(:invoice_id, :product_id, :discount_percentage, :price, :quantity, :line_total, :line_tax)
     end
 end
