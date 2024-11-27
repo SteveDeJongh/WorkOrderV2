@@ -65,7 +65,6 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
   useEffect(() => {
     async function loadInvoiceData() {
       if (!invoiceID) {
-        console.log("&&& No invoice ID");
         setMainData(newInvoice);
         dispatch({ type: "setInvoice", data: newInvoice });
         setHeaderText("New Invoice");
@@ -147,6 +146,9 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
     console.log("invoice", invoice);
   }
 
+  if (isPending) {
+    return <div>w</div>;
+  }
   if (mainLoading) {
     return <LoadingBox text="Loading Invoice..." />;
   }

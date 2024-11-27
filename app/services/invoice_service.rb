@@ -1,7 +1,8 @@
 class InvoiceService
-  def initialize(resource, has_lines)
-    @resource = resource
+  def initialize(invoice, has_lines, user = nil)
+    @invoice = invoice
     @has_lines = has_lines
+    @user = user
   end
 
   def calculateInvoiceTotals
@@ -10,30 +11,34 @@ class InvoiceService
     tax_total = 0;
     payment_total = 0;
 
-    if @resource.invoice_lines
-        @resource.invoice_lines.each do |line|
+    if @invoice.invoice_lines
+        @invoice.invoice_lines.each do |line|
           sub_total += line.line_total.to_f;
           tax_total += line.line_tax.to_f;
         end
     end
 
-    if @resource.payments
-      @resource.payments.each do |payment|
+    if @invoice.payments
+      @invoice.payments.each do |payment|
         payment_total += payment.amount.to_f
       end
     end
 
-    @resource.sub_total = sub_total
-    @resource.tax = tax_total
-    @resource.total = sub_total + tax_total
-    @resource.balance = sub_total + tax_total - payment_total
+    @invoice.sub_total = sub_total
+    @invoice.tax = tax_total
+    @invoice.total = sub_total + tax_total
+    @invoice.balance = sub_total + tax_total - payment_total
     if (@has_lines)
-      @resource.status = @resource.balance == 0 ? "closed" : "open";
+      @invoice.status = @invoice.balance == 0 ? "closed" : "open";
     end
   end
 
   def createInvoiceLineMovements
-    lines = @resource.invoice_lines
-    puts("Lines are", lines);
+    @invoice.invoice_lines.each { |line|
+      if (!line.movement_created)
+        MovementService.new(line.product, @user).record_invoice_line_movement(line)
+        line.update(movement_created: true);
+      end
+    }
   end
 end

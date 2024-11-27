@@ -52,6 +52,11 @@ class Api::V1::InvoicesController < ApplicationController
     InvoiceService.new(@invoice, has_lines).calculateInvoiceTotals
 
     if @invoice.save
+      # Created invoice movements if the invoice saves, status is closed, and we have lines.
+      if (@invoice.status === "closed" && has_lines)
+        InvoiceService.new(@invoice, has_lines, @user).createInvoiceLineMovements
+      end
+
       render json: @invoice.as_json(include: [{
         invoice_lines: {
           include: [{
@@ -94,13 +99,11 @@ class Api::V1::InvoicesController < ApplicationController
 
     if @invoice.update(workingParams)
       # Update Invoice total amounts.
+
       InvoiceService.new(@invoice, has_lines).calculateInvoiceTotals
-      # if @invoice.balance == 0.0;
-      #   InvoiceService.new(@invoice, has_lines).createInvoiceLineMovements
-      # end
+
       if (@invoice.status === "closed" && has_lines)
-        puts "Invoice is closed, creating movements"
-        InvoiceService.new(@invoice, has_lines).createInvoiceLineMovements
+        InvoiceService.new(@invoice, has_lines, @user).createInvoiceLineMovements
       end
 
       @invoice.save
@@ -158,6 +161,7 @@ class Api::V1::InvoicesController < ApplicationController
         :line_total,
         :created_at,
         :updated_at,
+        :movement_created,
         :product => [
           :id,
           :name,
@@ -186,6 +190,7 @@ class Api::V1::InvoicesController < ApplicationController
     end
 
     def recalculateInvoiceLine(line)
+      # This is currently trusting that the `product` and `tax_rate` data received from the front-end is still up to date. The front end will only receive `product` and `tax_rate` data when the invoice is refetched. If a product or tax rate are changed between an invoice being loaded and updated, it could calculate incorrectly.
       subtotal = line[:product][:price].to_f
       discountDollars = line[:product][:price].to_f * (line[:discount_percentage].to_f/100)
       line[:line_total] = (subtotal - discountDollars) * line[:quantity].to_f

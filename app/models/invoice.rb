@@ -1,5 +1,5 @@
 class Invoice < ApplicationRecord
-  belongs_to :customer
+  belongs_to :customer, optional: true
   has_many :invoice_lines
   has_many :payments
 

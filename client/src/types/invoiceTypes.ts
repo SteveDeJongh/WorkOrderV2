@@ -37,6 +37,7 @@ type InvoiceLine = {
   quantity: number;
   product: Product;
   changed?: boolean;
+  movement_created: boolean;
 };
 
 type Product = {

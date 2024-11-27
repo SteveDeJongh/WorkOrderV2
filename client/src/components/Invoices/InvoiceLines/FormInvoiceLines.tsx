@@ -42,9 +42,9 @@ export default function FormInvoiceLines({
 
     // Run checks for inventory before adding line.
     productData.stock > 0
-      ? addConfirmedLine(selectedProduct)
+      ? addConfirmedLine(productData)
       : confirm("This product has 0 stock, are you sure you want to continue?")
-      ? addConfirmedLine(selectedProduct)
+      ? addConfirmedLine(productData)
       : null;
   }
 
@@ -61,6 +61,7 @@ export default function FormInvoiceLines({
       product: productData,
       quantity: 1,
       updated_at: new Date(Date.now()).toISOString(),
+      movement_created: false,
     };
 
     let line = recalculateLine(newLine);
