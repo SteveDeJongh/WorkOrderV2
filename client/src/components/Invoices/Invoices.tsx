@@ -26,11 +26,18 @@ function Invoices() {
   const [selection, setSelection] = useState(Number(useParams().id) || "");
 
   useEffect(() => {
+    // If selection or pathname changes, re-route accordingly.
+    const invoiceRegExp = new RegExp("/invoices/\\d+/");
+
     if (
       (selection && pathname === "/invoices/new") ||
       pathname === "/invoices"
     ) {
+      // Creating a new invoice or navigating to invoices.
       setSelection("");
+    } else if (!selection && invoiceRegExp.test(pathname)) {
+      // New invoice created path.
+      setSelection(Number(pathname.split("/")[2]));
     } else if (
       !selection &&
       pathname !== "/invoices/new" &&

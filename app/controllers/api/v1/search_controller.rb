@@ -35,7 +35,7 @@ class Api::V1::SearchController < ApplicationController
   end
 
   def invoices
-    @invoices = Invoice.where('id LIKE ?', "%#{params[:q]}%")
+    @invoices = Invoice.where('id LIKE ?', "%#{params[:q]}%").sort_by {|invoice| -invoice.id}
 
     render json: @invoices
   end

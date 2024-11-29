@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { fetchProductData } from "../../../services/productServices";
 import InvoiceLine from "./InvoiceLine";
 import NewInvoiceLine from "./NewInvoiceLine";
@@ -6,6 +6,7 @@ import {
   Action,
   InvoiceLine as TInvoiceLine,
   Product,
+  InvoiceColumn,
 } from "../../../types/invoiceTypes";
 
 type props = {
@@ -17,7 +18,6 @@ type props = {
 
 export default function FormInvoiceLines({
   invoice_lines = [],
-  adminActions,
   invoice_id,
   dispatch,
 }: props) {
@@ -31,7 +31,8 @@ export default function FormInvoiceLines({
   console.log("*** FormInvoiceLines rerender", lines);
 
   function updateLine(updatedLine: TInvoiceLine) {
-    dispatch({ type: "updateInvoiceLine", invoice_line: updatedLine });
+    const invoiceLine = recalculateLine(updatedLine);
+    dispatch({ type: "updateInvoiceLine", invoice_line: invoiceLine });
     dispatch({ type: "recaculateInvoice" });
   }
 
@@ -83,6 +84,88 @@ export default function FormInvoiceLines({
     return line;
   }
 
+  let columns: InvoiceColumn[] = [
+    // {
+    //   keyName: "id",
+    //   productValue: false,
+    //   editable: false,
+    //   type: "number",
+    //   showAsDollars: false,
+    // },
+    {
+      keyName: "movement_created",
+      title: "Status",
+      productValue: false,
+      editable: false,
+      type: "text",
+      showAsDollars: false,
+    },
+    {
+      keyName: "sku",
+      title: "Sku",
+      productValue: true,
+      editable: false,
+      type: "text",
+      showAsDollars: false,
+    },
+    {
+      keyName: "description",
+      title: "Description",
+      productValue: true,
+      editable: false,
+      type: "text",
+      showAsDollars: false,
+    },
+    {
+      keyName: "quantity",
+      title: "Qty",
+      productValue: false,
+      editable: true,
+      type: "number",
+      showAsDollars: false,
+    },
+    {
+      keyName: "discount_percentage",
+      title: "Discount %",
+      productValue: false,
+      editable: true,
+      type: "number",
+      showAsDollars: false,
+    },
+    {
+      keyName: "price",
+      title: "MSRP",
+      productValue: true,
+      editable: false,
+      type: "test",
+      showAsDollars: true,
+    },
+    {
+      keyName: "price",
+      title: "Price",
+      productValue: false,
+      editable: false,
+      type: "text",
+      showAsDollars: true,
+    },
+    {
+      keyName: "line_total",
+      title: "Total",
+      productValue: false,
+      editable: false,
+      type: "text",
+      showAsDollars: true,
+    },
+    {
+      keyName: "line_tax",
+      title: "Tax",
+      productValue: false,
+      editable: false,
+      type: "text",
+      showAsDollars: true,
+    },
+  ];
+
   return (
     <div className="panel">
       <div className="panel-heading">
@@ -95,15 +178,9 @@ export default function FormInvoiceLines({
             <table>
               <thead>
                 <tr>
-                  <th>Line ID</th>
-                  <th>SKU</th>
-                  <th>Description</th>
-                  <th>Quantity</th>
-                  <th>Discount %</th>
-                  <th>MSRP</th>
-                  <th>Price</th>
-                  <th>Total</th>
-                  <th>Line Tax</th>
+                  {columns.map((column) => (
+                    <th key={`header${column.title}`}>{column.title}</th>
+                  ))}
                 </tr>
               </thead>
               {lines && (
@@ -113,7 +190,7 @@ export default function FormInvoiceLines({
                       key={line.id ? line.id : `new${idx}`}
                       line={line}
                       updateLine={updateLine}
-                      recalculateLine={recalculateLine}
+                      columns={columns}
                     />
                   ))}
                 </tbody>

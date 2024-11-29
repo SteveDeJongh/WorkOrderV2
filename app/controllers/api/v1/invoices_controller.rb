@@ -3,7 +3,7 @@ class Api::V1::InvoicesController < ApplicationController
 
   # GET /invoices
   def index
-    @invoices = Invoice.all
+    @invoices = Invoice.all.sort_by {|invoice| -invoice.id}
 
     render json: @invoices
   end
@@ -99,7 +99,6 @@ class Api::V1::InvoicesController < ApplicationController
 
     if @invoice.update(workingParams)
       # Update Invoice total amounts.
-
       InvoiceService.new(@invoice, has_lines).calculateInvoiceTotals
 
       if (@invoice.status === "closed" && has_lines)

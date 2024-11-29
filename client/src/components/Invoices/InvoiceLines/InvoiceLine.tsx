@@ -1,165 +1,99 @@
-import { fetchProductData } from "../../../services/productServices";
 import { useRef, useState } from "react";
-import { NumericFormat } from "react-number-format";
-import { TInvoiceLine } from "../../../types/invoiceTypes";
+import {
+  InvoiceLine as TInvoiceLine,
+  InvoiceColumn,
+} from "../../../types/invoiceTypes";
+import { showAsDollarAmount } from "../../../utils/index";
 
 type props = {
   line: TInvoiceLine;
   updateLine: Function;
-  recalculateLine: Function;
+  columns: InvoiceColumn[];
 };
 
-type tableFormCellProps = {
-  editable: boolean;
-  showAsDollars: boolean;
-  type: string;
-  val: string;
-  inputName: string;
+type TableDataProps = {
   onDelayedChange: Function;
+  disabled: boolean;
+  field: InvoiceColumn;
+  val: string;
 };
 
-function TableFormCell({
-  editable,
-  type,
-  showAsDollars,
-  val,
-  inputName,
-  onDelayedChange,
-}: tableFormCellProps) {
-  const changeRef = useRef<null | NodeJS.Timeout>(null);
-  const [inputValue, setInputValue] = useState(val);
+function TableData({ onDelayedChange, disabled, field, val }: TableDataProps) {
+  const editTimer = useRef<null | NodeJS.Timeout>(null);
+  const [inputValue, setInputValue] = useState<string | number>(val);
 
-  function handleChange(e) {
-    let value =
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    let newValue =
       e.target.type === "number" ? Number(e.target.value) : e.target.value;
-    const change = { [inputName]: value };
-    setInputValue(value);
+    const change = { [field.keyName]: newValue };
+    setInputValue(newValue);
 
-    if (changeRef.current) {
-      clearTimeout(changeRef.current);
+    if (editTimer.current) {
+      clearTimeout(editTimer.current);
     }
 
-    changeRef.current = setTimeout(() => {
+    editTimer.current = setTimeout(() => {
       onDelayedChange(change);
     }, 500);
   }
 
-  val = showAsDollars ? `$${Number(val).toFixed(2)}` : val;
+  function handleFocus(e) {
+    e.target.select();
+  }
+
+  val = field.showAsDollars ? showAsDollarAmount(val) : val;
+  val = field.keyName === "movement_created" ? (val ? "🔒" : "") : val;
+
   return (
     <td>
-      {editable && (
+      {field.editable && (
         <input
-          name={inputName}
-          type={type}
-          value={inputValue}
+          name={field.keyName}
+          type={field.type}
+          disabled={disabled}
           onChange={handleChange}
+          onFocus={handleFocus}
+          value={inputValue}
         />
       )}
-      {!editable && <div>{val}</div>}
+      {!field.editable && <div>{val}</div>}
     </td>
   );
 }
 
-export default function InvoiceLine({
-  line,
-  updateLine,
-  recalculateLine,
-}: props) {
-  const [stateLine, setStateLine] = useState(line);
-
+export default function InvoiceLine({ line, updateLine, columns }: props) {
   function onDelayedChange(change: TInvoiceLine) {
     let changedLine = { ...line, ...change, changed: true };
-    changedLine = recalculateLine(changedLine);
     updateLine(changedLine);
-    setStateLine(changedLine);
   }
 
-  let columns = [
-    {
-      keyName: "id",
-      productValue: false,
-      editable: false,
-      type: "number",
-      showAsDollars: false,
-    },
-    {
-      keyName: "sku",
-      productValue: true,
-      editable: false,
-      type: "text",
-      showAsDollars: false,
-    },
-    {
-      keyName: "description",
-      productValue: true,
-      editable: false,
-      type: "text",
-      showAsDollars: false,
-    },
-    {
-      keyName: "quantity",
-      productValue: false,
-      editable: true,
-      type: "number",
-      showAsDollars: false,
-    },
-    {
-      keyName: "discount_percentage",
-      productValue: false,
-      editable: true,
-      type: "number",
-      showAsDollars: false,
-    },
-    {
-      keyName: "price",
-      productValue: true,
-      editable: false,
-      type: "test",
-      showAsDollars: true,
-    },
-    {
-      keyName: "price",
-      productValue: false,
-      editable: false,
-      type: "text",
-      showAsDollars: true,
-    },
-    {
-      keyName: "line_total",
-      productValue: false,
-      editable: false,
-      type: "text",
-      showAsDollars: true,
-    },
-    {
-      keyName: "line_tax",
-      productValue: false,
-      editable: false,
-      type: "text",
-      showAsDollars: true,
-    },
-  ];
-
   return (
-    <tr>
-      {columns.map((col) => (
-        <TableFormCell
-          onDelayedChange={onDelayedChange}
-          editable={col.editable}
-          showAsDollars={col.showAsDollars}
-          key={
-            col.productValue
-              ? `Product${[col.keyName]}${line.id}`
-              : `${[col.keyName]}${line.id}`
-          }
-          inputName={col.keyName}
-          type={col.type}
-          val={
-            col.productValue ? line["product"][col.keyName] : line[col.keyName]
-          }
-          onChange={(e) => handleChange(e)}
-        />
-      ))}
-    </tr>
+    <>
+      <tr
+        title={
+          line.movement_created
+            ? "This invoice line has already been saved. To make changes, create a return line and start over."
+            : ""
+        }
+      >
+        {columns.map((field) => (
+          <TableData
+            onDelayedChange={onDelayedChange}
+            disabled={line.movement_created}
+            field={field}
+            key={
+              field.productValue
+                ? `Product${[field.keyName]}${line.id}`
+                : `${[field.keyName]}${line.id}`
+            }
+            val={
+              field.productValue
+                ? line["product"][field.keyName]
+                : line[field.keyName]
+            }
+          />
+        ))}
+      </tr>
+    </>
   );
 }

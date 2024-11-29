@@ -1,17 +1,11 @@
 import { Invoice } from "../../types/invoiceTypes";
-import { useState, useEffect } from "react";
+import { showAsDollarAmount, CapitalizeFullName } from "../../utils/index";
 
 type props = {
   invoice: Invoice;
 };
 
 export default function InvoiceTotalDetails({ invoice }: props) {
-  // const [details, setDetails] = useState(invoice);
-
-  // useEffect(() => {
-  //   setDetails(invoice);
-  // }, [invoice]);
-
   console.log("*** InvoiceTotalDetails rerender");
 
   return (
@@ -24,27 +18,27 @@ export default function InvoiceTotalDetails({ invoice }: props) {
           <div className="panel-contents-section">
             <div className="panel-section-desc">
               <div className="panel-section-data">
-                <div>Sub Total is {invoice.sub_total}</div>
+                <div>Sub Total is {showAsDollarAmount(invoice.sub_total)}</div>
               </div>
             </div>
             <div className="panel-section-desc">
               <div className="panel-section-data">
-                <div>Tax is {invoice.tax}</div>
+                <div>Tax is {showAsDollarAmount(invoice.tax)}</div>
               </div>
             </div>
             <div className="panel-section-desc">
               <div className="panel-section-data">
-                <div>Total is {invoice.total}</div>
+                <div>Total is {showAsDollarAmount(invoice.total)}</div>
               </div>
             </div>
             <div className="panel-section-desc">
               <div className="panel-section-data">
-                <div>Balance is {invoice.balance}</div>
+                <div>Balance is {showAsDollarAmount(invoice.balance)}</div>
               </div>
             </div>
             <div className="panel-section-desc">
               <div className="panel-section-data">
-                <div>Status is {invoice.status}</div>
+                <div>Status is {CapitalizeFullName(invoice.status)}</div>
               </div>
             </div>
           </div>

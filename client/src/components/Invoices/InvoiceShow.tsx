@@ -106,6 +106,13 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
       }
     },
     onSuccess: (returnedData: Invoice) => {
+      if (!invoiceID) {
+        console.log(
+          "Does this show correctly?",
+          `/invoices/${returnedData.id}/`
+        );
+        navigate(`/invoices/${returnedData.id}/`);
+      }
       dispatch({ type: "setInvoice", data: returnedData });
       setMainData(returnedData);
       queryClient.invalidateQueries({ queryKey: ["invoices"] });

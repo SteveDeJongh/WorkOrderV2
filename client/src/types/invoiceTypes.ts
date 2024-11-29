@@ -82,4 +82,13 @@ type Total = {
   status: "open" | "closed";
 };
 
-export { Action, Invoice, InvoiceLine, Product, Tax_rate, Payment, Total }
+type InvoiceColumn = {
+    keyName: string;
+    title: string;
+    productValue: boolean;
+    editable: boolean;
+    type: string;
+    showAsDollars: boolean;
+};
+
+export { Action, Invoice, InvoiceLine, Product, Tax_rate, Payment, Total, InvoiceColumn }

@@ -75,3 +75,7 @@ export function dateTimeFormatter(date) {
     timeZoneName: "short",
     timeZone: "Canada/Pacific"});
 }
+
+export function showAsDollarAmount(value) {
+  return `$${Number(value).toFixed(2)}`
+}
