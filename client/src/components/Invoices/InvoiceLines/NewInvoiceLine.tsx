@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import useProductsData from "../../../hooks/useProductsData";
 import useURLSearchParam from "../../../hooks/useURLSearchParam";
 import SearchBar from "../../../multiuse/SearchBar";
 import Button from "../../../multiuse/Button";
 import SearchResultsList from "./SearchResultsList";
+import { Product } from "../../../types/invoiceTypes";
 
 type props = {
   addLine: Function;
@@ -36,23 +37,34 @@ export default function NewInvoiceLine({ addLine }: props) {
     }
   }, [fetchedData]);
 
-  function handleDebouncedSearchChange(searchValue) {
+  function handleDebouncedSearchChange(searchValue: string) {
     setDebouncedSearchTerm(searchValue);
   }
 
-  function handleImmediateSearchChange(searchValue) {
+  function handleImmediateSearchChange(searchValue: string) {
     setSearchTerm(searchValue);
   }
 
-  function handleSelection(product) {
-    console.log("product selected", product);
+  function handleSelection(product: Product) {
     setSearchTerm("");
     setIsOpen(false);
     addLine(product);
   }
 
+  // Close search results list if outside click.
+  useEffect(() => {
+    function onClickOutside() {
+      setIsOpen(false);
+    }
+    window.addEventListener("click", onClickOutside, false);
+    return () => window.removeEventListener("click", onClickOutside);
+  }, []);
+
   return (
-    <div className="searchContainer">
+    <div
+      className="searchContainer"
+      onClick={(event) => event.stopPropagation()}
+    >
       <div id="search-actions">
         <SearchBar
           title={"products"}
@@ -62,11 +74,10 @@ export default function NewInvoiceLine({ addLine }: props) {
         />
         <Button text={"Add Product"} />
       </div>
-      {/* {data && searchTerm && <SearchResultsList results={data} />} */}
-      {isOpen && (
+      {isOpen && data && (
         <SearchResultsList
           results={data}
-          handleSelection={(product) => handleSelection(product)}
+          handleSelection={(product: Product) => handleSelection(product)}
         />
       )}
     </div>

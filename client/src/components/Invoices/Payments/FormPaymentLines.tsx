@@ -85,7 +85,7 @@ export default function FormPaymentLines({
                             handleClick(line, e)
                           }
                           adminActions={adminActions}
-                          deletePayment={toggleDelete}
+                          toggleDelete={toggleDelete}
                         />
                       );
                     })}

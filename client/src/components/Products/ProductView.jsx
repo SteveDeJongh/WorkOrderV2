@@ -1,10 +1,11 @@
-import { useOutletContext, Link } from "react-router-dom";
+import { useOutletContext, Link, useNavigate } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
 import { fetchLast3MovementsFor } from "../../services/movementServices";
 import { useQuery } from "@tanstack/react-query";
 import { dateTimeFormatter } from "../../utils";
 
 function ProductView() {
+  const navigate = useNavigate();
   const {
     productData: { product, isError, isPending },
   } = useOutletContext();
@@ -157,7 +158,16 @@ function ProductView() {
                       !movementError &&
                       movementData.map((movement) => {
                         return (
-                          <tr key={movement.id}>
+                          <tr
+                            key={movement.id}
+                            onClick={() => {
+                              if (movement.change_type === "Invoice") {
+                                navigate(
+                                  `/invoices/${movement.relation.split(" ")[1]}`
+                                );
+                              }
+                            }}
+                          >
                             <td>{movement.id}</td>
                             <td>{movement.relation}</td>
                             <td>{movement.adjustment ? "True" : "False"}</td>

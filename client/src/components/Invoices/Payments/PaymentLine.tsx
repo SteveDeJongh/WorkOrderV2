@@ -1,16 +1,15 @@
-import { useRef, useState } from "react";
-import Button from "../../../multiuse/Button";
-import { Invoice, Payment } from "../../../types/invoiceTypes";
+import { useState } from "react";
+import { Payment } from "../../../types/invoiceTypes";
 import { dateRegExp, dateTimeFormatter } from "../../../utils/index";
 
 type props = {
   paymentData: Payment;
   lineClick: Function;
   adminActions: Boolean;
-  deletePayment: Function;
+  toggleDelete: Function;
 };
 
-type dataCellProps = {
+type TabelDataProps = {
   showAsDollars: boolean;
   val: string | number | undefined;
   deleted?: boolean;
@@ -21,12 +20,10 @@ type columnProps = {
   showAsDollars: boolean;
 };
 
-function DataCell({ showAsDollars, val, deleted }: dataCellProps) {
-  const changeRef = useRef<null | NodeJS.Timeout>(null);
-  const [inputValue, setInputValue] = useState(val);
-
+function TabelData({ showAsDollars, val, deleted }: TabelDataProps) {
   val = showAsDollars ? `$${Number(val).toFixed(2)}` : val;
   val = dateRegExp.test(val) ? dateTimeFormatter(val) : val;
+
   return (
     <td>
       {deleted && (
@@ -43,9 +40,9 @@ export default function PaymentLine({
   paymentData,
   lineClick,
   adminActions,
-  deletePayment,
+  toggleDelete,
 }: props) {
-  const [payment, setPayment] = useState(paymentData);
+  const [payment, _] = useState(paymentData);
 
   let columns: Array<columnProps> = [
     {
@@ -65,7 +62,7 @@ export default function PaymentLine({
   return (
     <tr onClick={(e) => lineClick(e)}>
       {columns.map((col) => (
-        <DataCell
+        <TabelData
           showAsDollars={col.showAsDollars}
           key={`${[col.keyName]}${payment.id}`}
           val={payment[col.keyName]}
@@ -76,7 +73,8 @@ export default function PaymentLine({
         <td className="pad">
           <input
             type="checkbox"
-            onClick={() => deletePayment(payment.id, payment.created_at)}
+            onClick={() => toggleDelete(payment.id, payment.created_at)}
+            checked={payment._destroy}
           />
         </td>
       )}

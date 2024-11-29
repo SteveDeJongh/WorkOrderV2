@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchInventoryMovementsFor } from "../../services/movementServices";
-import { useOutletContext } from "react-router-dom";
-import ScrollableTableTable from "../../multiuse/ScrollableTableTall";
+import { useOutletContext, useNavigate } from "react-router-dom";
+import ScrollableTableTall from "../../multiuse/ScrollableTableTall";
 
 function ProductMovements() {
+  const navigate = useNavigate();
+
   const {
     productData: {
       product: { id },
@@ -34,9 +36,20 @@ function ProductMovements() {
     return <h1>Error</h1>;
   }
 
+  function onClick(line) {
+    console.log(line);
+    if (line.change_type === "Invoice") {
+      navigate(`/invoices/${line.relation.split(" ")[1]}`);
+    }
+  }
+
   return (
     <>
-      <ScrollableTableTable columns={columns} data={data} />
+      <ScrollableTableTall
+        columns={columns}
+        data={data}
+        onClick={(line) => onClick(line)}
+      />
     </>
   );
 }

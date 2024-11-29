@@ -38,6 +38,22 @@ function PaymentModal({
           created_at: new Date(Date.now()).toISOString(),
         },
       });
+      if (data.change && data.method === "Cash") {
+        let val = data.change;
+        if (typeof data.change === "string") {
+          val = Number(data.change.split("$")[1]);
+        }
+        dispatch({
+          type: "createPayment",
+          payment: {
+            ...data,
+            method: "Change",
+            amount: -val,
+            change: 0,
+            created_at: new Date(Date.now()).toISOString(),
+          },
+        });
+      }
     }
     closeModal();
   }

@@ -12,7 +12,7 @@ function Header() {
           </div>
           <div className="header-section header-mid">
             <Link to="/">
-              <h1>WorkOrder Logo</h1>
+              <h1>WorkOrder</h1>
             </Link>
           </div>
           <div className="header-section header-right">

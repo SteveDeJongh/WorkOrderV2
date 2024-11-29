@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import Button from "../../../multiuse/Button";
 import { Payment } from "../../../types/invoiceTypes";
 import { useEffect, useState } from "react";
+import { showAsDollarAmount } from "../../../utils/index";
 
 type Props = {
   handleCancel: Function;
@@ -26,6 +27,7 @@ function PaymentForm({
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
+    setValue,
   } = useForm({
     defaultValues: payment
       ? {
@@ -34,6 +36,7 @@ function PaymentForm({
           invoice_id: payment.invoice_id,
           method: payment.method,
           amount: payment.amount,
+          change: payment.change,
         }
       : {
           id: undefined,
@@ -41,6 +44,7 @@ function PaymentForm({
           invoice_id: invoice_id,
           method: undefined,
           amount: undefined,
+          change: undefined,
         },
   });
 
@@ -52,11 +56,19 @@ function PaymentForm({
   );
 
   useEffect(() => {
+    setValue("change", showAsDollarAmount(change));
+  }, [change]);
+
+  useEffect(() => {
     if (watchMethod === "Cash") {
       if (watchAmount && watchAmount < 0) {
         setChange(0);
       } else {
-        setChange(Number(watchAmount) - balance);
+        if (Number(watchAmount) - balance <= 0) {
+          setChange(0);
+        } else {
+          setChange(Number(watchAmount) - balance);
+        }
       }
       setShowChange(true);
     } else {
@@ -145,7 +157,7 @@ function PaymentForm({
                     id="change"
                     name="change"
                     disabled={true}
-                    value={change}
+                    value={showAsDollarAmount(change)}
                   />
                   {errors.amount && (
                     <p className="error">{`${errors.amount.message}`}</p>

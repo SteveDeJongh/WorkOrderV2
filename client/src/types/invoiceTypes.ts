@@ -73,6 +73,7 @@ type Payment = {
   invoice_id: number;
   method: string;
   _destroy?: boolean;
+  change?: number | string;
 };
 
 type Total = {

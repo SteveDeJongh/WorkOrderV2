@@ -132,7 +132,6 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
     };
   }
 
-  // TODO More to do here...
   function handleCancel() {
     if (invoiceHasChanges()) {
       if (
@@ -146,6 +145,18 @@ function InvoiceShow({ modalForm, buttonText }: Props) {
       navigate("/invoices");
     }
   }
+
+  // Alert on page refresh.
+  useEffect(() => {
+    const unloadCallback = (event) => {
+      event.preventDefault();
+      event.returnValue = "";
+      return "";
+    };
+
+    window.addEventListener("beforeunload", unloadCallback);
+    return () => window.removeEventListener("beforeunload", unloadCallback);
+  }, []);
 
   // For Debugging, to be removed.
   function outputCurrentData() {

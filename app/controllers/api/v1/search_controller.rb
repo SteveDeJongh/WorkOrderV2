@@ -6,7 +6,7 @@ class Api::V1::SearchController < ApplicationController
   end
 
   def customerInvoices
-    @invoices = Invoice.all.select {|i| i.customer_id == params[:q].to_i}
+    @invoices = Invoice.all.select {|i| i.customer_id == params[:q].to_i}.sort_by {|invoice| -invoice.id}
 
     render json: @invoices
   end
@@ -18,7 +18,7 @@ class Api::V1::SearchController < ApplicationController
   end
 
   def inventory_movement
-    @inventory_movements = InventoryMovement.all.select {|m| m.product_id == params[:q].to_i}
+    @inventory_movements = InventoryMovement.all.select {|m| m.product_id == params[:q].to_i}.sort_by {|movement| -movement.id}
 
     render json: @inventory_movements
   end
@@ -26,7 +26,7 @@ class Api::V1::SearchController < ApplicationController
   def last_3_inventory_movements
     movements = InventoryMovement.all.select {|m| m.product_id == params[:q].to_i}
     if (movements.length > 1)
-      @inventory_movements = movements.slice!(movements.length - 3, movements.length).reverse
+      @inventory_movements = movements.slice!(movements.length - 3, movements.length).sort_by {|movement| -movement.id}
     else
       @inventory_movements = movements
     end

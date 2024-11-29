@@ -1,16 +1,12 @@
-import SearchResult from "./SearchResult";
 import { useEffect, useMemo, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
-  createColumnHelper,
   RowSelectionState,
-  useRowSelect,
   getSortedRowModel,
 } from "@tanstack/react-table";
-import { Product } from "../../../types";
-import CheckBox from "./Checkbox";
+import { Product } from "../../../types/invoiceTypes";
 
 type Props = {
   results: Array<object> | String;
@@ -98,6 +94,7 @@ export default function SearchResultsList({ results, handleSelection }: Props) {
                   <tr
                     key={rowEl.id}
                     onClick={() => handleClick(rowEl.original)}
+                    className={"search-result"}
                   >
                     {rowEl.getVisibleCells().map((cellEl) => (
                       <td key={cellEl.id}>

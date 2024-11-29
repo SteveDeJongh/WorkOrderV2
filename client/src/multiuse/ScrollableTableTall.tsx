@@ -1,5 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchInventoryMovementsFor } from "../../services/movementServices";
 import { dateTimeFormatter } from "../utils";
 
 type Column = {
@@ -32,9 +30,7 @@ function ScrollableTableTall({ columns, data, onClick }: Props) {
                 return (
                   <tr
                     key={line.id}
-                    onClick={() =>
-                      onClick ? onClick(`/invoices/${line.id}/`) : null
-                    }
+                    onClick={() => (onClick ? onClick(line) : null)}
                   >
                     {columns.map((column) => {
                       if (

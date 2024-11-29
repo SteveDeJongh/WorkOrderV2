@@ -1,7 +1,8 @@
 :root {
   --main-black: rgb(1, 4, 9);
   --alt-black: #161b22;
-  --light-black: hwb(216 14% 84%);
+  --light-black: hwb(216 15% 85%);
+  --lighter-black: hwb(216 25% 85%);
   --main-text: rgb(230, 237, 243);
   --light-border: #8b949e;
   --light-selection: #30363d;
@@ -776,6 +777,10 @@ tbody {
 }
 
 tbody tr:nth-of-type(even) {
+  background-color: var(--lighter-black);
+}
+
+tbody tr:nth-of-type(odd) {
   background-color: var(--light-black);
 }
 
@@ -819,11 +824,16 @@ tbody > tr:hover {
   z-index: 999;
   position: absolute;
   width: 100%;
-  background-color: var(--light-border);
+  background-color: var(--dark-selection);
   display: flex;
   flex-direction: column;
   box-shadow: 0px 0px 2px white;
   max-height: 200px;
+  min-height: 200px;
   overflow-y: scroll;
   border: 2px solid var(--alt-black)
+}
+
+.search-result {
+  max-height: 28px;
 }
