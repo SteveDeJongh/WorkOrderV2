@@ -1,29 +1,29 @@
-import InvoiceForm from "../Unused/InvoiceForm";
-import { useNavigate } from "react-router-dom";
-import { createInvoice } from "../../services/invoiceServices";
-import { objectToFormData } from "../../utils/formDataHelper";
+import InvoiceForm from "../Invoices/InvoiceForm";
+import { Invoice } from "../../types/invoiceTypes";
 
 function InvoiceNew() {
-  const navigate = useNavigate();
-
-  async function handleCreateSubmit(rawData) {
-    try {
-      const formData = objectToFormData({ invoice: rawData });
-      const response = await createInvoice(formData);
-      navigate(`/invoices/${response.id}/view`);
-    } catch (e) {
-      console.error("Failed to save invoice: ", e);
-    }
-  }
+  let newInvoice: Invoice = {
+    id: null,
+    customer_id: 0,
+    user_id: 0,
+    total: 0,
+    sub_total: 0,
+    balance: 0,
+    tax: 0,
+    created_at: new Date(Date.now()).toISOString(),
+    updated_at: new Date(Date.now()).toISOString(),
+    status: "open",
+    invoice_lines: [],
+    payments: [],
+  };
 
   return (
     <>
       <div className="pane-inner">
         <InvoiceForm
-          headerText={`New Invoice`}
+          modalForm={false}
           buttonText={"Save"}
-          onSubmit={handleCreateSubmit}
-          handleCancel={() => navigate("/invoices")}
+          invoiceData={newInvoice}
         />
       </div>
     </>

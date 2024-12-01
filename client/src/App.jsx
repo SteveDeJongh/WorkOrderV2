@@ -30,6 +30,7 @@ import PageTitle from "./components/PageTitle";
 import { getUserByToken } from "./services/userServices";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import InvoiceShow from "./components/Invoices/InvoiceShow";
+import InvoiceNew from "./components/Invoices/InvoiceNew";
 
 const router = createBrowserRouter([
   {
@@ -81,11 +82,21 @@ const router = createBrowserRouter([
                 children: [
                   {
                     path: "profile",
-                    element: <CustomerProfile />,
+                    element: (
+                      <>
+                        <PageTitle title="Customer Profile" />
+                        <CustomerProfile />
+                      </>
+                    ),
                   },
                   {
                     path: "invoices",
-                    element: <CustomerInvoices />,
+                    element: (
+                      <>
+                        <PageTitle title="Customer Invoices" />
+                        <CustomerInvoices />
+                      </>
+                    ),
                   },
                   // {
                   //   path: "items",
@@ -99,11 +110,21 @@ const router = createBrowserRouter([
               },
               {
                 path: ":id/edit",
-                element: <CustomerEdit />,
+                element: (
+                  <>
+                    <PageTitle title="Edit Customer" />
+                    <CustomerEdit />
+                  </>
+                ),
               },
               {
                 path: "new",
-                element: <CustomerNew />,
+                element: (
+                  <>
+                    <PageTitle title="New Customer" />
+                    <CustomerNew />
+                  </>
+                ),
               },
             ],
           },
@@ -153,11 +174,21 @@ const router = createBrowserRouter([
               { index: true, element: <PageIndex title={"invoice"} /> },
               {
                 path: ":id",
-                element: <InvoiceShow modalForm={false} buttonText="Save" />,
+                element: (
+                  <>
+                    <PageTitle title={"View Invoice"} />
+                    <InvoiceShow modalForm={false} buttonText="Save" />
+                  </>
+                ),
               },
               {
                 path: "new",
-                element: <InvoiceShow modalForm={false} buttonText="Save" />,
+                element: (
+                  <>
+                    <PageTitle title="New Invoice" />
+                    <InvoiceNew modalForm={false} buttonText="Save" />
+                  </>
+                ),
               },
             ],
           },

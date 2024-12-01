@@ -25,27 +25,27 @@ function Invoices() {
 
   const [selection, setSelection] = useState(Number(useParams().id) || "");
 
-  useEffect(() => {
-    // If selection or pathname changes, re-route accordingly.
-    const invoiceRegExp = new RegExp("/invoices/\\d+/");
+  // useEffect(() => {
+  //   // If selection or pathname changes, re-route accordingly.
+  //   const invoiceRegExp = new RegExp("/invoices/\\d+/");
 
-    if (
-      (selection && pathname === "/invoices/new") ||
-      pathname === "/invoices"
-    ) {
-      // Creating a new invoice or navigating to invoices.
-      setSelection("");
-    } else if (!selection && invoiceRegExp.test(pathname)) {
-      // New invoice created path.
-      setSelection(Number(pathname.split("/")[2]));
-    } else if (
-      !selection &&
-      pathname !== "/invoices/new" &&
-      pathname !== "/invoices"
-    ) {
-      navigate(`/invoices`);
-    }
-  }, [selection, pathname]);
+  //   if (
+  //     (selection && pathname === "/invoices/new") ||
+  //     pathname === "/invoices"
+  //   ) {
+  //     // Creating a new invoice or navigating to invoices.
+  //     setSelection("");
+  //   } else if (!selection && invoiceRegExp.test(pathname)) {
+  //     // New invoice created path.
+  //     setSelection(Number(pathname.split("/")[2]));
+  //   } else if (
+  //     !selection &&
+  //     pathname !== "/invoices/new" &&
+  //     pathname !== "/invoices"
+  //   ) {
+  //     navigate(`/invoices`);
+  //   }
+  // }, [selection, pathname]);
 
   console.log("&&& Re-rendering Invoices, selection is:", selection, pathname);
 
@@ -78,7 +78,7 @@ function Invoices() {
               {!selection && pathname !== "/invoices/new" ? (
                 <NoSelection item={"invoice"} />
               ) : (
-                <Outlet />
+                <Outlet context={[selection, setSelection]} />
               )}
             </div>
           </div>

@@ -33,7 +33,7 @@ function CustomerInvoices() {
   ];
 
   function onClick(invoice: Invoice) {
-    navigate(`/navigate/${invoice.id}/`);
+    navigate(`/invoices/${invoice.id}/`);
   }
 
   return (
