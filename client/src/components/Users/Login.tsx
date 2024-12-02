@@ -43,6 +43,7 @@ function Login() {
     isError,
   } = useMutation({
     mutationFn: (rawData: SignInUser) => {
+      console.log("!!! calling onsubmit how many times?");
       const allowed = ["email", "password"];
       let content: NestedUser = { user: { email: "", pass: "" } };
 
@@ -80,7 +81,6 @@ function Login() {
               className={""}
             />
             <Button
-              onClick={onSubmit}
               form={"main-pane-content"}
               disabled={isPending}
               type="submit"
