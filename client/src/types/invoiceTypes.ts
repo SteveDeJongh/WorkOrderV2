@@ -92,4 +92,9 @@ type InvoiceColumn = {
     showAsDollars: boolean;
 };
 
-export { Action, Invoice, InvoiceLine, Product, Tax_rate, Payment, Total, InvoiceColumn }
+type SelectionContext = {
+  selection: string | number;
+  setSelection: React.Dispatch<React.SetStateAction<string | number>>;
+}
+
+export { Action, Invoice, InvoiceLine, Product, Tax_rate, Payment, Total, InvoiceColumn, SelectionContext }

@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect, useReducer } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createInvoice, editInvoice } from "../../services/invoiceServices";
 import { CapitalizeFullName, sumAProp } from "../../utils/index";
@@ -8,9 +8,10 @@ import FormInvoiceLines from "./InvoiceLines/FormInvoiceLines";
 import FormPaymentLines from "./Payments/FormPaymentLines";
 import InvoiceTotalDetails from "./InvoiceTotalDetails";
 import Button from "../../multiuse/Button";
-import { Action, Invoice } from "../../types/invoiceTypes";
+import { Action, Invoice, SelectionContext } from "../../types/invoiceTypes";
 import { User } from "../../types/users";
 import UserContext from "../../contexts/user-context";
+import { useSelection } from "./Invoices";
 
 type Props = {
   modalForm: boolean;
@@ -22,6 +23,9 @@ function InvoiceForm({ modalForm, buttonText, invoiceData }: Props) {
   // User
   const [user, setUser] = useContext<User>(UserContext);
   const adminActions = user.roles.includes("admin");
+
+  // Selection
+  const { selection, setSelection } = useSelection();
 
   // Reducer
   const [invoice, dispatch] = useReducer(invoiceReducer, invoiceData);
@@ -61,6 +65,7 @@ function InvoiceForm({ modalForm, buttonText, invoiceData }: Props) {
     onSuccess: (returnedData: Invoice) => {
       if (!invoiceID) {
         console.log("There wasn't an invoiceID");
+        setSelection(returnedData.id || "");
         navigate(`/invoices/${returnedData.id}/`);
       }
       dispatch({ type: "setInvoice", data: returnedData });
@@ -97,16 +102,16 @@ function InvoiceForm({ modalForm, buttonText, invoiceData }: Props) {
   }
 
   // Alert on page refresh.
-  useEffect(() => {
-    const unloadCallback = (event) => {
-      event.preventDefault();
-      event.returnValue = "";
-      return "";
-    };
+  // useEffect(() => {
+  //   const unloadCallback = (event) => {
+  //     event.preventDefault();
+  //     event.returnValue = "";
+  //     return "";
+  //   };
 
-    window.addEventListener("beforeunload", unloadCallback);
-    return () => window.removeEventListener("beforeunload", unloadCallback);
-  }, []);
+  //   window.addEventListener("beforeunload", unloadCallback);
+  //   return () => window.removeEventListener("beforeunload", unloadCallback);
+  // }, []);
 
   // For Debugging, to be removed.
   function outputCurrentData() {

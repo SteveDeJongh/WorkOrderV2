@@ -1,12 +1,19 @@
 import LeftListWithAction from "../../multiuse/LeftListWithAction";
-import { Outlet, useParams, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {
+  Outlet,
+  useParams,
+  useLocation,
+  useNavigate,
+  useOutletContext,
+} from "react-router-dom";
+import { useState } from "react";
 import NoSelection from "../NoSelection";
 import FullWidthTable from "../../multiuse/FullWidthTable";
 import { useContext } from "react";
 import UserContext from "../../contexts/user-context";
 import ViewToggle from "../../multiuse/ViewToggle";
 import useInvoicesData from "../../hooks/useInvoicesData";
+import { SelectionContext } from "../../types/invoiceTypes";
 
 function Invoices() {
   const [user, setUser] = useContext(UserContext);
@@ -24,28 +31,6 @@ function Invoices() {
   let navigate = useNavigate();
 
   const [selection, setSelection] = useState(Number(useParams().id) || "");
-
-  // useEffect(() => {
-  //   // If selection or pathname changes, re-route accordingly.
-  //   const invoiceRegExp = new RegExp("/invoices/\\d+/");
-
-  //   if (
-  //     (selection && pathname === "/invoices/new") ||
-  //     pathname === "/invoices"
-  //   ) {
-  //     // Creating a new invoice or navigating to invoices.
-  //     setSelection("");
-  //   } else if (!selection && invoiceRegExp.test(pathname)) {
-  //     // New invoice created path.
-  //     setSelection(Number(pathname.split("/")[2]));
-  //   } else if (
-  //     !selection &&
-  //     pathname !== "/invoices/new" &&
-  //     pathname !== "/invoices"
-  //   ) {
-  //     navigate(`/invoices`);
-  //   }
-  // }, [selection, pathname]);
 
   console.log("&&& Re-rendering Invoices, selection is:", selection, pathname);
 
@@ -78,7 +63,7 @@ function Invoices() {
               {!selection && pathname !== "/invoices/new" ? (
                 <NoSelection item={"invoice"} />
               ) : (
-                <Outlet context={[selection, setSelection]} />
+                <Outlet context={{ selection, setSelection }} />
               )}
             </div>
           </div>
@@ -105,6 +90,10 @@ function Invoices() {
       )}
     </>
   );
+}
+
+export function useSelection() {
+  return useOutletContext<SelectionContext>();
 }
 
 export default Invoices;
