@@ -14,7 +14,6 @@ async function createUser(userData) {
   }
 
   let token = response.headers.get("Authorization")
-  console.log("Authorization header", token);
   localStorage.setItem('authToken', token)
 
   return response.json();
@@ -36,11 +35,8 @@ async function createSession(userData) {
     throw err
   }
 
-  // Need to store this in localstorage
   let token = response.headers.get("Authorization")
-  console.log("Authorization header", token);
   localStorage.setItem('authToken', token)
-
   return response.json();
 }
 

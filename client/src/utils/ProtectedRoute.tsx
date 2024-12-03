@@ -1,14 +1,14 @@
-import { useContext } from "react";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
-import UserContext from "../contexts/user-context";
+import { useUserContext } from "../contexts/user-context";
+import { RoleTypes } from "../types/users";
 
 type Props = {
-  role: string;
+  role: RoleTypes;
 };
 
 function ProtectedRoute({ role }: Props) {
   const navigate = useNavigate();
-  const [user] = useContext(UserContext);
+  const { user } = useUserContext();
   console.log("User from protectedRoute", user);
 
   if (!user) {
@@ -16,7 +16,7 @@ function ProtectedRoute({ role }: Props) {
     return <Navigate to="/login" replace />;
   }
 
-  if (!user.roles?.includes(role)) {
+  if (!user.roles?.includes(role as RoleTypes)) {
     console.log("Don't have that role!");
     return <Navigate to={navigate(-1)} />;
   }

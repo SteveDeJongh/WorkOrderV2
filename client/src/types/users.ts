@@ -3,10 +3,22 @@ type User = {
     email: string;
     created_at: string;
     name: string;
-    roles: Array<roleTypes>;
+    roles: Array<RoleTypes>;
     created_date: string;
+    views?: {
+      customers: ViewTypes;
+      products: ViewTypes;
+      invoices: ViewTypes;
+    };
 }
 
-type roleTypes = "user" | "manager" | "admin";
+type ViewTypes = "profile" | "table";
 
-export { User }
+type RoleTypes = "user" | "manager" | "admin";
+
+type UserContext = {
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+}
+
+export { RoleTypes, User, UserContext, ViewTypes }

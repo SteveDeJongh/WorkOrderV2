@@ -2,18 +2,21 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./whitespace-resets.css";
 import "./App.css";
 import { useEffect, useState } from "react";
-import ErrorPage from "./error-page";
-import UserContext from "./contexts/user-context";
+import { UserContext } from "./contexts/user-context";
+// Navigation/Layout
 import Layout from "./components/Layout";
 import Index from "./components/Index";
+import ErrorPage from "./error-page";
+import PageTitle from "./components/PageTitle";
+import ProtectedRoute from "./utils/ProtectedRoute";
+// Customers
 import Customers from "./components/Customers/Customers";
 import CustomerProfile from "./components/Customers/CustomerProfile";
 import CustomerNew from "./components/Customers/CustomerNew";
 import CustomerShow from "./components/Customers/CustomerShow";
 import CustomerEdit from "./components/Customers/CustomerEdit";
 import CustomerInvoices from "./components/Customers/CustomerInvoices";
-// import CustomerItems from "./components/Customers/CustomerItems";
-// import CustomerWorkOrders from "./components/Customers/CustomerWorkOrders";
+// Products
 import Products from "./components/Products/Products";
 import PageIndex from "./multiuse/PageIndex";
 import ProductShow from "./components/Products/ProductShow";
@@ -21,16 +24,17 @@ import ProductView from "./components/Products/ProductView";
 import ProductMovements from "./components/Products/ProductMovements";
 import ProductEdit from "./components/Products/ProductEdit";
 import ProductNew from "./components/Products/ProductNew";
+// Invoices
 import Invoices from "./components/Invoices/Invoices";
+import InvoiceShow from "./components/Invoices/InvoiceShow";
+import InvoiceNew from "./components/Invoices/InvoiceNew";
+// Users
 import SignUp from "./components/Users/SignUp";
 import Login from "./components/Users/Login";
 import Profile from "./components/Users/Profile";
 import EditProfile from "./components/Users/EditProfile";
-import PageTitle from "./components/PageTitle";
 import { getUserByToken } from "./services/userServices";
-import ProtectedRoute from "./utils/ProtectedRoute";
-import InvoiceShow from "./components/Invoices/InvoiceShow";
-import InvoiceNew from "./components/Invoices/InvoiceNew";
+import { User } from "./types/users";
 
 const router = createBrowserRouter([
   {
@@ -177,7 +181,7 @@ const router = createBrowserRouter([
                 element: (
                   <>
                     <PageTitle title={"View Invoice"} />
-                    <InvoiceShow modalForm={false} buttonText="Save" />
+                    <InvoiceShow />
                   </>
                 ),
               },
@@ -186,7 +190,7 @@ const router = createBrowserRouter([
                 element: (
                   <>
                     <PageTitle title="New Invoice" />
-                    <InvoiceNew modalForm={false} buttonText="Save" />
+                    <InvoiceNew />
                   </>
                 ),
               },
@@ -199,7 +203,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -241,7 +245,7 @@ function App() {
 
   return (
     <>
-      <UserContext.Provider value={[user, setUser]}>
+      <UserContext.Provider value={{ user, setUser }}>
         <RouterProvider router={router} />
       </UserContext.Provider>
     </>

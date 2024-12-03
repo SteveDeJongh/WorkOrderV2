@@ -4,12 +4,11 @@ import { useState } from "react";
 import NoSelection from "../NoSelection";
 import useProductsData from "../../hooks/useProductsData";
 import FullWidthTable from "../../multiuse/FullWidthTable";
-import { useContext } from "react";
-import UserContext from "../../contexts/user-context";
+import { useUserContext } from "../../contexts/user-context";
 import ViewToggle from "../../multiuse/ViewToggle";
 
 function Products() {
-  const [user, setUser] = useContext(UserContext);
+  const { user } = useUserContext();
   const [view, setView] = useState(user.views?.products || "profile");
 
   function viewSetter(view) {

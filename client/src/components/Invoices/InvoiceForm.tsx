@@ -1,5 +1,5 @@
-import { useState, useContext, useEffect, useReducer } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useState, useEffect, useReducer } from "react";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createInvoice, editInvoice } from "../../services/invoiceServices";
 import { CapitalizeFullName, sumAProp } from "../../utils/index";
@@ -8,9 +8,8 @@ import FormInvoiceLines from "./InvoiceLines/FormInvoiceLines";
 import FormPaymentLines from "./Payments/FormPaymentLines";
 import InvoiceTotalDetails from "./InvoiceTotalDetails";
 import Button from "../../multiuse/Button";
-import { Action, Invoice, SelectionContext } from "../../types/invoiceTypes";
-import { User } from "../../types/users";
-import UserContext from "../../contexts/user-context";
+import { Action, Invoice } from "../../types/invoiceTypes";
+import { useUserContext } from "../../contexts/user-context";
 import { useSelection } from "./Invoices";
 
 type Props = {
@@ -21,14 +20,15 @@ type Props = {
 
 function InvoiceForm({ modalForm, buttonText, invoiceData }: Props) {
   // User
-  const [user, setUser] = useContext<User>(UserContext);
-  const adminActions = user.roles.includes("admin");
+  const { user } = useUserContext();
+  const adminActions = user?.roles.includes("admin");
 
   // Selection
   const { selection, setSelection } = useSelection();
 
   // Reducer
   const [invoice, dispatch] = useReducer(invoiceReducer, invoiceData);
+
   // Main Pane states
   const [mainData, setMainData] = useState<Invoice>(invoiceData);
   const [invoiceID, setInvoiceID] = useState(invoiceData.id);
@@ -64,7 +64,6 @@ function InvoiceForm({ modalForm, buttonText, invoiceData }: Props) {
     },
     onSuccess: (returnedData: Invoice) => {
       if (!invoiceID) {
-        console.log("There wasn't an invoiceID");
         setSelection(returnedData.id || "");
         navigate(`/invoices/${returnedData.id}/`);
       }
@@ -94,7 +93,7 @@ function InvoiceForm({ modalForm, buttonText, invoiceData }: Props) {
       ) {
         navigate("/invoices");
       } else {
-        console.log("Staying here!");
+        console.log("Staying here.");
       }
     } else {
       navigate("/invoices");
@@ -158,13 +157,13 @@ function InvoiceForm({ modalForm, buttonText, invoiceData }: Props) {
         />
         <FormInvoiceLines
           invoice_lines={invoice.invoice_lines}
-          adminActions={adminActions}
+          adminActions={!!adminActions}
           invoice_id={invoice.id}
           dispatch={dispatch}
         />
         <FormPaymentLines
           payments={invoice.payments}
-          adminActions={adminActions}
+          adminActions={!!adminActions}
           balance={invoice.balance}
           invoice_id={invoice.id}
           dispatch={dispatch}

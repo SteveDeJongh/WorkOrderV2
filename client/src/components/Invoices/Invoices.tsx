@@ -9,17 +9,17 @@ import {
 import { useState } from "react";
 import NoSelection from "../NoSelection";
 import FullWidthTable from "../../multiuse/FullWidthTable";
-import { useContext } from "react";
-import UserContext from "../../contexts/user-context";
+import { useUserContext } from "../../contexts/user-context";
 import ViewToggle from "../../multiuse/ViewToggle";
 import useInvoicesData from "../../hooks/useInvoicesData";
 import { SelectionContext } from "../../types/invoiceTypes";
+import { ViewTypes } from "../../types/users";
 
 function Invoices() {
-  const [user, setUser] = useContext(UserContext);
-  const [view, setView] = useState(user.views?.invoices || "profile");
+  const { user } = useUserContext();
+  const [view, setView] = useState(user?.views?.invoices || "profile");
 
-  function viewSetter(view: string) {
+  function viewSetter(view: ViewTypes) {
     user.views ? user.views : (user.views = {});
 
     user.views["invoices"] = view;

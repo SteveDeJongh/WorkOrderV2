@@ -1,13 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { destroySession } from "../services/userServices";
 import { useMutation } from "@tanstack/react-query";
-import { useContext, useState, useEffect, useRef } from "react";
-import UserContext from "../contexts/user-context";
+import { useState, useEffect, useRef } from "react";
 import { CapitalizeFullName } from "../utils";
+import { useUserContext } from "../contexts/user-context";
 
 function UserNav() {
   const navigate = useNavigate();
-  const [user, setUser] = useContext(UserContext);
+  const { user, setUser } = useUserContext();
   const [isActive, setActive] = useState(false);
   const menuRef = useRef();
 

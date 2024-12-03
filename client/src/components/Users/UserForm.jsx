@@ -1,16 +1,7 @@
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-import { createUser } from "../../services/userServices";
-import { useContext } from "react";
-import UserContext from "../../contexts/user-context";
 import Button from "../../multiuse/Button";
 
 function UserForm({ user, headerText, onSubmit, buttonText }) {
-  const navigate = useNavigate();
-  // const [user, setUser] = useContext(UserContext);
-  console.log(user);
-
   const {
     register,
     handleSubmit,
@@ -21,32 +12,6 @@ function UserForm({ user, headerText, onSubmit, buttonText }) {
       ? { name: user.name, email: user.email, roles: user.roles }
       : { roles: [] },
   });
-
-  // const { mutate, isPending, isError, isSuccess } = useMutation({
-  //   mutationFn: (rawData) => {
-  //     console.log(rawData);
-  //     const allowed = ["email", "password", "name", "roles"];
-  //     let content = { user: {} };
-
-  //     Object.keys(rawData)
-  //       .filter((key) => allowed.includes(key))
-  //       .forEach((key) => {
-  //         content["user"][key] = rawData[key];
-  //       });
-
-  //     console.log("Creating user...");
-  //     return createUser(content);
-  //   },
-  //   onSuccess: (response) => {
-  //     console.log("User created!");
-  //     setUser(response.data); // maybe don't need this if checking for user auth every time?
-  //     navigate(`/`);
-  //   },
-  //   onError: (error) => {
-  //     console.log("An Error occured creating the user:", error);
-  //     navigate("/signup");
-  //   },
-  // });
 
   async function onSubmitHandler(data) {
     try {

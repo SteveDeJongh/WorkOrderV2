@@ -2,14 +2,13 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createUser } from "../../services/userServices";
-import { useContext } from "react";
-import UserContext from "../../contexts/user-context";
+import { useUserContext } from "../../contexts/user-context";
 import PageTitle from "../PageTitle";
 import Button from "../../multiuse/Button";
 
 function SignUp() {
   const navigate = useNavigate();
-  const [user, setUser] = useContext(UserContext);
+  const { setUser } = useUserContext();
 
   const {
     register,

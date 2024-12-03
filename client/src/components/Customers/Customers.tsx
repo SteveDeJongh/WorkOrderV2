@@ -10,12 +10,11 @@ import {
 import { useState } from "react";
 import NoSelection from "../NoSelection";
 import useCustomersData from "../../hooks/useCustomersData";
-import { useContext } from "react";
-import UserContext from "../../contexts/user-context";
+import { useUserContext } from "../../contexts/user-context";
 import ViewToggle from "../../multiuse/ViewToggle";
 
 function Customers() {
-  const [user, setUser] = useContext(UserContext);
+  const { user } = useUserContext();
   const [view, setView] = useState(user.views?.customers || "profile");
 
   function viewSetter(view) {
@@ -33,7 +32,7 @@ function Customers() {
 
   let renderNoSelection = "/customers" === pathname && !selection;
 
-  if (selection && selection !== "undefined" && pathname === "/customers") {
+  if (selection && selection !== undefined && pathname === "/customers") {
     navigate(`/customers/${selection}/profile`);
   }
 

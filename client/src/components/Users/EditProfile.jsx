@@ -1,14 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { editUser, getUserByToken } from "../../services/userServices";
-import { useContext } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-
-import UserContext from "../../contexts/user-context";
+import { useUserContext } from "../../contexts/user-context";
 import UserForm from "./UserForm";
 
 function EditProfile() {
   const navigate = useNavigate();
-  const [user, setUser] = useContext(UserContext);
+  const { user, setUser } = useUserContext();
 
   const {
     data: userData,

@@ -1,9 +1,8 @@
-import { useForm, SubmitHandler } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createSession } from "../../services/userServices";
-import { useContext } from "react";
-import UserContext from "../../contexts/user-context";
+import { useUserContext } from "../../contexts/user-context";
 import PageTitle from "../PageTitle";
 import LoadingModal from "../../multiuse/LoadingModal";
 import Button from "../../multiuse/Button";
@@ -29,7 +28,7 @@ type UserResponseError = {
 
 function Login() {
   const navigate = useNavigate();
-  const [user, setUser] = useContext(UserContext);
+  const { setUser } = useUserContext();
 
   const {
     register,
@@ -43,7 +42,6 @@ function Login() {
     isError,
   } = useMutation({
     mutationFn: (rawData: SignInUser) => {
-      console.log("!!! calling onsubmit how many times?");
       const allowed = ["email", "password"];
       let content: NestedUser = { user: { email: "", pass: "" } };
 
@@ -63,7 +61,7 @@ function Login() {
       navigate(`/`);
     },
     onError: (error: UserResponseError) => {
-      console.log("An Error occured logging in:", error.status);
+      console.error("An Error occured logging in:", error.status);
       navigate("/Login");
     },
   });
