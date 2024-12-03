@@ -46,6 +46,6 @@ class Api::V1::PaymentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def payment_params
-      params.require(:payment).permit(:id, :method, :invoice_id, :amount)
+      params.require(:payment).permit(:id, :method, :invoice_id, :amount, :change)
     end
 end

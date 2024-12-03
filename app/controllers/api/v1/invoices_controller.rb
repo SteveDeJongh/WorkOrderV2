@@ -184,7 +184,7 @@ class Api::V1::InvoicesController < ApplicationController
             ],
           ],
         ],
-       payments_attributes: [:id, :method, :invoice_id, :amount, :created_at, :updated_at, :_destroy]
+       payments_attributes: [:id, :method, :invoice_id, :amount, :created_at, :updated_at, :_destroy, :change]
        )
     end
 
