@@ -15,6 +15,7 @@ function UserNav() {
     mutationFn: () => {
       let token = localStorage.getItem("authToken");
       localStorage.removeItem("authToken");
+      localStorage.dispatchEvent(new Event("storage"));
       setActive(!isActive);
 
       console.log("Logging out...");

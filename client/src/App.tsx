@@ -36,6 +36,8 @@ import EditProfile from "./components/Users/EditProfile";
 import { getUserByToken } from "./services/userServices";
 import { User } from "./types/users";
 
+import { interceptor } from "./interceptors/interceptor";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -206,6 +208,15 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [intercept, _] = useState(true);
+
+  useEffect(() => {
+    if (intercept) {
+      // Loads interceptor if state is set to true.
+      interceptor();
+    }
+  }, [intercept]);
+
   useEffect(() => {
     async function checkActiveUser() {
       let token = localStorage.getItem("authToken");
@@ -218,6 +229,7 @@ function App() {
           if (response.status.code === 204) {
             console.log("Sorry, that token expired.");
             localStorage.removeItem("authToken");
+            localStorage.dispatchEvent(new Event("storage"));
           } else {
             console.log("That's still a valid token, checking if user is set.");
             if (!user) {
@@ -237,6 +249,10 @@ function App() {
     }
 
     checkActiveUser();
+  }, []);
+
+  window.addEventListener("storage", () => {
+    console.log("change to local storage.");
   });
 
   if (loading) {
