@@ -14,15 +14,12 @@ function UserNav() {
   const { mutate: logOut } = useMutation({
     mutationFn: () => {
       let token = localStorage.getItem("authToken");
-      localStorage.removeItem("authToken");
-      localStorage.dispatchEvent(new Event("storage"));
       setActive(!isActive);
-
       console.log("Logging out...");
       return destroySession(token);
     },
-    onSuccess: (response) => {
-      console.log(response);
+    onSuccess: () => {
+      localStorage.removeItem("authToken");
       console.log("Logged out!");
       setUser(null);
       navigate(`/`);

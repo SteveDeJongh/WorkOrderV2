@@ -50,11 +50,13 @@ a {
 header {
   background-color: var(--main-black);
   height: 5vh;
-  padding: 0px;
+  padding: 0px, 10px;
   margin-bottom: 2vh;
   border-bottom: 2px solid var(--light-border);
   display: flex;
   align-items: center;
+  position: fixed;
+  width: 100%;
 }
 
 #header-sections{
@@ -418,6 +420,7 @@ nav li:has(a.active) {
 #panes {
   display: flex;
   flex-direction: row;
+  margin-top: 7vh;
 }
 
 /* Full Pane */

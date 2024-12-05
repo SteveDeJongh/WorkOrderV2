@@ -12,12 +12,12 @@ function ProtectedRoute({ role }: Props) {
   console.log("User from protectedRoute", user);
 
   if (!user) {
-    console.log("Don't have a user signed in!");
+    console.error("No user signed in.");
     return <Navigate to="/login" replace />;
   }
 
   if (!user.roles?.includes(role as RoleTypes)) {
-    console.log("Don't have that role!");
+    console.error("User doesn't have that role.");
     return <Navigate to={navigate(-1)} />;
   }
 

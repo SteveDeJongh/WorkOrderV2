@@ -69,68 +69,72 @@ function Login() {
   return (
     <>
       <PageTitle title="Sign In" />
-      <div className="main-pane-header">
-        <div className="main-pane-header-title">
-          <h2>Sign In</h2>
-          <div className="main-pane-form-actions">
-            <Button
-              onClick={() => navigate("/")}
-              text="Cancel"
-              className={""}
-            />
-            <Button
-              form={"main-pane-content"}
-              disabled={isPending}
-              type="submit"
-              text={"Sign In"}
-            />
+      <div id="panes">
+        <div className="pane pane-full">
+          <div className="main-pane-header">
+            <div className="main-pane-header-title">
+              <h2>Sign In</h2>
+              <div className="main-pane-form-actions">
+                <Button
+                  onClick={() => navigate("/")}
+                  text="Cancel"
+                  className={""}
+                />
+                <Button
+                  form={"main-pane-content"}
+                  disabled={isPending}
+                  type="submit"
+                  text={"Sign In"}
+                />
+              </div>
+            </div>
           </div>
+          {isPending && <LoadingModal text={"Signing in..."} />}
+          <form
+            id="main-pane-content"
+            className="main-pane-content"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            {isError && (
+              <>
+                <h3>Unable to log in.</h3>
+                <p>Username or password is incorrect.</p>
+              </>
+            )}
+            <div className="panel">
+              <h3>User Details</h3>
+              <div className="panel-contents-section">
+                <div className="formPair half">
+                  <label htmlFor="email">Email:</label>
+                  <input
+                    {...register("email", {
+                      required: "Email is required.",
+                    })}
+                    type="text"
+                    id="email"
+                    name="email"
+                    placeholder="example@example.com"
+                  />
+                  {errors.email && <p>{`${errors.email.message}`}</p>}
+                </div>
+                <div className="formPair half">
+                  <label htmlFor="password">Password:</label>
+                  <input
+                    {...register("password", {
+                      required: "Password is required.",
+                    })}
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder=""
+                  />
+                  {errors.password && <p>{`${errors.password.message}`}</p>}
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
-      {isPending && <LoadingModal text={"Signing in..."} />}
-      <form
-        id="main-pane-content"
-        className="main-pane-content"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        {isError && (
-          <>
-            <h3>Unable to log in.</h3>
-            <p>Username or password is incorrect.</p>
-          </>
-        )}
-        <div className="panel">
-          <h3>User Details</h3>
-          <div className="panel-contents-section">
-            <div className="formPair half">
-              <label htmlFor="email">Email:</label>
-              <input
-                {...register("email", {
-                  required: "Email is required.",
-                })}
-                type="text"
-                id="email"
-                name="email"
-                placeholder="example@example.com"
-              />
-              {errors.email && <p>{`${errors.email.message}`}</p>}
-            </div>
-            <div className="formPair half">
-              <label htmlFor="password">Password:</label>
-              <input
-                {...register("password", {
-                  required: "Password is required.",
-                })}
-                type="password"
-                id="password"
-                name="password"
-                placeholder=""
-              />
-              {errors.password && <p>{`${errors.password.message}`}</p>}
-            </div>
-          </div>
-        </div>
-      </form>
     </>
   );
 }

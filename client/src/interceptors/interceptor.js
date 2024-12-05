@@ -2,18 +2,16 @@ export const interceptor = async () => {
   const { fetch: originalFetch } = window;
   window.fetch = async (...args) => {
     let [resource, config, skipAuthTest] = args;
-
-    console.log("Using the interceptor", resource)
     const response = await originalFetch(resource, config);
 
     if (skipAuthTest) {
-      console.log("opts was false");
+      console.log("Skipping reponse Authenticaion error test.");
       return response;
     }
 
     if (response.status === 401) {
-      console.log("Unauthorized, removing token.")
       localStorage.removeItem("authToken");
+      window.dispatchEvent(new Event("authChange"));
       return response;
     } else {
       return response;

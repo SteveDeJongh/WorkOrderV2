@@ -229,7 +229,7 @@ function App() {
           if (response.status.code === 204) {
             console.log("Sorry, that token expired.");
             localStorage.removeItem("authToken");
-            localStorage.dispatchEvent(new Event("storage"));
+            window.dispatchEvent(new Event("storage"));
           } else {
             console.log("That's still a valid token, checking if user is set.");
             if (!user) {
@@ -251,9 +251,21 @@ function App() {
     checkActiveUser();
   }, []);
 
-  window.addEventListener("storage", () => {
-    console.log("change to local storage.");
-  });
+  useEffect(() => {
+    window.addEventListener("authChange", storageChange);
+
+    function storageChange() {
+      console.log("There was a change to our authToken.");
+      if (!localStorage.getItem("authToken")) {
+        console.log("We no longer have a token, removing user.");
+        setUser(null);
+      }
+    }
+
+    return () => {
+      window.removeEventListener("authChange", storageChange);
+    };
+  }, []);
 
   if (loading) {
     return <h1>Loading...</h1>;
