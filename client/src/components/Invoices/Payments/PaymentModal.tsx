@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDom from "react-dom";
 import PaymentForm from "./PaymentForm";
 import { Payment } from "../../../types/invoiceTypes";

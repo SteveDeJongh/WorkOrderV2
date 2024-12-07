@@ -1,4 +1,3 @@
-import React from "react";
 import { useState, useEffect, useContext } from "react";
 import ReactDom from "react-dom";
 import SearchBar from "../../multiuse/SearchBar";
