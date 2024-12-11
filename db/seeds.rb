@@ -49,7 +49,7 @@ InvoiceLine.new(invoice_id: 2, product_id: 3, discount_percentage: 0, price: 30.
 InvoiceLine.new(invoice_id: 3, product_id: 2, discount_percentage: 0, price: 20.00, quantity: 1, line_total: 20.00, line_tax: 3.00).save
 
 Payment.new(method: "Cash", invoice_id: 1, amount: 5.00).save
-Payment.new(method: "Cash", invoice_id: 3, amount: 21.00).save
+Payment.new(method: "Cash", invoice_id: 3, amount: "123").save
 
 
 puts "1 admin user, 4 Customers and 8 Products created, and inventory movements created."

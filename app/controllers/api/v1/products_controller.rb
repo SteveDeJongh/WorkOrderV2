@@ -32,7 +32,7 @@ class Api::V1::ProductsController < ApplicationController
       if (stockChange != 0)
         MovementService.new(@product).record_movement("ProductEdit", stockChange, @user)
       end
-      render json: @product
+      render json: @product, status: :ok
     else
       render json: @product.errors, status: :unprocessable_entity
     end

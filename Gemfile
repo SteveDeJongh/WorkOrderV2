@@ -54,3 +54,5 @@ end
 gem "devise-api", "~> 0.1.3"
 gem "devise-jwt"
 gem "jsonapi-serializer"
+
+gem 'simplecov', require: false, group: :test

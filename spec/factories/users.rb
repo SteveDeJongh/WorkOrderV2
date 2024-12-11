@@ -6,5 +6,3 @@ FactoryBot.define do
     roles {["user", "manager", "admin"]}
   end
 end
-
-# User.create(name: 'Admin', email: 'admin@test.com', password: "password", roles: ['user', 'manager', 'admin'])

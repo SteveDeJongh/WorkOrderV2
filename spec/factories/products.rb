@@ -3,7 +3,7 @@ FactoryBot.define do
     sequence(:name) {|x| "Product #{x}"}
     sequence(:description) {|x| "This is product #{x}"}
     sequence(:sku) {|x| "PR000#{x}"}
-    sequence(:upc) {|x| x.to_s * 12.to_i}
+    sequence(:upc) {|x| (x.to_s * 12.to_i)[0, 12]}
     sequence(:price) {|x| x * 10 }
     sequence(:cost) {|x| x }
     sequence(:stock) {|x| x }

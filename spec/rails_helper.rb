@@ -71,6 +71,6 @@ RSpec.configure do |config|
   # Add Factory Bot Methods to test suite.
   config.include FactoryBot::Syntax::Methods
 
-  # Devise User Auth
+  # Devise User Auth, allows to sign in users.
   config.include Devise::Test::IntegrationHelpers, type: :request
 end
