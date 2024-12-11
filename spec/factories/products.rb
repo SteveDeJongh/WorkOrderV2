@@ -10,7 +10,7 @@ FactoryBot.define do
     sequence(:min) {|x| x }
     sequence(:max) {|x| x * 10}
     inventory { true }
-    tax_rate factory: :tax_rate
+    tax_rate # references tax_rate factory defined in tax_rates.rb
   end
 end
 
