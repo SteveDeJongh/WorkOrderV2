@@ -78,7 +78,6 @@ describe 'Products API', type: :request do
       user = build(:user)
       sign_in user
       patch "/api/v1/products/1", :params => {:id => 1, :product => {name: nil}}
-      puts response.status
       expect(response).to have_http_status(:unprocessable_entity)
     end
   end
