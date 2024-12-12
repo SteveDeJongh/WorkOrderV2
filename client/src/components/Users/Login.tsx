@@ -7,6 +7,7 @@ import PageTitle from "../PageTitle";
 import LoadingModal from "../../multiuse/LoadingModal";
 import Button from "../../multiuse/Button";
 import { User } from "../../types/users";
+import { useEffect } from "react";
 
 type NestedUser = {
   user: SignInUser;
@@ -28,7 +29,14 @@ type UserResponseError = {
 
 function Login() {
   const navigate = useNavigate();
-  const { setUser } = useUserContext();
+  const { user, setUser } = useUserContext();
+
+  useEffect(() => {
+    // If we already have a user, redirect back to previous page.
+    if (user) {
+      navigate(-1);
+    }
+  }, []);
 
   const {
     register,

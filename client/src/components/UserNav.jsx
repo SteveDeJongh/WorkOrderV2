@@ -33,6 +33,13 @@ function UserNav() {
   useEffect(() => {
     function handler(e) {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
+        const parentClassName = e.target.parentElement.className;
+        if (
+          parentClassName.includes("ham-menu") ||
+          parentClassName.includes("header-right")
+        ) {
+          return;
+        }
         setActive(false);
       }
     }
