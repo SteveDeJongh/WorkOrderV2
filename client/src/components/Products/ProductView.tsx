@@ -3,13 +3,13 @@ import { NumericFormat } from "react-number-format";
 import { fetchLast3MovementsFor } from "../../services/movementServices";
 import { useQuery } from "@tanstack/react-query";
 import { dateTimeFormatter } from "../../utils";
+import { ProductShowOutlet } from "../../types/products";
 
 function ProductView() {
   const navigate = useNavigate();
   const {
     productData: { product, isError, isPending },
-  } = useOutletContext();
-  console.log("This is from calling useOutletContext", product);
+  } = useOutletContext<ProductShowOutlet>();
 
   const {
     data: movementData,

@@ -12,7 +12,7 @@ type User = {
     };
 }
 
-type ViewTypes = "profile" | "table";
+type ViewTypes = "profile" | "table" | null;
 
 type RoleTypes = "user" | "manager" | "admin";
 

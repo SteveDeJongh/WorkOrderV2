@@ -2,6 +2,16 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Button from "../../multiuse/Button";
+import { Product } from "../../types/products";
+
+type Props = {
+  modalForm?: boolean;
+  handleCancel?: Function;
+  product?: Product;
+  headerText: string;
+  onSubmit: Function;
+  buttonText: string;
+};
 
 function ProductForm({
   modalForm,
@@ -10,9 +20,9 @@ function ProductForm({
   headerText,
   onSubmit,
   buttonText,
-}) {
+}: Props) {
   const navigate = useNavigate();
-  const [inventoried, setInventoried] = useState(
+  const [inventoried, setInventoried] = useState<boolean>(
     product ? product.inventory : true
   );
 
@@ -38,7 +48,7 @@ function ProductForm({
       : undefined,
   });
 
-  async function onSubmitHandler(data) {
+  async function onSubmitHandler(data: Product) {
     console.log(data);
     try {
       onSubmit(data);
@@ -208,10 +218,10 @@ function ProductForm({
                   type="checkbox"
                   placeholder="inventory"
                   defaultChecked={inventoried}
+                  {...register("inventory")}
                   onChange={(e) => {
                     setInventoried(e.target.checked);
                   }}
-                  {...register("inventory")}
                 />
                 {errors.inventory && (
                   <p className="error">{`${errors.inventory.message}`}</p>

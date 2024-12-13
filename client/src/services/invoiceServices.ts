@@ -64,7 +64,7 @@ async function fetchInvoiceData(id: string | undefined): Promise<Invoice[]> {
   return mapSingleResponseDataToKeys(responseData);
 }
 
-async function editInvoice(id: string, invoiceData: Invoice): Promise<Invoice[]> {
+async function editInvoice(id: string, invoiceData: Invoice): Promise<Invoice> {
   const response = await fetch(`${API_URL}/invoices/${id}`, {
     method: "PATCH",
     headers: {

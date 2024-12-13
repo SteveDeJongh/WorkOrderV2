@@ -1,11 +1,12 @@
 import { mapResponseDataToKeys, mapSingleResponseDataToKeys } from "../utils";
 import { API_URL } from "../constants";
+import { Payment } from "../types/payments";
 
-async function fetchAllPayments() {
+async function fetchAllPayments(): Promise<Payment[]> {
     const response = await fetch(`${API_URL}/payments`, {
       headers: {
         "Authorization": localStorage.getItem("authToken"),
-      }
+      } as HeadersInit
     });
     if (response.ok) {
       let responseData = await response.json();
@@ -15,11 +16,11 @@ async function fetchAllPayments() {
     }
 }
 
-async function searchPayments(query) {
+async function searchPayments(query: string): Promise<Payment[]> {
   const response = await fetch(`${API_URL}/search/payments/?q=${query}`, {
     headers: {
       "Authorization": localStorage.getItem("authToken"),
-    }
+    } as HeadersInit
   });
   if (response.ok) {
     let responseData = await response.json();
@@ -29,12 +30,12 @@ async function searchPayments(query) {
   }
 }
 
-async function createPayment(PaymentData) {
+async function createPayment(PaymentData: Payment): Promise<Payment> {
   const response = await fetch(`${API_URL}/payments`, {
     method: "POST",
     headers: {
       "Authorization": localStorage.getItem("authToken"),
-    },
+    } as HeadersInit,
     body: PaymentData,
   })
 
@@ -45,11 +46,11 @@ async function createPayment(PaymentData) {
   return response.json();
 }
 
-async function fetchPaymentData(id) {
+async function fetchPaymentData(id: string): Promise<Payment> {
   const response = await fetch(`${API_URL}/payments/${id}`, {
     headers: {
       "Authorization": localStorage.getItem("authToken"),
-    }
+    } as HeadersInit
   })
 
   if (!response.ok) {
@@ -61,12 +62,12 @@ async function fetchPaymentData(id) {
   return mapSingleResponseDataToKeys(responseData);
 }
 
-async function editPayment(id, PaymentData) {
+async function editPayment(id: string, PaymentData: Payment): Promise<Payment> {
   const response = await fetch(`${API_URL}/payments/${id}`, {
     method: "PATCH",
     headers: {
       "Authorization": localStorage.getItem("authToken"),
-    },
+    } as HeadersInit,
     body: PaymentData,
   })
 
@@ -78,7 +79,7 @@ async function editPayment(id, PaymentData) {
   return mapSingleResponseDataToKeys(responseData);
 }
 
-async function savePayment(id, paymentData) {
+async function savePayment(id:string, paymentData:Payment) {
   if (id === "") {
     console.log("creating");
     return createPayment(paymentData);

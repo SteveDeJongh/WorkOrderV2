@@ -63,7 +63,7 @@ function TableData({ onDelayedChange, disabled, field, val }: TableDataProps) {
 
 export default function InvoiceLine({ line, updateLine, columns }: props) {
   function onDelayedChange(change: TInvoiceLine) {
-    let changedLine = { ...line, ...change, changed: true };
+    let changedLine = { ...line, ...change };
     updateLine(changedLine);
   }
 

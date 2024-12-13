@@ -12,33 +12,35 @@ import {
 } from "../../services/movementServices";
 import { useQuery } from "@tanstack/react-query";
 import Button from "../../multiuse/Button";
+import { Product } from "../../types/products";
 
 type Props = {
   open: boolean;
   onClose: Function;
-  resourceId: number | null;
+  resourceId: number;
   searchTerm: String;
 };
 
 function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
   function handleClose(e) {
     if (e.target.className === "main-modal-background") {
+      entity = null;
       onClose();
     }
   }
 
-  // Main Pane states
-  const [mainLoading, setMainLoading] = useState(false);
+  // Main states
+  const [mainLoading, setMainLoading] = useState(true);
   const [mainError, setMainError] = useState("");
-  const [mainData, setMainData] = useState({});
-  const [tab, setTab] = useState("Profile");
+  const [mainData, setMainData] = useState<Product>();
+  const [tab, setTab] = useState("View");
 
-  // Profile Tab
+  // view Tab
   useEffect(() => {
-    async function loadProductData() {
+    async function loadProductData(id: number) {
       try {
         setMainLoading(true);
-        const response = await fetchProductData(resourceId);
+        const response = await fetchProductData(id);
         setMainData(response);
       } catch (e) {
         setMainError("An error occured fetching the data.");
@@ -48,19 +50,28 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
       }
     }
     if (resourceId) {
-      loadProductData();
+      loadProductData(resourceId);
     }
   }, [resourceId]);
 
-  let entity = Object.keys(mainData).length < 1 ? false : mainData;
+  let entity = mainData
+    ? Object.keys(mainData).length < 1
+      ? null
+      : mainData
+    : null;
+
+  useEffect(() => {
+    console.log("entity", entity);
+    console.log(!!entity);
+  }, [entity]);
 
   const {
     data: is3MovementsData,
     isError: is3MovementsError,
     isPending: is3MovementsPending,
   } = useQuery({
-    queryKey: ["3productMovements", entity.id],
-    queryFn: () => fetchLast3MovementsFor(entity.id),
+    queryKey: ["3productMovements", entity?.id],
+    queryFn: () => fetchLast3MovementsFor(entity!.id),
     enabled: !!entity,
   });
 
@@ -74,9 +85,14 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
       return await fetchProductData(resourceId);
     },
     onSuccess: (data) => {
+      console.log(data);
       setMainData(data);
-      const oldData = queryClient.getQueryData(["products", searchTerm]);
-      let newData = oldData.map((entry) =>
+      entity = data;
+      const oldData: Product[] | undefined = queryClient.getQueryData([
+        "products",
+        searchTerm,
+      ]);
+      let newData = oldData?.map((entry) =>
         entry.id === resourceId ? data : entry
       );
       queryClient.setQueryData(["products", searchTerm], newData);
@@ -92,8 +108,8 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
     isPending: isMovementPending,
     isSuccess: isMovementSuccess,
   } = useQuery({
-    queryKey: ["productMovements", entity.id],
-    queryFn: () => fetchInventoryMovementsFor(entity.id),
+    queryKey: ["productMovements", resourceId],
+    queryFn: () => fetchInventoryMovementsFor(resourceId),
     enabled: !!entity,
   });
 
@@ -107,7 +123,7 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
         <div className="main-modal">
           {mainLoading && <LoadingBox text="Loading Product..." />}
           {mainError && <p>An error occured.</p>}
-          {!mainLoading && !mainError && (
+          {!mainLoading && !mainError && entity && (
             <>
               <div className="modal-pane-header">
                 <div className="modal-pane-header-title">
@@ -121,18 +137,9 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
                         <li
                           key={page}
                           className={"mid-nav-pill"}
-                          onClick={() =>
-                            setTab(page === "View" ? "Profile" : page)
-                          }
+                          onClick={() => setTab(page)}
                         >
-                          <span
-                            className={
-                              page === tab ||
-                              (page === "View" && tab === "Profile")
-                                ? "active"
-                                : ""
-                            }
-                          >
+                          <span className={page === tab ? "active" : ""}>
                             {page}
                           </span>
                         </li>
@@ -141,7 +148,7 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
                   </ul>
                 </div>
               </div>
-              {tab === "Profile" && (
+              {tab === "View" && (
                 <>
                   <div className="modal-content">
                     <div className="panel">
@@ -256,9 +263,9 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
                               <th>Change</th>
                               <th>Stock</th>
                               <th>ChangeType</th>
-                              <th>userId</th>
+                              <th>user ID</th>
                               <th>Time</th>
-                              <th>ProductID</th>
+                              <th>Product ID</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -284,10 +291,10 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
                                     </td>
                                     <td>{movement.change}</td>
                                     <td>{movement.stock}</td>
-                                    <td>{movement.changeType}</td>
-                                    <td>{movement.userID}</td>
+                                    <td>{movement.change_type}</td>
+                                    <td>{movement.user_id}</td>
                                     <td>{movement.created_at}</td>
-                                    <td>{movement.productID}</td>
+                                    <td>{movement.product_id}</td>
                                   </tr>
                                 );
                               })}

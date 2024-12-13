@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../services/productServices";
 import { objectToFormData } from "../../utils/formDataHelper";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Product } from "../../types/products";
 
 function ProductNew() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function ProductNew() {
       console.log("Creating product...");
       return createProduct(formData);
     },
-    onSuccess: (newProduct) => {
+    onSuccess: (newProduct: Product) => {
       console.log("Product created!");
       console.log(newProduct);
       // queryClient.setQueryData(["products"], (oldProducts) => {

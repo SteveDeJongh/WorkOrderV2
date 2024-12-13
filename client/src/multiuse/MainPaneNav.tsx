@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 interface MainPaneNavProps {
   title: string;
-  id: string;
+  id: string | number;
   identifier: string;
   pages: Array<string>;
 }

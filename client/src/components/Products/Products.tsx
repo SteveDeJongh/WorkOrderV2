@@ -6,15 +6,21 @@ import useProductsData from "../../hooks/useProductsData";
 import FullWidthTable from "../../multiuse/FullWidthTable";
 import { useUserContext } from "../../contexts/user-context";
 import ViewToggle from "../../multiuse/ViewToggle";
+import { ViewTypes } from "../../types/users";
+import { ProductContext } from "../../types/products";
 
 function Products() {
   const { user } = useUserContext();
-  const [view, setView] = useState(user.views?.products || "profile");
+  const [view, setView] = useState<ViewTypes>(
+    user!.views?.products || "profile"
+  );
 
-  function viewSetter(view) {
-    user.views ? user.views : (user.views = {});
+  function viewSetter(view: ViewTypes) {
+    user?.views
+      ? user?.views
+      : (user!.views = { customers: null, products: null, invoices: null });
 
-    user.views["products"] = view;
+    user!.views["products"] = view;
     setView(view);
   }
 
@@ -26,7 +32,7 @@ function Products() {
 
   let renderNoSelection = "/products" === pathname && !selection;
 
-  if (selection && selection !== "undefined" && pathname === "/products") {
+  if (selection && pathname === "/products") {
     navigate(`/products/${selection}/view`);
   }
 

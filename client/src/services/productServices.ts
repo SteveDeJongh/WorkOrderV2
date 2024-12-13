@@ -1,12 +1,12 @@
 import { API_URL } from "../constants";
 import { mapResponseDataToKeys, mapSingleResponseDataToKeys } from "../utils";
+import { Product } from "../types/products";
 
-
-async function fetchAllProducts() {
+async function fetchAllProducts(): Promise<Product[]> {
     const response = await fetch(`${API_URL}/products`, {
       headers: {
         "Authorization": localStorage.getItem("authToken"),
-      }
+      } as HeadersInit
     });
     if (response.ok) {
       let responseData = await response.json();
@@ -25,11 +25,11 @@ async function fetchAllProducts() {
     }
 }
 
-async function searchProducts(query) {
+async function searchProducts(query: string): Promise<Product[] | string> {
   const response = await fetch(`${API_URL}/search/products/?q=${query}`, {
     headers: {
       "Authorization": localStorage.getItem("authToken"),
-    }
+    } as HeadersInit
   });
   if (response.ok) {
     let responseData = await response.json();
@@ -39,11 +39,11 @@ async function searchProducts(query) {
   }
 }
 
-async function fetchProductData(id, options = {tax_rate: false}) {
+async function fetchProductData(id: string | number, options = {tax_rate: false}): Promise<Product> {
   const response = await fetch(`${API_URL}/products/${id}`, {
     headers: {
       "Authorization": localStorage.getItem("authToken"),
-    }
+    } as HeadersInit
   })
 
   if (!response.ok) {
@@ -62,12 +62,12 @@ async function fetchProductData(id, options = {tax_rate: false}) {
   return mapSingleResponseDataToKeys(responseData);
 }
 
-async function createProduct(productData) {
+async function createProduct(productData: Product): Promise<Product> {
   const response = await fetch(`${API_URL}/products`, {
     method: "POST",
     headers: {
       "Authorization": localStorage.getItem("authToken"),
-    },
+    } as HeadersInit,
     body: productData,
   })
 
@@ -79,12 +79,12 @@ async function createProduct(productData) {
   return mapSingleResponseDataToKeys(responseData);
 }
 
-async function editProduct(id, productData) {
+async function editProduct(id: string | number, productData: Product): Promise<Product> {
   const response = await fetch(`${API_URL}/products/${id}`, {
     method: "PATCH",
     headers: {
       "Authorization": localStorage.getItem("authToken"),
-    },
+    } as HeadersInit,
     body: productData,
   })
 

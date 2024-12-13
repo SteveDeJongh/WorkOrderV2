@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-const PageTitle = ({ title }) => {
+type Props = {
+  title: string;
+};
+
+const PageTitle = ({ title }: Props) => {
   const location = useLocation();
 
   useEffect(() => {

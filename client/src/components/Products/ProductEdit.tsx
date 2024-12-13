@@ -15,13 +15,13 @@ function ProductEdit() {
     isPending: mainLoading,
   } = useQuery({
     queryKey: ["editProduct", id],
-    queryFn: () => fetchProductData(id),
+    queryFn: () => fetchProductData(id as string),
   });
 
   const { mutate, isPending, isError, isSuccess } = useMutation({
     mutationFn: (rawData) => {
       const formData = objectToFormData({ product: rawData });
-      return editProduct(id, formData);
+      return editProduct(id as string, formData);
     },
     onSuccess: (newProduct) => {
       queryClient.invalidateQueries({ queryKey: ["editProduct", id] });
