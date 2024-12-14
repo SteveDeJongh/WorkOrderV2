@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Payment } from "../../../types/invoiceTypes";
+import { Payment } from "../../../types/payments";
 import { dateRegExp, dateTimeFormatter } from "../../../utils/index";
 
 type props = {

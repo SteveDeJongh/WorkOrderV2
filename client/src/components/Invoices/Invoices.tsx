@@ -17,12 +17,16 @@ import { ViewTypes } from "../../types/users";
 
 function Invoices() {
   const { user } = useUserContext();
-  const [view, setView] = useState(user?.views?.invoices || "profile");
+  const [view, setView] = useState<ViewTypes>(
+    user?.views?.invoices || "profile"
+  );
 
   function viewSetter(view: ViewTypes) {
-    user.views ? user.views : (user.views = {});
+    user?.views
+      ? user?.views
+      : (user!.views = { customers: null, products: null, invoices: null });
 
-    user.views["invoices"] = view;
+    user!.views["invoices"] = view;
     setView(view);
   }
 

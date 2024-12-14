@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import Button from "../../multiuse/Button";
 
 function UserForm({ user, headerText, onSubmit, buttonText }) {
+  console.log(user);
   const {
     register,
     handleSubmit,

@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchInventoryMovementsFor } from "../../services/movementServices";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import ScrollableTableTall from "../../multiuse/ScrollableTableTall";
+import { ProductShowOutlet } from "../../types/products";
+import { Movement } from "../../types/movements";
 
 function ProductMovements() {
   const navigate = useNavigate();
@@ -10,7 +12,7 @@ function ProductMovements() {
     productData: {
       product: { id },
     },
-  } = useOutletContext();
+  } = useOutletContext<ProductShowOutlet>();
 
   const { data, isError, isPending } = useQuery({
     queryKey: ["productMovements", id],
@@ -36,8 +38,7 @@ function ProductMovements() {
     return <h1>Error</h1>;
   }
 
-  function onClick(line) {
-    console.log(line);
+  function onClick(line: Movement) {
     if (line.change_type === "Invoice") {
       navigate(`/invoices/${line.relation.split(" ")[1]}`);
     }
@@ -48,7 +49,7 @@ function ProductMovements() {
       <ScrollableTableTall
         columns={columns}
         data={data}
-        onClick={(line) => onClick(line)}
+        onClick={(line: Movement) => onClick(line)}
       />
     </>
   );

@@ -60,11 +60,6 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
       : mainData
     : null;
 
-  useEffect(() => {
-    console.log("entity", entity);
-    console.log(!!entity);
-  }, [entity]);
-
   const {
     data: is3MovementsData,
     isError: is3MovementsError,
@@ -85,7 +80,6 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
       return await fetchProductData(resourceId);
     },
     onSuccess: (data) => {
-      console.log(data);
       setMainData(data);
       entity = data;
       const oldData: Product[] | undefined = queryClient.getQueryData([
@@ -335,14 +329,14 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
                       <thead>
                         <tr>
                           <th>Movement ID</th>
-                          <th>relation</th>
+                          <th>Relation</th>
                           <th>Adjustment</th>
                           <th>Change</th>
                           <th>Stock</th>
-                          <th>ChangeType</th>
-                          <th>userId</th>
+                          <th>Change Type</th>
+                          <th>User ID</th>
                           <th>Time</th>
-                          <th>ProductID</th>
+                          <th>Product ID</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -368,10 +362,10 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
                                 </td>
                                 <td>{movement.change}</td>
                                 <td>{movement.stock}</td>
-                                <td>{movement.changeType}</td>
-                                <td>{movement.userID}</td>
+                                <td>{movement.change_type}</td>
+                                <td>{movement.user_id}</td>
                                 <td>{movement.created_at}</td>
-                                <td>{movement.productID}</td>
+                                <td>{movement.product_id}</td>
                               </tr>
                             );
                           })}

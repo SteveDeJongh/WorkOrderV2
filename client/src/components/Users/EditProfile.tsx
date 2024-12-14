@@ -3,6 +3,7 @@ import { editUser, getUserByToken } from "../../services/userServices";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useUserContext } from "../../contexts/user-context";
 import UserForm from "./UserForm";
+import { NestedUser } from "../../types/users";
 
 function EditProfile() {
   const navigate = useNavigate();
@@ -11,15 +12,19 @@ function EditProfile() {
   const {
     data: userData,
     isError: mainError,
-    isPEnding: mainLoading,
+    isPending: mainLoading,
   } = useQuery({
-    queryKey: ["editProfile", user.id],
-    queryFn: () => getUserByToken(localStorage.getItem("authToken")),
+    queryKey: ["editProfile", user!.id],
+    queryFn: async () => {
+      let response = await getUserByToken(
+        localStorage.getItem("authToken") as string
+      );
+      return response.data;
+    },
   });
 
   const { mutate, isPending, isError, isSuccess } = useMutation({
     mutationFn: (rawData) => {
-      console.log(rawData);
       const allowed = [
         "email",
         "password",
@@ -36,11 +41,13 @@ function EditProfile() {
         });
 
       console.log("Editing user...");
-      return editUser(content);
+      return editUser(content as NestedUser);
     },
     onSuccess: (response) => {
       console.log("User edited!");
-      response.data["views"] = {}; // To eventually come direct from API user call.
+      user?.views
+        ? (response.data["views"] = user.views)
+        : { customers: null, products: null, invoices: null };
       setUser(response.data); // maybe don't need this if checking for user auth every time?
       navigate("/profile");
     },
@@ -51,19 +58,23 @@ function EditProfile() {
 
   return (
     <>
-      <div className="pane-inner">
-        {mainLoading && <p>Information loading...</p>}
-        {mainError && <p>An error occured.</p>}
-        {!mainLoading && !mainError && userData && (
-          <>
-            <UserForm
-              user={userData.data}
-              headerText={"Edit User"}
-              onSubmit={mutate}
-              buttonText={"Save"}
-            />
-          </>
-        )}
+      <div id="panes">
+        <div className="pane pane-full">
+          <div className="pane-inner">
+            {mainLoading && <p>Information loading...</p>}
+            {mainError && <p>An error occured.</p>}
+            {!mainLoading && !mainError && userData && (
+              <>
+                <UserForm
+                  user={userData}
+                  headerText={"Edit User"}
+                  onSubmit={mutate}
+                  buttonText={"Save"}
+                />
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </>
   );

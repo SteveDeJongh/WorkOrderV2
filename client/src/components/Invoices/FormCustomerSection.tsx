@@ -1,4 +1,4 @@
-import { Dispatch, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import CustomerSearchModal from "../Customers/CustomerSearchModal";
 import { fetchCustomerData } from "../../services/customerServices";
 import LoadingBox from "../../multiuse/LoadingBox";

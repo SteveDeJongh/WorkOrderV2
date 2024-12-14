@@ -1,6 +1,7 @@
 import { HOST_URL } from "../constants";
+import { NestedSignInUser, NestedUser, User, UserResponse} from "../types/users";
 
-async function createUser(userData) {
+async function createUser(userData: NestedUser): Promise<UserResponse> {
   const response = await fetch(`${HOST_URL}/signup`, {
     method: "POST",
     headers: {
@@ -14,18 +15,18 @@ async function createUser(userData) {
   }
 
   let token = response.headers.get("Authorization")
-  localStorage.setItem('authToken', token)
+  token ? localStorage.setItem('authToken', token) : null;
 
   return response.json();
 }
 
-async function createSession(userData) {
+async function createSession(loginData: NestedSignInUser): Promise<UserResponse> {
   const response = await fetch(`${HOST_URL}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(userData),
+    body: JSON.stringify(loginData),
   })
 
   if (!response.ok) {
@@ -36,11 +37,11 @@ async function createSession(userData) {
   }
 
   let token = response.headers.get("Authorization")
-  localStorage.setItem('authToken', token)
+  token ? localStorage.setItem('authToken', token) : null;
   return response.json();
 }
 
-async function destroySession(token) {
+async function destroySession(token: string) {
   const response = await fetch(`${HOST_URL}/logout`, {
     method: "DELETE",
     headers: {
@@ -55,7 +56,7 @@ async function destroySession(token) {
   return response.json();
 }
 
-async function editUser(userData) {
+async function editUser(userData: NestedUser): Promise<UserResponse> {
   const response = await fetch(`${HOST_URL}/signup`, {
     method: "PUT",
     headers: {
@@ -71,7 +72,7 @@ async function editUser(userData) {
   return response.json();
 }
 
-async function getUserByToken(token) {
+async function getUserByToken(token: string): Promise<UserResponse> {
   const response = await fetch(`${HOST_URL}/current_user_details`, {
     headers: {
       "Authorization": token,

@@ -183,7 +183,7 @@ function ProductView() {
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td colSpan="100%">
+                      <td colSpan={"100%"}>
                         <Link
                           to={`/products/${product.id}/movements`}
                           className="inLineLink"

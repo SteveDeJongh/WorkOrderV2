@@ -1,6 +1,6 @@
 import ReactDom from "react-dom";
 import PaymentForm from "./PaymentForm";
-import { Payment } from "../../../types/invoiceTypes";
+import { Payment } from "../../../types/payments";
 
 type Props = {
   open: boolean;

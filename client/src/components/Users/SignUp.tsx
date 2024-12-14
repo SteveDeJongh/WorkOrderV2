@@ -5,6 +5,7 @@ import { createUser } from "../../services/userServices";
 import { useUserContext } from "../../contexts/user-context";
 import PageTitle from "../PageTitle";
 import Button from "../../multiuse/Button";
+import { NestedUser, UserResponse } from "../../types/users";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ function SignUp() {
     isError,
     isSuccess,
   } = useMutation({
-    mutationFn: (rawData) => {
+    mutationFn: (rawData: NestedUser) => {
       console.log(rawData);
       const allowed = ["email", "password", "name", "roles"];
       let content = { user: {} };
@@ -37,11 +38,15 @@ function SignUp() {
         });
 
       console.log("Creating user...");
-      return createUser(content);
+      return createUser(content as NestedUser);
     },
-    onSuccess: (response) => {
+    onSuccess: (response: UserResponse) => {
       console.log("User created!");
-      response.data["views"] = {}; // To eventually come direct from API user call.
+      response.data["views"] = {
+        customers: null,
+        products: null,
+        invoices: null,
+      }; // To eventually come direct from API user call.
       setUser(response.data); // maybe don't need this if checking for user auth every time?
       navigate(`/`);
     },

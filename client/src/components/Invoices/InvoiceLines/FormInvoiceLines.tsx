@@ -5,9 +5,9 @@ import NewInvoiceLine from "./NewInvoiceLine";
 import {
   Action,
   InvoiceLine as TInvoiceLine,
-  Product,
   InvoiceColumn,
 } from "../../../types/invoiceTypes";
+import { Product } from "../../../types/products";
 
 type props = {
   invoice_lines: TInvoiceLine[];

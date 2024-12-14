@@ -4,7 +4,7 @@ import useURLSearchParam from "../../../hooks/useURLSearchParam";
 import SearchBar from "../../../multiuse/SearchBar";
 import Button from "../../../multiuse/Button";
 import SearchResultsList from "./SearchResultsList";
-import { Product } from "../../../types/invoiceTypes";
+import { Product } from "../../../types/products";
 
 type props = {
   addLine: Function;

@@ -1,3 +1,5 @@
+import { Http2ServerResponse } from "http2";
+
 type User = {
     id: number;
     email: string;
@@ -12,13 +14,31 @@ type User = {
     };
 }
 
+type NestedUser = {
+  user: User; 
+}
+
+type NestedSignInUser = {
+  user: SignInUser;
+}
+
 type ViewTypes = "profile" | "table" | null;
 
 type RoleTypes = "user" | "manager" | "admin";
+
+type UserResponse = {
+  status: Http2ServerResponse;
+  data: User;
+}
+
+type SignInUser = {
+  email: string;
+  pass: string;
+};
 
 type UserContext = {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
-export { RoleTypes, User, UserContext, ViewTypes }
+export { NestedUser, NestedSignInUser, UserResponse, SignInUser, RoleTypes, User, UserContext, ViewTypes }

@@ -1,4 +1,8 @@
-function LoadingBox({ text }) {
+type Props = {
+  text: string;
+};
+
+function LoadingBox({ text }: Props) {
   return (
     <>
       <div className="loading-box">

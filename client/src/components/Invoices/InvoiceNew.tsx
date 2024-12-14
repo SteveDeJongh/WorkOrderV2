@@ -1,4 +1,4 @@
-import InvoiceForm from "../Invoices/InvoiceForm";
+import InvoiceForm from "./InvoiceForm";
 import { Invoice } from "../../types/invoiceTypes";
 import { useEffect } from "react";
 import { useSelection } from "./Invoices";

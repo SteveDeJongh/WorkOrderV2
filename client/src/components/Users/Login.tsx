@@ -6,26 +6,8 @@ import { useUserContext } from "../../contexts/user-context";
 import PageTitle from "../PageTitle";
 import LoadingModal from "../../multiuse/LoadingModal";
 import Button from "../../multiuse/Button";
-import { User } from "../../types/users";
+import { NestedSignInUser, SignInUser, UserResponse } from "../../types/users";
 import { useEffect } from "react";
-
-type NestedUser = {
-  user: SignInUser;
-};
-
-type SignInUser = {
-  email: string;
-  pass: string;
-};
-
-type UserResponse = {
-  data: User;
-  status: { code: number; message: string };
-};
-
-type UserResponseError = {
-  status: number;
-};
 
 function Login() {
   const navigate = useNavigate();
@@ -51,7 +33,7 @@ function Login() {
   } = useMutation({
     mutationFn: (rawData: SignInUser) => {
       const allowed = ["email", "password"];
-      let content: NestedUser = { user: { email: "", pass: "" } };
+      let content: NestedSignInUser = { user: { email: "", pass: "" } };
 
       Object.keys(rawData)
         .filter((key) => allowed.includes(key))
@@ -68,7 +50,7 @@ function Login() {
       setUser(response.data);
       navigate(`/`);
     },
-    onError: (error: UserResponseError) => {
+    onError: (error: UserResponse) => {
       console.error("An Error occured logging in:", error.status);
       navigate("/Login");
     },

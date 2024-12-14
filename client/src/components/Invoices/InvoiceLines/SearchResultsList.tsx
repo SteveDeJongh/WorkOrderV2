@@ -6,7 +6,7 @@ import {
   RowSelectionState,
   getSortedRowModel,
 } from "@tanstack/react-table";
-import { Product } from "../../../types/invoiceTypes";
+import { Product } from "../../../types/products";
 
 type Props = {
   results: Array<object> | String;

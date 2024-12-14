@@ -1,8 +1,9 @@
-import { Dispatch, useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PaymentLine from "./PaymentLine";
 import Button from "../../../multiuse/Button";
 import PaymentModal from "./PaymentModal";
-import { Action, Payment } from "../../../types/invoiceTypes";
+import { Action } from "../../../types/invoiceTypes";
+import { Payment } from "../../../types/payments";
 
 type props = {
   payments: Payment[];

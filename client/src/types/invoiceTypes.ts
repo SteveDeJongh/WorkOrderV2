@@ -12,7 +12,11 @@ type Action =
   | { type: "updatePayment"; payment: Payment }
   | { type: "createPayment"; payment: Payment };
 
-type Invoice = {
+type NestedInvoiceData = {
+  invoice: InitialInvoice;
+}
+
+type InitialInvoice = {
   id: number | null;
   customer_id: number | undefined;
   user_id: number;
@@ -23,6 +27,19 @@ type Invoice = {
   created_at: string;
   updated_at: string;
   status: "open" | "closed";
+}
+
+type Invoice = InitialInvoice & {
+  // id: number | null;
+  // customer_id: number | undefined;
+  // user_id: number;
+  // total: number;
+  // sub_total: number;
+  // balance: number;
+  // tax: number;
+  // created_at: string;
+  // updated_at: string;
+  // status: "open" | "closed";
   invoice_lines: InvoiceLine[]; // changed from an optional property.
   payments: Payment[];
 };
@@ -64,4 +81,4 @@ type SelectionContext = {
   setSelection: React.Dispatch<React.SetStateAction<string | number>>;
 }
 
-export { Action, Invoice, InvoiceLine, Total, InvoiceColumn, SelectionContext }
+export { Action, Invoice, InvoiceLine, Total, InvoiceColumn, NestedInvoiceData, SelectionContext }
