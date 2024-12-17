@@ -1,26 +1,25 @@
 import LeftListWithAction from "../../multiuse/LeftListWithAction";
 import FullWidthTable from "../../multiuse/FullWidthTable";
-import {
-  Link,
-  Outlet,
-  useParams,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Outlet, useParams, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import NoSelection from "../NoSelection";
 import useCustomersData from "../../hooks/useCustomersData";
 import { useUserContext } from "../../contexts/user-context";
 import ViewToggle from "../../multiuse/ViewToggle";
+import { ViewTypes } from "../../types/users";
 
 function Customers() {
   const { user } = useUserContext();
-  const [view, setView] = useState(user.views?.customers || "profile");
+  const [view, setView] = useState<ViewTypes>(
+    user?.views?.customers || "profile"
+  );
 
-  function viewSetter(view) {
-    user.views ? user.views : (user.views = {});
+  function viewSetter(view: ViewTypes) {
+    user?.views
+      ? user?.views
+      : (user!.views = { customers: null, products: null, invoices: null });
 
-    user.views["customers"] = view;
+    user!.views["invoices"] = view;
     setView(view);
   }
 
@@ -50,58 +49,48 @@ function Customers() {
   ];
   return (
     <>
-      {!user && (
-        <>
-          <h1>Sorry, you must be signed in to access this page.</h1>
-          <Link to="/signin">Sign In</Link>
-        </>
+      {view === "profile" && (
+        <div id="panes">
+          <div className="pane pane-left">
+            <div className="pane-inner">
+              <LeftListWithAction
+                title={"Customers"}
+                linkToPage={"profile"}
+                setSelection={setSelection}
+                selection={selection}
+                fetcher={useCustomersData}
+              />
+            </div>
+          </div>
+          <div className="pane pane-mid">
+            <div className="pane-inner">
+              <ViewToggle view={view} setView={viewSetter} />
+              {renderNoSelection ? (
+                <NoSelection item={"customer"} />
+              ) : (
+                <Outlet context={[selection, setSelection]} />
+              )}
+            </div>
+          </div>
+        </div>
       )}
-      {user && (
+      {view === "table" && (
         <>
-          {view === "profile" && (
-            <div id="panes">
-              <div className="pane pane-left">
-                <div className="pane-inner">
-                  <LeftListWithAction
-                    title={"Customers"}
-                    linkToPage={"profile"}
-                    setSelection={setSelection}
-                    selection={selection}
-                    fetcher={useCustomersData}
-                  />
-                </div>
-              </div>
-              <div className="pane pane-mid">
-                <div className="pane-inner">
+          <div id="panes">
+            <div className="pane pane-full">
+              <div className="pane-inner">
+                <div className="table-top">
+                  <h3 className="title">Customers</h3>
                   <ViewToggle view={view} setView={viewSetter} />
-                  {renderNoSelection ? (
-                    <NoSelection item={"customer"} />
-                  ) : (
-                    <Outlet context={[selection, setSelection]} />
-                  )}
                 </div>
+                <FullWidthTable
+                  title={"Customers"}
+                  fetcher={useCustomersData}
+                  columns={columns}
+                />
               </div>
             </div>
-          )}
-          {view === "table" && (
-            <>
-              <div id="panes">
-                <div className="pane pane-full">
-                  <div className="pane-inner">
-                    <div className="table-top">
-                      <h3 className="title">Customers</h3>
-                      <ViewToggle view={view} setView={viewSetter} />
-                    </div>
-                    <FullWidthTable
-                      title={"Customers"}
-                      fetcher={useCustomersData}
-                      columns={columns}
-                    />
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
+          </div>
         </>
       )}
     </>

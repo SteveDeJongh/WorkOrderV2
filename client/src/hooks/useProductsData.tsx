@@ -1,7 +1,7 @@
 import { fetchAllProducts, searchProducts } from "../services/productServices";
 import { useQuery } from "@tanstack/react-query";
 
-function useProductsData(searchTerm) {
+function useProductsData(searchTerm: string) {
   const {
     data,
     isLoading: loading,

@@ -25,7 +25,7 @@ async function fetchAllProducts(): Promise<Product[]> {
     }
 }
 
-async function searchProducts(query: string): Promise<Product[] | string> {
+async function searchProducts(query: string): Promise<Product[]> {
   const response = await fetch(`${API_URL}/search/products/?q=${query}`, {
     headers: {
       "Authorization": localStorage.getItem("authToken"),

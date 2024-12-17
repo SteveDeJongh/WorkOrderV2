@@ -1,4 +1,8 @@
-function LoadingModal({ text }) {
+type Props = {
+  text: string;
+};
+
+function LoadingModal({ text }: Props) {
   return (
     <>
       <div className="loading-modal-background"></div>

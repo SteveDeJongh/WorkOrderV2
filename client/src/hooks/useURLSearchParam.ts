@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 
-// import { useSearchParams } from "react-router-dom";
-
-function useURLSearchParam(paramName, initialValue = "") {
+function useURLSearchParam(paramName: string, initialValue = ""): [string, React.Dispatch<React.SetStateAction<string>>] {
   const query = new URLSearchParams(window.location.search);
 
   const [paramValue, setParamValue] = useState(query.get(paramName) || initialValue);

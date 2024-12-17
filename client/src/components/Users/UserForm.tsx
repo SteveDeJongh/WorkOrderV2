@@ -1,7 +1,15 @@
 import { useForm } from "react-hook-form";
 import Button from "../../multiuse/Button";
+import { User } from "../../types/users";
 
-function UserForm({ user, headerText, onSubmit, buttonText }) {
+type Props = {
+  user: User;
+  headerText: string;
+  onSubmit: Function;
+  buttonText: string;
+};
+
+function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
   console.log(user);
   const {
     register,
@@ -72,7 +80,7 @@ function UserForm({ user, headerText, onSubmit, buttonText }) {
                   name="email"
                   placeholder="Email"
                 />
-                {errors.userEmail && <p>{`${errors.userEmail.message}`}</p>}
+                {errors.email && <p>{`${errors.email.message}`}</p>}
               </div>
             </div>
             {user && (
@@ -133,7 +141,7 @@ function UserForm({ user, headerText, onSubmit, buttonText }) {
                 <div className="formPair">
                   <input {...register("roles")} type="checkbox" value="user" />
                   <label htmlFor="user">User</label>
-                  {errors.user && <p>{`${errors.user.message}`}</p>}
+                  {errors.roles && <p>{`${errors.roles.message}`}</p>}
                 </div>
                 <div className="formPair">
                   <input
@@ -142,7 +150,7 @@ function UserForm({ user, headerText, onSubmit, buttonText }) {
                     value="manager"
                   />
                   <label htmlFor="manager">Manager</label>
-                  {errors.user && <p>{`${errors.user.message}`}</p>}
+                  {errors.roles && <p>{`${errors.roles.message}`}</p>}
                 </div>
                 {user && user.roles?.includes("admin") && (
                   <div className="formPair">
@@ -152,7 +160,7 @@ function UserForm({ user, headerText, onSubmit, buttonText }) {
                       value="admin"
                     />
                     <label htmlFor="admin">Admin</label>
-                    {errors.admin && <p>{`${errors.admin.message}`}</p>}
+                    {errors.roles && <p>{`${errors.roles.message}`}</p>}
                   </div>
                 )}
               </div>

@@ -1,30 +1,46 @@
 import { Link } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
-import PropTypes from "prop-types";
+import { Customer, isCustomer } from "../types/customers";
+import { isProduct } from "../types/products";
+import { isInvoice } from "../types/invoiceTypes";
 
-function ListItem({ resource, value, linkToPage, handleClick, selected }) {
+type Props = {
+  resource: string;
+  value: Customer | Object;
+  linkToPage: string;
+  handleClick: Function;
+  selected: boolean;
+};
+
+function ListItem({
+  resource,
+  value,
+  linkToPage,
+  handleClick,
+  selected,
+}: Props) {
   return (
     <>
-      {resource === "customers" && (
+      {resource === "customers" && isCustomer(value) && (
         <Link
           to={`/${resource}/${value.id}/${linkToPage}`}
           className="col-link"
         >
           <li
-            onClick={(e) => handleClick(e, value.id)}
+            onClick={() => handleClick(value.id)}
             className={`single-col-li ${selected ? "selected" : ""}`}
           >
             {value.first_name + " " + value.last_name}
           </li>
         </Link>
       )}
-      {resource === "products" && (
+      {resource === "products" && isProduct(value) && (
         <Link
           to={`/${resource}/${value.id}/${linkToPage}`}
           className="col-link"
         >
           <li
-            onClick={(e) => handleClick(e, value.id)}
+            onClick={() => handleClick(value.id)}
             className={`single-col-li ${selected ? "selected" : ""}`}
           >
             <div className="li-row li-top">
@@ -47,13 +63,13 @@ function ListItem({ resource, value, linkToPage, handleClick, selected }) {
           </li>
         </Link>
       )}
-      {resource === "invoices" && (
+      {resource === "invoices" && isInvoice(value) && (
         <Link
           to={`/${resource}/${value.id}/${linkToPage}`}
           className="col-link"
         >
           <li
-            onClick={(e) => handleClick(e, value.id)}
+            onClick={() => handleClick(value.id)}
             className={`single-col-li ${selected ? "selected" : ""}`}
           >
             <div className="li-row li-top">
@@ -88,13 +104,5 @@ function ListItem({ resource, value, linkToPage, handleClick, selected }) {
     </>
   );
 }
-
-ListItem.propTypes = {
-  resource: PropTypes.string,
-  value: PropTypes.object,
-  linkToPage: PropTypes.string,
-  handleClick: PropTypes.func,
-  selected: PropTypes.bool,
-};
 
 export default ListItem;

@@ -17,7 +17,13 @@ function SignUp() {
     formState: { errors, isSubmitting },
     watch,
   } = useForm({
-    defaultValues: { roles: [] },
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      passwordConf: "",
+      roles: [],
+    },
   });
 
   const {
@@ -113,7 +119,7 @@ function SignUp() {
                       name="email"
                       placeholder="Email"
                     />
-                    {errors.userEmail && <p>{`${errors.userEmail.message}`}</p>}
+                    {errors.email && <p>{`${errors.email.message}`}</p>}
                   </div>
                 </div>
                 <div className="panel-contents-section">
@@ -161,7 +167,7 @@ function SignUp() {
                         value="user"
                       />
                       <label htmlFor="user">User</label>
-                      {errors.user && <p>{`${errors.user.message}`}</p>}
+                      {errors.roles && <p>{`${errors.roles.message}`}</p>}
                     </div>
                     <div className="formPair">
                       <input
@@ -170,7 +176,7 @@ function SignUp() {
                         value="manager"
                       />
                       <label htmlFor="manager">Manager</label>
-                      {errors.user && <p>{`${errors.user.message}`}</p>}
+                      {errors.roles && <p>{`${errors.roles.message}`}</p>}
                     </div>
                     <div className="formPair">
                       <input
@@ -179,7 +185,7 @@ function SignUp() {
                         value="admin"
                       />
                       <label htmlFor="admin">Admin</label>
-                      {errors.admin && <p>{`${errors.admin.message}`}</p>}
+                      {errors.roles && <p>{`${errors.roles.message}`}</p>}
                     </div>
                   </div>
                 </div>

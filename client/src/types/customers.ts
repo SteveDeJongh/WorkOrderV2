@@ -25,4 +25,9 @@ type EditableCustomerCata = {
   postal: string;
 }
 
-export { Customer, EditableCustomerCata}
+// User defined type-guard, returns type predicate.
+function isCustomer(customer: Customer | Object): customer is Customer {
+  return (customer as Customer).first_name !== undefined && (customer as Customer).last_name !== undefined;
+}
+
+export { Customer, EditableCustomerCata, isCustomer}

@@ -1,5 +1,4 @@
 import { useMemo, useState, useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   useReactTable,
   getCoreRowModel,
@@ -14,7 +13,7 @@ import ProductModal from "../components/Products/ProductModal";
 import InvoiceModal from "../components/Invoices/InvoiceModal";
 
 type Props = {
-  title: String;
+  title: string;
   fetcher: Function;
   columns: Array<Object>;
 };
@@ -132,7 +131,7 @@ function FullWidthTable({ title, fetcher, columns }: Props) {
               </thead>
               <tbody>
                 <>
-                  {data == "No results" ? (
+                  {data.length <= 0 ? (
                     <p>No Results</p>
                   ) : (
                     <>

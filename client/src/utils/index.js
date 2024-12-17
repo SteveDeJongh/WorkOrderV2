@@ -17,7 +17,8 @@ export function snakeCase(val) {
 
 export function mapResponseDataToKeys(data) {
   if (data.length === 0) {
-    return "No results";
+    // return "No results";
+    return [];
   }
   let k = Object.keys(data[0]);
   return data.map((obj) => {

@@ -16,7 +16,7 @@ function UserNav() {
       let token = localStorage.getItem("authToken");
       setActive(!isActive);
       console.log("Logging out...");
-      return destroySession(token);
+      return destroySession(token as string);
     },
     onSuccess: () => {
       localStorage.removeItem("authToken");

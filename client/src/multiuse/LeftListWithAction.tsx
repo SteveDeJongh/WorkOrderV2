@@ -1,10 +1,27 @@
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-
+import { Link, useParams } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import ListItem from "./ListItem";
 import useURLSearchParam from "../hooks/useURLSearchParam";
+import { Customer } from "../types/customers";
+import { Product } from "../types/products";
+import { Invoice } from "../types/invoiceTypes";
+
+type OptionalSelection = {
+  selected?: boolean;
+};
+type CustomerWithSelection = Customer & OptionalSelection;
+type ProductWithSelection = Product & OptionalSelection;
+type InvoiceWithSelection = Invoice & OptionalSelection;
+
+type Props = {
+  title: string;
+  linkToPage: string;
+  setSelection: React.Dispatch<React.SetStateAction<number | null>>;
+  selection: number | null;
+  fetcher: Function;
+};
 
 function LeftListWithAction({
   title,
@@ -12,14 +29,15 @@ function LeftListWithAction({
   setSelection,
   selection,
   fetcher,
-}) {
-  const [lastSelection, setLastSelection] = useState(null);
-
-  const [data, setData] = useState([]);
+}: Props) {
+  const { id: paramID } = useParams();
+  const [lastSelection, setLastSelection] = useState<Number>();
+  const [data, setData] = useState<
+    CustomerWithSelection[] | ProductWithSelection[] | InvoiceWithSelection[]
+  >();
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
     useURLSearchParam("search");
-
   const { data: fetchedData, loading, error } = fetcher(debouncedSearchTerm);
 
   useEffect(() => {
@@ -28,16 +46,16 @@ function LeftListWithAction({
     }
   }, [fetchedData]);
 
-  function handleDebouncedSearchChange(searchValue) {
+  function handleDebouncedSearchChange(searchValue: string) {
     setDebouncedSearchTerm(searchValue);
   }
 
-  function handleImmediateSearchChange(searchValue) {
+  function handleImmediateSearchChange(searchValue: string) {
     setSearchTerm(searchValue);
   }
 
-  function handleItemClick(e, id) {
-    let nextData = data.slice();
+  function handleItemClick(id: number) {
+    let nextData = data ? data.slice() : [];
 
     let item = nextData.filter((data) => data.id == id)[0];
     if (lastSelection) {
@@ -45,19 +63,21 @@ function LeftListWithAction({
       lastItem.selected = false;
     }
     item.selected = true;
+
     setSelection(id);
     setLastSelection(id);
     setData(nextData);
   }
 
   function handleNewClick() {
-    let nextData = data.slice();
+    let nextData = data ? data.slice() : [];
 
     selection
       ? (nextData.filter((data) => {
           return data.id == selection;
         })[0].selected = false)
       : null;
+
     setData(nextData);
   }
 
@@ -77,32 +97,34 @@ function LeftListWithAction({
           </>
         )}
         {error && <p>An error occured.</p>}
-        {!loading && !error && data == "No results" ? (
+        {!loading && !error && data?.length === 0 ? (
           <>
             <p>No Results</p>
           </>
         ) : !loading && !error ? (
-          <>
-            {data.map((data) => {
-              return (
-                <ListItem
-                  resource={title.toLowerCase()}
-                  value={data}
-                  linkToPage={linkToPage}
-                  key={data.id}
-                  handleClick={handleItemClick}
-                  selected={data.id === selection}
-                />
-              );
-            })}
-          </>
+          data ? (
+            <>
+              {data.map((data) => {
+                return (
+                  <ListItem
+                    resource={title.toLowerCase()}
+                    value={data}
+                    linkToPage={linkToPage}
+                    key={data.id}
+                    handleClick={handleItemClick}
+                    selected={!!data.selected || data.id == Number(paramID)}
+                  />
+                );
+              })}
+            </>
+          ) : null
         ) : null}
       </ul>
       <div id="single-col-bottom">
         <Link
           to={`/${title.toLowerCase()}/new`}
           onClick={() => {
-            handleNewClick(false);
+            handleNewClick();
           }}
         >
           <span>➕ New {title.slice(0, -1)}</span>
@@ -111,13 +133,5 @@ function LeftListWithAction({
     </>
   );
 }
-
-LeftListWithAction.propTypes = {
-  title: PropTypes.string,
-  linkToPage: PropTypes.string,
-  setSelection: PropTypes.func,
-  selection: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  fetcher: PropTypes.func,
-};
 
 export default LeftListWithAction;

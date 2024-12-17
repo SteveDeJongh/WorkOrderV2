@@ -28,4 +28,8 @@ type ProductShowOutlet = {
   productData: {product: Product, isError: boolean, isPending: boolean, isSuccces: boolean};
 }
 
-export { Product, ProductContext, ProductShowOutlet}
+function isProduct(product: Product | Object): product is Product {
+  return (product as Product).sku !== undefined && (product as Product).name !== undefined;
+}
+
+export { Product, ProductContext, ProductShowOutlet, isProduct}

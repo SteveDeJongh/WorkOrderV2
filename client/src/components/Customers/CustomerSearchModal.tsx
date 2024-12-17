@@ -1,10 +1,11 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import ReactDom from "react-dom";
 import SearchBar from "../../multiuse/SearchBar";
 import useCustomersData from "../../hooks/useCustomersData";
 import useURLSearchParam from "../../hooks/useURLSearchParam";
 import SelectableListItem from "../../multiuse/SelectableListItem";
 import Button from "../../multiuse/Button";
+import { Customer } from "../../types/customers";
 
 type Props = {
   open: boolean;
@@ -14,15 +15,16 @@ type Props = {
 };
 
 function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
-  function handleClose(e) {
-    if (e.target.className === "main-modal-background") {
+  function handleClose(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    let target = e.target as HTMLElement;
+    if (target.className === "main-modal-background") {
       onClose();
     }
   }
 
   // Main Pane states
   const [selection, setSelection] = useState(customer_id);
-  const [data, setMainData] = useState();
+  const [data, setMainData] = useState<Customer[]>();
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
     useURLSearchParam("search");
@@ -70,9 +72,9 @@ function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
           <ul>
             {loading && <p>Information loading...</p>}
             {error && <p>An error occured.</p>}
-            {!loading && !error && data === "No results" ? (
+            {!loading && !error && data?.length === 0 ? (
               <p>No Results</p>
-            ) : (
+            ) : data ? (
               <>
                 {data.map((d) => {
                   return (
@@ -86,7 +88,7 @@ function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
                   );
                 })}
               </>
-            )}
+            ) : null}
           </ul>
           <div className="controls">
             <Button onClick={() => onSave(selection)} text={"Save"} />

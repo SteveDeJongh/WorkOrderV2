@@ -4,7 +4,7 @@ import {
   searchCustomers,
 } from "../services/customerServices";
 
-function useCustomersData(searchTerm) {
+function useCustomersData(searchTerm: string) {
   const {
     data,
     isLoading: loading,

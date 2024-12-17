@@ -18,7 +18,7 @@ export default function SearchResultsList({ results, handleSelection }: Props) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   useEffect(() => {
-    if (results instanceof String || typeof results === "string") {
+    if (results.length === 0) {
       setHaveResults(false);
     } else {
       setHaveResults(true);

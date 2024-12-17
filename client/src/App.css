@@ -289,6 +289,7 @@ nav li:has(a.active) {
   opacity: .25;
   background-color: var(--light-border);
   z-index: 1;
+  margin-top: -108px;
 }
 
 .loading-modal {

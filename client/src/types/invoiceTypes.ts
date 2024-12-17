@@ -81,4 +81,8 @@ type SelectionContext = {
   setSelection: React.Dispatch<React.SetStateAction<string | number>>;
 }
 
-export { Action, Invoice, InvoiceLine, Total, InvoiceColumn, NestedInvoiceData, SelectionContext }
+function isInvoice(invoice: Invoice | Object): invoice is Invoice {
+  return (invoice as Invoice).total !== undefined && (invoice as Invoice).sub_total !== undefined;
+}
+
+export { Action, Invoice, InvoiceLine, Total, InvoiceColumn, NestedInvoiceData, SelectionContext, isInvoice }

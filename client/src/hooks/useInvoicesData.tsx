@@ -1,7 +1,7 @@
 import { fetchAllInvoices, searchInvoices } from "../services/invoiceServices";
 import { useQuery } from "@tanstack/react-query";
 
-function useInvoicesData(searchTerm) {
+function useInvoicesData(searchTerm: string) {
   const {
     data,
     isLoading: loading,

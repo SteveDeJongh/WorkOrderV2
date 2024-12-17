@@ -14,7 +14,7 @@ export default function NewInvoiceLine({ addLine }: props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
     useURLSearchParam("productSearch");
-  const [data, setData] = useState();
+  const [data, setData] = useState<Product[]>();
   const [isOpen, setIsOpen] = useState(false);
 
   const {
