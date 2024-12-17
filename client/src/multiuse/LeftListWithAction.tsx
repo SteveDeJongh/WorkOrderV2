@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import SearchBar from "./SearchBar";
@@ -31,7 +30,9 @@ function LeftListWithAction({
   fetcher,
 }: Props) {
   const { id: paramID } = useParams();
-  const [lastSelection, setLastSelection] = useState<Number>();
+  const [lastSelection, setLastSelection] = useState<Number>(
+    selection ? selection : 0
+  );
   const [data, setData] = useState<
     CustomerWithSelection[] | ProductWithSelection[] | InvoiceWithSelection[]
   >();
@@ -55,31 +56,32 @@ function LeftListWithAction({
   }
 
   function handleItemClick(id: number) {
-    let nextData = data ? data.slice() : [];
-
-    let item = nextData.filter((data) => data.id == id)[0];
-    if (lastSelection) {
-      let lastItem = nextData.filter((data) => data.id == lastSelection)[0];
-      lastItem.selected = false;
-    }
-    item.selected = true;
-
-    setSelection(id);
-    setLastSelection(id);
-    setData(nextData);
+    // let nextData = data ? data.slice() : [];
+    // console.log(lastSelection);
+    // let item = nextData.filter((data) => data.id == id)[0];
+    // if (lastSelection) {
+    //   let lastItem = nextData.filter((data) => data.id == lastSelection)[0];
+    //   lastItem.selected = false;
+    // }
+    // item.selected = true;
+    // setSelection(id);
+    // setLastSelection(id);
+    // setData(nextData);
   }
 
   function handleNewClick() {
-    let nextData = data ? data.slice() : [];
-
-    selection
-      ? (nextData.filter((data) => {
-          return data.id == selection;
-        })[0].selected = false)
-      : null;
-
-    setData(nextData);
+    // let nextData = data ? data.slice() : [];
+    // selection
+    //   ? (nextData.filter((data) => {
+    //       return data.id == selection;
+    //     })[0].selected = false)
+    //   : null;
+    // setData(nextData);
   }
+
+  useEffect(() => {
+    console.log("data changed", data);
+  }, [data]);
 
   return (
     <>
@@ -112,7 +114,7 @@ function LeftListWithAction({
                     linkToPage={linkToPage}
                     key={data.id}
                     handleClick={handleItemClick}
-                    selected={!!data.selected || data.id == Number(paramID)}
+                    selected={data.id == Number(paramID)}
                   />
                 );
               })}
