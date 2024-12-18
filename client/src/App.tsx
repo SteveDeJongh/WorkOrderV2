@@ -104,24 +104,16 @@ const router = createBrowserRouter([
                       </>
                     ),
                   },
-                  // {
-                  //   path: "items",
-                  //   element: <CustomerItems />,
-                  // },
-                  // {
-                  //   path: "workorders",
-                  //   element: <CustomerWorkOrders />,
-                  // },
+                  {
+                    path: "edit",
+                    element: (
+                      <>
+                        <PageTitle title="Edit Customer" />
+                        <CustomerEdit />
+                      </>
+                    ),
+                  },
                 ],
-              },
-              {
-                path: ":id/edit",
-                element: (
-                  <>
-                    <PageTitle title="Edit Customer" />
-                    <CustomerEdit />
-                  </>
-                ),
               },
               {
                 path: "new",
@@ -156,11 +148,11 @@ const router = createBrowserRouter([
                     path: "movements",
                     element: <ProductMovements />,
                   },
+                  {
+                    path: "edit",
+                    element: <ProductEdit />,
+                  },
                 ],
-              },
-              {
-                path: ":id/edit",
-                element: <ProductEdit />,
               },
               {
                 path: "new",

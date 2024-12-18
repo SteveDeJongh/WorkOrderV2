@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import CustomerSearchModal from "../Customers/CustomerSearchModal";
-import { fetchCustomerData } from "../../services/customerServices";
-import LoadingBox from "../multiuse/LoadingBox";
-import Button from "../multiuse/Button";
-import { Action } from "../../types/invoiceTypes";
-import { Customer } from "../../types/customers";
+import CustomerSearchModal from "./CustomerSearchModal";
+import { fetchCustomerData } from "../../../services/customerServices";
+import LoadingBox from "../../multiuse/LoadingBox";
+import Button from "../../multiuse/Button";
+import { Action } from "../../../types/invoiceTypes";
+import { Customer } from "../../../types/customers";
 
 type props = {
   customerId?: number;

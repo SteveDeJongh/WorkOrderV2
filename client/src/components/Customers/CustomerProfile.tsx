@@ -4,10 +4,19 @@ import { fetchCustomerData } from "../../services/customerServices";
 import LoadingBox from "../multiuse/LoadingBox";
 import { Customer } from "../../types/customers";
 
+type CustomerWithNotices = Customer & {
+  notices?: Notice[];
+};
+
+type Notice = {
+  id: number;
+  notice: string;
+};
+
 function CustomerProfile() {
   const [mainLoading, setMainLoading] = useState(false);
   const [mainError, setMainError] = useState(false);
-  const [customerData, setcustomerData] = useState<Customer>();
+  const [customerData, setcustomerData] = useState<CustomerWithNotices>();
   let { id } = useParams();
 
   useEffect(() => {
@@ -31,20 +40,17 @@ function CustomerProfile() {
     loadCustomerData();
   }, [id]);
 
-  // console.log(customerData);
-  let customer = Object.keys(customerData).length < 1 ? false : customerData;
-
   // Example Notices data, to be part of the customer data api fetch in the future.
-  if (customer && customer.first_name == "Steve") {
-    customer.notices = [
+  if (customerData && customerData.first_name == "Steve") {
+    customerData.notices = [
       { id: 1, notice: "This is notice 1." },
       { id: 2, notice: "This is notice 2." },
     ];
-  } else if (customer) {
-    customer.notices = [];
+  } else if (customerData) {
+    customerData.notices = [];
   }
 
-  let noticeCount = customer ? customer.notices.length : 0;
+  let noticeCount = customerData ? customerData.notices?.length : 0;
 
   return (
     <>
@@ -52,8 +58,8 @@ function CustomerProfile() {
       {mainError && <p>An error occured.</p>}
       {!mainLoading && !mainError && (
         <>
-          {!customer && <h2>No Customer Selected</h2>}
-          {customer && (
+          {!customerData && <h2>No Customer Selected</h2>}
+          {customerData && (
             <>
               <div className="main-pane-content">
                 <div className="panel">
@@ -62,24 +68,25 @@ function CustomerProfile() {
                     <div className="panel-contents-section">
                       <div className="panel-section-desc">📞</div>
                       <div className="panel-section-data">
-                        <div className="data-item">{customer.phone}</div>
-                        <div className="data-item">{customer.phone}</div>
+                        <div className="data-item">{customerData.phone}</div>
+                        <div className="data-item">{customerData.phone}</div>
                       </div>
                     </div>
                     <div className="panel-contents-section">
                       <div className="panel-section-desc">📧</div>
                       <div className="panel-section-data">
-                        <div className="data-item">{customer.email}</div>
+                        <div className="data-item">{customerData.email}</div>
                       </div>
                     </div>
                     <div className="panel-contents-section">
                       <div className="panel-section-desc">🏠</div>
                       <div className="panel-section-data">
-                        <div className="data-item">{customer.address}</div>
+                        <div className="data-item">{customerData.address}</div>
                         <div className="data-item">
-                          {customer.city} {customer.province} {customer.postal}
+                          {customerData.city} {customerData.province}{" "}
+                          {customerData.postal}
                         </div>
-                        <div className="data-item">{customer.country}</div>
+                        <div className="data-item">{customerData.country}</div>
                       </div>
                     </div>
                   </div>
@@ -90,7 +97,7 @@ function CustomerProfile() {
                   </h3>
                   <ul>
                     {noticeCount === 0 && <li>No Notices</li>}
-                    {customer.notices.map((notice) => {
+                    {customerData.notices?.map((notice) => {
                       return <li key={notice.id}>{notice.notice}</li>;
                     })}
                   </ul>

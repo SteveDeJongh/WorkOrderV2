@@ -5,12 +5,13 @@ import { useParams } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { useOutletContext } from "react-router-dom";
 import LoadingBox from "../multiuse/LoadingBox";
+import { Customer } from "../../types/customers";
 
 function CustomerShow() {
   // Main Pane states
   const [mainLoading, setMainLoading] = useState(false);
   const [mainError, setMainError] = useState(false);
-  const [mainData, setMainData] = useState({});
+  const [mainData, setMainData] = useState<Customer>();
   const [selection, setSelection] = useOutletContext();
 
   let { id } = useParams();
@@ -43,7 +44,7 @@ function CustomerShow() {
   return (
     <>
       {mainError && <p>An error occured.</p>}
-      {!mainLoading && (
+      {!mainLoading && mainData && (
         <>
           <MainPaneNav
             title={`${mainData.first_name} ${mainData.last_name}`}

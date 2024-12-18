@@ -3,7 +3,6 @@ import {
   useReactTable,
   getCoreRowModel,
   flexRender,
-  RowSelectionState,
   getSortedRowModel,
 } from "@tanstack/react-table";
 import { Product } from "../../types/products";
@@ -68,11 +67,11 @@ export default function SearchResultsTable({
     row.classList.add("active");
   }
 
-  function doubleClickHandler(id: number, target: HTMLElement) {
+  function doubleClickHandler(row, target: HTMLElement) {
     if (handleDoubleClick) {
-      handleDoubleClick(id);
+      handleDoubleClick(row.id);
     } else {
-      handleClick(id, target);
+      handleClick(row, target);
     }
   }
 
@@ -104,9 +103,11 @@ export default function SearchResultsTable({
               {table.getRowModel().rows.map((rowEl) => (
                 <tr
                   key={rowEl.id}
-                  onClick={(e) => handleClick(rowEl.original, e.target)}
+                  onClick={(e) => {
+                    handleClick(rowEl.original, e.target as HTMLElement);
+                  }}
                   onDoubleClick={(e) =>
-                    doubleClickHandler(rowEl.original, e.target)
+                    doubleClickHandler(rowEl.original, e.target as HTMLElement)
                   }
                   className={"search-result"}
                 >

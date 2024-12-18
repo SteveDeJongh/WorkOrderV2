@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createInvoice, editInvoice } from "../../services/invoiceServices";
 import { CapitalizeFullName, sumAProp } from "../../utils/index";
-import FormCustomerSection from "./FormCustomerSection";
+import FormCustomerSection from "./Customer/FormCustomerSection";
 import FormInvoiceLines from "./InvoiceLines/FormInvoiceLines";
 import FormPaymentLines from "./Payments/FormPaymentLines";
 import InvoiceTotalDetails from "./InvoiceTotalDetails";

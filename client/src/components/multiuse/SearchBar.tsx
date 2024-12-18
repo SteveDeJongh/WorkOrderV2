@@ -24,6 +24,10 @@ function SearchBar({ title, value, onSearchChange, onImmediateChange }: Props) {
     }, 1000);
   }
 
+  function handleFocus(e) {
+    e.target.select();
+  }
+
   return (
     <div className="searchBar">
       <input
@@ -32,6 +36,7 @@ function SearchBar({ title, value, onSearchChange, onImmediateChange }: Props) {
         placeholder={`Search ${title}...`}
         value={value}
         onChange={(e) => handleSearchChange(e)}
+        onFocus={handleFocus}
       />
     </div>
   );

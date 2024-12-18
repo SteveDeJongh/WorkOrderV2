@@ -6,7 +6,7 @@ import {
 } from "../../services/customerServices";
 import { objectToFormData } from "../../utils/formDataHelper";
 import CustomerForm from "./CustomerForm";
-import { Customer } from "../../types/customers";
+import { Customer, EditableCustomerData } from "../../types/customers";
 
 function CustomerEdit() {
   const [mainLoading, setMainLoading] = useState(false);
@@ -36,7 +36,7 @@ function CustomerEdit() {
     loadCustomerData();
   }, [id]);
 
-  async function handleEditSubmit(rawData) {
+  async function handleEditSubmit(rawData: EditableCustomerData) {
     try {
       const formData = objectToFormData({ customer: rawData });
       await editCustomer(id, formData);
