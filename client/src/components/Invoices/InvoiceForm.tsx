@@ -7,7 +7,7 @@ import FormCustomerSection from "./FormCustomerSection";
 import FormInvoiceLines from "./InvoiceLines/FormInvoiceLines";
 import FormPaymentLines from "./Payments/FormPaymentLines";
 import InvoiceTotalDetails from "./InvoiceTotalDetails";
-import Button from "../../multiuse/Button";
+import Button from "../multiuse/Button";
 import { Action, Invoice } from "../../types/invoiceTypes";
 import { useUserContext } from "../../contexts/user-context";
 import { useSelection } from "./Invoices";

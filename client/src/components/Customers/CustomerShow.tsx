@@ -1,10 +1,10 @@
-import MainPaneNav from "../../multiuse/MainPaneNav";
+import MainPaneNav from "../multiuse/MainPaneNav";
 import { fetchCustomerData } from "../../services/customerServices";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { useOutletContext } from "react-router-dom";
-import LoadingBox from "../../multiuse/LoadingBox";
+import LoadingBox from "../multiuse/LoadingBox";
 
 function CustomerShow() {
   // Main Pane states
@@ -26,7 +26,7 @@ function CustomerShow() {
         const response = await fetchCustomerData(id);
         setMainData(response);
       } catch (e) {
-        setMainError("An error occured fetching the data.");
+        setMainError(true);
         console.error(e);
       } finally {
         setMainLoading(false);

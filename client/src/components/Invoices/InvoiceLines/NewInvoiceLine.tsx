@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import useProductsData from "../../../hooks/useProductsData";
 import useURLSearchParam from "../../../hooks/useURLSearchParam";
-import SearchBar from "../../../multiuse/SearchBar";
-import Button from "../../../multiuse/Button";
-import SearchResultsList from "./SearchResultsList";
+import SearchBar from "../../multiuse/SearchBar";
+import Button from "../../multiuse/Button";
+import SearchResultsTable from "../../multiuse/SearchResultsTable";
 import { Product } from "../../../types/products";
 
 type props = {
@@ -60,6 +60,15 @@ export default function NewInvoiceLine({ addLine }: props) {
     return () => window.removeEventListener("click", onClickOutside);
   }, []);
 
+  const columns = [
+    { keys: ["sku"], header: "SKU" },
+    { keys: ["upc"], header: "UPC" },
+    { keys: ["name"], header: "Name" },
+    { keys: ["description"], header: "Description" },
+    { keys: ["price"], header: "Price" },
+    { keys: ["stock"], header: "stock" },
+  ];
+
   return (
     <div
       className="searchContainer"
@@ -75,10 +84,13 @@ export default function NewInvoiceLine({ addLine }: props) {
         <Button text={"Add Product"} />
       </div>
       {isOpen && data && (
-        <SearchResultsList
-          results={data}
-          handleSelection={(product: Product) => handleSelection(product)}
-        />
+        <div className="results-list">
+          <SearchResultsTable
+            results={data}
+            handleSelection={(product: Product) => handleSelection(product)}
+            columns={columns}
+          />
+        </div>
       )}
     </div>
   );

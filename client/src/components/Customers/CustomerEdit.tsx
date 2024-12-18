@@ -6,18 +6,19 @@ import {
 } from "../../services/customerServices";
 import { objectToFormData } from "../../utils/formDataHelper";
 import CustomerForm from "./CustomerForm";
+import { Customer } from "../../types/customers";
 
 function CustomerEdit() {
   const [mainLoading, setMainLoading] = useState(false);
   const [mainError, setMainError] = useState(false);
-  const [customer, setCustomer] = useState({});
+  const [customer, setCustomer] = useState<Customer>();
   const navigate = useNavigate();
 
   let { id } = useParams();
   useEffect(() => {
     async function loadCustomerData() {
       if (!id) {
-        setCustomer({});
+        setCustomer(undefined);
         return;
       }
       try {
@@ -25,7 +26,7 @@ function CustomerEdit() {
         const response = await fetchCustomerData(id);
         setCustomer(response);
       } catch (e) {
-        setMainError("An error occured fetching the data.");
+        setMainError(true);
         console.error(e);
       } finally {
         setMainLoading(false);

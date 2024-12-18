@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import ReactDom from "react-dom";
-import SearchBar from "../../multiuse/SearchBar";
+import SearchBar from "../multiuse/SearchBar";
 import useCustomersData from "../../hooks/useCustomersData";
 import useURLSearchParam from "../../hooks/useURLSearchParam";
-import SelectableListItem from "../../multiuse/SelectableListItem";
-import Button from "../../multiuse/Button";
+import SearchResultsTable from "../multiuse/SearchResultsTable";
+import Button from "../multiuse/Button";
 import { Customer } from "../../types/customers";
 
 type Props = {
@@ -53,11 +53,24 @@ function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
     setSearchTerm(searchValue);
   }
 
-  function handleCustomerSelect(e: React.MouseEvent<HTMLElement>, id: number) {
+  function handleCustomerSelect(id: number) {
     setSelection(id);
   }
 
   if (!open) return null;
+
+  const columns = [
+    { keys: ["id"], header: "ID" },
+    { keys: ["first_name", "last_name"], header: "Full Name" },
+    { keys: ["first_name"], header: "First Name" },
+    { keys: ["last_name"], header: "Last Name" },
+    { keys: ["phone"], header: "Phone" },
+    { keys: ["email"], header: "Email" },
+    { keys: ["address"], header: "Address" },
+    { keys: ["city"], header: "City" },
+    { keys: ["province"], header: "Province" },
+    { keys: ["country"], header: "Country" },
+  ];
 
   return ReactDom.createPortal(
     <>
@@ -69,27 +82,24 @@ function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
             onSearchChange={handleDebouncedSearchChange}
             onImmediateChange={handleImmediateSearchChange}
           />
-          <ul>
-            {loading && <p>Information loading...</p>}
-            {error && <p>An error occured.</p>}
-            {!loading && !error && data?.length === 0 ? (
-              <p>No Results</p>
-            ) : data ? (
-              <>
-                {data.map((d) => {
-                  return (
-                    <SelectableListItem
-                      resource={"customers"}
-                      value={d}
-                      key={d.id}
-                      handleClick={handleCustomerSelect}
-                      selected={d.id === selection}
-                    />
-                  );
-                })}
-              </>
-            ) : null}
-          </ul>
+          {loading && <p>Information loading...</p>}
+          {error && <p>An error occured.</p>}
+          {!loading && !error && data ? (
+            <>
+              <div className="contained-search-table">
+                <SearchResultsTable
+                  results={data}
+                  handleSelection={(customer: Customer) => {
+                    handleCustomerSelect(customer.id);
+                  }}
+                  handleDoubleClick={() => {
+                    onSave(selection);
+                  }}
+                  columns={columns}
+                />
+              </div>
+            </>
+          ) : null}
           <div className="controls">
             <Button onClick={() => onSave(selection)} text={"Save"} />
             <Button onClick={() => onClose()} text={"Cancel"} />

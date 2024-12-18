@@ -4,8 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 import { createSession } from "../../services/userServices";
 import { useUserContext } from "../../contexts/user-context";
 import PageTitle from "../PageTitle";
-import LoadingModal from "../../multiuse/LoadingModal";
-import Button from "../../multiuse/Button";
+import LoadingModal from "../multiuse/LoadingModal";
+import Button from "../multiuse/Button";
 import { NestedSignInUser, SignInUser, UserResponse } from "../../types/users";
 import { useEffect } from "react";
 

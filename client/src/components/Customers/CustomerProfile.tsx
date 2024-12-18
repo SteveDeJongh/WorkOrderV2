@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchCustomerData } from "../../services/customerServices";
-import LoadingBox from "../../multiuse/LoadingBox";
+import LoadingBox from "../multiuse/LoadingBox";
+import { Customer } from "../../types/customers";
 
 function CustomerProfile() {
   const [mainLoading, setMainLoading] = useState(false);
   const [mainError, setMainError] = useState(false);
-  const [customerData, setcustomerData] = useState({});
+  const [customerData, setcustomerData] = useState<Customer>();
   let { id } = useParams();
 
   useEffect(() => {
     async function loadCustomerData() {
       if (!id) {
-        setcustomerData({});
+        setcustomerData(undefined);
         return;
       }
       try {
@@ -20,7 +21,7 @@ function CustomerProfile() {
         const response = await fetchCustomerData(id);
         setcustomerData(response);
       } catch (e) {
-        setMainError("An error occured fetching the data.");
+        setMainError(true);
         console.error(e);
       } finally {
         setMainLoading(false);

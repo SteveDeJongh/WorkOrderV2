@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Button from "../../multiuse/Button";
+import Button from "../multiuse/Button";
 import { Product } from "../../types/products";
 
 type Props = {

@@ -1,4 +1,4 @@
-import MainPaneNav from "../../multiuse/MainPaneNav";
+import MainPaneNav from "../multiuse/MainPaneNav";
 import { fetchProductData } from "../../services/productServices";
 import { Outlet, useParams, useOutletContext } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";

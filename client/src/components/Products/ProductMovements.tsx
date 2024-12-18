@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchInventoryMovementsFor } from "../../services/movementServices";
 import { useOutletContext, useNavigate } from "react-router-dom";
-import ScrollableTableTall from "../../multiuse/ScrollableTableTall";
+import ScrollableTableTall from "../multiuse/ScrollableTableTall";
 import { ProductShowOutlet } from "../../types/products";
 import { Movement } from "../../types/movements";
 

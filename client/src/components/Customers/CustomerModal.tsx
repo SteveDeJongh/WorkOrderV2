@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import ReactDom from "react-dom";
-import LoadingBox from "../../multiuse/LoadingBox";
+import LoadingBox from "../multiuse/LoadingBox";
 import CustomerForm from "./CustomerForm";
 import {
   editCustomer,

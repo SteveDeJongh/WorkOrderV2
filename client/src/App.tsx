@@ -18,7 +18,7 @@ import CustomerEdit from "./components/Customers/CustomerEdit";
 import CustomerInvoices from "./components/Customers/CustomerInvoices";
 // Products
 import Products from "./components/Products/Products";
-import PageIndex from "./multiuse/PageIndex";
+import PageIndex from "./components/multiuse/PageIndex";
 import ProductShow from "./components/Products/ProductShow";
 import ProductView from "./components/Products/ProductView";
 import ProductMovements from "./components/Products/ProductMovements";

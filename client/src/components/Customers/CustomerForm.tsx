@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import Button from "../../multiuse/Button";
-import { Customer, EditableCustomerCata } from "../../types/customers";
+import Button from "../multiuse/Button";
+import { Customer, EditableCustomerData } from "../../types/customers";
 
 type props = {
-  modalForm: boolean;
+  modalForm?: boolean;
   handleCancel: Function;
-  customer: Customer;
+  customer: Customer | undefined;
   headerText: string;
   onSubmit: Function;
   buttonText: string;
@@ -42,7 +42,7 @@ function CustomerForm({
       : undefined,
   });
 
-  async function onSubmitHandler(data: EditableCustomerCata) {
+  async function onSubmitHandler(data: EditableCustomerData) {
     try {
       onSubmit(data);
     } catch (e) {

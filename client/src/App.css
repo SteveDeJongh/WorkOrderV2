@@ -6,6 +6,7 @@
   --main-text: rgb(230, 237, 243);
   --light-border: #8b949e;
   --light-selection: #30363d;
+  --lighter-selection: #727c89;
   --dark-selection: #2b2f33;
   --open-green: rgb(53, 190, 53);
   --closed-red: rgb(218, 71, 71);
@@ -836,6 +837,23 @@ tbody > tr:hover {
   min-height: 200px;
   overflow-y: scroll;
   border: 2px solid var(--alt-black)
+}
+
+.contained-search-table {
+  width: 100%;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  background-color: var(--dark-selection);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 0px 2px white;
+  max-height: 200px;
+  min-height: 200px;
+  border: 2px solid var(--alt-black)
+}
+
+.search-result.active {
+  background-color: var(--lighter-selection);
 }
 
 .search-result {

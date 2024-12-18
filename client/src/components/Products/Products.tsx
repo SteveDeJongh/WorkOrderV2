@@ -1,11 +1,11 @@
-import LeftListWithAction from "../../multiuse/LeftListWithAction";
+import LeftListWithAction from "../multiuse/LeftListWithAction";
 import { Outlet, useParams, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import NoSelection from "../NoSelection";
 import useProductsData from "../../hooks/useProductsData";
-import FullWidthTable from "../../multiuse/FullWidthTable";
+import FullWidthTable from "../multiuse/FullWidthTable";
 import { useUserContext } from "../../contexts/user-context";
-import ViewToggle from "../../multiuse/ViewToggle";
+import ViewToggle from "../multiuse/ViewToggle";
 import { ViewTypes } from "../../types/users";
 import { ProductContext } from "../../types/products";
 

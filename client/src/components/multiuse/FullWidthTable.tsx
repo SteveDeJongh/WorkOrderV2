@@ -5,12 +5,12 @@ import {
   flexRender,
   createColumnHelper,
 } from "@tanstack/react-table";
-import useURLSearchParam from "../hooks/useURLSearchParam";
+import useURLSearchParam from "../../hooks/useURLSearchParam";
 import SearchBar from "./SearchBar";
 import { useParams } from "react-router-dom";
-import CustomerModal from "../components/Customers/CustomerModal";
-import ProductModal from "../components/Products/ProductModal";
-import InvoiceModal from "../components/Invoices/InvoiceModal";
+import CustomerModal from "../Customers/CustomerModal";
+import ProductModal from "../Products/ProductModal";
+import InvoiceModal from "../Invoices/InvoiceModal";
 
 type Props = {
   title: string;

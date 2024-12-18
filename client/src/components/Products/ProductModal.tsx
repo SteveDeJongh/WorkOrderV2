@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import ReactDom from "react-dom";
-import LoadingBox from "../../multiuse/LoadingBox";
+import LoadingBox from "../multiuse/LoadingBox";
 import ProductForm from "./ProductForm";
 import { editProduct, fetchProductData } from "../../services/productServices";
 import { objectToFormData } from "../../utils/formDataHelper";
@@ -11,7 +11,7 @@ import {
   fetchInventoryMovementsFor,
 } from "../../services/movementServices";
 import { useQuery } from "@tanstack/react-query";
-import Button from "../../multiuse/Button";
+import Button from "../multiuse/Button";
 import { Product } from "../../types/products";
 
 type Props = {

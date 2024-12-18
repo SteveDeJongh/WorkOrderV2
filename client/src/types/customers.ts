@@ -13,7 +13,7 @@ type Customer = {
     updated_at: string;
 }
 
-type EditableCustomerCata = {
+type EditableCustomerData = {
   first_name: string;
   last_name: string;
   email: string;
@@ -30,4 +30,4 @@ function isCustomer(customer: Customer | Object): customer is Customer {
   return (customer as Customer).first_name !== undefined && (customer as Customer).last_name !== undefined;
 }
 
-export { Customer, EditableCustomerCata, isCustomer}
+export { Customer, EditableCustomerData, isCustomer}

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchCustomerInvoices } from "../../services/customerServices";
 import { useParams, useNavigate } from "react-router-dom";
-import ScrollableTableTall from "../../multiuse/ScrollableTableTall";
+import ScrollableTableTall from "../multiuse/ScrollableTableTall";
 import { Invoice } from "../../types/invoiceTypes";
 
 function CustomerInvoices() {
@@ -10,7 +10,7 @@ function CustomerInvoices() {
 
   const { data, isError, isPending } = useQuery({
     queryKey: ["customerInvoices", customerId],
-    queryFn: () => fetchCustomerInvoices(customerId),
+    queryFn: () => (customerId ? fetchCustomerInvoices(customerId) : []),
     gcTime: 0,
   });
 

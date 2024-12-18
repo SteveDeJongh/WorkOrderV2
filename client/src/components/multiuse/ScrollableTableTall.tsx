@@ -1,4 +1,4 @@
-import { dateTimeFormatter } from "../utils";
+import { dateTimeFormatter } from "../../utils";
 
 type Column = {
   name: String;

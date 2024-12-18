@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
-import { Customer, isCustomer } from "../types/customers";
-import { isProduct } from "../types/products";
-import { isInvoice } from "../types/invoiceTypes";
+import { Customer, isCustomer } from "../../types/customers";
+import { isProduct } from "../../types/products";
+import { isInvoice } from "../../types/invoiceTypes";
 
 type Props = {
   resource: string;

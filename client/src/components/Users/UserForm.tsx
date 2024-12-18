@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import Button from "../../multiuse/Button";
+import Button from "../multiuse/Button";
 import { User } from "../../types/users";
 
 type Props = {

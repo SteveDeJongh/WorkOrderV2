@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import ListItem from "./ListItem";
-import useURLSearchParam from "../hooks/useURLSearchParam";
-import { Customer } from "../types/customers";
-import { Product } from "../types/products";
-import { Invoice } from "../types/invoiceTypes";
+import useURLSearchParam from "../../hooks/useURLSearchParam";
+import { Customer } from "../../types/customers";
+import { Product } from "../../types/products";
+import { Invoice } from "../../types/invoiceTypes";
 
 type OptionalSelection = {
   selected?: boolean;
