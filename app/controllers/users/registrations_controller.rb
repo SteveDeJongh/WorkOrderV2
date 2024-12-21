@@ -13,8 +13,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # POST /resource
   def create
     super
-    puts("Creating a user, self is", self) # To remove
-
+    puts "Params in create are", params
     params["user"]["roles"].each do |role|
       resource.roles.push(role)
     end
@@ -51,13 +50,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :roles])
+    devise_parameter_sanitizer.permit(:sign_up) do |user_params|
+      user_params.permit({roles: []}, :name, :email, :password, :password_confirmation)
+    end
   end
 
   # If you have extra params to permit, append them to the sanitizer.
-  # def configure_account_update_params
-  #   devise_parameter_sanitizer.permit(:account_update, keys: [:attribute])
-  # end
+  def configure_account_update_params
+    # devise_parameter_sanitizer.permit(:account_update, keys: [:attribute])
+    devise_parameter_sanitizer.permit(:account_update) do |user_params|
+      user_params.permit({roles: []}, :name, :email, :password, :password_confirmation)
+    end
+  end
 
   # The path used after sign up.
   # def after_sign_up_path_for(resource)

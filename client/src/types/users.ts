@@ -1,5 +1,3 @@
-import { Http2ServerResponse } from "http2";
-
 type User = {
     id: number;
     email: string;
@@ -27,8 +25,13 @@ type ViewTypes = "profile" | "table" | null;
 type RoleTypes = "user" | "manager" | "admin";
 
 type UserResponse = {
-  status: Http2ServerResponse;
+  status: StatusResponse;
   data: User;
+}
+
+type StatusResponse = {
+  code: number;
+  message: string;
 }
 
 type SignInUser = {

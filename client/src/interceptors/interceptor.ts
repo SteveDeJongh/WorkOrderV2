@@ -1,10 +1,17 @@
+type ExtendedFetchProps = RequestInit & {
+  input: RequestInfo | URL;
+  init?: RequestInit & {
+    skipAuthTest: Boolean;
+  };
+}
+
 export const interceptor = async () => {
   const { fetch: originalFetch } = window;
   window.fetch = async (...args) => {
-    let [resource, config, skipAuthTest] = args;
+    let [resource, config] = args;
     const response = await originalFetch(resource, config);
 
-    if (skipAuthTest) {
+    if (config.skipAuthTest) {
       console.log("Skipping reponse Authenticaion error test.");
       return response;
     }

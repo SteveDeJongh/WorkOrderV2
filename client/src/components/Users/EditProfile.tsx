@@ -66,7 +66,7 @@ function EditProfile() {
             {!mainLoading && !mainError && userData && (
               <>
                 <UserForm
-                  user={userData}
+                  userData={userData}
                   headerText={"Edit User"}
                   onSubmit={mutate}
                   buttonText={"Save"}

@@ -56,7 +56,7 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        element: <ProtectedRoute role="admin" />,
+        element: <ProtectedRoute role="admin" />, // User must be an admin to create a new user.
         children: [
           {
             path: "signup",
@@ -217,7 +217,7 @@ function App() {
         console.log("We have a token.");
         try {
           const response = await getUserByToken(token);
-          console.log(response.status.code);
+          console.log(response.status);
           if (response.status.code === 204) {
             console.log("Sorry, that token expired.");
             localStorage.removeItem("authToken");
@@ -226,7 +226,11 @@ function App() {
             console.log("That's still a valid token, checking if user is set.");
             if (!user) {
               console.log("We didn't have a set user, so let's set it now.");
-              response.data["views"] = {}; // To eventually come direct from API user call.
+              response.data["views"] = {
+                customers: null,
+                products: null,
+                invoices: null,
+              }; // To eventually come direct from API user call.
               setUser(response.data);
             }
           }

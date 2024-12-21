@@ -14,13 +14,12 @@ class Users::SessionsController < Devise::SessionsController
   # POST /resource/sign_in
   def create
     puts("Current user at sign in", current_user.inspect)
-    sleep 2 # For testing loading modal
+    sleep 1 # Simulating API response delay
     super
   end
 
   # DELETE /resource/sign_out
   def destroy
-    puts "here"
     super
   end
 

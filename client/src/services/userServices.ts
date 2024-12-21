@@ -30,10 +30,7 @@ async function createSession(loginData: NestedSignInUser): Promise<UserResponse>
   })
 
   if (!response.ok) {
-    let err = new Error;
-    err.status = response.status;
-    err.statusText = response.statusText;
-    throw err
+    throw new Error(response.statusText)
   }
 
   let token = response.headers.get("Authorization")
@@ -47,7 +44,8 @@ async function destroySession(token: string) {
     headers: {
       "Authorization": token,
     },
-  }, true)
+    skipAuthTest: true,
+  })
 
   if (!response.ok) {
     throw new Error(response.statusText)

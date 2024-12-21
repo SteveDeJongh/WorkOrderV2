@@ -1,25 +1,28 @@
 import { useForm } from "react-hook-form";
 import Button from "../multiuse/Button";
 import { User } from "../../types/users";
+import { useUserContext } from "../../contexts/user-context";
 
 type Props = {
-  user: User;
+  userData: User | null;
   headerText: string;
   onSubmit: Function;
   buttonText: string;
 };
 
-function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
-  console.log(user);
+function UserForm({ userData, headerText, onSubmit, buttonText }: Props) {
+  const { user, setUser } = useUserContext();
+
+  console.log("User in UserForm", user);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
   } = useForm({
-    defaultValues: user
-      ? { name: user.name, email: user.email, roles: user.roles }
-      : { roles: [] },
+    defaultValues: userData
+      ? { name: userData.name, email: userData.email, roles: userData.roles }
+      : { roles: ["user"] },
   });
 
   async function onSubmitHandler(data) {
@@ -30,10 +33,11 @@ function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
     }
   }
 
+  console.log("is admin?", user.roles?.includes("admin"));
   return (
     <>
-      <div id="main-pane-header">
-        <div id="main-pane-header-title">
+      <div className="main-pane-header">
+        <div className="main-pane-header-title">
           <h2>{headerText}</h2>
           <div className="main-pane-form-actions">
             <Button onClick={() => navigate(`/`)} text={"Cancel"} />
@@ -46,12 +50,11 @@ function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
           </div>
         </div>
       </div>
-      <form id="main-pane-content" onSubmit={handleSubmit(onSubmitHandler)}>
-        {/* {isError && (
-          <>
-            <h3>Unable to Create User.</h3>
-          </>
-        )} */}
+      <form
+        id="main-pane-content"
+        className="main-pane-content"
+        onSubmit={handleSubmit(onSubmitHandler)}
+      >
         <div className="panel">
           <h3>User Details</h3>
           <div className="panel-contents">
@@ -83,7 +86,7 @@ function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
                 {errors.email && <p>{`${errors.email.message}`}</p>}
               </div>
             </div>
-            {user && (
+            {userData && (
               <div className="formPair half">
                 <label htmlFor="current_password">current_password:</label>
                 <input
@@ -98,7 +101,8 @@ function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
                 {errors.password && <p>{`${errors.password.message}`}</p>}
               </div>
             )}
-            {!user && (
+            {/* No Password changes via edit profile page. */}
+            {!userData && (
               <div className="panel-contents-section">
                 <div className="formPair half">
                   <label htmlFor="password">Password:</label>
