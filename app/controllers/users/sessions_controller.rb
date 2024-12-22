@@ -13,7 +13,6 @@ class Users::SessionsController < Devise::SessionsController
 
   # POST /resource/sign_in
   def create
-    puts("Current user at sign in", current_user.inspect)
     sleep 1 # Simulating API response delay
     super
   end
@@ -34,13 +33,13 @@ class Users::SessionsController < Devise::SessionsController
     if (current_user)
       user = UserSerializer.new(current_user).serializable_hash[:data][:attributes]
       render json: {
-        status: {code: 200, message: "User for token found."},
+        message: "User for token found.",
         data: user,
       }, status: :ok
     else
       render json: {
-        status: {code: 204, message: "No active session for that token."}
-      }
+        message: "No active session for that token.",
+      }, status: :unauthorized
     end
   end
 

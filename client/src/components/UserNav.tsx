@@ -1,34 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
-import { destroySession } from "../services/userServices";
-import { useMutation } from "@tanstack/react-query";
 import { useState, useEffect, useRef } from "react";
 import { CapitalizeFullName } from "../utils";
-import { useUserContext } from "../contexts/user-context";
+import { useAuth } from "../contexts/AuthContext";
 
 function UserNav() {
   const navigate = useNavigate();
-  const { user, setUser } = useUserContext();
+  const { user, logout } = useAuth();
   const [isActive, setActive] = useState(false);
   const menuRef = useRef();
-
-  const { mutate: logOut } = useMutation({
-    mutationFn: () => {
-      let token = localStorage.getItem("authToken");
-      setActive(!isActive);
-      console.log("Logging out...");
-      return destroySession(token as string);
-    },
-    onSuccess: () => {
-      localStorage.removeItem("authToken");
-      console.log("Logged out!");
-      setUser(null);
-      navigate(`/`);
-    },
-    onError: (error) => {
-      console.log("An Error occured logging out:", error.status);
-      navigate("/");
-    },
-  });
 
   useEffect(() => {
     function handler(e) {
@@ -49,7 +28,7 @@ function UserNav() {
     return () => {
       document.removeEventListener("mousedown", handler);
     };
-  });
+  }, [menuRef, setActive]);
 
   return (
     <>
@@ -91,7 +70,7 @@ function UserNav() {
                     </Link>
                   )}
                   <Link>
-                    <li onClick={() => logOut()}>Sign Out</li>
+                    <li onClick={() => logout()}>Sign Out</li>
                   </Link>
                 </>
               )}

@@ -1,61 +1,21 @@
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createUser } from "../../services/userServices";
-import { useUserContext } from "../../contexts/user-context";
 import PageTitle from "../PageTitle";
-import { NestedUser, UserResponse } from "../../types/users";
-import UserForm from "./UserForm";
+import { UserResponse } from "../../types/users";
+import UserForm, { TUserForm } from "./UserForm";
+import { useAuth } from "../../contexts/AuthContext";
 
 function SignUp() {
   const navigate = useNavigate();
-  const { setUser } = useUserContext();
+  const { loginSuccess } = useAuth();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    watch,
-  } = useForm({
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      passwordConf: "",
-      roles: [],
-    },
-  });
-
-  const {
-    mutate: onSubmit,
-    isPending,
-    isError,
-    isSuccess,
-  } = useMutation({
-    mutationFn: (rawData: NestedUser) => {
-      console.log("rawData from signup mutate", rawData);
-      const allowed = ["email", "password", "name", "roles"];
-      let content = { user: {} };
-
-      Object.keys(rawData)
-        .filter((key) => allowed.includes(key))
-        .forEach((key) => {
-          content["user"][key] = rawData[key];
-        });
-
-      console.log("content after loop", content);
-
-      console.log("Creating user...");
-      return createUser(content as NestedUser);
+  const { mutate: signUp } = useMutation({
+    mutationFn: (user: TUserForm) => {
+      return createUser(user);
     },
     onSuccess: (response: UserResponse) => {
-      console.log("User created!");
-      response.data["views"] = {
-        customers: null,
-        products: null,
-        invoices: null,
-      }; // To eventually come direct from API user call.
-      setUser(response.data); // maybe don't need this if checking for user auth every time?
+      loginSuccess(response.data);
       navigate(`/`);
     },
     onError: (error) => {
@@ -63,6 +23,10 @@ function SignUp() {
       navigate("/signup");
     },
   });
+
+  const onSubmit = (user: TUserForm) => {
+    signUp(user);
+  };
 
   return (
     <>
@@ -72,7 +36,6 @@ function SignUp() {
           <div className="pane-inner">
             <>
               <UserForm
-                userData={null}
                 headerText="Create New User"
                 onSubmit={onSubmit}
                 buttonText={"Create User"}

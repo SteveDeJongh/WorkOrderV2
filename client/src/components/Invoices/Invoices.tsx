@@ -8,14 +8,14 @@ import {
 import { useState } from "react";
 import NoSelection from "../NoSelection";
 import FullWidthTable from "../multiuse/FullWidthTable";
-import { useUserContext } from "../../contexts/user-context";
 import ViewToggle from "../multiuse/ViewToggle";
 import useInvoicesData from "../../hooks/useInvoicesData";
 import { SelectionContext } from "../../types/invoiceTypes";
 import { ViewTypes } from "../../types/users";
+import { useAuth } from "../../contexts/AuthContext";
 
 function Invoices() {
-  const { user } = useUserContext();
+  const { user } = useAuth();
   const [view, setView] = useState<ViewTypes>(
     user?.views?.invoices || "profile"
   );

@@ -1,13 +1,14 @@
+import { TUserForm } from "../components/Users/UserForm";
 import { HOST_URL } from "../constants";
 import { NestedSignInUser, NestedUser, User, UserResponse} from "../types/users";
 
-async function createUser(userData: NestedUser): Promise<UserResponse> {
+async function createUser(user: TUserForm): Promise<UserResponse> {
   const response = await fetch(`${HOST_URL}/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(userData),
+    body: JSON.stringify({user}),
   })
 
   if (!response.ok) {
@@ -44,7 +45,6 @@ async function destroySession(token: string) {
     headers: {
       "Authorization": token,
     },
-    skipAuthTest: true,
   })
 
   if (!response.ok) {
@@ -54,13 +54,13 @@ async function destroySession(token: string) {
   return response.json();
 }
 
-async function editUser(userData: NestedUser): Promise<UserResponse> {
+async function editUser(user: TUserForm): Promise<UserResponse> {
   const response = await fetch(`${HOST_URL}/signup`, {
-    method: "PUT",
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(userData),
+    body: JSON.stringify({user}),
   })
 
   if (!response.ok) {

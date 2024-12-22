@@ -36,7 +36,7 @@ type StatusResponse = {
 
 type SignInUser = {
   email: string;
-  pass: string;
+  password: string;
 };
 
 type UserContext = {

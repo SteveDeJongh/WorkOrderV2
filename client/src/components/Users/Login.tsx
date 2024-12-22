@@ -2,16 +2,16 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createSession } from "../../services/userServices";
-import { useUserContext } from "../../contexts/user-context";
 import PageTitle from "../PageTitle";
 import LoadingModal from "../multiuse/LoadingModal";
 import Button from "../multiuse/Button";
 import { NestedSignInUser, SignInUser, UserResponse } from "../../types/users";
 import { useEffect } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
-  const { user, setUser } = useUserContext();
+  const { user, loginSuccess } = useAuth();
 
   useEffect(() => {
     // If we already have a user, redirect back to previous page.
@@ -24,30 +24,19 @@ function Login() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<SignInUser>();
 
   const {
-    mutate: onSubmit,
+    mutate: login,
     isPending,
     isError,
   } = useMutation({
-    mutationFn: (rawData: SignInUser) => {
-      const allowed = ["email", "password"];
-      let content: NestedSignInUser = { user: { email: "", pass: "" } };
-
-      Object.keys(rawData)
-        .filter((key) => allowed.includes(key))
-        .forEach((key) => {
-          content["user"][key as keyof SignInUser] =
-            rawData[key as keyof SignInUser];
-        });
-
-      console.log("Logging in...");
-      return createSession(content);
+    mutationFn: (loginData: SignInUser) => {
+      return createSession({ user: loginData });
     },
     onSuccess: (response: UserResponse) => {
       console.log("Logged in!");
-      setUser(response.data);
+      loginSuccess(response.data);
       navigate(`/`);
     },
     onError: (error: UserResponse) => {
@@ -55,6 +44,10 @@ function Login() {
       navigate("/Login");
     },
   });
+
+  const onSubmit = (loginData: SignInUser) => {
+    login(loginData);
+  };
 
   return (
     <>

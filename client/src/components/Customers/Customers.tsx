@@ -4,12 +4,12 @@ import { Outlet, useParams, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import NoSelection from "../NoSelection";
 import useCustomersData from "../../hooks/useCustomersData";
-import { useUserContext } from "../../contexts/user-context";
 import ViewToggle from "../multiuse/ViewToggle";
 import { ViewTypes } from "../../types/users";
+import { useAuth } from "../../contexts/AuthContext";
 
 function Customers() {
-  const { user } = useUserContext();
+  const { user } = useAuth();
   const [view, setView] = useState<ViewTypes>(
     user?.views?.customers || "profile"
   );

@@ -1,25 +1,27 @@
-import { useForm, Resolver } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Button from "../multiuse/Button";
-import { useUserContext } from "../../contexts/user-context";
 import { User, RoleTypes } from "../../types/users";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
-  userData: User | null;
+  user?: User;
   headerText: string;
-  onSubmit: Function;
+  onSubmit: (user: TUserForm) => void;
   buttonText: string;
 };
 
-type FormValues = {
+export type TUserForm = {
   name: string;
   email: string;
   roles: [RoleTypes];
+  password: string;
+  password_confirmation?: string;
+  currentPassword?: string;
 };
 
-function UserForm({ userData, headerText, onSubmit, buttonText }: Props) {
-  const { user, setUser } = useUserContext();
-
+function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
   console.log("User in UserForm", user);
+  const navigate = useNavigate();
 
   // Working on adding resolver to UserForm.
 
@@ -42,21 +44,12 @@ function UserForm({ userData, headerText, onSubmit, buttonText }: Props) {
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
-  } = useForm<FormValues>({
-    defaultValues: userData
-      ? { name: userData.name, email: userData.email, roles: userData.roles }
+  } = useForm<TUserForm>({
+    defaultValues: user
+      ? { name: user.name, email: user.email, roles: user.roles }
       : { roles: ["user"] },
   });
 
-  async function onSubmitHandler(data) {
-    try {
-      onSubmit(data);
-    } catch (e) {
-      console.log("Error Submitting the form data.", e);
-    }
-  }
-
-  console.log("is admin?", user.roles?.includes("admin"));
   return (
     <>
       <div className="main-pane-header">
@@ -76,7 +69,7 @@ function UserForm({ userData, headerText, onSubmit, buttonText }: Props) {
       <form
         id="main-pane-content"
         className="main-pane-content"
-        onSubmit={handleSubmit(onSubmitHandler)}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <div className="panel">
           <h3>User Details</h3>
@@ -109,11 +102,11 @@ function UserForm({ userData, headerText, onSubmit, buttonText }: Props) {
                 {errors.email && <p>{`${errors.email.message}`}</p>}
               </div>
             </div>
-            {userData && (
+            {user && (
               <div className="formPair half">
                 <label htmlFor="current_password">current_password:</label>
                 <input
-                  {...register("current_password", {
+                  {...register("currentPassword", {
                     required: "current_password is required.",
                   })}
                   type="password"
@@ -125,7 +118,7 @@ function UserForm({ userData, headerText, onSubmit, buttonText }: Props) {
               </div>
             )}
             {/* No Password changes via edit profile page. */}
-            {!userData && (
+            {!user && (
               <div className="panel-contents-section">
                 <div className="formPair half">
                   <label htmlFor="password">Password:</label>
@@ -141,9 +134,11 @@ function UserForm({ userData, headerText, onSubmit, buttonText }: Props) {
                   {errors.password && <p>{`${errors.password.message}`}</p>}
                 </div>
                 <div className="formPair half">
-                  <label htmlFor="passwordConf">Confirm Password:</label>
+                  <label htmlFor="password_confirmation">
+                    Confirm Password:
+                  </label>
                   <input
-                    {...register("passwordConf", {
+                    {...register("password_confirmation", {
                       required: "Password is required.",
                       validate: (value) => {
                         if (watch("password") != value) {
@@ -152,12 +147,12 @@ function UserForm({ userData, headerText, onSubmit, buttonText }: Props) {
                       },
                     })}
                     type="password"
-                    id="passwordConf"
-                    name="passwordConf"
+                    id="password_confirmation"
+                    name="password_confirmation"
                     placeholder=""
                   />
-                  {errors.passwordConf && (
-                    <p>{`${errors.passwordConf.message}`}</p>
+                  {errors.password_confirmation && (
+                    <p>{`${errors.password_confirmation.message}`}</p>
                   )}
                 </div>
               </div>

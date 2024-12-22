@@ -9,8 +9,8 @@ import FormPaymentLines from "./Payments/FormPaymentLines";
 import InvoiceTotalDetails from "./InvoiceTotalDetails";
 import Button from "../multiuse/Button";
 import { Action, Invoice } from "../../types/invoiceTypes";
-import { useUserContext } from "../../contexts/user-context";
 import { useSelection } from "./Invoices";
+import { useAuth } from "../../contexts/AuthContext";
 
 type Props = {
   modalForm: boolean;
@@ -20,7 +20,7 @@ type Props = {
 
 function InvoiceForm({ modalForm, buttonText, invoiceData }: Props) {
   // User
-  const { user } = useUserContext();
+  const { user } = useAuth();
   const adminActions = user?.roles.includes("admin");
 
   // Selection

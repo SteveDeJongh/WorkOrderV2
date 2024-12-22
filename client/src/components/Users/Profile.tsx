@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { CapitalizeFullName } from "../../utils";
-import { useUserContext } from "../../contexts/user-context";
 import PageTitle from "../PageTitle";
+import { useAuth } from "../../contexts/AuthContext";
 
 function Profile() {
-  const { user } = useUserContext();
+  const { user } = useAuth();
 
   console.log(user);
 

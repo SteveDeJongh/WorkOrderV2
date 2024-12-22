@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
-import { useUserContext } from "../contexts/user-context";
 import { RoleTypes } from "../types/users";
+import { useAuth } from "../contexts/AuthContext";
 
 type Props = {
   role: RoleTypes;
@@ -8,7 +8,7 @@ type Props = {
 
 function ProtectedRoute({ role }: Props) {
   const navigate = useNavigate();
-  const { user } = useUserContext();
+  const { user } = useAuth();
   console.log("User from protectedRoute", user);
 
   if (!user) {

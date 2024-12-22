@@ -5,9 +5,9 @@ import { Invoice } from "../types/invoiceTypes";
 
 async function fetchAllCustomers(): Promise<Customer[]> {
     const response = await fetch(`${API_URL}/customers`, {
-      headers: {
-        "Authorization": localStorage.getItem("authToken"),
-      } as HeadersInit
+      // headers: {
+      //   "Authorization": localStorage.getItem("authToken"),
+      // } as HeadersInit
     });
     if (response.ok) {
       let responseData = await response.json();

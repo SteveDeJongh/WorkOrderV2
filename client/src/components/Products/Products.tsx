@@ -4,13 +4,13 @@ import { useState } from "react";
 import NoSelection from "../NoSelection";
 import useProductsData from "../../hooks/useProductsData";
 import FullWidthTable from "../multiuse/FullWidthTable";
-import { useUserContext } from "../../contexts/user-context";
 import ViewToggle from "../multiuse/ViewToggle";
 import { ViewTypes } from "../../types/users";
 import { ProductContext } from "../../types/products";
+import { useAuth } from "../../contexts/AuthContext";
 
 function Products() {
-  const { user } = useUserContext();
+  const { user } = useAuth();
   const [view, setView] = useState<ViewTypes>(
     user!.views?.products || "profile"
   );
