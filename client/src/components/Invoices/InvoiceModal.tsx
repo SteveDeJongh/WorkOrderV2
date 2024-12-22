@@ -9,7 +9,7 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 type Props = {
   open: boolean;
   onClose: Function;
-  resourceId: number | null;
+  resourceId: number | undefined;
   searchTerm: String;
 };
 
@@ -53,7 +53,9 @@ function InvoiceModal({ open, onClose, resourceId, searchTerm }: Props) {
   const { mutate, isPending, isError, isSuccess } = useMutation({
     mutationFn: async (rawData) => {
       const formData = objectToFormData({ invoice: rawData });
-      await editInvoice(resourceId, formData);
+      if (resourceId) {
+        await editInvoice(resourceId, formData);
+      }
       return await fetchInvoiceData(resourceId);
     },
     onSuccess: (data) => {

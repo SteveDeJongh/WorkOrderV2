@@ -49,7 +49,7 @@ async function createInvoice(invoiceData: NestedInvoiceData): Promise<Invoice> {
   return response.json();
 }
 
-async function fetchInvoiceData(id: string | undefined): Promise<Invoice> {
+async function fetchInvoiceData(id: string | number | undefined): Promise<Invoice> {
   const response = await fetch(`${API_URL}/invoices/${id}`, {
     headers: {
       "Authorization": localStorage.getItem("authToken"),

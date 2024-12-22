@@ -1,7 +1,7 @@
-import { useForm } from "react-hook-form";
+import { useForm, Resolver } from "react-hook-form";
 import Button from "../multiuse/Button";
-import { User } from "../../types/users";
 import { useUserContext } from "../../contexts/user-context";
+import { User, RoleTypes } from "../../types/users";
 
 type Props = {
   userData: User | null;
@@ -10,16 +10,39 @@ type Props = {
   buttonText: string;
 };
 
+type FormValues = {
+  name: string;
+  email: string;
+  roles: [RoleTypes];
+};
+
 function UserForm({ userData, headerText, onSubmit, buttonText }: Props) {
   const { user, setUser } = useUserContext();
 
   console.log("User in UserForm", user);
+
+  // Working on adding resolver to UserForm.
+
+  // const resolver: Resolver<FormValues> = async (values) => {
+  //   return {
+  //     values: values.name ? values : {},
+  //     errors: !values.name
+  //       ? {
+  //           name: {
+  //             type: "required",
+  //             message: "This is required.",
+  //           },
+  //         }
+  //       : {},
+  //   };
+  // };
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
-  } = useForm({
+  } = useForm<FormValues>({
     defaultValues: userData
       ? { name: userData.name, email: userData.email, roles: userData.roles }
       : { roles: ["user"] },
