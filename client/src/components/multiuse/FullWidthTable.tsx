@@ -132,7 +132,9 @@ function FullWidthTable({ title, fetcher, columns }: Props) {
               <tbody>
                 <>
                   {data.length <= 0 ? (
-                    <p>No Results</p>
+                    <tr>
+                      <td>No Results</td>
+                    </tr>
                   ) : (
                     <>
                       {table.getRowModel().rows.map((rowEl) => (

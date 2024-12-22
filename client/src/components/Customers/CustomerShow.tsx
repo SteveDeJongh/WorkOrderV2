@@ -19,7 +19,7 @@ function CustomerShow() {
   useEffect(() => {
     async function loadCustomerData() {
       if (!id) {
-        setMainData({});
+        setMainData(undefined);
         return;
       }
       try {
