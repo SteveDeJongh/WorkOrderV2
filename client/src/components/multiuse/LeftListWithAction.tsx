@@ -17,29 +17,18 @@ type InvoiceWithSelection = Invoice & OptionalSelection;
 type Props = {
   title: string;
   linkToPage: string;
-  // setSelection: React.Dispatch<React.SetStateAction<number | null>>;
-  // selection: number | null;
-  fetcher: Function;
+  getter: Function;
 };
 
-function LeftListWithAction({
-  title,
-  linkToPage,
-  // setSelection,
-  // selection,
-  fetcher,
-}: Props) {
+function LeftListWithAction({ title, linkToPage, getter }: Props) {
   const { id: paramID } = useParams();
-  const [lastSelection, setLastSelection] = useState<Number>(
-    paramID ? Number(paramID) : 0
-  );
   const [data, setData] = useState<
     CustomerWithSelection[] | ProductWithSelection[] | InvoiceWithSelection[]
   >();
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
     useURLSearchParam("search");
-  const { data: fetchedData, loading, error } = fetcher(debouncedSearchTerm);
+  const { data: fetchedData, loading, error } = getter(debouncedSearchTerm);
 
   useEffect(() => {
     if (fetchedData) {
@@ -54,34 +43,6 @@ function LeftListWithAction({
   function handleImmediateSearchChange(searchValue: string) {
     setSearchTerm(searchValue);
   }
-
-  function handleItemClick(id: number) {
-    // let nextData = data ? data.slice() : [];
-    // console.log(lastSelection);
-    // let item = nextData.filter((data) => data.id == id)[0];
-    // if (lastSelection) {
-    //   let lastItem = nextData.filter((data) => data.id == lastSelection)[0];
-    //   lastItem.selected = false;
-    // }
-    // item.selected = true;
-    // setSelection(id);
-    // setLastSelection(id);
-    // setData(nextData);
-  }
-
-  function handleNewClick() {
-    // let nextData = data ? data.slice() : [];
-    // selection
-    //   ? (nextData.filter((data) => {
-    //       return data.id == selection;
-    //     })[0].selected = false)
-    //   : null;
-    // setData(nextData);
-  }
-
-  useEffect(() => {
-    console.log("data changed", data);
-  }, [data]);
 
   return (
     <>
@@ -109,11 +70,9 @@ function LeftListWithAction({
               {data.map((data) => {
                 return (
                   <ListItem
-                    resource={title.toLowerCase()}
                     value={data}
                     linkToPage={linkToPage}
                     key={data.id}
-                    handleClick={handleItemClick}
                     selected={data.id == Number(paramID)}
                   />
                 );
@@ -123,12 +82,7 @@ function LeftListWithAction({
         ) : null}
       </ul>
       <div id="single-col-bottom">
-        <Link
-          to={`/${title.toLowerCase()}/new`}
-          onClick={() => {
-            handleNewClick();
-          }}
-        >
+        <Link to={`/${title.toLowerCase()}/new`}>
           <span>➕ New {title.slice(0, -1)}</span>
         </Link>
       </div>

@@ -7,7 +7,7 @@ type props = {
   modalForm?: boolean;
   customer?: Customer;
   headerText: string;
-  onSubmit: (data: EditableCustomerData) => void;
+  onSubmit: (data: EditableCustomerData) => Promise<void>;
   buttonText: string;
 };
 

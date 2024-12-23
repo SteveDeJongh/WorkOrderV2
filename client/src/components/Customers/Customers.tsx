@@ -46,7 +46,7 @@ function Customers() {
               <LeftListWithAction
                 title={"Customers"}
                 linkToPage={"profile"}
-                fetcher={useCustomersData}
+                getter={useCustomersData}
               />
             </div>
           </div>

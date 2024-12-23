@@ -57,7 +57,7 @@ function Invoices() {
                 linkToPage={""}
                 setSelection={setSelection}
                 selection={selection}
-                fetcher={useInvoicesData}
+                getter={useInvoicesData}
               />
             </div>
           </div>

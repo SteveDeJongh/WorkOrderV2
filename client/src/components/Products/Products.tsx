@@ -60,7 +60,7 @@ function Products() {
                 linkToPage={"view"}
                 setSelection={setSelection}
                 selection={selection}
-                fetcher={useProductsData}
+                getter={useProductsData}
               />
             </div>
           </div>

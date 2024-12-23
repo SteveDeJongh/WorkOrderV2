@@ -5,44 +5,24 @@ import { isProduct } from "../../types/products";
 import { isInvoice } from "../../types/invoiceTypes";
 
 type Props = {
-  resource: string;
   value: Customer | Object;
   linkToPage: string;
-  handleClick: Function;
   selected: boolean;
 };
 
-function ListItem({
-  resource,
-  value,
-  linkToPage,
-  handleClick,
-  selected,
-}: Props) {
+function ListItem({ value, linkToPage, selected }: Props) {
   return (
     <>
-      {resource === "customers" && isCustomer(value) && (
-        <Link
-          to={`/${resource}/${value.id}/${linkToPage}`}
-          className="col-link"
-        >
-          <li
-            onClick={() => handleClick(value.id)}
-            className={`single-col-li ${selected ? "selected" : ""}`}
-          >
+      {isCustomer(value) && (
+        <Link to={`/customers/${value.id}/${linkToPage}`} className="col-link">
+          <li className={`single-col-li ${selected ? "selected" : ""}`}>
             {value.first_name + " " + value.last_name}
           </li>
         </Link>
       )}
-      {resource === "products" && isProduct(value) && (
-        <Link
-          to={`/${resource}/${value.id}/${linkToPage}`}
-          className="col-link"
-        >
-          <li
-            onClick={() => handleClick(value.id)}
-            className={`single-col-li ${selected ? "selected" : ""}`}
-          >
+      {isProduct(value) && (
+        <Link to={`/products/${value.id}/${linkToPage}`} className="col-link">
+          <li className={`single-col-li ${selected ? "selected" : ""}`}>
             <div className="li-row li-top">
               <span>{value.name}</span>
               {/* trim this to x# of characters eventually. */}
@@ -63,15 +43,9 @@ function ListItem({
           </li>
         </Link>
       )}
-      {resource === "invoices" && isInvoice(value) && (
-        <Link
-          to={`/${resource}/${value.id}/${linkToPage}`}
-          className="col-link"
-        >
-          <li
-            onClick={() => handleClick(value.id)}
-            className={`single-col-li ${selected ? "selected" : ""}`}
-          >
+      {isInvoice(value) && (
+        <Link to={`/invoices/${value.id}/${linkToPage}`} className="col-link">
+          <li className={`single-col-li ${selected ? "selected" : ""}`}>
             <div className="li-row li-top">
               <span>Invoice: {value.id}</span>
               <span className={`product-span ${value.status}`}>
