@@ -3,7 +3,6 @@ import { fetchCustomerData } from "../../services/customerServices";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Outlet } from "react-router-dom";
-import { useOutletContext } from "react-router-dom";
 import LoadingBox from "../multiuse/LoadingBox";
 import { Customer } from "../../types/customers";
 
@@ -12,7 +11,6 @@ function CustomerShow() {
   const [mainLoading, setMainLoading] = useState(false);
   const [mainError, setMainError] = useState(false);
   const [mainData, setMainData] = useState<Customer>();
-  const [selection, setSelection] = useOutletContext();
 
   let { id } = useParams();
 
@@ -52,7 +50,7 @@ function CustomerShow() {
             identifier={"Customer"}
             pages={["Profile", "Edit", "Invoices"]}
           />
-          <Outlet context={[selection, setSelection]} />
+          <Outlet context={{ mainData, setMainData }} />
         </>
       )}
     </>

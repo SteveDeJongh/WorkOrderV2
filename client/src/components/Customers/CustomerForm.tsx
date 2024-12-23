@@ -5,16 +5,14 @@ import { Customer, EditableCustomerData } from "../../types/customers";
 
 type props = {
   modalForm?: boolean;
-  handleCancel: Function;
-  customer: Customer | undefined;
+  customer?: Customer;
   headerText: string;
-  onSubmit: Function;
+  onSubmit: (data: EditableCustomerData) => void;
   buttonText: string;
 };
 
 function CustomerForm({
   modalForm,
-  handleCancel,
   customer,
   headerText,
   onSubmit,
@@ -42,14 +40,6 @@ function CustomerForm({
       : undefined,
   });
 
-  async function onSubmitHandler(data: EditableCustomerData) {
-    try {
-      onSubmit(data);
-    } catch (e) {
-      console.log("failed!");
-    }
-  }
-
   return (
     <>
       {!modalForm && (
@@ -70,7 +60,7 @@ function CustomerForm({
       <form
         id="main-pane-content"
         className="main-pane-content"
-        onSubmit={handleSubmit(onSubmitHandler)}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <div className="panel">
           <h3>Customer Details</h3>
@@ -209,7 +199,7 @@ function CustomerForm({
       {modalForm && (
         <div className="main-modal-form-actions">
           <div className="main-pane-form-actions">
-            <Button onClick={() => handleCancel()} text="Cancel" />
+            <Button text="Cancel" />
             <Button
               form="main-pane-content"
               disabled={isSubmitting}

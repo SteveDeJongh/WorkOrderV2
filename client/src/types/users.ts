@@ -5,7 +5,7 @@ type User = {
     name: string;
     roles: Array<RoleTypes>;
     created_date: string;
-    views?: {
+    views: {
       customers: ViewTypes;
       products: ViewTypes;
       invoices: ViewTypes;

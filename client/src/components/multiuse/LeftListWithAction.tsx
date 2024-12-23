@@ -17,21 +17,21 @@ type InvoiceWithSelection = Invoice & OptionalSelection;
 type Props = {
   title: string;
   linkToPage: string;
-  setSelection: React.Dispatch<React.SetStateAction<number | null>>;
-  selection: number | null;
+  // setSelection: React.Dispatch<React.SetStateAction<number | null>>;
+  // selection: number | null;
   fetcher: Function;
 };
 
 function LeftListWithAction({
   title,
   linkToPage,
-  setSelection,
-  selection,
+  // setSelection,
+  // selection,
   fetcher,
 }: Props) {
   const { id: paramID } = useParams();
   const [lastSelection, setLastSelection] = useState<Number>(
-    selection ? selection : 0
+    paramID ? Number(paramID) : 0
   );
   const [data, setData] = useState<
     CustomerWithSelection[] | ProductWithSelection[] | InvoiceWithSelection[]

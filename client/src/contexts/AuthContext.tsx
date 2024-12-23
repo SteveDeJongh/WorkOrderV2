@@ -38,7 +38,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       }
       try {
         const response = await getUserByToken(token);
-        setUser(response.data);
+        loginSuccess(response.data);
       } catch (error) {
         setUser(undefined);
         localStorage.removeItem("authToken");

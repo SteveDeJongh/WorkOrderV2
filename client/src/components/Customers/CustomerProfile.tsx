@@ -1,8 +1,5 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { fetchCustomerData } from "../../services/customerServices";
-import LoadingBox from "../multiuse/LoadingBox";
-import { Customer } from "../../types/customers";
+import { useOutletContext } from "react-router-dom";
+import { Customer, CustomerContext } from "../../types/customers";
 
 type CustomerWithNotices = Customer & {
   notices?: Notice[];
@@ -14,31 +11,8 @@ type Notice = {
 };
 
 function CustomerProfile() {
-  const [mainLoading, setMainLoading] = useState(false);
-  const [mainError, setMainError] = useState(false);
-  const [customerData, setcustomerData] = useState<CustomerWithNotices>();
-  let { id } = useParams();
-
-  useEffect(() => {
-    async function loadCustomerData() {
-      if (!id) {
-        setcustomerData(undefined);
-        return;
-      }
-      try {
-        setMainLoading(true);
-        const response = await fetchCustomerData(id);
-        setcustomerData(response);
-      } catch (e) {
-        setMainError(true);
-        console.error(e);
-      } finally {
-        setMainLoading(false);
-      }
-    }
-
-    loadCustomerData();
-  }, [id]);
+  const { mainData } = useOutletContext<CustomerContext>();
+  const customerData: CustomerWithNotices = { ...mainData };
 
   // Example Notices data, to be part of the customer data api fetch in the future.
   if (customerData && customerData.first_name == "Steve") {
@@ -54,63 +28,57 @@ function CustomerProfile() {
 
   return (
     <>
-      {mainLoading && <LoadingBox text="Loading Profile..." />}
-      {mainError && <p>An error occured.</p>}
-      {!mainLoading && !mainError && (
+      {!customerData && <h2>No Customer Selected</h2>}
+      {customerData && (
         <>
-          {!customerData && <h2>No Customer Selected</h2>}
-          {customerData && (
-            <>
-              <div className="main-pane-content">
-                <div className="panel">
-                  <h3>Details</h3>
-                  <div className="panel-contents">
-                    <div className="panel-contents-section">
-                      <div className="panel-section-desc">📞</div>
-                      <div className="panel-section-data">
-                        <div className="data-item">{customerData.phone}</div>
-                        <div className="data-item">{customerData.phone}</div>
-                      </div>
-                    </div>
-                    <div className="panel-contents-section">
-                      <div className="panel-section-desc">📧</div>
-                      <div className="panel-section-data">
-                        <div className="data-item">{customerData.email}</div>
-                      </div>
-                    </div>
-                    <div className="panel-contents-section">
-                      <div className="panel-section-desc">🏠</div>
-                      <div className="panel-section-data">
-                        <div className="data-item">{customerData.address}</div>
-                        <div className="data-item">
-                          {customerData.city} {customerData.province}{" "}
-                          {customerData.postal}
-                        </div>
-                        <div className="data-item">{customerData.country}</div>
-                      </div>
-                    </div>
+          <div className="main-pane-content">
+            <div className="panel">
+              <h3>Details</h3>
+              <div className="panel-contents">
+                <div className="panel-contents-section">
+                  <div className="panel-section-desc">📞</div>
+                  <div className="panel-section-data">
+                    <div className="data-item">{customerData.phone}</div>
+                    <div className="data-item">{customerData.phone}</div>
                   </div>
                 </div>
-                <div className="panel customer-notices">
-                  <h3>
-                    Notices <span>({`${noticeCount}`})</span>
-                  </h3>
-                  <ul>
-                    {noticeCount === 0 && <li>No Notices</li>}
-                    {customerData.notices?.map((notice) => {
-                      return <li key={notice.id}>{notice.notice}</li>;
-                    })}
-                  </ul>
+                <div className="panel-contents-section">
+                  <div className="panel-section-desc">📧</div>
+                  <div className="panel-section-data">
+                    <div className="data-item">{customerData.email}</div>
+                  </div>
                 </div>
-                <div className="panel customer-history">
-                  <h3>History</h3>
-                  <ul>
-                    <li>Todo...</li>
-                  </ul>
+                <div className="panel-contents-section">
+                  <div className="panel-section-desc">🏠</div>
+                  <div className="panel-section-data">
+                    <div className="data-item">{customerData.address}</div>
+                    <div className="data-item">
+                      {customerData.city} {customerData.province}{" "}
+                      {customerData.postal}
+                    </div>
+                    <div className="data-item">{customerData.country}</div>
+                  </div>
                 </div>
               </div>
-            </>
-          )}
+            </div>
+            <div className="panel customer-notices">
+              <h3>
+                Notices <span>({`${noticeCount}`})</span>
+              </h3>
+              <ul>
+                {noticeCount === 0 && <li>No Notices</li>}
+                {customerData.notices?.map((notice) => {
+                  return <li key={notice.id}>{notice.notice}</li>;
+                })}
+              </ul>
+            </div>
+            <div className="panel customer-history">
+              <h3>History</h3>
+              <ul>
+                <li>Todo...</li>
+              </ul>
+            </div>
+          </div>
         </>
       )}
     </>

@@ -1,6 +1,6 @@
 import LeftListWithAction from "../multiuse/LeftListWithAction";
 import FullWidthTable from "../multiuse/FullWidthTable";
-import { Outlet, useParams, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useParams, useLocation } from "react-router-dom";
 import { useState } from "react";
 import NoSelection from "../NoSelection";
 import useCustomersData from "../../hooks/useCustomersData";
@@ -11,29 +11,19 @@ import { useAuth } from "../../contexts/AuthContext";
 function Customers() {
   const { user } = useAuth();
   const [view, setView] = useState<ViewTypes>(
-    user?.views?.customers || "profile"
+    user?.views.customers || "profile"
   );
+  const { id } = useParams();
 
   function viewSetter(view: ViewTypes) {
-    user?.views
-      ? user?.views
-      : (user!.views = { customers: null, products: null, invoices: null });
-
     user!.views["invoices"] = view;
     setView(view);
   }
 
   let location = useLocation();
   let pathname = location.pathname;
-  let navigate = useNavigate();
 
-  const [selection, setSelection] = useState(Number(useParams().id) || null);
-
-  let renderNoSelection = "/customers" === pathname && !selection;
-
-  if (selection && selection !== undefined && pathname === "/customers") {
-    navigate(`/customers/${selection}/profile`);
-  }
+  let renderNoSelection = "/customers" === pathname && !id;
 
   const columns = [
     { keys: ["id"], header: "ID" },
@@ -56,8 +46,6 @@ function Customers() {
               <LeftListWithAction
                 title={"Customers"}
                 linkToPage={"profile"}
-                setSelection={setSelection}
-                selection={selection}
                 fetcher={useCustomersData}
               />
             </div>
@@ -68,7 +56,7 @@ function Customers() {
               {renderNoSelection ? (
                 <NoSelection item={"customer"} />
               ) : (
-                <Outlet context={[selection, setSelection]} />
+                <Outlet />
               )}
             </div>
           </div>

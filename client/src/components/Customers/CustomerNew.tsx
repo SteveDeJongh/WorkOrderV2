@@ -2,11 +2,12 @@ import CustomerForm from "./CustomerForm";
 import { useNavigate } from "react-router-dom";
 import { createCustomer } from "../../services/customerServices";
 import { objectToFormData } from "../../utils/formDataHelper";
+import { Customer } from "../../types/customers";
 
 function CustomerNew() {
   const navigate = useNavigate();
 
-  async function handleCreateSubmit(rawData) {
+  async function handleCreateSubmit(rawData: Customer) {
     try {
       const formData = objectToFormData({ customer: rawData });
       const response = await createCustomer(formData);
