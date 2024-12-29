@@ -1,10 +1,10 @@
-import LeftListWithAction from "../multiuse/LeftListWithAction";
-import FullWidthTable from "../multiuse/FullWidthTable";
+import { LeftListWithAction } from "../multiuse/LeftListWithAction";
+import { FullWidthTable } from "../multiuse/FullWidthTable";
 import { Outlet, useParams, useLocation } from "react-router-dom";
 import { useState } from "react";
-import NoSelection from "../NoSelection";
-import useCustomersData from "../../hooks/useCustomersData";
-import ViewToggle from "../multiuse/ViewToggle";
+import { NoSelection } from "../NoSelection";
+import { useCustomersData } from "../../hooks/useCustomersData";
+import { ViewToggle } from "../multiuse/ViewToggle";
 import { ViewTypes } from "../../types/users";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -85,4 +85,4 @@ function Customers() {
   );
 }
 
-export default Customers;
+export { Customers };

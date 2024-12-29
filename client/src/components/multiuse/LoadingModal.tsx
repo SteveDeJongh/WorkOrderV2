@@ -45,4 +45,4 @@ function LoadingModal({ text }: Props) {
   );
 }
 
-export default LoadingModal;
+export { LoadingModal };

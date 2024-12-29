@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchProductData } from "../../../services/productServices";
-import InvoiceLine from "./InvoiceLine";
-import NewInvoiceLine from "./NewInvoiceLine";
+import { InvoiceLine } from "./InvoiceLine";
+import { NewInvoiceLine } from "./NewInvoiceLine";
 import {
   Action,
   InvoiceLine as TInvoiceLine,
@@ -16,11 +16,7 @@ type props = {
   dispatch: React.Dispatch<Action>;
 };
 
-export default function FormInvoiceLines({
-  invoice_lines = [],
-  invoice_id,
-  dispatch,
-}: props) {
+function FormInvoiceLines({ invoice_lines = [], invoice_id, dispatch }: props) {
   const [lines, setLines] = useState<TInvoiceLine[]>(invoice_lines);
 
   useEffect(() => {
@@ -203,3 +199,5 @@ export default function FormInvoiceLines({
     </div>
   );
 }
+
+export { FormInvoiceLines };

@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import ReactDom from "react-dom";
-import SearchBar from "../../multiuse/SearchBar";
-import useCustomersData from "../../../hooks/useCustomersData";
-import useURLSearchParam from "../../../hooks/useURLSearchParam";
-import SearchResultsTable from "../../multiuse/SearchResultsTable";
-import Button from "../../multiuse/Button";
+import { SearchBar } from "../../multiuse/SearchBar";
+import { useCustomersData } from "../../../hooks/useCustomersData";
+import { useURLSearchParam } from "../../../hooks/useURLSearchParam";
+import { SearchResultsTable } from "../../multiuse/SearchResultsTable";
+import { Button } from "../../multiuse/Button";
 import { Customer } from "../../../types/customers";
 
 type Props = {
@@ -111,4 +111,4 @@ function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
   );
 }
 
-export default CustomerSearchModal;
+export { CustomerSearchModal };

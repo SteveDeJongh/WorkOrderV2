@@ -1,24 +1,24 @@
-import MainPaneNav from "../multiuse/MainPaneNav";
+import { MainPaneNav } from "../multiuse/MainPaneNav";
 import { fetchProductData } from "../../services/productServices";
-import { Outlet, useParams, useOutletContext } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ProductContext } from "../../types/products";
+import { useState } from "react";
+import { Product } from "../../types/products";
 
 function ProductShow() {
-  const { selection, setSelection } = useOutletContext<ProductContext>();
-  let { id } = useParams();
+  const [mainData, setMainData] = useState<Product>();
+  const { id } = useParams();
 
-  const { data, isError, isPending, isSuccess } = useQuery({
-    queryKey: ["product", id],
-    queryFn: () => fetchProductData(id as string),
+  const { isError, isPending } = useQuery({
+    queryKey: ["product", { id }],
+    queryFn: async () => {
+      const response = await fetchProductData(id as string);
+      setMainData(response);
+      return response;
+    },
     staleTime: 1000, // overriding default staleTime
     refetchOnWindowFocus: false, // won't refetch when switching tabs.
   });
-
-  let product;
-  if (isSuccess) {
-    product = Object.keys(data).length < 1 ? false : data;
-  }
 
   return (
     <>
@@ -28,21 +28,16 @@ function ProductShow() {
           {isError && <p>An error occured.</p>}
           {!isPending && !isError && (
             <>
-              {!product && <h2>No Product Selected</h2>}
-              {product && (
+              {!mainData && <h2>No Product Selected</h2>}
+              {mainData && (
                 <>
                   <MainPaneNav
-                    title={data.name}
-                    id={data.id}
+                    title={mainData.name}
+                    id={mainData.id}
                     identifier={"Product"}
                     pages={["View", "Edit", "Movements"]}
                   />
-                  <Outlet
-                    context={{
-                      selection: [selection, setSelection],
-                      productData: { product, isError, isPending, isSuccess },
-                    }}
-                  />
+                  <Outlet context={{ mainData, setMainData }} />
                 </>
               )}
             </>
@@ -53,4 +48,4 @@ function ProductShow() {
   );
 }
 
-export default ProductShow;
+export { ProductShow };

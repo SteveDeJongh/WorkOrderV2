@@ -16,4 +16,4 @@ function useURLSearchParam(paramName: string, initialValue = ""): [string, React
   return [paramValue, setParamValue];
 }
 
-export default useURLSearchParam;
+export { useURLSearchParam };

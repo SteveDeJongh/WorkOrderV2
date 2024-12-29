@@ -14,7 +14,7 @@ type Props = {
   columns: { keys: string[]; header: string }[];
 };
 
-export default function SearchResultsTable({
+function SearchResultsTable({
   results,
   handleSelection,
   handleDoubleClick,
@@ -128,3 +128,5 @@ export default function SearchResultsTable({
     </>
   );
 }
+
+export { SearchResultsTable };

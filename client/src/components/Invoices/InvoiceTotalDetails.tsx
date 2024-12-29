@@ -5,7 +5,7 @@ type props = {
   invoice: Invoice;
 };
 
-export default function InvoiceTotalDetails({ invoice }: props) {
+function InvoiceTotalDetails({ invoice }: props) {
   console.log("*** InvoiceTotalDetails rerender");
 
   return (
@@ -47,3 +47,5 @@ export default function InvoiceTotalDetails({ invoice }: props) {
     </>
   );
 }
+
+export { InvoiceTotalDetails };

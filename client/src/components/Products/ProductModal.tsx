@@ -1,7 +1,7 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import ReactDom from "react-dom";
-import LoadingBox from "../multiuse/LoadingBox";
-import ProductForm from "./ProductForm";
+import { LoadingBox } from "../multiuse/LoadingBox";
+import { ProductForm } from "./ProductForm";
 import { editProduct, fetchProductData } from "../../services/productServices";
 import { objectToFormData } from "../../utils/formDataHelper";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
@@ -11,8 +11,8 @@ import {
   fetchInventoryMovementsFor,
 } from "../../services/movementServices";
 import { useQuery } from "@tanstack/react-query";
-import Button from "../multiuse/Button";
-import { Product } from "../../types/products";
+import { Button } from "../multiuse/Button";
+import { EditableProductData, Product } from "../../types/products";
 
 type Props = {
   open: boolean;
@@ -22,8 +22,9 @@ type Props = {
 };
 
 function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
-  function handleClose(e) {
-    if (e.target.className === "main-modal-background") {
+  function handleClose(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    let target = e.target as HTMLElement;
+    if (target.className === "main-modal-background") {
       entity = null;
       onClose();
     }
@@ -74,7 +75,7 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
   const queryClient = useQueryClient();
 
   const { mutate, isPending, isError, isSuccess } = useMutation({
-    mutationFn: async (rawData) => {
+    mutationFn: async (rawData: EditableProductData) => {
       const formData = objectToFormData({ product: rawData });
       await editProduct(resourceId, formData);
       return await fetchProductData(resourceId);
@@ -314,7 +315,6 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
                 <>
                   <ProductForm
                     modalForm={true}
-                    handleCancel={() => setTab("View")}
                     product={entity}
                     headerText={`Edit Product`}
                     buttonText={"Save"}
@@ -383,4 +383,4 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
   );
 }
 
-export default ProductModal;
+export { ProductModal };

@@ -1,22 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchInventoryMovementsFor } from "../../services/movementServices";
-import { useOutletContext, useNavigate } from "react-router-dom";
-import ScrollableTableTall from "../multiuse/ScrollableTableTall";
-import { ProductShowOutlet } from "../../types/products";
+import { useParams, useNavigate } from "react-router-dom";
+import { ScrollableTableTall } from "../multiuse/ScrollableTableTall";
 import { Movement } from "../../types/movements";
 
 function ProductMovements() {
   const navigate = useNavigate();
-
-  const {
-    productData: {
-      product: { id },
-    },
-  } = useOutletContext<ProductShowOutlet>();
+  const { id } = useParams();
 
   const { data, isError, isPending } = useQuery({
     queryKey: ["productMovements", id],
-    queryFn: () => fetchInventoryMovementsFor(id),
+    queryFn: () => fetchInventoryMovementsFor(id as string),
   });
 
   const columns = [
@@ -55,4 +49,4 @@ function ProductMovements() {
   );
 }
 
-export default ProductMovements;
+export { ProductMovements };

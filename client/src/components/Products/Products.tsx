@@ -1,12 +1,11 @@
-import LeftListWithAction from "../multiuse/LeftListWithAction";
+import { LeftListWithAction } from "../multiuse/LeftListWithAction";
 import { Outlet, useParams, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import NoSelection from "../NoSelection";
-import useProductsData from "../../hooks/useProductsData";
-import FullWidthTable from "../multiuse/FullWidthTable";
-import ViewToggle from "../multiuse/ViewToggle";
+import { NoSelection } from "../NoSelection";
+import { useProductsData } from "../../hooks/useProductsData";
+import { FullWidthTable } from "../multiuse/FullWidthTable";
+import { ViewToggle } from "../multiuse/ViewToggle";
 import { ViewTypes } from "../../types/users";
-import { ProductContext } from "../../types/products";
 import { useAuth } from "../../contexts/AuthContext";
 
 function Products() {
@@ -14,6 +13,7 @@ function Products() {
   const [view, setView] = useState<ViewTypes>(
     user!.views?.products || "profile"
   );
+  const { id } = useParams();
 
   function viewSetter(view: ViewTypes) {
     user?.views
@@ -26,15 +26,8 @@ function Products() {
 
   let location = useLocation();
   let pathname = location.pathname;
-  let navigate = useNavigate();
 
-  const [selection, setSelection] = useState(Number(useParams().id) || null);
-
-  let renderNoSelection = "/products" === pathname && !selection;
-
-  if (selection && pathname === "/products") {
-    navigate(`/products/${selection}/view`);
-  }
+  let renderNoSelection = "/products" === pathname && !id;
 
   const columns = [
     { keys: ["id"], header: "ID" },
@@ -58,8 +51,6 @@ function Products() {
               <LeftListWithAction
                 title={"Products"}
                 linkToPage={"view"}
-                setSelection={setSelection}
-                selection={selection}
                 getter={useProductsData}
               />
             </div>
@@ -70,7 +61,7 @@ function Products() {
               {renderNoSelection ? (
                 <NoSelection item={"product"} />
               ) : (
-                <Outlet context={[selection, setSelection]} />
+                <Outlet />
               )}
             </div>
           </div>
@@ -99,4 +90,4 @@ function Products() {
   );
 }
 
-export default Products;
+export { Products };

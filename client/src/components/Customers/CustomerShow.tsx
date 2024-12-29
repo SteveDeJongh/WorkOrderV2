@@ -1,9 +1,9 @@
-import MainPaneNav from "../multiuse/MainPaneNav";
+import { MainPaneNav } from "../multiuse/MainPaneNav";
 import { fetchCustomerData } from "../../services/customerServices";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Outlet } from "react-router-dom";
-import LoadingBox from "../multiuse/LoadingBox";
+import { LoadingBox } from "../multiuse/LoadingBox";
 import { Customer } from "../../types/customers";
 
 function CustomerShow() {
@@ -12,7 +12,7 @@ function CustomerShow() {
   const [mainError, setMainError] = useState(false);
   const [mainData, setMainData] = useState<Customer>();
 
-  let { id } = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
     async function loadCustomerData() {
@@ -57,4 +57,4 @@ function CustomerShow() {
   );
 }
 
-export default CustomerShow;
+export { CustomerShow };

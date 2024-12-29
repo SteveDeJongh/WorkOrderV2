@@ -8,4 +8,4 @@ function CustomerIndex() {
   );
 }
 
-export default CustomerIndex;
+export { CustomerIndex };

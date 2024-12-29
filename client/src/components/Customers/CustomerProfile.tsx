@@ -85,4 +85,4 @@ function CustomerProfile() {
   );
 }
 
-export default CustomerProfile;
+export { CustomerProfile };

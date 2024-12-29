@@ -1,21 +1,20 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Button from "../multiuse/Button";
-import { Product } from "../../types/products";
+import { Button } from "../multiuse/Button";
+import { EditableProductData, Product } from "../../types/products";
+import { UseMutateFunction } from "@tanstack/react-query";
 
 type Props = {
   modalForm?: boolean;
-  handleCancel?: Function;
   product?: Product;
   headerText: string;
-  onSubmit: Function;
+  onSubmit: UseMutateFunction<Product, Error, EditableProductData, unknown>;
   buttonText: string;
 };
 
 function ProductForm({
   modalForm,
-  handleCancel,
   product,
   headerText,
   onSubmit,
@@ -48,8 +47,7 @@ function ProductForm({
       : undefined,
   });
 
-  async function onSubmitHandler(data: Product) {
-    console.log(data);
+  async function onSubmitHandler(data: EditableProductData) {
     try {
       onSubmit(data);
     } catch (e) {
@@ -278,7 +276,7 @@ function ProductForm({
       {modalForm && (
         <div className="main-modal-form-actions">
           <div className="main-pane-form-actions">
-            <Button onClick={() => handleCancel()} text={"Cancel"} />
+            <Button text={"Cancel"} />
             <Button
               form="main-pane-content"
               disabled={isSubmitting}
@@ -292,4 +290,4 @@ function ProductForm({
   );
 }
 
-export default ProductForm;
+export { ProductForm };

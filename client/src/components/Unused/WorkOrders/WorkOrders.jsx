@@ -15,4 +15,4 @@ function Workorders() {
   );
 }
 
-export default Workorders;
+export { Workorders };

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchCustomerInvoices } from "../../services/customerServices";
 import { useParams, useNavigate } from "react-router-dom";
-import ScrollableTableTall from "../multiuse/ScrollableTableTall";
+import { ScrollableTableTall } from "../multiuse/ScrollableTableTall";
 import { Invoice } from "../../types/invoiceTypes";
 
 function CustomerInvoices() {
@@ -47,4 +47,4 @@ function CustomerInvoices() {
   );
 }
 
-export default CustomerInvoices;
+export { CustomerInvoices };

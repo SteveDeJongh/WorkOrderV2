@@ -67,4 +67,4 @@ function ScrollableTableTall({ columns, data, onClick }: Props) {
   );
 }
 
-export default ScrollableTableTall;
+export { ScrollableTableTall };

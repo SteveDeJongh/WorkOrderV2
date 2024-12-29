@@ -12,4 +12,4 @@ function PageIndex({ title }: props) {
   );
 }
 
-export default PageIndex;
+export { PageIndex };

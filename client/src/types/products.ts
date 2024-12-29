@@ -18,18 +18,27 @@ type Product = {
   updated_at: string;
 };
 
-type ProductContext = {
-  selection: number | null;
-  setSelection: React.Dispatch<React.SetStateAction<number | null>>;
+type EditableProductData = {
+  cost: string;
+  description: string;
+  inventory: true;
+  max: number;
+  min: number;
+  name: string;
+  price: string;
+  sku: string;
+  stock: number;
+  tax_rate_id: number;
+  upc: number;
 }
 
-type ProductShowOutlet = {
-  selection: ProductContext;
-  productData: {product: Product, isError: boolean, isPending: boolean, isSuccces: boolean};
+type ProductContext = {
+  mainData: Product;
+  setMainData: React.Dispatch<React.SetStateAction<Product | null>>;
 }
 
 function isProduct(product: Product | Object): product is Product {
   return (product as Product).sku !== undefined && (product as Product).name !== undefined;
 }
 
-export { Product, ProductContext, ProductShowOutlet, isProduct}
+export { EditableProductData, Product, ProductContext, isProduct}

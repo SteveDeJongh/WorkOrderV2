@@ -42,4 +42,4 @@ function SearchBar({ title, value, onSearchChange, onImmediateChange }: Props) {
   );
 }
 
-export default SearchBar;
+export { SearchBar };

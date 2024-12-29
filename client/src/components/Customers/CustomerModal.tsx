@@ -1,24 +1,26 @@
 import { useState, useEffect, useContext } from "react";
 import ReactDom from "react-dom";
-import LoadingBox from "../multiuse/LoadingBox";
-import CustomerForm from "./CustomerForm";
+import { LoadingBox } from "../multiuse/LoadingBox";
+import { CustomerForm } from "./CustomerForm";
 import {
   editCustomer,
   fetchCustomerData,
 } from "../../services/customerServices";
 import { objectToFormData } from "../../utils/formDataHelper";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { Customer } from "../../types/customers";
 
 type Props = {
   open: boolean;
   onClose: Function;
-  resourceId: number | null;
+  resourceId: number | undefined;
   searchTerm: String;
 };
 
 function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
-  function handleClose(e) {
-    if (e.target.className === "main-modal-background") {
+  function handleClose(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    let target = e.target as HTMLElement;
+    if (target.className === "main-modal-background") {
       onClose();
     }
   }
@@ -34,7 +36,7 @@ function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
     async function loadCustomerData() {
       try {
         setMainLoading(true);
-        const response = await fetchCustomerData(resourceId);
+        const response = await fetchCustomerData(resourceId as number);
         setMainData(response);
       } catch (e) {
         setMainError("An error occured fetching the data.");
@@ -48,7 +50,8 @@ function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
     }
   }, [resourceId]);
 
-  let entity = Object.keys(mainData).length < 1 ? false : mainData;
+  let entity: Customer | undefined =
+    Object.keys(mainData).length < 1 ? false : mainData;
 
   // Example Notices data, to be part of the customer data api fetch in the future.
   if (entity && entity.first_name == "Steve") {
@@ -191,4 +194,4 @@ function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
   );
 }
 
-export default CustomerModal;
+export { CustomerModal };

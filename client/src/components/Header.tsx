@@ -1,5 +1,5 @@
-import NavBar from "./NavBar";
-import UserNav from "./UserNav";
+import { NavBar } from "./NavBar";
+import { UserNav } from "./UserNav";
 import { Link } from "react-router-dom";
 
 function Header() {
@@ -24,4 +24,4 @@ function Header() {
   );
 }
 
-export default Header;
+export { Header };

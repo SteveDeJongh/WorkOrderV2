@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { editUser, getUserByToken } from "../../services/userServices";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import UserForm, { TUserForm } from "./UserForm";
-import { NestedUser } from "../../types/users";
+import { editUser } from "../../services/userServices";
+import { useMutation } from "@tanstack/react-query";
+import { UserForm, TUserForm } from "./UserForm";
 import { useAuth } from "../../contexts/AuthContext";
 
 function EditProfile() {
@@ -40,4 +39,4 @@ function EditProfile() {
   );
 }
 
-export default EditProfile;
+export { EditProfile };

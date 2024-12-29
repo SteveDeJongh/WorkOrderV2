@@ -82,4 +82,4 @@ function UserNav() {
   );
 }
 
-export default UserNav;
+export { UserNav };

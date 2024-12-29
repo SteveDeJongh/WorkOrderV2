@@ -3,29 +3,25 @@ import { NumericFormat } from "react-number-format";
 import { fetchLast3MovementsFor } from "../../services/movementServices";
 import { useQuery } from "@tanstack/react-query";
 import { dateTimeFormatter } from "../../utils";
-import { ProductShowOutlet } from "../../types/products";
+import { ProductContext } from "../../types/products";
 
 function ProductView() {
   const navigate = useNavigate();
-  const {
-    productData: { product, isError, isPending },
-  } = useOutletContext<ProductShowOutlet>();
+  const { mainData, setMainData } = useOutletContext<ProductContext>();
 
   const {
     data: movementData,
     isError: movementError,
     isPending: movementPending,
   } = useQuery({
-    queryKey: ["3productMovements", product.id],
-    queryFn: () => fetchLast3MovementsFor(product.id),
+    queryKey: ["3productMovements", mainData.id],
+    queryFn: () => fetchLast3MovementsFor(mainData.id),
     staleTime: 0,
   });
 
   return (
     <>
-      {isPending && <p>Information loading...</p>}
-      {isError && <p>An error occured.</p>}
-      {!isPending && !isError && (
+      {mainData && (
         <>
           <div className="main-pane-content">
             <div className="panel">
@@ -34,25 +30,25 @@ function ProductView() {
                 <div className="panel-contents-section">
                   <div className="panel-section-desc">Name:</div>
                   <div className="panel-section-data">
-                    <div className="data-item">{product.name}</div>
+                    <div className="data-item">{mainData.name}</div>
                   </div>
                 </div>
                 <div className="panel-contents-section">
                   <div className="panel-section-desc">Description:</div>
                   <div className="panel-section-data">
-                    <div className="data-item">{product.description}</div>
+                    <div className="data-item">{mainData.description}</div>
                   </div>
                 </div>
                 <div className="panel-contents-section">
                   <div className="panel-section-desc">Sku:</div>
                   <div className="panel-section-data">
-                    <div className="data-item">{product.sku}</div>
+                    <div className="data-item">{mainData.sku}</div>
                   </div>
                 </div>
                 <div className="panel-contents-section">
                   <div className="panel-section-desc">UPC:</div>
                   <div className="panel-section-data">
-                    <div className="data-item">{product.upc}</div>
+                    <div className="data-item">{mainData.upc}</div>
                   </div>
                 </div>
               </div>
@@ -65,7 +61,7 @@ function ProductView() {
                   <div className="panel-section-data">
                     <div className="data-item">
                       <NumericFormat
-                        value={Number(product.price).toFixed(2)}
+                        value={Number(mainData.price).toFixed(2)}
                         displayType={"text"}
                         thousandSeparator={true}
                         prefix={"$"}
@@ -79,7 +75,7 @@ function ProductView() {
                     <div className="data-item">
                       {" "}
                       <NumericFormat
-                        value={Number(product.cost).toFixed(2)}
+                        value={Number(mainData.cost).toFixed(2)}
                         displayType={"text"}
                         thousandSeparator={true}
                         prefix={"$"}
@@ -92,34 +88,34 @@ function ProductView() {
             <div className="panel customer-details">
               <h3>Inventory</h3>
               <div className="panel-contents">
-                {product.inventory && (
+                {mainData.inventory && (
                   <>
                     <div className="panel-contents-section">
                       <div className="panel-section-desc">Stock:</div>
                       <div className="panel-section-data">
-                        <div className="data-item">{product.stock}</div>
+                        <div className="data-item">{mainData.stock}</div>
                       </div>
                     </div>
                     <div className="panel-contents-section">
                       <div className="panel-section-desc">Min:</div>
                       <div className="panel-section-data">
-                        <div className="data-item">{product.min}</div>
+                        <div className="data-item">{mainData.min}</div>
                       </div>
                       <div className="panel-contents-section">
                         <div className="panel-section-desc">Max:</div>
                         <div className="panel-section-data">
-                          <div className="data-item">{product.max}</div>
+                          <div className="data-item">{mainData.max}</div>
                         </div>
                       </div>
                     </div>
                   </>
                 )}
-                {!product.inventory && (
+                {!mainData.inventory && (
                   <>
                     <div className="panel-contents-section">
                       <div className="panel-section-desc">Stock:</div>
                       <div className="panel-section-data">
-                        <div className="data-item">{product.stock}</div>
+                        <div className="data-item">{mainData.stock}</div>
                       </div>
                     </div>
                   </>
@@ -185,7 +181,7 @@ function ProductView() {
                     <tr>
                       <td colSpan={"100%"}>
                         <Link
-                          to={`/products/${product.id}/movements`}
+                          to={`/products/${mainData.id}/movements`}
                           className="inLineLink"
                         >
                           View Full Movement History
@@ -203,4 +199,4 @@ function ProductView() {
   );
 }
 
-export default ProductView;
+export { ProductView };

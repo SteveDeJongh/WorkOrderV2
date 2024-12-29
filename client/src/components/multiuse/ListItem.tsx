@@ -79,4 +79,4 @@ function ListItem({ value, linkToPage, selected }: Props) {
   );
 }
 
-export default ListItem;
+export { ListItem };

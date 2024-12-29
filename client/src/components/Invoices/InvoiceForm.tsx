@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createInvoice, editInvoice } from "../../services/invoiceServices";
 import { CapitalizeFullName, sumAProp } from "../../utils/index";
-import FormCustomerSection from "./Customer/FormCustomerSection";
-import FormInvoiceLines from "./InvoiceLines/FormInvoiceLines";
-import FormPaymentLines from "./Payments/FormPaymentLines";
-import InvoiceTotalDetails from "./InvoiceTotalDetails";
-import Button from "../multiuse/Button";
+import { FormCustomerSection } from "./Customer/FormCustomerSection";
+import { FormInvoiceLines } from "./InvoiceLines/FormInvoiceLines";
+import { FormPaymentLines } from "./Payments/FormPaymentLines";
+import { InvoiceTotalDetails } from "./InvoiceTotalDetails";
+import { Button } from "../multiuse/Button";
 import { Action, Invoice } from "../../types/invoiceTypes";
 import { useSelection } from "./Invoices";
 import { useAuth } from "../../contexts/AuthContext";
@@ -258,4 +258,4 @@ function invoiceReducer(invoice: Invoice, action: Action): Invoice {
   return invoice;
 }
 
-export default InvoiceForm;
+export { InvoiceForm };

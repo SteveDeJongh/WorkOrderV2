@@ -1,4 +1,4 @@
-import CustomerForm from "./CustomerForm";
+import { CustomerForm } from "./CustomerForm";
 import { useNavigate } from "react-router-dom";
 import { createCustomer } from "../../services/customerServices";
 import { objectToFormData } from "../../utils/formDataHelper";
@@ -30,4 +30,4 @@ function CustomerNew() {
   );
 }
 
-export default CustomerNew;
+export { CustomerNew };

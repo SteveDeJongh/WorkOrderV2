@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import PaymentLine from "./PaymentLine";
-import Button from "../../multiuse/Button";
-import PaymentModal from "./PaymentModal";
+import { PaymentLine } from "./PaymentLine";
+import { Button } from "../../multiuse/Button";
+import { PaymentModal } from "./PaymentModal";
 import { Action } from "../../../types/invoiceTypes";
 import { Payment } from "../../../types/payments";
 
@@ -13,7 +13,7 @@ type props = {
   dispatch: React.Dispatch<Action>;
 };
 
-export default function FormPaymentLines({
+function FormPaymentLines({
   payments = [],
   adminActions,
   balance,
@@ -109,3 +109,5 @@ export default function FormPaymentLines({
     </>
   );
 }
+
+export { FormPaymentLines };

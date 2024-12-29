@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import UserNav from "./UserNav";
+import { UserNav } from "./UserNav";
 import { MemoryRouter } from "react-router-dom";
 import { UserContext } from "../contexts/user-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

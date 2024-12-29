@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import Button from "../multiuse/Button";
+import { Button } from "../multiuse/Button";
 import { Customer, EditableCustomerData } from "../../types/customers";
 
 type props = {
@@ -213,4 +213,4 @@ function CustomerForm({
   );
 }
 
-export default CustomerForm;
+export { CustomerForm };

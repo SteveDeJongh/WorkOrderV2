@@ -20,4 +20,4 @@ function useInvoicesData(searchTerm: string) {
   return { data, loading, error };
 }
 
-export default useInvoicesData;
+export { useInvoicesData };

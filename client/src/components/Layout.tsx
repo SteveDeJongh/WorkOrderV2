@@ -1,5 +1,5 @@
-import Header from "./Header";
-import Footer from "./Footer";
+import { Header } from "./Header";
+import { Footer } from "./Footer";
 import { Outlet } from "react-router-dom";
 
 function Layout() {
@@ -12,4 +12,4 @@ function Layout() {
   );
 }
 
-export default Layout;
+export { Layout };

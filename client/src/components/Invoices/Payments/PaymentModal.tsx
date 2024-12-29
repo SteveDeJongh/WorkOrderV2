@@ -1,5 +1,5 @@
 import ReactDom from "react-dom";
-import PaymentForm from "./PaymentForm";
+import { PaymentForm } from "./PaymentForm";
 import { Payment } from "../../../types/payments";
 
 type Props = {
@@ -80,4 +80,4 @@ function PaymentModal({
   );
 }
 
-export default PaymentModal;
+export { PaymentModal };

@@ -1,7 +1,7 @@
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { editCustomer } from "../../services/customerServices";
 import { objectToFormData } from "../../utils/formDataHelper";
-import CustomerForm from "./CustomerForm";
+import { CustomerForm } from "./CustomerForm";
 import { CustomerContext, EditableCustomerData } from "../../types/customers";
 
 function CustomerEdit() {
@@ -35,4 +35,4 @@ function CustomerEdit() {
   );
 }
 
-export default CustomerEdit;
+export { CustomerEdit };

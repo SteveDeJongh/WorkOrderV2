@@ -36,4 +36,4 @@ function NavBar() {
   );
 }
 
-export default NavBar;
+export { NavBar };

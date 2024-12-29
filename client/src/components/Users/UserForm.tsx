@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import Button from "../multiuse/Button";
+import { Button } from "../multiuse/Button";
 import { User, RoleTypes } from "../../types/users";
 import { useNavigate } from "react-router-dom";
 
@@ -194,4 +194,4 @@ function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
   );
 }
 
-export default UserForm;
+export { UserForm };

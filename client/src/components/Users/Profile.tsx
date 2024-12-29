@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
 import { CapitalizeFullName } from "../../utils";
-import PageTitle from "../PageTitle";
+import { PageTitle } from "../PageTitle";
 import { useAuth } from "../../contexts/AuthContext";
 
 function Profile() {
   const { user } = useAuth();
-
-  console.log(user);
 
   return (
     <>
@@ -77,4 +75,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export { Profile };

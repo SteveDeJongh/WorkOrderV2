@@ -1,9 +1,9 @@
-import ProductForm from "./ProductForm";
+import { ProductForm } from "./ProductForm";
 import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../services/productServices";
 import { objectToFormData } from "../../utils/formDataHelper";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Product } from "../../types/products";
+import { EditableProductData, Product } from "../../types/products";
 
 function ProductNew() {
   const navigate = useNavigate();
@@ -15,17 +15,12 @@ function ProductNew() {
     isError,
     isSuccess,
   } = useMutation({
-    mutationFn: (rawData) => {
+    mutationFn: (rawData: EditableProductData) => {
       const formData = objectToFormData({ product: rawData });
-      console.log("Creating product...");
       return createProduct(formData);
     },
     onSuccess: (newProduct: Product) => {
-      console.log("Product created!");
-      console.log(newProduct);
-      // queryClient.setQueryData(["products"], (oldProducts) => {
-      //   [...oldProducts, newProduct];
-      // });
+      queryClient.invalidateQueries({ queryKey: ["productsSearch"] });
       navigate(`/products/${newProduct.id}/view`);
     },
   });
@@ -43,4 +38,4 @@ function ProductNew() {
   );
 }
 
-export default ProductNew;
+export { ProductNew };

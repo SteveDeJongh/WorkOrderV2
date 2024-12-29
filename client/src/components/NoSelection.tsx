@@ -10,4 +10,4 @@ function NoSelection({ item }: Props) {
   );
 }
 
-export default NoSelection;
+export { NoSelection };

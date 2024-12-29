@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import Button from "../../multiuse/Button";
+import { Button } from "../../multiuse/Button";
 import { Payment } from "../../../types/payments";
 import { useEffect, useState } from "react";
 import { showAsDollarAmount } from "../../../utils/index";
@@ -183,4 +183,4 @@ function PaymentForm({
   );
 }
 
-export default PaymentForm;
+export { PaymentForm };

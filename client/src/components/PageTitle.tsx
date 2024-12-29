@@ -15,4 +15,4 @@ const PageTitle = ({ title }: Props) => {
   return null;
 };
 
-export default PageTitle;
+export { PageTitle };

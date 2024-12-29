@@ -36,7 +36,7 @@ function TabelData({ showAsDollars, val, deleted }: TabelDataProps) {
   );
 }
 
-export default function PaymentLine({
+function PaymentLine({
   paymentData,
   lineClick,
   adminActions,
@@ -81,3 +81,5 @@ export default function PaymentLine({
     </tr>
   );
 }
+
+export { PaymentLine };

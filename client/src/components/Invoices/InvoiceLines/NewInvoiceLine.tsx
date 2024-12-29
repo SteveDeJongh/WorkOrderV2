@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
-import useProductsData from "../../../hooks/useProductsData";
-import useURLSearchParam from "../../../hooks/useURLSearchParam";
-import SearchBar from "../../multiuse/SearchBar";
-import Button from "../../multiuse/Button";
-import SearchResultsTable from "../../multiuse/SearchResultsTable";
+import { useProductsData } from "../../../hooks/useProductsData";
+import { useURLSearchParam } from "../../../hooks/useURLSearchParam";
+import { SearchBar } from "../../multiuse/SearchBar";
+import { Button } from "../../multiuse/Button";
+import { SearchResultsTable } from "../../multiuse/SearchResultsTable";
 import { Product } from "../../../types/products";
 
 type props = {
   addLine: Function;
 };
 
-export default function NewInvoiceLine({ addLine }: props) {
+function NewInvoiceLine({ addLine }: props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
     useURLSearchParam("productSearch");
@@ -95,3 +95,5 @@ export default function NewInvoiceLine({ addLine }: props) {
     </div>
   );
 }
+
+export { NewInvoiceLine };

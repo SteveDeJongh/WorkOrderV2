@@ -23,4 +23,4 @@ function useCustomersData(searchTerm: string) {
   return { data, loading, error };
 }
 
-export default useCustomersData;
+export { useCustomersData };

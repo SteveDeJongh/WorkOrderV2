@@ -1,8 +1,8 @@
-import InvoiceForm from "../Invoices/InvoiceForm";
+import { InvoiceForm } from "../Invoices/InvoiceForm";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { fetchInvoiceData } from "../../services/invoiceServices";
-import LoadingBox from "../multiuse/LoadingBox";
+import { LoadingBox } from "../multiuse/LoadingBox";
 
 function InvoiceShow() {
   const { id } = useParams();
@@ -27,4 +27,4 @@ function InvoiceShow() {
   );
 }
 
-export default InvoiceShow;
+export { InvoiceShow };

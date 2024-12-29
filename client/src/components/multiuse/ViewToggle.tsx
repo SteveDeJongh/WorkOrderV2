@@ -1,4 +1,4 @@
-import Button from "./Button";
+import { Button } from "./Button";
 
 type props = {
   view: string;
@@ -29,4 +29,4 @@ function ViewToggle({ view, setView }: props) {
   );
 }
 
-export default ViewToggle;
+export { ViewToggle };

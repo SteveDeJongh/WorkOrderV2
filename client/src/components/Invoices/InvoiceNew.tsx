@@ -1,4 +1,4 @@
-import InvoiceForm from "./InvoiceForm";
+import { InvoiceForm } from "./InvoiceForm";
 import { Invoice } from "../../types/invoiceTypes";
 import { useEffect } from "react";
 import { useSelection } from "./Invoices";
@@ -38,4 +38,4 @@ function InvoiceNew() {
   );
 }
 
-export default InvoiceNew;
+export { InvoiceNew };

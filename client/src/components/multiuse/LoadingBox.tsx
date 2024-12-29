@@ -44,4 +44,4 @@ function LoadingBox({ text }: Props) {
   );
 }
 
-export default LoadingBox;
+export { LoadingBox };

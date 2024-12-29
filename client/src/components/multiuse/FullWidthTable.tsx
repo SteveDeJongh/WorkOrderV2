@@ -5,12 +5,12 @@ import {
   flexRender,
   createColumnHelper,
 } from "@tanstack/react-table";
-import useURLSearchParam from "../../hooks/useURLSearchParam";
-import SearchBar from "./SearchBar";
+import { useURLSearchParam } from "../../hooks/useURLSearchParam";
+import { SearchBar } from "./SearchBar";
 import { useParams } from "react-router-dom";
-import CustomerModal from "../Customers/CustomerModal";
-import ProductModal from "../Products/ProductModal";
-import InvoiceModal from "../Invoices/InvoiceModal";
+import { CustomerModal } from "../Customers/CustomerModal";
+import { ProductModal } from "../Products/ProductModal";
+import { InvoiceModal } from "../Invoices/InvoiceModal";
 
 type Props = {
   title: string;
@@ -170,4 +170,4 @@ function FullWidthTable({ title, fetcher, columns }: Props) {
   );
 }
 
-export default FullWidthTable;
+export { FullWidthTable };

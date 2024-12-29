@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createUser } from "../../services/userServices";
-import PageTitle from "../PageTitle";
+import { PageTitle } from "../PageTitle";
 import { UserResponse } from "../../types/users";
-import UserForm, { TUserForm } from "./UserForm";
+import { UserForm, TUserForm } from "./UserForm";
 import { useAuth } from "../../contexts/AuthContext";
 
 function SignUp() {
@@ -175,4 +175,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export { SignUp };

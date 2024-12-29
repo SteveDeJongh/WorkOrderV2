@@ -44,4 +44,4 @@ const MainPaneNav: React.FC<MainPaneNavProps> = ({
   );
 };
 
-export default MainPaneNav;
+export { MainPaneNav };

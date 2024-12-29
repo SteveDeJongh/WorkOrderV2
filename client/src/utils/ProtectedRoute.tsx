@@ -24,4 +24,4 @@ function ProtectedRoute({ role }: Props) {
   return <Outlet />;
 }
 
-export default ProtectedRoute;
+export { ProtectedRoute };

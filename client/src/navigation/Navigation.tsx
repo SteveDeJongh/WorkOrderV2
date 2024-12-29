@@ -1,35 +1,35 @@
 import { createBrowserRouter } from "react-router-dom";
 
 // Navigation/Layout
-import Layout from "../components/Layout";
-import Index from "../components/Index";
-import ErrorPage from "../error-page";
-import PageTitle from "../components/PageTitle";
-import ProtectedRoute from "../utils/ProtectedRoute";
+import { Layout } from "../components/Layout";
+import { Index } from "../components/Index";
+import { ErrorPage } from "../error-page";
+import { PageTitle } from "../components/PageTitle";
+import { ProtectedRoute } from "../utils/ProtectedRoute";
 // Customers
-import Customers from "../components/Customers/Customers";
-import CustomerProfile from "../components/Customers/CustomerProfile";
-import CustomerNew from "../components/Customers/CustomerNew";
-import CustomerShow from "../components/Customers/CustomerShow";
-import CustomerEdit from "../components/Customers/CustomerEdit";
-import CustomerInvoices from "../components/Customers/CustomerInvoices";
+import { Customers } from "../components/Customers/Customers";
+import { CustomerProfile } from "../components/Customers/CustomerProfile";
+import { CustomerNew } from "../components/Customers/CustomerNew";
+import { CustomerShow } from "../components/Customers/CustomerShow";
+import { CustomerEdit } from "../components/Customers/CustomerEdit";
+import { CustomerInvoices } from "../components/Customers/CustomerInvoices";
 // Products
-import Products from "../components/Products/Products";
-import PageIndex from "../components/multiuse/PageIndex";
-import ProductShow from "../components/Products/ProductShow";
-import ProductView from "../components/Products/ProductView";
-import ProductMovements from "../components/Products/ProductMovements";
-import ProductEdit from "../components/Products/ProductEdit";
-import ProductNew from "../components/Products/ProductNew";
+import { Products } from "../components/Products/Products";
+import { PageIndex } from "../components/multiuse/PageIndex";
+import { ProductShow } from "../components/Products/ProductShow";
+import { ProductView } from "../components/Products/ProductView";
+import { ProductMovements } from "../components/Products/ProductMovements";
+import { ProductEdit } from "../components/Products/ProductEdit";
+import { ProductNew } from "../components/Products/ProductNew";
 // Invoices
-import Invoices from "../components/Invoices/Invoices";
-import InvoiceShow from "../components/Invoices/InvoiceShow";
-import InvoiceNew from "../components/Invoices/InvoiceNew";
+import { Invoices } from "../components/Invoices/Invoices";
+import { InvoiceShow } from "../components/Invoices/InvoiceShow";
+import { InvoiceNew } from "../components/Invoices/InvoiceNew";
 // Users
-import SignUp from "../components/Users/SignUp";
-import Login from "../components/Users/Login";
-import Profile from "../components/Users/Profile";
-import EditProfile from "../components/Users/EditProfile";
+import { SignUp } from "../components/Users/SignUp";
+import { Login } from "../components/Users/Login";
+import { Profile } from "../components/Users/Profile";
+import { EditProfile } from "../components/Users/EditProfile";
 
 export const router = createBrowserRouter([
   {

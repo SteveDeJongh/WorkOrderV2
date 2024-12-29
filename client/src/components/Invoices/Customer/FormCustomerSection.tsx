@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import CustomerSearchModal from "./CustomerSearchModal";
+import { CustomerSearchModal } from "./CustomerSearchModal";
 import { fetchCustomerData } from "../../../services/customerServices";
-import LoadingBox from "../../multiuse/LoadingBox";
-import Button from "../../multiuse/Button";
+import { LoadingBox } from "../../multiuse/LoadingBox";
+import { Button } from "../../multiuse/Button";
 import { Action } from "../../../types/invoiceTypes";
 import { Customer } from "../../../types/customers";
 
@@ -11,7 +11,7 @@ type props = {
   dispatch: React.Dispatch<Action>;
 };
 
-export default function FormCustomerSection({ customerId, dispatch }: props) {
+function FormCustomerSection({ customerId, dispatch }: props) {
   const [customerModal, setCustomerModal] = useState(false);
   const [loading, setloading] = useState(false);
   const [customer, setCustomer] = useState<Customer>();
@@ -128,3 +128,5 @@ export default function FormCustomerSection({ customerId, dispatch }: props) {
     </div>
   );
 }
+
+export { FormCustomerSection };
