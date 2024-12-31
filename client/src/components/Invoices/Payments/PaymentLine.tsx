@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Payment } from "../../../types/payments";
 import { dateRegExp, dateTimeFormatter } from "../../../utils/index";
 
@@ -22,7 +21,7 @@ type columnProps = {
 
 function TabelData({ showAsDollars, val, deleted }: TabelDataProps) {
   val = showAsDollars ? `$${Number(val).toFixed(2)}` : val;
-  val = dateRegExp.test(val) ? dateTimeFormatter(val) : val;
+  val = dateRegExp.test(val as string) ? dateTimeFormatter(val as string) : val;
 
   return (
     <td>
@@ -42,7 +41,7 @@ function PaymentLine({
   adminActions,
   toggleDelete,
 }: props) {
-  const [payment, _] = useState(paymentData);
+  const payment = { ...paymentData };
 
   let columns: Array<columnProps> = [
     {

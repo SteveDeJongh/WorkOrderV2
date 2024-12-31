@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Button } from "../../multiuse/Button";
-import { Payment } from "../../../types/payments";
+import { EditablePaymentData, Payment } from "../../../types/payments";
 import { useEffect, useState } from "react";
 import { showAsDollarAmount } from "../../../utils/index";
 
@@ -9,7 +9,7 @@ type Props = {
   payment?: Payment;
   onSubmit: Function;
   buttonText: string;
-  invoice_id: Number | null;
+  invoice_id: number | null;
   balance: number;
 };
 
@@ -23,7 +23,6 @@ function PaymentForm({
 }: Props) {
   const {
     register,
-    unregister,
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
@@ -39,12 +38,11 @@ function PaymentForm({
           change: payment.change,
         }
       : {
-          id: undefined,
-          created_at: undefined,
-          invoice_id: invoice_id,
-          method: undefined,
-          amount: undefined,
-          change: undefined,
+          created_at: "",
+          invoice_id: invoice_id ? invoice_id : 0,
+          method: "Cash",
+          amount: balance,
+          change: 0,
         },
   });
 
@@ -64,10 +62,11 @@ function PaymentForm({
       if (watchAmount && watchAmount < 0) {
         setChange(0);
       } else {
-        if (Number(watchAmount) - balance <= 0) {
+        let existingPayment = payment ? Number(payment.amount) : 0;
+        if (Number(watchAmount) - balance - existingPayment <= 0) {
           setChange(0);
         } else {
-          setChange(Number(watchAmount) - balance);
+          setChange(Number(watchAmount) - balance - existingPayment);
         }
       }
       setShowChange(true);
@@ -77,7 +76,7 @@ function PaymentForm({
     }
   }, [watchMethod, watchAmount]);
 
-  async function onSubmitHandler(data: Payment) {
+  async function onSubmitHandler(data: EditablePaymentData) {
     try {
       onSubmit(data);
     } catch (e) {

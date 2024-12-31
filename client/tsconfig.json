@@ -8,6 +8,8 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "preserve",
+    "allowJs": true,
+    "checkJs": false,
   },
   "include": ["./src/**/*"],
   "$schema": "https://json.schemastore.org/tsconfig",

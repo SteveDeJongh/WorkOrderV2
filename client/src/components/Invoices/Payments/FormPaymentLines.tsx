@@ -27,6 +27,10 @@ function FormPaymentLines({
     setLines(payments);
   }, [payments]);
 
+  useEffect(() => {
+    console.log("lines changed", lines);
+  }, [lines]);
+
   console.log("*** FormPaymentLines rerender");
 
   function toggleDelete(paymentId: string | number, created_at: string | Date) {
@@ -43,7 +47,7 @@ function FormPaymentLines({
   const [payment, setPayment] = useState<Payment | undefined>();
   const [isOpen, setIsOpen] = useState(false);
 
-  function handleClick(line: Payment, e: React.MouseEvent): void {
+  function handlePaymentClick(line: Payment, e: React.MouseEvent): void {
     if ((e.target as HTMLInputElement).tagName !== "INPUT") {
       setPayment(line);
       setIsOpen(true);
@@ -83,7 +87,7 @@ function FormPaymentLines({
                           key={line.id ? line.id : `new${idx}`}
                           paymentData={line}
                           lineClick={(e: React.MouseEvent) =>
-                            handleClick(line, e)
+                            handlePaymentClick(line, e)
                           }
                           adminActions={adminActions}
                           toggleDelete={toggleDelete}

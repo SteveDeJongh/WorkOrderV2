@@ -1,15 +1,7 @@
 import { InvoiceForm } from "./InvoiceForm";
 import { Invoice } from "../../types/invoiceTypes";
-import { useEffect } from "react";
-import { useSelection } from "./Invoices";
 
 function InvoiceNew() {
-  const { selection, setSelection } = useSelection();
-
-  useEffect(() => {
-    setSelection("");
-  });
-
   let newInvoice: Invoice = {
     id: null,
     customer_id: 0,

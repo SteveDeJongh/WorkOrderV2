@@ -6,8 +6,6 @@ type props = {
 };
 
 function InvoiceTotalDetails({ invoice }: props) {
-  console.log("*** InvoiceTotalDetails rerender");
-
   return (
     <>
       <div className="panel">

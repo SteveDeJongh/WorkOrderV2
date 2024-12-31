@@ -9,7 +9,6 @@ import { FormPaymentLines } from "./Payments/FormPaymentLines";
 import { InvoiceTotalDetails } from "./InvoiceTotalDetails";
 import { Button } from "../multiuse/Button";
 import { Action, Invoice } from "../../types/invoiceTypes";
-import { useSelection } from "./Invoices";
 import { useAuth } from "../../contexts/AuthContext";
 
 type Props = {
@@ -22,9 +21,6 @@ function InvoiceForm({ modalForm, buttonText, invoiceData }: Props) {
   // User
   const { user } = useAuth();
   const adminActions = user?.roles.includes("admin");
-
-  // Selection
-  const { selection, setSelection } = useSelection();
 
   // Reducer
   const [invoice, dispatch] = useReducer(invoiceReducer, invoiceData);
@@ -40,6 +36,7 @@ function InvoiceForm({ modalForm, buttonText, invoiceData }: Props) {
 
   // Updates Reducer and state data anytime invoiceData changes.
   useEffect(() => {
+    console.log("invoiceData changed", invoiceData);
     dispatch({ type: "setInvoice", data: invoiceData });
     setMainData(invoiceData);
     setInvoiceID(invoiceData.id);
@@ -64,7 +61,6 @@ function InvoiceForm({ modalForm, buttonText, invoiceData }: Props) {
     },
     onSuccess: (returnedData: Invoice) => {
       if (!invoiceID) {
-        setSelection(returnedData.id || "");
         navigate(`/invoices/${returnedData.id}/`);
       }
       dispatch({ type: "setInvoice", data: returnedData });

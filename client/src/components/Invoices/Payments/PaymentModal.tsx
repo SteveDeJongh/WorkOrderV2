@@ -1,6 +1,7 @@
 import ReactDom from "react-dom";
 import { PaymentForm } from "./PaymentForm";
-import { Payment } from "../../../types/payments";
+import { EditablePaymentData, Payment } from "../../../types/payments";
+import { useEffect } from "react";
 
 type Props = {
   open: boolean;
@@ -26,7 +27,11 @@ function PaymentModal({
     }
   }
 
-  function savePayment(data: Payment) {
+  useEffect(() => {
+    console.log("balance changed", balance);
+  }, [balance]);
+
+  function savePayment(data: EditablePaymentData) {
     if (data.id || data.created_at) {
       dispatch({ type: "updatePayment", payment: data });
     } else {

@@ -1,11 +1,11 @@
-export function CapitalizeFullName(name) {
+export function CapitalizeFullName(name: string): string {
   return name
     .split(" ")
     .map((p) => p[0].toUpperCase() + p.slice(1, p.length).toLowerCase())
     .join(" ");
 }
 
-export function snakeCase(val) {
+export function snakeCase(val: string): string {
   return val.split('').map((c) => {
     if (c === c.toUpperCase()) {
       return `_${c.toLowerCase()}`;
@@ -46,7 +46,7 @@ export function formDataLogger(formData) {
   })
 }
 
-export function sumAProp(collection, prop, unlessOpts) {
+export function sumAProp(collection, prop, unlessOpts = {}) {
   return collection.reduce((acc, x) => {
     if (unlessOpts) {
       let ok = true;
@@ -64,7 +64,7 @@ export function sumAProp(collection, prop, unlessOpts) {
 
 export const dateRegExp = new RegExp(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/)
 
-export function dateTimeFormatter(date) {
+export function dateTimeFormatter(date: string): string {
   return new Date(date).toLocaleDateString('en-US', {
     weekday: 'long',
     day: 'numeric',
@@ -77,6 +77,6 @@ export function dateTimeFormatter(date) {
     timeZone: "Canada/Pacific"});
 }
 
-export function showAsDollarAmount(value) {
+export function showAsDollarAmount(value: string | number): string {
   return `$${Number(value).toFixed(2)}`
 }

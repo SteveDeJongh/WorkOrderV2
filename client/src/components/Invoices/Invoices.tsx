@@ -1,16 +1,10 @@
 import { LeftListWithAction } from "../multiuse/LeftListWithAction";
-import {
-  Outlet,
-  useParams,
-  useLocation,
-  useOutletContext,
-} from "react-router-dom";
+import { Outlet, useParams, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { NoSelection } from "../NoSelection";
 import { FullWidthTable } from "../multiuse/FullWidthTable";
 import { ViewToggle } from "../multiuse/ViewToggle";
 import { useInvoicesData } from "../../hooks/useInvoicesData";
-import { SelectionContext } from "../../types/invoiceTypes";
 import { ViewTypes } from "../../types/users";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -19,22 +13,15 @@ function Invoices() {
   const [view, setView] = useState<ViewTypes>(
     user?.views?.invoices || "profile"
   );
+  const { id } = useParams();
 
   function viewSetter(view: ViewTypes) {
-    user?.views
-      ? user?.views
-      : (user!.views = { customers: null, products: null, invoices: null });
-
     user!.views["invoices"] = view;
     setView(view);
   }
 
   let location = useLocation();
   let pathname = location.pathname;
-
-  const [selection, setSelection] = useState(Number(useParams().id) || null);
-
-  console.log("&&& Re-rendering Invoices, selection is:", selection, pathname);
 
   const columns = [
     { keys: ["id"], header: "ID" },
@@ -44,7 +31,7 @@ function Invoices() {
     { keys: ["status"], header: "Status" },
   ];
 
-  let renderNoSelection = "/invoices" === pathname && !selection;
+  let renderNoSelection = "/invoices" === pathname && !id;
 
   return (
     <>
@@ -55,8 +42,6 @@ function Invoices() {
               <LeftListWithAction
                 title={"Invoices"}
                 linkToPage={""}
-                setSelection={setSelection}
-                selection={selection}
                 getter={useInvoicesData}
               />
             </div>
@@ -67,7 +52,7 @@ function Invoices() {
               {renderNoSelection ? (
                 <NoSelection item={"invoice"} />
               ) : (
-                <Outlet context={{ selection, setSelection }} />
+                <Outlet />
               )}
             </div>
           </div>
@@ -94,10 +79,6 @@ function Invoices() {
       )}
     </>
   );
-}
-
-export function useSelection() {
-  return useOutletContext<SelectionContext>();
 }
 
 export { Invoices };

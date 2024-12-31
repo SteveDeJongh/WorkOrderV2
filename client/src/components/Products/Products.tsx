@@ -16,10 +16,6 @@ function Products() {
   const { id } = useParams();
 
   function viewSetter(view: ViewTypes) {
-    user?.views
-      ? user?.views
-      : (user!.views = { customers: null, products: null, invoices: null });
-
     user!.views["products"] = view;
     setView(view);
   }
