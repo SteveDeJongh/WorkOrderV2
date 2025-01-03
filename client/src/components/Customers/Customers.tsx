@@ -7,6 +7,7 @@ import { useCustomersData } from "../../hooks/useCustomersData";
 import { ViewToggle } from "../multiuse/ViewToggle";
 import { ViewTypes } from "../../types/users";
 import { useAuth } from "../../contexts/AuthContext";
+import { CUSTOMERCOLUMNS } from "./columns";
 
 function Customers() {
   const { user } = useAuth();
@@ -25,20 +26,6 @@ function Customers() {
 
   let renderNoSelection = "/customers" === pathname && !id;
 
-  const columns = [
-    { keys: ["id"], header: "ID" },
-    { keys: ["first_name", "last_name"], header: "Full Name" },
-    { keys: ["first_name"], header: "First Name" },
-    { keys: ["last_name"], header: "Last Name" },
-    { keys: ["phone"], header: "Phone" },
-    { keys: ["email"], header: "Email" },
-    { keys: ["address"], header: "Address" },
-    { keys: ["city"], header: "City" },
-    { keys: ["province"], header: "Province" },
-    { keys: ["country"], header: "Country" },
-  ];
-
-  console.log("Re-rendering customers!");
   return (
     <>
       {view === "profile" && (
@@ -76,7 +63,7 @@ function Customers() {
                 <FullWidthTable
                   title={"Customers"}
                   fetcher={useCustomersData}
-                  columns={columns}
+                  columns={CUSTOMERCOLUMNS}
                 />
               </div>
             </div>

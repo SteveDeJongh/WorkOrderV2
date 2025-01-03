@@ -11,7 +11,7 @@ import { useAuth } from "../../contexts/AuthContext";
 function Products() {
   const { user } = useAuth();
   const [view, setView] = useState<ViewTypes>(
-    user!.views?.products || "profile"
+    user?.views.products || "profile"
   );
   const { id } = useParams();
 

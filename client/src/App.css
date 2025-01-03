@@ -739,6 +739,10 @@ flex-direction: column;;
   height: 71vh;
 }
 
+.scrollable-table.tall.modal-content {
+  height: 80%;
+}
+
 .scrollable-table.short {
   height: 16vh;
 }

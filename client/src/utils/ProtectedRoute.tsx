@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { RoleTypes } from "../types/users";
 import { useAuth } from "../contexts/AuthContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   role: RoleTypes;
@@ -10,10 +10,11 @@ type Props = {
 function ProtectedRoute({ role }: Props) {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    console.log("User in hook", user);
     if (!user) {
+      console.log("in here?");
       navigate("/login");
       return;
     }
@@ -22,9 +23,13 @@ function ProtectedRoute({ role }: Props) {
       navigate(-1);
       return;
     }
+
+    setChecked(true);
   });
 
-  return <Outlet />;
+  if (checked) {
+    return <Outlet />;
+  }
 }
 
 export { ProtectedRoute };
