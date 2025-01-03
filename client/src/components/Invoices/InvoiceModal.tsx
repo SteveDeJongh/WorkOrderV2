@@ -9,7 +9,7 @@ import { useQueryClient, useMutation } from "@tanstack/react-query";
 type Props = {
   open: boolean;
   onClose: Function;
-  resourceId: number | undefined;
+  resourceId: number;
   searchTerm: String;
 };
 
@@ -28,7 +28,7 @@ function InvoiceModal({ open, onClose, resourceId, searchTerm }: Props) {
 
   // Profile Tab
   useEffect(() => {
-    async function looadInvoiceData() {
+    async function loadInvoiceData() {
       try {
         setMainLoading(true);
         const response = await fetchInvoiceData(resourceId);
@@ -41,7 +41,7 @@ function InvoiceModal({ open, onClose, resourceId, searchTerm }: Props) {
       }
     }
     if (resourceId) {
-      looadInvoiceData();
+      loadInvoiceData();
     }
   }, [resourceId]);
 

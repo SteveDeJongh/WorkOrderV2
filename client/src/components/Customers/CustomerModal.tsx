@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import ReactDom from "react-dom";
 import { LoadingBox } from "../multiuse/LoadingBox";
 import { CustomerForm } from "./CustomerForm";
@@ -8,16 +8,15 @@ import {
 } from "../../services/customerServices";
 import { objectToFormData } from "../../utils/formDataHelper";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { Customer } from "../../types/customers";
+import { Customer, CustomerWithNotices } from "../../types/customers";
 
 type Props = {
   open: boolean;
   onClose: Function;
-  resourceId: number | undefined;
-  searchTerm: String;
+  resourceId: number;
 };
 
-function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
+function CustomerModal({ open, onClose, resourceId }: Props) {
   function handleClose(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     let target = e.target as HTMLElement;
     if (target.className === "main-modal-background") {
@@ -28,7 +27,7 @@ function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
   // Main Pane states
   const [mainLoading, setMainLoading] = useState(false);
   const [mainError, setMainError] = useState("");
-  const [mainData, setMainData] = useState({});
+  const [mainData, setMainData] = useState<Customer>();
   const [tab, setTab] = useState("Profile");
 
   // Profile Tab
@@ -50,20 +49,23 @@ function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
     }
   }, [resourceId]);
 
-  let entity: Customer | undefined =
-    Object.keys(mainData).length < 1 ? false : mainData;
+  let customerData: CustomerWithNotices | undefined = mainData
+    ? Object.keys(mainData).length < 1
+      ? undefined
+      : mainData
+    : undefined;
 
   // Example Notices data, to be part of the customer data api fetch in the future.
-  if (entity && entity.first_name == "Steve") {
-    entity.notices = [
+  if (customerData && customerData.first_name == "Steve") {
+    customerData.notices = [
       { id: 1, notice: "This is notice 1." },
       { id: 2, notice: "This is notice 2." },
     ];
-  } else if (entity) {
-    entity.notices = [];
+  } else if (customerData) {
+    customerData.notices = [];
   }
 
-  let noticeCount = entity ? entity.notices.length : 0;
+  let noticeCount = customerData ? customerData.notices?.length : 0;
 
   // Edit Tab
   const queryClient = useQueryClient();
@@ -71,21 +73,28 @@ function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
   const { mutate, isPending, isError, isSuccess } = useMutation({
     mutationFn: async (rawData) => {
       const formData = objectToFormData({ customer: rawData });
-      await editCustomer(resourceId, formData);
-      return await fetchCustomerData(resourceId);
+      return await editCustomer(resourceId, formData);
     },
     onSuccess: (data) => {
       setMainData(data);
-      const oldData = queryClient.getQueryData(["customers", searchTerm]);
-      let newData = oldData.map((entry) =>
-        entry.id === resourceId ? data : entry
+      const oldData = queryClient.getQueryData(["customersSearch"]);
+      let newData = oldData.map((customer: Customer) =>
+        customer.id === resourceId ? data : customer
       );
-      queryClient.setQueryData(["customers", searchTerm], newData);
+      queryClient.setQueryData(["customersSearch"], newData);
       setTab("Profile");
     },
   });
 
   const pages = ["Profile", "Edit", "Invoices"];
+
+  useEffect(() => {
+    async function loadCustomerInvoices() {}
+
+    if (tab === "Invoices") {
+      loadCustomerInvoices();
+    }
+  }, [tab]);
 
   if (!open) return null;
 
@@ -95,12 +104,14 @@ function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
         <div className="main-modal">
           {mainLoading && <LoadingBox text="Loading Customer..." />}
           {mainError && <p>An error occured.</p>}
-          {!mainLoading && !mainError && (
+          {!mainLoading && !mainError && customerData && (
             <>
               <div className="modal-pane-header">
                 <div className="modal-pane-header-title">
-                  <h2>{`${mainData.first_name} ${mainData.last_name}`}</h2>
-                  <div className="modal-pane-id">Customer {mainData.id}</div>
+                  <h2>{`${customerData.first_name} ${customerData.last_name}`}</h2>
+                  <div className="modal-pane-id">
+                    Customer {customerData.id}
+                  </div>
                 </div>
                 <div className="modal-pane-nav">
                   <ul className="modal-pane-nav mid-nav">
@@ -120,7 +131,7 @@ function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
                   </ul>
                 </div>
               </div>
-              {tab === "Profile" && (
+              {tab === "Profile" && customerData && (
                 <>
                   <div className="modal-content">
                     <div className="panel">
@@ -129,24 +140,35 @@ function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
                         <div className="panel-contents-section">
                           <div className="panel-section-desc">📞</div>
                           <div className="panel-section-data">
-                            <div className="data-item">{entity.phone}</div>
-                            <div className="data-item">{entity.phone}</div>
+                            <div className="data-item">
+                              {customerData.phone}
+                            </div>
+                            <div className="data-item">
+                              {customerData.phone}
+                            </div>
                           </div>
                         </div>
                         <div className="panel-contents-section">
                           <div className="panel-section-desc">📧</div>
                           <div className="panel-section-data">
-                            <div className="data-item">{entity.email}</div>
+                            <div className="data-item">
+                              {customerData.email}
+                            </div>
                           </div>
                         </div>
                         <div className="panel-contents-section">
                           <div className="panel-section-desc">🏠</div>
                           <div className="panel-section-data">
-                            <div className="data-item">{entity.address}</div>
                             <div className="data-item">
-                              {entity.city} {entity.province} {entity.postal}
+                              {customerData.address}
                             </div>
-                            <div className="data-item">{entity.country}</div>
+                            <div className="data-item">
+                              {customerData.city} {customerData.province}{" "}
+                              {customerData.postal}
+                            </div>
+                            <div className="data-item">
+                              {customerData.country}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -158,7 +180,8 @@ function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
                       <ul>
                         {noticeCount === 0 && <li>No Notices</li>}
                         {noticeCount !== 0 &&
-                          entity.notices.map((notice) => {
+                          customerData.notices &&
+                          customerData.notices.map((notice) => {
                             return <li key={notice.id}>{notice.notice}</li>;
                           })}
                       </ul>
@@ -177,7 +200,7 @@ function CustomerModal({ open, onClose, resourceId, searchTerm }: Props) {
                   <CustomerForm
                     modalForm={true}
                     handleCancel={() => setTab("Profile")}
-                    customer={entity}
+                    customer={customerData}
                     headerText={`Edit Customer`}
                     buttonText={"Save"}
                     onSubmit={mutate}

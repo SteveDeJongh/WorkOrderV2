@@ -94,7 +94,9 @@ function FullWidthTable({ title, fetcher, columns }: Props) {
 
   // For Modal
   const [isOpen, setIsOpen] = useState(false);
-  const [clickedID, setClickedId] = useState(Number(useParams().id) || null);
+  const [clickedID, setClickedId] = useState(
+    Number(useParams().id) || undefined
+  );
 
   function handleClick(id) {
     setClickedId(id);

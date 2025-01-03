@@ -30,6 +30,7 @@ class Api::V1::CustomersController < ApplicationController
 
   # PATCH/PUT /customers/1
   def update
+    sleep 2
     if @customer.update(customer_params)
       render json: @customer
     else

@@ -1,14 +1,5 @@
 import { useOutletContext } from "react-router-dom";
-import { Customer, CustomerContext } from "../../types/customers";
-
-type CustomerWithNotices = Customer & {
-  notices?: Notice[];
-};
-
-type Notice = {
-  id: number;
-  notice: string;
-};
+import { CustomerWithNotices, CustomerContext } from "../../types/customers";
 
 function CustomerProfile() {
   const { mainData } = useOutletContext<CustomerContext>();

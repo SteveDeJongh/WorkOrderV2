@@ -30,9 +30,18 @@ type CustomerContext = {
   setMainData: React.Dispatch<React.SetStateAction<Customer | null>>;
 }
 
+type CustomerWithNotices = Customer & {
+  notices?: CustomerNotice[];
+};
+
+type CustomerNotice = {
+  id: number;
+  notice: string;
+};
+
 // User defined type-guard, returns type predicate.
 function isCustomer(customer: Customer | Object): customer is Customer {
   return (customer as Customer).first_name !== undefined && (customer as Customer).last_name !== undefined;
 }
 
-export { Customer, CustomerContext, EditableCustomerData, isCustomer}
+export { Customer, CustomerContext, CustomerWithNotices, CustomerNotice, EditableCustomerData, isCustomer}

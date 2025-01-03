@@ -16,7 +16,7 @@ function Customers() {
   const { id } = useParams();
 
   function viewSetter(view: ViewTypes) {
-    user!.views["invoices"] = view;
+    user!.views.customers = view;
     setView(view);
   }
 
@@ -37,6 +37,8 @@ function Customers() {
     { keys: ["province"], header: "Province" },
     { keys: ["country"], header: "Country" },
   ];
+
+  console.log("Re-rendering customers!");
   return (
     <>
       {view === "profile" && (

@@ -1,6 +1,6 @@
 import { API_URL } from "../constants";
 import { mapResponseDataToKeys, mapSingleResponseDataToKeys } from "../utils";
-import { Customer } from "../types/customers";
+import { Customer, EditableCustomerData } from "../types/customers";
 import { Invoice } from "../types/invoiceTypes";
 
 async function fetchAllCustomers(): Promise<Customer[]> {
@@ -31,7 +31,7 @@ async function searchCustomers(query: string): Promise<Customer[]> {
   }
 }
 
-async function createCustomer(customerData: Customer): Promise<Customer> {
+async function createCustomer(customerData: EditableCustomerData): Promise<Customer> {
   const response = await fetch(`${API_URL}/customers`, {
     method: "POST",
     headers: {
@@ -47,7 +47,7 @@ async function createCustomer(customerData: Customer): Promise<Customer> {
   return response.json();
 }
 
-async function editCustomer(id: string | number, customerData: Customer): Promise<Customer> {
+async function editCustomer(id: number, customerData: EditableCustomerData): Promise<Customer> {
   const response = await fetch(`${API_URL}/customers/${id}`, {
     method: "PATCH",
     headers: {
@@ -64,7 +64,7 @@ async function editCustomer(id: string | number, customerData: Customer): Promis
   return mapSingleResponseDataToKeys(responseData);
 }
 
-async function fetchCustomerData(id: string | number): Promise<Customer> {
+async function fetchCustomerData(id: number): Promise<Customer> {
   const response = await fetch(`${API_URL}/customers/${id}`, {
     headers: {
       "Authorization": localStorage.getItem("authToken"),
@@ -79,7 +79,7 @@ async function fetchCustomerData(id: string | number): Promise<Customer> {
   return mapSingleResponseDataToKeys(responseData);
 }
 
-async function fetchCustomerInvoices(id: string | number): Promise<Invoice[]> {
+async function fetchCustomerInvoices(id: number): Promise<Invoice[]> {
   const response = await fetch(`${API_URL}/search/customerInvoices/?q=${id}`, {
     headers: {
       "Authorization": localStorage.getItem("authToken"),

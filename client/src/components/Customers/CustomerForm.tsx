@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../multiuse/Button";
 import { Customer, EditableCustomerData } from "../../types/customers";
+import { LoadingModal } from "../multiuse/LoadingModal";
 
 type props = {
   modalForm?: boolean;
@@ -52,6 +53,7 @@ function CustomerForm({
                 type={"submit"}
                 form={"main-pane-content"}
                 text={buttonText}
+                disabled={isSubmitting}
               />
             </div>
           </div>
@@ -63,6 +65,9 @@ function CustomerForm({
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="panel">
+          {isSubmitting && (
+            <LoadingModal text={"Editing customer..."}></LoadingModal>
+          )}
           <h3>Customer Details</h3>
           <div className="panel-contents-section">
             <div className="formPair half">
