@@ -1,6 +1,6 @@
 import { API_URL } from "../constants";
 import { mapResponseDataToKeys, mapSingleResponseDataToKeys } from "../utils";
-import { Customer, EditableCustomerData } from "../types/customers";
+import { Customer } from "../types/customers";
 import { Invoice } from "../types/invoiceTypes";
 
 async function fetchAllCustomers(): Promise<Customer[]> {
@@ -31,7 +31,7 @@ async function searchCustomers(query: string): Promise<Customer[]> {
   }
 }
 
-async function createCustomer(customerData: EditableCustomerData): Promise<Customer> {
+async function createCustomer(customerData: FormData): Promise<Customer> {
   const response = await fetch(`${API_URL}/customers`, {
     method: "POST",
     headers: {
@@ -47,7 +47,7 @@ async function createCustomer(customerData: EditableCustomerData): Promise<Custo
   return response.json();
 }
 
-async function editCustomer(id: number, customerData: EditableCustomerData): Promise<Customer> {
+async function editCustomer(id: number, customerData: FormData): Promise<Customer> {
   const response = await fetch(`${API_URL}/customers/${id}`, {
     method: "PATCH",
     headers: {

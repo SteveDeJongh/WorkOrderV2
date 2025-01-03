@@ -261,7 +261,7 @@ nav li:has(a.active) {
   padding: 50px;
   z-index: 5;
   min-width: 600px;
-  max-width: 800px;
+  width: 80%;
   border: 3px solid var(--light-selection);
   border-radius: 5px;
 }

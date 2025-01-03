@@ -3,6 +3,7 @@ import { fetchCustomerInvoices } from "../../services/customerServices";
 import { useParams, useNavigate } from "react-router-dom";
 import { ScrollableTableTall } from "../multiuse/ScrollableTableTall";
 import { Invoice } from "../../types/invoiceTypes";
+import { INVOICECOLUMNS } from "./columns";
 
 function CustomerInvoices() {
   const navigate = useNavigate();
@@ -10,7 +11,8 @@ function CustomerInvoices() {
 
   const { data, isError, isPending } = useQuery({
     queryKey: ["customerInvoices", customerId],
-    queryFn: () => (customerId ? fetchCustomerInvoices(customerId) : []),
+    queryFn: () =>
+      customerId ? fetchCustomerInvoices(Number(customerId)) : [],
     gcTime: 0,
   });
 
@@ -22,28 +24,18 @@ function CustomerInvoices() {
     return <h1>Error</h1>;
   }
 
-  const columns = [
-    { name: "Invoice ID", propName: "id" },
-    { name: "Status", propName: "status" },
-    { name: "Total", propName: "total" },
-    { name: "Tax", propName: "tax" },
-    { name: "Balance", propName: "balance" },
-    { name: "Updated", propName: "updated_at" },
-    { name: "Created", propName: "created_at" },
-  ];
-
   function onClick(invoice: Invoice) {
     navigate(`/invoices/${invoice.id}/`);
   }
 
   return (
-    <>
+    <div className="main-pane-content">
       <ScrollableTableTall
-        columns={columns}
+        columns={INVOICECOLUMNS}
         data={data}
         onClick={(invoice: Invoice) => onClick(invoice)}
       />
-    </>
+    </div>
   );
 }
 

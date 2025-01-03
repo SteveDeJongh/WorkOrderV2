@@ -5,10 +5,19 @@ import { CustomerForm } from "./CustomerForm";
 import {
   editCustomer,
   fetchCustomerData,
+  fetchCustomerInvoices,
 } from "../../services/customerServices";
 import { objectToFormData } from "../../utils/formDataHelper";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { Customer, CustomerWithNotices } from "../../types/customers";
+import {
+  Customer,
+  CustomerWithNotices,
+  EditableCustomerData,
+} from "../../types/customers";
+import { Invoice } from "../../types/invoiceTypes";
+import { ScrollableTableTall } from "../multiuse/ScrollableTableTall";
+import { INVOICECOLUMNS } from "./columns";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   open: boolean;
@@ -17,6 +26,8 @@ type Props = {
 };
 
 function CustomerModal({ open, onClose, resourceId }: Props) {
+  const navigate = useNavigate();
+
   function handleClose(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     let target = e.target as HTMLElement;
     if (target.className === "main-modal-background") {
@@ -29,6 +40,7 @@ function CustomerModal({ open, onClose, resourceId }: Props) {
   const [mainError, setMainError] = useState("");
   const [mainData, setMainData] = useState<Customer>();
   const [tab, setTab] = useState("Profile");
+  const [customerInvoices, setCustomerInvoices] = useState<Invoice[]>();
 
   // Profile Tab
   useEffect(() => {
@@ -71,13 +83,17 @@ function CustomerModal({ open, onClose, resourceId }: Props) {
   const queryClient = useQueryClient();
 
   const { mutate, isPending, isError, isSuccess } = useMutation({
-    mutationFn: async (rawData) => {
-      const formData = objectToFormData({ customer: rawData });
-      return await editCustomer(resourceId, formData);
+    mutationFn: async (rawData: EditableCustomerData) => {
+      return await editCustomer(
+        resourceId,
+        objectToFormData({ customer: rawData })
+      );
     },
     onSuccess: (data) => {
       setMainData(data);
-      const oldData = queryClient.getQueryData(["customersSearch"]);
+      const oldData = queryClient.getQueryData([
+        "customersSearch",
+      ]) as Customer[];
       let newData = oldData.map((customer: Customer) =>
         customer.id === resourceId ? data : customer
       );
@@ -89,12 +105,22 @@ function CustomerModal({ open, onClose, resourceId }: Props) {
   const pages = ["Profile", "Edit", "Invoices"];
 
   useEffect(() => {
-    async function loadCustomerInvoices() {}
+    async function loadCustomerInvoices() {
+      if (mainData) {
+        const response = await fetchCustomerInvoices(mainData.id);
+        setCustomerInvoices(response);
+      }
+      return;
+    }
 
     if (tab === "Invoices") {
       loadCustomerInvoices();
     }
   }, [tab]);
+
+  function onClick(invoice: Invoice) {
+    navigate(`/invoices/${invoice.id}/`);
+  }
 
   if (!open) return null;
 
@@ -131,9 +157,9 @@ function CustomerModal({ open, onClose, resourceId }: Props) {
                   </ul>
                 </div>
               </div>
-              {tab === "Profile" && customerData && (
-                <>
-                  <div className="modal-content">
+              <div className="modal-content">
+                {tab === "Profile" && customerData && (
+                  <>
                     <div className="panel">
                       <h3>Details</h3>
                       <div className="panel-contents">
@@ -192,28 +218,37 @@ function CustomerModal({ open, onClose, resourceId }: Props) {
                         <li>Todo...</li>
                       </ul>
                     </div>
-                  </div>
-                </>
-              )}
-              {tab === "Edit" && (
-                <>
-                  <CustomerForm
-                    modalForm={true}
-                    handleCancel={() => setTab("Profile")}
-                    customer={customerData}
-                    headerText={`Edit Customer`}
-                    buttonText={"Save"}
-                    onSubmit={mutate}
+                  </>
+                )}
+                {tab === "Edit" && (
+                  <>
+                    <CustomerForm
+                      modalForm={true}
+                      customer={customerData}
+                      headerText={`Edit Customer`}
+                      buttonText={"Save"}
+                      onSubmit={mutate}
+                    />
+                  </>
+                )}
+                {tab === "Invoices" && customerInvoices && (
+                  <ScrollableTableTall
+                    columns={INVOICECOLUMNS}
+                    data={customerInvoices}
+                    onClick={(invoice: Invoice) => onClick(invoice)}
+                    inModal={true}
                   />
-                </>
-              )}
-              {tab === "Invoices" && <div>Invoices</div>}
+                )}
+                {tab === "Invoices" && !customerInvoices && (
+                  <LoadingBox text="Loading Invoices..." />
+                )}
+              </div>
             </>
           )}
         </div>
       </div>
     </>,
-    document.getElementById("portal")
+    document.getElementById("portal") as HTMLElement
   );
 }
 
