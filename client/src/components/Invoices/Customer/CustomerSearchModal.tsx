@@ -6,6 +6,7 @@ import { useURLSearchParam } from "../../../hooks/useURLSearchParam";
 import { SearchResultsTable } from "../../multiuse/SearchResultsTable";
 import { Button } from "../../multiuse/Button";
 import { Customer } from "../../../types/customers";
+import { CUSTOMERCOLUMNS } from "../../Customers/columns";
 
 type Props = {
   open: boolean;
@@ -59,19 +60,6 @@ function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
 
   if (!open) return null;
 
-  const columns = [
-    { keys: ["id"], header: "ID" },
-    { keys: ["first_name", "last_name"], header: "Full Name" },
-    { keys: ["first_name"], header: "First Name" },
-    { keys: ["last_name"], header: "Last Name" },
-    { keys: ["phone"], header: "Phone" },
-    { keys: ["email"], header: "Email" },
-    { keys: ["address"], header: "Address" },
-    { keys: ["city"], header: "City" },
-    { keys: ["province"], header: "Province" },
-    { keys: ["country"], header: "Country" },
-  ];
-
   return ReactDom.createPortal(
     <>
       <div className="main-modal-background" onClick={(e) => handleClose(e)}>
@@ -95,7 +83,7 @@ function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
                   handleDoubleClick={() => {
                     onSave(selection);
                   }}
-                  columns={columns}
+                  columns={CUSTOMERCOLUMNS}
                 />
               </div>
             </>

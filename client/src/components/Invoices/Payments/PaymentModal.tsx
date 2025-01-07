@@ -31,7 +31,7 @@ function PaymentModal({
     console.log("balance changed", balance);
   }, [balance]);
 
-  function savePayment(data: EditablePaymentData) {
+  function onSavePayment(data: EditablePaymentData) {
     if (data.id || data.created_at) {
       dispatch({ type: "updatePayment", payment: data });
     } else {
@@ -72,7 +72,7 @@ function PaymentModal({
             <PaymentForm
               handleCancel={() => closeModal()}
               payment={payment}
-              onSubmit={savePayment}
+              onSubmit={onSavePayment}
               buttonText={"Save"}
               invoice_id={invoice_id}
               balance={balance}

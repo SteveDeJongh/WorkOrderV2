@@ -1,20 +1,11 @@
 import { API_URL } from "../constants";
 import { mapResponseDataToKeys, mapSingleResponseDataToKeys } from "../utils";
-import { Product } from "../types/products";
+import { NestedProductData, Product } from "../types/products";
 
 async function fetchAllProducts(): Promise<Product[]> {
     const response = await fetch(`${API_URL}/products`);
     if (response.ok) {
       let responseData = await response.json();
-      // responseData = responseData.map((obj) => {
-      //   return {
-      //     id: obj.id,
-      //     sku: obj.sku,
-      //     name: obj.name,
-      //     price: obj.price,
-      //     stock: obj.stock,
-      //   };
-      // });
       return mapResponseDataToKeys(responseData);
     } else {
       throw new Error(response.statusText);
@@ -31,7 +22,7 @@ async function searchProducts(query: string): Promise<Product[]> {
   }
 }
 
-async function fetchProductData(id: string | number, options = {tax_rate: false}): Promise<Product> {
+async function fetchProductData(id: number, options = {tax_rate: false}): Promise<Product> {
   const response = await fetch(`${API_URL}/products/${id}`)
 
   if (!response.ok) {
@@ -47,13 +38,16 @@ async function fetchProductData(id: string | number, options = {tax_rate: false}
     }
   }
   
-  return mapSingleResponseDataToKeys(responseData);
+  return mapSingleResponseDataToKeys(responseData) as Product;
 }
 
-async function createProduct(productData: Product): Promise<Product> {
+async function createProduct(productData: NestedProductData): Promise<Product> {
   const response = await fetch(`${API_URL}/products`, {
     method: "POST",
-    body: productData,
+    headers: {
+      "Content-Type": "application/json",
+    } as HeadersInit,
+    body: JSON.stringify(productData),
   })
 
   if (!response.ok) {
@@ -61,13 +55,16 @@ async function createProduct(productData: Product): Promise<Product> {
   }
 
   let responseData = await response.json();
-  return mapSingleResponseDataToKeys(responseData);
+  return mapSingleResponseDataToKeys(responseData) as Product;;
 }
 
-async function editProduct(id: string | number, productData: Product): Promise<Product> {
+async function editProduct(id: number, productData: NestedProductData): Promise<Product> {
   const response = await fetch(`${API_URL}/products/${id}`, {
     method: "PATCH",
-    body: productData,
+    headers: {
+      "Content-Type": "application/json",
+    } as HeadersInit,
+    body: JSON.stringify(productData),
   })
 
   if (!response.ok) {

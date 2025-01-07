@@ -13,7 +13,6 @@ function CustomerEdit() {
   async function handleEditSubmit(rawData: EditableCustomerData) {
     try {
       const formData = objectToFormData({ customer: rawData });
-      let wait = await JSON.stringify(formData);
       const response = await editCustomer(mainData.id, formData);
       setMainData(response);
       navigate(`/customers/${mainData.id}/profile`);

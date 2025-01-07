@@ -32,6 +32,10 @@ type EditableProductData = {
   upc: number;
 }
 
+type NestedProductData = {
+  product: EditableProductData;
+}
+
 type ProductContext = {
   mainData: Product;
   setMainData: React.Dispatch<React.SetStateAction<Product | null>>;
@@ -41,4 +45,4 @@ function isProduct(product: Product | Object): product is Product {
   return (product as Product).sku !== undefined && (product as Product).name !== undefined;
 }
 
-export { EditableProductData, Product, ProductContext, isProduct}
+export { EditableProductData, Product, ProductContext, NestedProductData, isProduct}

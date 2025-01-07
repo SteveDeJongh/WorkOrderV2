@@ -20,4 +20,8 @@ type EditablePaymentData = {
   change?: number | string;
 };
 
-export { EditablePaymentData, Payment }
+type NestedPaymentData = {
+  payment: EditablePaymentData;
+}
+
+export { EditablePaymentData, NestedPaymentData, Payment }

@@ -12,7 +12,7 @@ function ProductShow() {
   const { isError, isPending } = useQuery({
     queryKey: ["product", { id }],
     queryFn: async () => {
-      const response = await fetchProductData(id as string);
+      const response = await fetchProductData(Number(id));
       setMainData(response);
       return response;
     },

@@ -1,6 +1,6 @@
 import { TUserForm } from "../components/Users/UserForm";
 import { HOST_URL } from "../constants";
-import { NestedSignInUser, NestedUser, User, UserResponse} from "../types/users";
+import { NestedSignInUser, UserResponse} from "../types/users";
 
 async function createUser(user: TUserForm): Promise<UserResponse> {
   const response = await fetch(`${HOST_URL}/signup`, {

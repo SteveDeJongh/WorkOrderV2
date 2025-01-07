@@ -7,7 +7,7 @@ function useInvoicesData(searchTerm: string) {
     isLoading: loading,
     error,
   } = useQuery({
-    queryKey: ["invoices", searchTerm],
+    queryKey: ["invoices", { searchTerm }],
     queryFn: () => {
       if (searchTerm) {
         return searchInvoices(searchTerm);

@@ -10,7 +10,7 @@ function CustomerInvoices() {
   const { id: customerId } = useParams();
 
   const { data, isError, isPending } = useQuery({
-    queryKey: ["customerInvoices", customerId],
+    queryKey: ["customerInvoices", { id: customerId }],
     queryFn: () =>
       customerId ? fetchCustomerInvoices(Number(customerId)) : [],
     gcTime: 0,

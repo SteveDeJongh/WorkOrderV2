@@ -48,7 +48,7 @@ function InvoiceForm({ modalForm, buttonText, invoiceData }: Props) {
     return JSON.stringify(mainData) !== JSON.stringify(invoice);
   }
 
-  // Submits invoice Data. TODO: Add new invoice creation. (if no invoiceID exists)
+  // Submits invoice Data.
   const { mutate, isPending, isError, isSuccess } = useMutation({
     mutationFn: (invoiceData: Invoice) => {
       if (invoiceID) {

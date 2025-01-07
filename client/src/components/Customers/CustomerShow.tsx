@@ -22,7 +22,7 @@ function CustomerShow() {
       }
       try {
         setMainLoading(true);
-        const response = await fetchCustomerData(id);
+        const response = await fetchCustomerData(Number(id));
         setMainData(response);
       } catch (e) {
         setMainError(true);

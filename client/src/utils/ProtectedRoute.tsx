@@ -14,7 +14,6 @@ function ProtectedRoute({ role }: Props) {
 
   useEffect(() => {
     if (!user) {
-      console.log("in here?");
       navigate("/login");
       return;
     }

@@ -7,8 +7,8 @@ import { LoadingBox } from "../multiuse/LoadingBox";
 function InvoiceShow() {
   const { id } = useParams();
   const { data, isError, error, isPending } = useQuery({
-    queryKey: ["fetchInvoice", id],
-    queryFn: () => fetchInvoiceData(id),
+    queryKey: ["fetchInvoice", { id }],
+    queryFn: () => fetchInvoiceData(Number(id)),
   });
 
   if (isPending) {

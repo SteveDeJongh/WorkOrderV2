@@ -10,7 +10,7 @@ function useCustomersData(searchTerm: string) {
     isLoading: loading,
     error,
   } = useQuery({
-    queryKey: ["customersSearch"],
+    queryKey: ["customersSearch", { searchTerm }],
     queryFn: () => {
       if (searchTerm) {
         return searchCustomers(searchTerm);

@@ -1,13 +1,9 @@
 import { mapResponseDataToKeys, mapSingleResponseDataToKeys } from "../utils";
 import { API_URL } from "../constants";
-import { Payment } from "../types/payments";
+import { NestedPaymentData, Payment } from "../types/payments";
 
 async function fetchAllPayments(): Promise<Payment[]> {
-    const response = await fetch(`${API_URL}/payments`, {
-      headers: {
-        "Authorization": localStorage.getItem("authToken"),
-      } as HeadersInit
-    });
+    const response = await fetch(`${API_URL}/payments`);
     if (response.ok) {
       let responseData = await response.json();
       return mapResponseDataToKeys(responseData);
@@ -17,11 +13,7 @@ async function fetchAllPayments(): Promise<Payment[]> {
 }
 
 async function searchPayments(query: string): Promise<Payment[]> {
-  const response = await fetch(`${API_URL}/search/payments/?q=${query}`, {
-    headers: {
-      "Authorization": localStorage.getItem("authToken"),
-    } as HeadersInit
-  });
+  const response = await fetch(`${API_URL}/search/payments/?q=${query}`);
   if (response.ok) {
     let responseData = await response.json();
     return mapResponseDataToKeys(responseData);
@@ -30,13 +22,13 @@ async function searchPayments(query: string): Promise<Payment[]> {
   }
 }
 
-async function createPayment(PaymentData: Payment): Promise<Payment> {
+async function createPayment(PaymentData: NestedPaymentData): Promise<Payment> {
   const response = await fetch(`${API_URL}/payments`, {
     method: "POST",
     headers: {
-      "Authorization": localStorage.getItem("authToken"),
+      "Content-Type": "application/json",
     } as HeadersInit,
-    body: PaymentData,
+    body: JSON.stringify(PaymentData),
   })
 
   if (!response.ok) {
@@ -46,29 +38,24 @@ async function createPayment(PaymentData: Payment): Promise<Payment> {
   return response.json();
 }
 
-async function fetchPaymentData(id: string): Promise<Payment> {
-  const response = await fetch(`${API_URL}/payments/${id}`, {
-    headers: {
-      "Authorization": localStorage.getItem("authToken"),
-    } as HeadersInit
-  })
+async function fetchPaymentData(id: number): Promise<Payment> {
+  const response = await fetch(`${API_URL}/payments/${id}`)
 
   if (!response.ok) {
     throw new Error(response.statusText);
   }
 
   let responseData = await response.json();
-  console.log("Response in fetchPaymentData", responseData)
-  return mapSingleResponseDataToKeys(responseData);
+  return mapSingleResponseDataToKeys(responseData) as Payment;
 }
 
-async function editPayment(id: string, PaymentData: Payment): Promise<Payment> {
+async function editPayment(id: number, PaymentData: NestedPaymentData): Promise<Payment> {
   const response = await fetch(`${API_URL}/payments/${id}`, {
     method: "PATCH",
     headers: {
-      "Authorization": localStorage.getItem("authToken"),
+      "Content-Type": "application/json",
     } as HeadersInit,
-    body: PaymentData,
+    body: JSON.stringify(PaymentData),
   })
 
   if (!response.ok) {
@@ -76,15 +63,13 @@ async function editPayment(id: string, PaymentData: Payment): Promise<Payment> {
   }
 
   let responseData = await response.json();
-  return mapSingleResponseDataToKeys(responseData);
+  return mapSingleResponseDataToKeys(responseData) as Payment;
 }
 
-async function savePayment(id:string, paymentData:Payment) {
-  if (id === "") {
-    console.log("creating");
+async function savePayment(id:number, paymentData: NestedPaymentData) {
+  if (id === undefined) {
     return createPayment(paymentData);
   } else {
-    console.log("editing");
     return editPayment(id, paymentData);
   }
 }

@@ -3,12 +3,7 @@ import { API_URL } from "../constants";
 import { Invoice, NestedInvoiceData } from "../types/invoiceTypes";
 
 async function fetchAllInvoices(): Promise<Invoice[]> {
-  const requestHeaders: HeadersInit = new Headers();
-  requestHeaders.set('Authorization', localStorage.getItem("authToken") as string)
-
-  const response = await fetch(`${API_URL}/invoices`, {
-    headers: requestHeaders,
-  });
+  const response = await fetch(`${API_URL}/invoices`);
   if (!response.ok) {
     throw new Error(response.statusText);
   }
@@ -18,11 +13,7 @@ async function fetchAllInvoices(): Promise<Invoice[]> {
 }
 
 async function searchInvoices(query: string): Promise<Invoice[]> {
-  const response = await fetch(`${API_URL}/search/invoices/?q=${query}`, {
-    headers: {
-      "Authorization": localStorage.getItem("authToken"),
-    } as HeadersInit,
-  });
+  const response = await fetch(`${API_URL}/search/invoices/?q=${query}`);
   
   if (!response.ok) {
     throw new Error(response.statusText);
@@ -36,7 +27,6 @@ async function createInvoice(invoiceData: NestedInvoiceData): Promise<Invoice> {
   const response = await fetch(`${API_URL}/invoices`, {
     method: "POST",
     headers: {
-      "Authorization": localStorage.getItem("authToken"),
       "Content-Type": "application/json",
     } as HeadersInit,
     body: JSON.stringify(invoiceData),
@@ -49,26 +39,21 @@ async function createInvoice(invoiceData: NestedInvoiceData): Promise<Invoice> {
   return response.json();
 }
 
-async function fetchInvoiceData(id: string | number | undefined): Promise<Invoice> {
-  const response = await fetch(`${API_URL}/invoices/${id}`, {
-    headers: {
-      "Authorization": localStorage.getItem("authToken"),
-    } as HeadersInit,
-  })
+async function fetchInvoiceData(id: number ): Promise<Invoice> {
+  const response = await fetch(`${API_URL}/invoices/${id}`)
 
   if (!response.ok) {
     throw new Error(response.statusText);
   }
 
   let responseData = await response.json();
-  return mapSingleResponseDataToKeys(responseData);
+  return mapSingleResponseDataToKeys(responseData) as Invoice;
 }
 
-async function editInvoice(id: string | number, invoiceData: NestedInvoiceData): Promise<Invoice> {
+async function editInvoice(id: number, invoiceData: NestedInvoiceData): Promise<Invoice> {
   const response = await fetch(`${API_URL}/invoices/${id}`, {
     method: "PATCH",
     headers: {
-      "Authorization": localStorage.getItem("authToken"),
       "Content-Type": "application/json",
     } as HeadersInit,
     body: JSON.stringify(invoiceData),
@@ -79,7 +64,7 @@ async function editInvoice(id: string | number, invoiceData: NestedInvoiceData):
   }
 
   let responseData = await response.json();
-  return mapSingleResponseDataToKeys(responseData);
+  return mapSingleResponseDataToKeys(responseData) as Invoice;
 }
 
 export { createInvoice, editInvoice, fetchAllInvoices, fetchInvoiceData, searchInvoices } 

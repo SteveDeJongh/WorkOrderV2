@@ -14,7 +14,7 @@ function ProductView() {
     isError: movementError,
     isPending: movementPending,
   } = useQuery({
-    queryKey: ["3productMovements", mainData.id],
+    queryKey: ["3productMovements", { id: mainData.id }],
     queryFn: () => fetchLast3MovementsFor(mainData.id),
     staleTime: 0,
   });

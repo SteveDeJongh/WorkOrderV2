@@ -66,7 +66,7 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
     isError: is3MovementsError,
     isPending: is3MovementsPending,
   } = useQuery({
-    queryKey: ["3productMovements", entity?.id],
+    queryKey: ["3productMovements", { id: entity?.id }],
     queryFn: () => fetchLast3MovementsFor(entity!.id),
     enabled: !!entity,
   });
@@ -76,8 +76,7 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
 
   const { mutate, isPending, isError, isSuccess } = useMutation({
     mutationFn: async (rawData: EditableProductData) => {
-      const formData = objectToFormData({ product: rawData });
-      await editProduct(resourceId, formData);
+      await editProduct(resourceId, { product: rawData });
       return await fetchProductData(resourceId);
     },
     onSuccess: (data) => {
@@ -103,7 +102,7 @@ function ProductModal({ open, onClose, resourceId, searchTerm }: Props) {
     isPending: isMovementPending,
     isSuccess: isMovementSuccess,
   } = useQuery({
-    queryKey: ["productMovements", resourceId],
+    queryKey: ["productMovements", { id: resourceId }],
     queryFn: () => fetchInventoryMovementsFor(resourceId),
     enabled: !!entity,
   });

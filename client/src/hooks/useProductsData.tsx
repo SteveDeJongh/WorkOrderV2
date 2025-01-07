@@ -7,7 +7,7 @@ function useProductsData(searchTerm: string) {
     isLoading: loading,
     error,
   } = useQuery({
-    queryKey: ["productsSearch"],
+    queryKey: ["productsSearch", { searchTerm }],
     queryFn: () => {
       if (searchTerm) {
         return searchProducts(searchTerm);

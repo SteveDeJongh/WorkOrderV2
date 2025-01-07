@@ -1,5 +1,5 @@
 import { LeftListWithAction } from "../multiuse/LeftListWithAction";
-import { Outlet, useParams, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useParams, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { NoSelection } from "../NoSelection";
 import { useProductsData } from "../../hooks/useProductsData";
@@ -7,6 +7,7 @@ import { FullWidthTable } from "../multiuse/FullWidthTable";
 import { ViewToggle } from "../multiuse/ViewToggle";
 import { ViewTypes } from "../../types/users";
 import { useAuth } from "../../contexts/AuthContext";
+import { PRODUCTCOLUMNS } from "../Customers/columns";
 
 function Products() {
   const { user } = useAuth();
@@ -24,19 +25,6 @@ function Products() {
   let pathname = location.pathname;
 
   let renderNoSelection = "/products" === pathname && !id;
-
-  const columns = [
-    { keys: ["id"], header: "ID" },
-    { keys: ["sku"], header: "SKU" },
-    { keys: ["upc"], header: "UPC" },
-    { keys: ["name"], header: "Name" },
-    { keys: ["description"], header: "Description" },
-    { keys: ["price"], header: "Price" },
-    { keys: ["taxrate"], header: "TaxRate" },
-    { keys: ["stock"], header: "stock" },
-    { keys: ["min"], header: "Min" },
-    { keys: ["max"], header: "Max" },
-  ];
 
   return (
     <>
@@ -75,7 +63,7 @@ function Products() {
                 <FullWidthTable
                   title={"Products"}
                   fetcher={useProductsData}
-                  columns={columns}
+                  columns={PRODUCTCOLUMNS}
                 />
               </div>
             </div>

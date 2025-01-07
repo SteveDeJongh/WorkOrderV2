@@ -7,6 +7,7 @@ import { ViewToggle } from "../multiuse/ViewToggle";
 import { useInvoicesData } from "../../hooks/useInvoicesData";
 import { ViewTypes } from "../../types/users";
 import { useAuth } from "../../contexts/AuthContext";
+import { INVOICECOLUMNSALT } from "../Customers/columns";
 
 function Invoices() {
   const { user } = useAuth();
@@ -22,14 +23,6 @@ function Invoices() {
 
   let location = useLocation();
   let pathname = location.pathname;
-
-  const columns = [
-    { keys: ["id"], header: "ID" },
-    { keys: ["customer_id"], header: "Customer_ID" },
-    { keys: ["total"], header: "Total" },
-    { keys: ["balance"], header: "Balance" },
-    { keys: ["status"], header: "Status" },
-  ];
 
   let renderNoSelection = "/invoices" === pathname && !id;
 
@@ -70,7 +63,7 @@ function Invoices() {
                 <FullWidthTable
                   title={"Invoices"}
                   fetcher={useInvoicesData}
-                  columns={columns}
+                  columns={INVOICECOLUMNSALT}
                 />
               </div>
             </div>
