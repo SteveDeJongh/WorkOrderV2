@@ -3,7 +3,6 @@ import ReactDom from "react-dom";
 import { LoadingBox } from "../multiuse/LoadingBox";
 import { ProductForm } from "./ProductForm";
 import { editProduct, fetchProductData } from "../../services/productServices";
-import { objectToFormData } from "../../utils/formDataHelper";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { NumericFormat } from "react-number-format";
 import {

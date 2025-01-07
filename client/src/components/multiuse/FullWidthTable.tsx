@@ -98,7 +98,7 @@ function FullWidthTable({ title, fetcher, columns }: Props) {
     Number(useParams().id) || undefined
   );
 
-  function handleClick(id) {
+  function handleClick(id: number) {
     setClickedId(id);
     setIsOpen(true);
   }
@@ -142,7 +142,7 @@ function FullWidthTable({ title, fetcher, columns }: Props) {
                       {table.getRowModel().rows.map((rowEl) => (
                         <tr
                           key={rowEl.id}
-                          onClick={() => handleClick(rowEl.original.id)}
+                          onClick={() => handleClick(Number(rowEl.original.id))}
                         >
                           {rowEl.getVisibleCells().map((cellEl) => (
                             <td key={cellEl.id}>
