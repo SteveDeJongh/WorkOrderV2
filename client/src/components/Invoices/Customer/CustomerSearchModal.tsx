@@ -95,7 +95,7 @@ function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
         </div>
       </div>
     </>,
-    document.getElementById("portal")
+    document.getElementById("portal") as HTMLElement
   );
 }
 

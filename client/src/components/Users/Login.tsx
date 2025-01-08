@@ -5,7 +5,7 @@ import { createSession } from "../../services/userServices";
 import { PageTitle } from "../PageTitle";
 import { LoadingModal } from "../multiuse/LoadingModal";
 import { Button } from "../multiuse/Button";
-import { NestedSignInUser, SignInUser, UserResponse } from "../../types/users";
+import { SignInUser, UserResponse } from "../../types/users";
 import { useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -35,7 +35,6 @@ function Login() {
       return createSession({ user: loginData });
     },
     onSuccess: (response: UserResponse) => {
-      console.log("Logged in!");
       loginSuccess(response.data);
       navigate(`/`);
     },

@@ -6,11 +6,7 @@ import {
   FC,
   PropsWithChildren,
 } from "react";
-import {
-  getUserByToken,
-  createSession,
-  destroySession,
-} from "../services/userServices";
+import { getUserByToken, destroySession } from "../services/userServices";
 
 import { User } from "../types/users";
 
