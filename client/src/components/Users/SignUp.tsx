@@ -12,6 +12,7 @@ function SignUp() {
 
   const { mutate: signUp } = useMutation({
     mutationFn: (user: TUserForm) => {
+      console.log("am i being called?");
       return createUser(user);
     },
     onSuccess: (response: UserResponse) => {

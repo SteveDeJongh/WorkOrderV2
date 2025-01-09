@@ -4,6 +4,7 @@ import { User, RoleTypes } from "../../types/users";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
+  modalForm?: boolean;
   user?: User;
   headerText: string;
   onSubmit: (user: TUserForm) => void;
@@ -19,8 +20,13 @@ export type TUserForm = {
   currentPassword?: string;
 };
 
-function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
-  console.log("User in UserForm", user);
+function UserForm({
+  modalForm,
+  user,
+  headerText,
+  onSubmit,
+  buttonText,
+}: Props) {
   const navigate = useNavigate();
 
   // Working on adding resolver to UserForm.
@@ -107,14 +113,26 @@ function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
                 <label htmlFor="current_password">current_password:</label>
                 <input
                   {...register("currentPassword", {
-                    required: "current_password is required.",
+                    validate: {
+                      required: (value) => {
+                        if (user) {
+                          if (!value) {
+                            return "Current password is required.";
+                          }
+                          return true;
+                        }
+                        return true;
+                      },
+                    },
                   })}
                   type="password"
-                  id="current_password"
-                  name="current_password"
+                  id="currentPassword"
+                  name="currentPassword"
                   placeholder=""
                 />
-                {errors.password && <p>{`${errors.password.message}`}</p>}
+                {errors.currentPassword && (
+                  <p>{`${errors.currentPassword.message}`}</p>
+                )}
               </div>
             )}
             {/* No Password changes via edit profile page. */}
@@ -124,7 +142,17 @@ function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
                   <label htmlFor="password">Password:</label>
                   <input
                     {...register("password", {
-                      required: "Password is required.",
+                      validate: {
+                        required: (value) => {
+                          if (!user) {
+                            if (!value) {
+                              return "Password is required.";
+                            }
+                            return true;
+                          }
+                          return true;
+                        },
+                      },
                     })}
                     type="password"
                     id="password"
@@ -139,11 +167,16 @@ function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
                   </label>
                   <input
                     {...register("password_confirmation", {
-                      required: "Password is required.",
-                      validate: (value) => {
-                        if (watch("password") != value) {
-                          return "Passwords must match.";
-                        }
+                      validate: {
+                        required: (value) => {
+                          if (!user) {
+                            if (watch("password") != value) {
+                              return "Passwords must match.";
+                            }
+                            return true;
+                          }
+                          return true;
+                        },
                       },
                     })}
                     type="password"

@@ -55,6 +55,7 @@ async function destroySession(token: string) {
 }
 
 async function editUser(user: TUserForm): Promise<UserResponse> {
+  console.log("Here!")
   const response = await fetch(`${HOST_URL}/signup`, {
     method: "PATCH",
     headers: {

@@ -103,7 +103,6 @@ describe 'Products API', type: :request do
 
     describe "Un-Authenticated" do
       it "fails when un-authenticated" do
-        # product = create(:product)
         patch "/api/v1/products/1", :params => {:id => 1, :product => {name: nil}}
         expect(response).to have_http_status(401)
       end
