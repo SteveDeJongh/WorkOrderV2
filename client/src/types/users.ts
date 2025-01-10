@@ -1,3 +1,5 @@
+import { UserPreferences } from "./userPreferences";
+
 type User = {
     id: number;
     email: string;
@@ -5,11 +7,7 @@ type User = {
     name: string;
     roles: Array<RoleTypes>;
     created_date: string;
-    views: {
-      customers: ViewTypes;
-      products: ViewTypes;
-      invoices: ViewTypes;
-    };
+    preferences: UserPreferences;
 }
 
 type NestedUser = {
@@ -20,7 +18,7 @@ type NestedSignInUser = {
   user: SignInUser;
 }
 
-type ViewTypes = "profile" | "table" | null;
+type ViewTypes = "profile" | "table";
 
 type RoleTypes = "user" | "manager" | "admin";
 

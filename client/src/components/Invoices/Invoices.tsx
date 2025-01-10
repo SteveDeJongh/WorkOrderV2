@@ -8,17 +8,22 @@ import { useInvoicesData } from "../../hooks/useInvoicesData";
 import { ViewTypes } from "../../types/users";
 import { useAuth } from "../../contexts/AuthContext";
 import { INVOICECOLUMNSALT } from "../Customers/columns";
+import { syncUserPreference } from "../../services/userPreferencesServices";
 
 function Invoices() {
-  const { user } = useAuth();
+  const { user, updateUserPreferences } = useAuth();
   const [view, setView] = useState<ViewTypes>(
-    user?.views?.invoices || "profile"
+    user?.preferences.view_products || "profile"
   );
   const { id } = useParams();
 
-  function viewSetter(view: ViewTypes) {
-    user!.views["invoices"] = view;
+  async function viewSetter(view: ViewTypes) {
     setView(view);
+
+    const updatedPreferences = await syncUserPreference(user!.id, {
+      view_invoices: view,
+    });
+    updateUserPreferences(updatedPreferences);
   }
 
   let location = useLocation();

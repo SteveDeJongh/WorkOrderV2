@@ -1,4 +1,4 @@
 class UserPreferenceSerializer
   include JSONAPI::Serializer
-  attributes :theme, :view_customers, :view_products, :view_invoices
+  attributes :user_id, :theme, :view_customers, :view_products, :view_invoices, :created_at, :updated_at
 end

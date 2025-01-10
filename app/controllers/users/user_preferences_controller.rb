@@ -1,4 +1,4 @@
-class UserPreferencesController < ApplicationController
+class Users::UserPreferencesController < ApplicationController
   before_action :set_user_preference, only: %i[ show update destroy ]
 
   # GET /user_preferences
@@ -27,7 +27,7 @@ class UserPreferencesController < ApplicationController
   # PATCH/PUT /user_preferences/1
   def update
     if @user_preference.update(user_preference_params)
-      render json: @user_preference
+      render json: serialized_preferences(@user_preference)
     else
       render json: @user_preference.errors, status: :unprocessable_entity
     end
@@ -39,6 +39,10 @@ class UserPreferencesController < ApplicationController
   end
 
   private
+    def serialized_preferences(preferences)
+      UserPreferenceSerializer.new(preferences).serializable_hash[:data][:attributes]
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_user_preference
       @user_preference = UserPreference.find(params[:id])
@@ -46,6 +50,6 @@ class UserPreferencesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_preference_params
-      params.require(:user_preference).permit(:user_id, :view, :theme)
+      params.require(:user_preference).permit(:user_id, :view_customers, :view_products, :view_invoices, :theme)
     end
 end

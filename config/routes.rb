@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :user_preferences
   # /login /logout /signup
   devise_for :users, path: '', path_names: {
     sign_in: 'login',
@@ -14,6 +13,10 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     get "/current_user_details", to: 'users/sessions#current_user_details'
+  end
+
+  namespace :users do
+    resources :user_preferences
   end
 
   # API routes should be in /api/v1

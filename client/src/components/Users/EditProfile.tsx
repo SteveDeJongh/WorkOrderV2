@@ -10,8 +10,6 @@ function EditProfile() {
 
   const { mutate } = useMutation({
     mutationFn: (userData: TUserForm) => {
-      console.log("In mutate");
-      console.log("userData", userData);
       return editUser(userData);
     },
     onSuccess: (response) => {

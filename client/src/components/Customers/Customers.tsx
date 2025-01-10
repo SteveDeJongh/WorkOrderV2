@@ -8,17 +8,20 @@ import { ViewToggle } from "../multiuse/ViewToggle";
 import { ViewTypes } from "../../types/users";
 import { useAuth } from "../../contexts/AuthContext";
 import { CUSTOMERCOLUMNS } from "./columns";
+import { syncUserPreference } from "../../services/userPreferencesServices";
 
 function Customers() {
-  const { user } = useAuth();
-  const [view, setView] = useState<ViewTypes>(
-    user?.views.customers || "profile"
-  );
+  const { user, updateUserPreferences } = useAuth();
+  const [view, setView] = useState<ViewTypes>(user!.preferences.view_customers);
   const { id } = useParams();
 
-  function viewSetter(view: ViewTypes) {
-    user!.views.customers = view;
+  async function viewSetter(view: ViewTypes) {
     setView(view);
+
+    const updatedPreferences = await syncUserPreference(user!.id, {
+      view_customers: view,
+    });
+    updateUserPreferences(updatedPreferences);
   }
 
   let location = useLocation();

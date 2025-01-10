@@ -9,16 +9,19 @@ import {
 import { getUserByToken, destroySession } from "../services/userServices";
 
 import { User } from "../types/users";
+import { UserPreferences } from "../types/userPreferences";
 
 interface AuthContext {
   user?: User;
   loginSuccess: (user: User) => void;
   logout: () => Promise<void>;
+  updateUserPreferences: (preferences: UserPreferences) => void;
 }
 
 const AuthContext = createContext<AuthContext>({
   loginSuccess: () => null,
   logout: () => Promise.resolve(),
+  updateUserPreferences: () => null,
 });
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -49,11 +52,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const loginSuccess = (user: User) => {
     setUser({
       ...user,
-      views: {
-        customers: null,
-        products: null,
-        invoices: null,
-      },
     });
   };
 
@@ -71,10 +69,18 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     setUser(undefined);
   };
 
+  const updateUserPreferences = (preferences: UserPreferences) => {
+    setUser({
+      ...user!,
+      preferences: { ...preferences },
+    });
+  };
+
   const contextValue: AuthContext = {
     user,
     loginSuccess,
     logout,
+    updateUserPreferences,
   };
 
   if (loading) {

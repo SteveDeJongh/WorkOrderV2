@@ -19,7 +19,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
 
     if resource.save
-      UserPreference.create(user_id: resource.id, theme:"Dark")
+      UserPreference.create(user_id: resource.id, theme:"dark")
     end
   end
 
