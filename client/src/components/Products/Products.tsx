@@ -7,7 +7,7 @@ import { FullWidthTable } from "../multiuse/FullWidthTable";
 import { ViewToggle } from "../multiuse/ViewToggle";
 import { ViewTypes } from "../../types/users";
 import { useAuth } from "../../contexts/AuthContext";
-import { PRODUCTCOLUMNS } from "../Customers/columns";
+import { PRODUCTCOLUMNS } from "../columns";
 import { syncUserPreference } from "../../services/userPreferencesServices";
 
 function Products() {

@@ -6,7 +6,7 @@ import { useURLSearchParam } from "../../../hooks/useURLSearchParam";
 import { SearchResultsTable } from "../../multiuse/SearchResultsTable";
 import { Button } from "../../multiuse/Button";
 import { Customer } from "../../../types/customers";
-import { CUSTOMERCOLUMNS } from "../../Customers/columns";
+import { CUSTOMERCOLUMNS } from "../../columns";
 
 type Props = {
   open: boolean;

@@ -7,7 +7,7 @@ import { ViewToggle } from "../multiuse/ViewToggle";
 import { useInvoicesData } from "../../hooks/useInvoicesData";
 import { ViewTypes } from "../../types/users";
 import { useAuth } from "../../contexts/AuthContext";
-import { INVOICECOLUMNSALT } from "../Customers/columns";
+import { INVOICECOLUMNSALT } from "../columns";
 import { syncUserPreference } from "../../services/userPreferencesServices";
 
 function Invoices() {

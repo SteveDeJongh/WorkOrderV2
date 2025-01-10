@@ -7,7 +7,7 @@ import { useCustomersData } from "../../hooks/useCustomersData";
 import { ViewToggle } from "../multiuse/ViewToggle";
 import { ViewTypes } from "../../types/users";
 import { useAuth } from "../../contexts/AuthContext";
-import { CUSTOMERCOLUMNS } from "./columns";
+import { CUSTOMERCOLUMNS } from "../columns";
 import { syncUserPreference } from "../../services/userPreferencesServices";
 
 function Customers() {

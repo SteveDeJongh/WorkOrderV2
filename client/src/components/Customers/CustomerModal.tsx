@@ -16,7 +16,7 @@ import {
 } from "../../types/customers";
 import { Invoice } from "../../types/invoiceTypes";
 import { ScrollableTableTall } from "../multiuse/ScrollableTableTall";
-import { INVOICECOLUMNS } from "./columns";
+import { INVOICECOLUMNS } from "../columns";
 import { useNavigate } from "react-router-dom";
 
 type Props = {

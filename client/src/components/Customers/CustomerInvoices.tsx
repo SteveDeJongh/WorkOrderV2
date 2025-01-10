@@ -3,7 +3,7 @@ import { fetchCustomerInvoices } from "../../services/customerServices";
 import { useParams, useNavigate } from "react-router-dom";
 import { ScrollableTableTall } from "../multiuse/ScrollableTableTall";
 import { Invoice } from "../../types/invoiceTypes";
-import { INVOICECOLUMNS } from "./columns";
+import { INVOICECOLUMNS } from "../columns";
 
 function CustomerInvoices() {
   const navigate = useNavigate();

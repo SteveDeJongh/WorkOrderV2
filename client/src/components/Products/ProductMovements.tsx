@@ -3,7 +3,7 @@ import { fetchInventoryMovementsFor } from "../../services/movementServices";
 import { useParams, useNavigate } from "react-router-dom";
 import { ScrollableTableTall } from "../multiuse/ScrollableTableTall";
 import { Movement } from "../../types/movements";
-import { MOVEMENTCOLUMNS } from "../Customers/columns";
+import { MOVEMENTCOLUMNS } from "../columns";
 
 function ProductMovements() {
   const navigate = useNavigate();
