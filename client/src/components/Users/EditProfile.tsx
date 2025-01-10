@@ -9,9 +9,10 @@ function EditProfile() {
   const { user, loginSuccess } = useAuth();
 
   const { mutate } = useMutation({
-    mutationFn: (user: TUserForm) => {
+    mutationFn: (userData: TUserForm) => {
       console.log("In mutate");
-      return editUser(user);
+      console.log("userData", userData);
+      return editUser(userData);
     },
     onSuccess: (response) => {
       loginSuccess(response.data);

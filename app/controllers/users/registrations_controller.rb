@@ -14,12 +14,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # POST /resource
   def create
     super
-    puts "Params in create are", params
     params["user"]["roles"].each do |role|
       resource.roles.push(role)
     end
 
-    resource.save
+    if resource.save
+      UserPreference.create(user_id: resource.id, theme:"Dark")
+    end
   end
 
   # GET /resource/edit
@@ -29,7 +30,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # PUT /resource
   def update
-    puts("Here trying to update!")
     super
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_10_233624) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_09_234740) do
   create_table "customers", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -39,14 +39,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_10_233624) do
     t.index ["previous_refresh_token"], name: "index_devise_api_tokens_on_previous_refresh_token"
     t.index ["refresh_token"], name: "index_devise_api_tokens_on_refresh_token"
     t.index ["resource_owner_type", "resource_owner_id"], name: "index_devise_api_tokens_on_resource_owner"
-  end
-
-  create_table "dummies", force: :cascade do |t|
-    t.string "name"
-    t.integer "age"
-    t.datetime "born_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "inventory_movements", force: :cascade do |t|
@@ -114,6 +106,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_10_233624) do
 
   create_table "tax_rates", force: :cascade do |t|
     t.float "percentage"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "user_preferences", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "view_customers", default: "profile", null: false
+    t.string "view_products", default: "profile", null: false
+    t.string "view_invoices", default: "profile", null: false
+    t.string "theme"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

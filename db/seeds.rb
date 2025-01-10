@@ -14,7 +14,9 @@ Customer.create(first_name: 'Bob', last_name: 'Gee', email: 'cust@yahoo.com', ph
 Customer.create(first_name: 'Rob', last_name: 'Jones', email: 'cust@google.com', phone: "444-444-4444", city: 'New York')
 
 User.create(name: 'Admin', email: 'admin@test.com', password: "password", roles: ['user', 'manager', 'admin'])
+UserPreference.create(user_id: 1, theme:"Dark")
 User.create(name: 'Manager', email: 'manager@test.com', password: "password", roles: ['user', 'manager'])
+UserPreference.create(user_id: 2, theme:"Dark")
 
 @user = User.first
 

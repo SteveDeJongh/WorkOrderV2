@@ -15,6 +15,7 @@ class Users::SessionsController < Devise::SessionsController
   def create
     sleep 1 # Simulating API response delay
     super
+    puts current_user.user_preference.inspect
   end
 
   # DELETE /resource/sign_out
@@ -31,10 +32,9 @@ class Users::SessionsController < Devise::SessionsController
 
   def current_user_details
     if (current_user)
-      user = UserSerializer.new(current_user).serializable_hash[:data][:attributes]
       render json: {
         message: "User for token found.",
-        data: user,
+        data: serailized_user(current_user),
       }, status: :ok
     else
       render json: {
@@ -45,10 +45,16 @@ class Users::SessionsController < Devise::SessionsController
 
   private
 
+  def serailized_user(user)
+    u = UserSerializer.new(current_user).serializable_hash[:data][:attributes]
+    u[:preferences] = UserPreferenceSerializer.new(current_user.user_preference).serializable_hash[:data][:attributes]
+    return u;
+  end
+
   def respond_with(resource, _opts = {})
     render json: {
       status: {code: 200, message: 'Logged in sucessfully.'},
-      data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
+      data: serailized_user(resource)
     }, status: :ok
   end
 
