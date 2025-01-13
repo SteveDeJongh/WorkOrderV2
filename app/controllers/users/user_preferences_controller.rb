@@ -18,7 +18,7 @@ class Users::UserPreferencesController < ApplicationController
     @user_preference = UserPreference.new(user_preference_params)
 
     if @user_preference.save
-      render json: @user_preference, status: :created, location: @user_preference
+      render json: @user_preference, status: :created
     else
       render json: @user_preference.errors, status: :unprocessable_entity
     end

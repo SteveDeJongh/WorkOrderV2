@@ -15,7 +15,6 @@ class Users::SessionsController < Devise::SessionsController
   def create
     sleep 1 # Simulating API response delay
     super
-    puts current_user.user_preference.inspect
   end
 
   # DELETE /resource/sign_out

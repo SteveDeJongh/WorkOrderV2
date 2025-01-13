@@ -6,7 +6,6 @@ class InvoiceService
   end
 
   def calculateInvoiceTotals
-    puts "We're calculating!"
     sub_total = 0;
     tax_total = 0;
     payment_total = 0;
