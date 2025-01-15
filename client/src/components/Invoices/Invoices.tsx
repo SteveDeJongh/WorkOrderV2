@@ -5,7 +5,7 @@ import { NoSelection } from "../NoSelection";
 import { FullWidthTable } from "../multiuse/FullWidthTable";
 import { ViewToggle } from "../multiuse/ViewToggle";
 import { useInvoicesData } from "../../hooks/useInvoicesData";
-import { ViewTypes } from "../../types/users";
+import { ViewTypes } from "../../types/userPreferences";
 import { useAuth } from "../../contexts/AuthContext";
 import { INVOICECOLUMNSALT } from "../columns";
 import { syncUserPreference } from "../../services/userPreferencesServices";

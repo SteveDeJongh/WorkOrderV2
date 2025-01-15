@@ -6,12 +6,13 @@ import { PageTitle } from "../PageTitle";
 import { LoadingModal } from "../multiuse/LoadingModal";
 import { Button } from "../multiuse/Button";
 import { SignInUser, UserResponse } from "../../types/users";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
-  const { user, loginSuccess } = useAuth();
+  const { setToken, user, loginSuccess } = useAuth();
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   useEffect(() => {
     // If we already have a user, redirect back to previous page.
@@ -32,14 +33,27 @@ function Login() {
     isError,
   } = useMutation({
     mutationFn: (loginData: SignInUser) => {
+      setErrorMessage(undefined);
       return createSession({ user: loginData });
     },
-    onSuccess: (response: UserResponse) => {
-      loginSuccess(response.data);
-      navigate(`/`);
+    onSuccess: async ({
+      r: response,
+      token,
+    }: {
+      r: UserResponse;
+      token: string;
+    }) => {
+      if (response.status.code === 200) {
+        let trimmedResponse = { ...response.data, ...response.status };
+        loginSuccess(trimmedResponse);
+        setToken(token);
+        navigate("/");
+      } else {
+        setErrorMessage(response.status.message);
+      }
     },
-    onError: (error: UserResponse) => {
-      console.error("An Error occured logging in:", error.status);
+    onError: (error) => {
+      console.error("An Error occured logging in:", error);
       navigate("/Login");
     },
   });
@@ -77,12 +91,14 @@ function Login() {
             className="main-pane-content"
             onSubmit={handleSubmit(onSubmit)}
           >
-            {isError && (
-              <>
-                <h3>Unable to log in.</h3>
-                <p>Username or password is incorrect.</p>
-              </>
-            )}
+            {isError ||
+              (errorMessage && (
+                <>
+                  <h3>Unable to log in.</h3>
+                  {errorMessage && `Error: ${errorMessage}`}
+                  {!errorMessage && <p>An error occured signing in.</p>}
+                </>
+              ))}
             <div className="panel">
               <h3>User Details</h3>
               <div className="panel-contents-section">

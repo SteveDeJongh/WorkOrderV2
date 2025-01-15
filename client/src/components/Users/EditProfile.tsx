@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { editUser } from "../../services/userServices";
 import { useMutation } from "@tanstack/react-query";
-import { UserForm, TUserForm } from "./UserForm";
+import { UserForm } from "./UserForm";
+import { TUserForm } from "../../types/users";
 import { useAuth } from "../../contexts/AuthContext";
 
 function EditProfile() {
@@ -17,7 +18,7 @@ function EditProfile() {
       navigate("/profile");
     },
     onError: (error) => {
-      console.log("An Error occured editing the user:", error);
+      console.error("An Error occured editing the user:", error);
     },
   });
 

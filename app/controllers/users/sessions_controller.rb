@@ -2,6 +2,7 @@
 
 class Users::SessionsController < Devise::SessionsController
   skip_before_action :set_current_user
+  skip_before_action :authenticate_user!
   respond_to :json
 
   # before_action :configure_sign_in_params, only: [:create]
@@ -14,7 +15,13 @@ class Users::SessionsController < Devise::SessionsController
   # POST /resource/sign_in
   def create
     sleep 1 # Simulating API response delay
-    super
+    login_result = catch(:warden) { super }
+    return unless login_failed?(login_result)
+
+    # Failed to sign in
+    render json: {
+      status: {code: 404, message: 'Email or Password incorrect.'},
+    }, status: :ok
   end
 
   # DELETE /resource/sign_out
@@ -43,6 +50,10 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   private
+
+  def login_failed?(login_result)
+    login_result.is_a?(Hash) && login_result.key?(:scope) && login_result.key?(:recall)
+  end
 
   def serailized_user(user)
     u = UserSerializer.new(current_user).serializable_hash[:data][:attributes]

@@ -1,59 +1,31 @@
 import { useForm } from "react-hook-form";
 import { Button } from "../multiuse/Button";
-import { User, RoleTypes } from "../../types/users";
+import { User, ZUserForm, TUserForm } from "../../types/users";
 import { useNavigate } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "../../contexts/AuthContext";
 
 type Props = {
-  modalForm?: boolean;
   user?: User;
   headerText: string;
   onSubmit: (user: TUserForm) => void;
   buttonText: string;
 };
 
-export type TUserForm = {
-  name: string;
-  email: string;
-  roles: [RoleTypes];
-  password: string;
-  password_confirmation?: string;
-  currentPassword?: string;
-};
-
-function UserForm({
-  modalForm,
-  user,
-  headerText,
-  onSubmit,
-  buttonText,
-}: Props) {
+function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
   const navigate = useNavigate();
-
-  // Working on adding resolver to UserForm.
-
-  // const resolver: Resolver<FormValues> = async (values) => {
-  //   return {
-  //     values: values.name ? values : {},
-  //     errors: !values.name
-  //       ? {
-  //           name: {
-  //             type: "required",
-  //             message: "This is required.",
-  //           },
-  //         }
-  //       : {},
-  //   };
-  // };
+  const { user: SignedInUser } = useAuth();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    watch,
   } = useForm<TUserForm>({
     defaultValues: user
       ? { name: user.name, email: user.email, roles: user.roles }
       : { roles: ["user"] },
+    resolver: zodResolver(ZUserForm),
+    shouldUnregister: true,
   });
 
   return (
@@ -84,12 +56,9 @@ function UserForm({
               <div className="formPair half">
                 <label htmlFor="name">Name:</label>
                 <input
-                  {...register("name", {
-                    required: "name is required.",
-                  })}
+                  {...register("name")}
                   type="text"
                   id="name"
-                  name="name"
                   placeholder="Your Name"
                 />
                 {errors.name && <p>{`${errors.name.message}`}</p>}
@@ -97,12 +66,9 @@ function UserForm({
               <div className="formPair half">
                 <label htmlFor="email">Email:</label>
                 <input
-                  {...register("email", {
-                    required: "Email is required.",
-                  })}
+                  {...register("email")}
                   type="text"
                   id="email"
-                  name="email"
                   placeholder="Email"
                 />
                 {errors.email && <p>{`${errors.email.message}`}</p>}
@@ -112,26 +78,13 @@ function UserForm({
               <div className="formPair half">
                 <label htmlFor="current_password">current_password:</label>
                 <input
-                  {...register("currentPassword", {
-                    validate: {
-                      required: (value) => {
-                        if (user) {
-                          if (!value) {
-                            return "Current password is required.";
-                          }
-                          return true;
-                        }
-                        return true;
-                      },
-                    },
-                  })}
+                  {...register("current_password")}
                   type="password"
-                  id="currentPassword"
-                  name="currentPassword"
+                  id="current_password"
                   placeholder=""
                 />
-                {errors.currentPassword && (
-                  <p>{`${errors.currentPassword.message}`}</p>
+                {errors.current_password && (
+                  <p>{`${errors.current_password.message}`}</p>
                 )}
               </div>
             )}
@@ -141,23 +94,9 @@ function UserForm({
                 <div className="formPair half">
                   <label htmlFor="password">Password:</label>
                   <input
-                    {...register("password", {
-                      validate: {
-                        required: (value) => {
-                          if (!user) {
-                            if (!value) {
-                              return "Password is required.";
-                            }
-                            return true;
-                          }
-                          return true;
-                        },
-                      },
-                    })}
+                    {...register("password")}
                     type="password"
                     id="password"
-                    name="password"
-                    placeholder=""
                   />
                   {errors.password && <p>{`${errors.password.message}`}</p>}
                 </div>
@@ -166,23 +105,9 @@ function UserForm({
                     Confirm Password:
                   </label>
                   <input
-                    {...register("password_confirmation", {
-                      validate: {
-                        required: (value) => {
-                          if (!user) {
-                            if (watch("password") != value) {
-                              return "Passwords must match.";
-                            }
-                            return true;
-                          }
-                          return true;
-                        },
-                      },
-                    })}
+                    {...register("password_confirmation")}
                     type="password"
                     id="password_confirmation"
-                    name="password_confirmation"
-                    placeholder=""
                   />
                   {errors.password_confirmation && (
                     <p>{`${errors.password_confirmation.message}`}</p>
@@ -190,24 +115,28 @@ function UserForm({
                 </div>
               </div>
             )}
-            <div className="panel-contents-section">
-              <div className="formList">
-                <h3>Roles:</h3>
-                <div className="formPair">
-                  <input {...register("roles")} type="checkbox" value="user" />
-                  <label htmlFor="user">User</label>
-                  {errors.roles && <p>{`${errors.roles.message}`}</p>}
-                </div>
-                <div className="formPair">
-                  <input
-                    {...register("roles")}
-                    type="checkbox"
-                    value="manager"
-                  />
-                  <label htmlFor="manager">Manager</label>
-                  {errors.roles && <p>{`${errors.roles.message}`}</p>}
-                </div>
-                {user && user.roles?.includes("admin") && (
+            {SignedInUser && SignedInUser.roles?.includes("admin") && (
+              <div className="panel-contents-section">
+                <div className="formList">
+                  <h3>Roles:</h3>
+                  <div className="formPair">
+                    <input
+                      {...register("roles")}
+                      type="checkbox"
+                      value="user"
+                    />
+                    <label htmlFor="user">User</label>
+                    {errors.roles && <p>{`${errors.roles.message}`}</p>}
+                  </div>
+                  <div className="formPair">
+                    <input
+                      {...register("roles")}
+                      type="checkbox"
+                      value="manager"
+                    />
+                    <label htmlFor="manager">Manager</label>
+                    {errors.roles && <p>{`${errors.roles.message}`}</p>}
+                  </div>
                   <div className="formPair">
                     <input
                       {...register("roles")}
@@ -217,9 +146,9 @@ function UserForm({
                     <label htmlFor="admin">Admin</label>
                     {errors.roles && <p>{`${errors.roles.message}`}</p>}
                   </div>
-                )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </form>

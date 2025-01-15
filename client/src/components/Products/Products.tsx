@@ -5,7 +5,7 @@ import { NoSelection } from "../NoSelection";
 import { useProductsData } from "../../hooks/useProductsData";
 import { FullWidthTable } from "../multiuse/FullWidthTable";
 import { ViewToggle } from "../multiuse/ViewToggle";
-import { ViewTypes } from "../../types/users";
+import { ViewTypes } from "../../types/userPreferences";
 import { useAuth } from "../../contexts/AuthContext";
 import { PRODUCTCOLUMNS } from "../columns";
 import { syncUserPreference } from "../../services/userPreferencesServices";

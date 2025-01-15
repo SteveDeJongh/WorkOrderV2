@@ -1,4 +1,4 @@
-import { TUserForm } from "../components/Users/UserForm";
+import { TUserForm } from "../types/users";
 import { HOST_URL } from "../constants";
 import { NestedSignInUser, UserResponse} from "../types/users";
 
@@ -21,7 +21,7 @@ async function createUser(user: TUserForm): Promise<UserResponse> {
   return response.json();
 }
 
-async function createSession(loginData: NestedSignInUser): Promise<UserResponse> {
+async function createSession(loginData: NestedSignInUser): Promise<{r: UserResponse, token: string}> {
   const response = await fetch(`${HOST_URL}/login`, {
     method: "POST",
     headers: {
@@ -34,9 +34,9 @@ async function createSession(loginData: NestedSignInUser): Promise<UserResponse>
     throw new Error(response.statusText)
   }
 
-  let token = response.headers.get("Authorization")
-  token ? localStorage.setItem('authToken', token) : null;
-  return response.json();
+  let token = response.headers.get("Authorization") || "";
+  let r = await response.json();
+  return {r, token};
 }
 
 async function destroySession(token: string) {

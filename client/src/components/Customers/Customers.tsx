@@ -5,7 +5,7 @@ import { useState } from "react";
 import { NoSelection } from "../NoSelection";
 import { useCustomersData } from "../../hooks/useCustomersData";
 import { ViewToggle } from "../multiuse/ViewToggle";
-import { ViewTypes } from "../../types/users";
+import { ViewTypes } from "../../types/userPreferences";
 import { useAuth } from "../../contexts/AuthContext";
 import { CUSTOMERCOLUMNS } from "../columns";
 import { syncUserPreference } from "../../services/userPreferencesServices";

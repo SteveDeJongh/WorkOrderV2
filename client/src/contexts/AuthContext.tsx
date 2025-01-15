@@ -12,6 +12,7 @@ import { User } from "../types/users";
 import { UserPreferences } from "../types/userPreferences";
 
 interface AuthContext {
+  setToken: (token: string) => null;
   user?: User;
   loginSuccess: (user: User) => void;
   logout: () => Promise<void>;
@@ -19,6 +20,7 @@ interface AuthContext {
 }
 
 const AuthContext = createContext<AuthContext>({
+  setToken: () => null,
   loginSuccess: () => null,
   logout: () => Promise.resolve(),
   updateUserPreferences: () => null,
@@ -49,6 +51,11 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     fetchUser();
   }, []);
 
+  const setToken = (token: string) => {
+    localStorage.setItem("authToken", token);
+    return;
+  };
+
   const loginSuccess = (user: User) => {
     setUser({
       ...user,
@@ -72,11 +79,12 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const updateUserPreferences = (preferences: UserPreferences) => {
     setUser({
       ...user!,
-      preferences: { ...preferences },
+      ...preferences,
     });
   };
 
   const contextValue: AuthContext = {
+    setToken,
     user,
     loginSuccess,
     logout,
