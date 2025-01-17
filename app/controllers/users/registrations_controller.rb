@@ -60,7 +60,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def configure_account_update_params
     # devise_parameter_sanitizer.permit(:account_update, keys: [:attribute])
     devise_parameter_sanitizer.permit(:account_update) do |user_params|
-      user_params.permit({roles: []}, :name, :email, :password, :password_confirmation)
+      user_params.permit({roles: []}, :name, :email, :current_password)
     end
   end
 
@@ -74,21 +74,40 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super(resource)
   # end
 
+  def not_updated?(resource)
+    Time.current - resource.updated_at > 1;
+  end
+
   private
 
   def respond_with(resource, _opts = {})
+  puts "self", self
     if request.method == "POST" && resource.persisted?
       render json: {
         status: {code: 200, message: "Signed up sucessfully."},
         data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
       }, status: :ok
+    elsif request.method == "POST" && !resource.persisted?
+      render json: {
+        status: {code: 422, message: "Failed to create account.", error: "#{resource.errors.full_messages.to_sentence}"},
+      }, status: :ok
     elsif request.method == "DELETE"
       render json: {
         status: { code: 200, message: "Account deleted successfully."}
       }, status: :ok
+    elsif request.method == "PATCH" && self.not_updated?(resource)
+      render json: {
+        status: { code: 422, message: "Failed to updated account.", error: "#{resource.errors.full_messages.to_sentence}"},
+        data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
+      }, status: :ok
+    elsif request.method == "PATCH" && resource.persisted?
+      render json: {
+        status: { code: 200, message: "Account updated successfully."},
+        data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
+      }, status: :ok
     else
       render json: {
-        status: {code: 422, message: "User couldn't be created successfully. #{resource.errors.full_messages.to_sentence}"}
+        status: {code: 422, message: "An error occured. #{resource.errors.full_messages.to_sentence}"}
       }, status: :unprocessable_entity
     end
   end

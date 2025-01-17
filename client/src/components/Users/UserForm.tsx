@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Button } from "../multiuse/Button";
-import { User, ZUserForm, TUserForm } from "../../types/users";
+import { User, ZUserForm, TUserForm, UserErrorData } from "../../types/users";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../../contexts/AuthContext";
@@ -10,9 +10,16 @@ type Props = {
   headerText: string;
   onSubmit: (user: TUserForm) => void;
   buttonText: string;
+  errorMessage?: UserErrorData;
 };
 
-function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
+function UserForm({
+  user,
+  headerText,
+  onSubmit,
+  buttonText,
+  errorMessage,
+}: Props) {
   const navigate = useNavigate();
   const { user: SignedInUser } = useAuth();
 
@@ -49,6 +56,12 @@ function UserForm({ user, headerText, onSubmit, buttonText }: Props) {
         className="main-pane-content"
         onSubmit={handleSubmit(onSubmit)}
       >
+        {errorMessage && (
+          <div className="panel">
+            <h2>{errorMessage.message}</h2>
+            <p>{errorMessage.error}</p>
+          </div>
+        )}
         <div className="panel">
           <h3>User Details</h3>
           <div className="panel-contents">

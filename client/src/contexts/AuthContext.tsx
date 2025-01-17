@@ -12,7 +12,7 @@ import { User } from "../types/users";
 import { UserPreferences } from "../types/userPreferences";
 
 interface AuthContext {
-  setToken: (token: string) => null;
+  setToken: (token: string) => void;
   user?: User;
   loginSuccess: (user: User) => void;
   logout: () => Promise<void>;

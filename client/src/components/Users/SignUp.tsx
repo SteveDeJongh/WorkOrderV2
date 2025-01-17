@@ -2,22 +2,21 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createUser } from "../../services/userServices";
 import { PageTitle } from "../PageTitle";
-import { UserResponse } from "../../types/users";
 import { UserForm } from "./UserForm";
-import { TUserForm } from "../../types/users";
-import { useAuth } from "../../contexts/AuthContext";
+import { TUserForm, UserErrorData, UserResponse } from "../../types/users";
+import { useState } from "react";
 
 function SignUp() {
   const navigate = useNavigate();
-  const { loginSuccess } = useAuth();
+  const [errorMessage, setErrorMessage] = useState<UserErrorData>();
 
-  const { mutate: signUp } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: (user: TUserForm) => {
+      setErrorMessage(undefined);
       return createUser(user);
     },
-    onSuccess: (response: UserResponse) => {
-      loginSuccess(response.data);
-      navigate(`/`);
+    onSuccess: ({ r: response }) => {
+      handleSuccess(response);
     },
     onError: (error) => {
       console.error("An Error occured creating the user:", error);
@@ -25,9 +24,17 @@ function SignUp() {
     },
   });
 
-  const onSubmit = (user: TUserForm) => {
-    signUp(user);
-  };
+  function handleSuccess(response: UserResponse) {
+    if (response.status.code === 200) {
+      alert("User created!");
+      navigate("/");
+    } else {
+      setErrorMessage({
+        message: response.status.message,
+        error: response.status.error,
+      });
+    }
+  }
 
   return (
     <>
@@ -37,8 +44,9 @@ function SignUp() {
           <div className="pane-inner">
             <UserForm
               headerText="Create New User"
-              onSubmit={onSubmit}
+              onSubmit={mutate}
               buttonText={"Create User"}
+              errorMessage={errorMessage}
             />
           </div>
         </div>

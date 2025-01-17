@@ -17,8 +17,8 @@ const ZUserForm = z.object({
     if (current_password === "") {
       return ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ["password"],
-        message: 'Field is required111.',
+        path: ["current_password"],
+        message: 'Current password is required to update account.',
       });
     }
   }
@@ -80,9 +80,13 @@ type UserResponse = {
   data: User;
 }
 
-type StatusResponse = {
+type StatusResponse = UserErrorData & {
   code: number;
+}
+
+type UserErrorData = {
   message: string;
+  error?: string;
 }
 
 type SignInUser = {
@@ -95,4 +99,4 @@ type UserContext = {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
-export { NestedUser, NestedSignInUser, UserResponse, SignInUser, TUserForm, RoleTypes, User, UserContext, ZUserWithID, ZUser, ZUserForm }
+export { NestedUser, NestedSignInUser, UserResponse, UserErrorData, SignInUser, TUserForm, RoleTypes, User, UserContext, ZUserWithID, ZUser, ZUserForm }

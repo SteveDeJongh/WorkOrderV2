@@ -36,21 +36,8 @@ function Login() {
       setErrorMessage(undefined);
       return createSession({ user: loginData });
     },
-    onSuccess: async ({
-      r: response,
-      token,
-    }: {
-      r: UserResponse;
-      token: string;
-    }) => {
-      if (response.status.code === 200) {
-        let trimmedResponse = { ...response.data, ...response.status };
-        loginSuccess(trimmedResponse);
-        setToken(token);
-        navigate("/");
-      } else {
-        setErrorMessage(response.status.message);
-      }
+    onSuccess: ({ r: response, token }: { r: UserResponse; token: string }) => {
+      handleSuccess(response, token);
     },
     onError: (error) => {
       console.error("An Error occured logging in:", error);
@@ -61,6 +48,17 @@ function Login() {
   const onSubmit = (loginData: SignInUser) => {
     login(loginData);
   };
+
+  function handleSuccess(response: UserResponse, token: string) {
+    if (response.status.code === 200) {
+      let trimmedResponse = { ...response.data, ...response.status };
+      loginSuccess(trimmedResponse);
+      setToken(token);
+      navigate("/");
+    } else {
+      setErrorMessage(response.status.message);
+    }
+  }
 
   return (
     <>
@@ -94,9 +92,11 @@ function Login() {
             {isError ||
               (errorMessage && (
                 <>
-                  <h3>Unable to log in.</h3>
-                  {errorMessage && `Error: ${errorMessage}`}
-                  {!errorMessage && <p>An error occured signing in.</p>}
+                  <div className="panel">
+                    <h2>Unable to log in.</h2>
+                    {errorMessage && <p>`Error: ${errorMessage}`</p>}
+                    {!errorMessage && <p>An error occured signing in.</p>}
+                  </div>
                 </>
               ))}
             <div className="panel">

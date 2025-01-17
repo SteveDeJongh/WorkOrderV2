@@ -2,7 +2,7 @@ import { TUserForm } from "../types/users";
 import { HOST_URL } from "../constants";
 import { NestedSignInUser, UserResponse} from "../types/users";
 
-async function createUser(user: TUserForm): Promise<UserResponse> {
+async function createUser(user: TUserForm): Promise<{r: UserResponse}> {
   const response = await fetch(`${HOST_URL}/signup`, {
     method: "POST",
     headers: {
@@ -15,10 +15,8 @@ async function createUser(user: TUserForm): Promise<UserResponse> {
     throw new Error(response.statusText);
   }
 
-  let token = response.headers.get("Authorization")
-  token ? localStorage.setItem('authToken', token) : null;
-
-  return response.json();
+  let r = await response.json();
+  return {r};
 }
 
 async function createSession(loginData: NestedSignInUser): Promise<{r: UserResponse, token: string}> {
