@@ -80,12 +80,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   private
 
+  def serailized_user(user)
+    u = UserSerializer.new(user).serializable_hash[:data][:attributes]
+    u[:preferences] = UserPreferenceSerializer.new(user.user_preference).serializable_hash[:data][:attributes]
+    return u;
+  end
+
   def respond_with(resource, _opts = {})
   puts "self", self
     if request.method == "POST" && resource.persisted?
       render json: {
         status: {code: 200, message: "Signed up sucessfully."},
-        data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
+        data: serailized_user(resource)
       }, status: :ok
     elsif request.method == "POST" && !resource.persisted?
       render json: {
@@ -98,12 +104,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
     elsif request.method == "PATCH" && self.not_updated?(resource)
       render json: {
         status: { code: 422, message: "Failed to updated account.", error: "#{resource.errors.full_messages.to_sentence}"},
-        data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
+        data: serailized_user(resource)
       }, status: :ok
     elsif request.method == "PATCH" && resource.persisted?
       render json: {
         status: { code: 200, message: "Account updated successfully."},
-        data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
+        data: serailized_user(resource)
       }, status: :ok
     else
       render json: {

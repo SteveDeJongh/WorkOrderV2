@@ -56,8 +56,8 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def serailized_user(user)
-    u = UserSerializer.new(current_user).serializable_hash[:data][:attributes]
-    u[:preferences] = UserPreferenceSerializer.new(current_user.user_preference).serializable_hash[:data][:attributes]
+    u = UserSerializer.new(user).serializable_hash[:data][:attributes]
+    u[:preferences] = UserPreferenceSerializer.new(user.user_preference).serializable_hash[:data][:attributes]
     return u;
   end
 
