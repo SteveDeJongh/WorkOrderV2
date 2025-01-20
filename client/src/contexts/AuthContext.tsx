@@ -79,7 +79,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const updateUserPreferences = (preferences: UserPreferences) => {
     setUser({
       ...user!,
-      ...preferences,
+      preferences,
     });
   };
 

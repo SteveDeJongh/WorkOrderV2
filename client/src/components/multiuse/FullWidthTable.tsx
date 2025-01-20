@@ -93,10 +93,9 @@ function FullWidthTable({ title, fetcher, columns }: Props) {
   });
 
   // For Modal
-  const [isOpen, setIsOpen] = useState(false);
-  const [clickedID, setClickedId] = useState(
-    Number(useParams().id) || undefined
-  );
+  const { id } = useParams();
+  const [clickedID, setClickedId] = useState(Number(id) || undefined);
+  const [isOpen, setIsOpen] = useState(!!clickedID);
 
   function handleClick(id: number) {
     setClickedId(id);
@@ -164,7 +163,10 @@ function FullWidthTable({ title, fetcher, columns }: Props) {
       )}
       <Modal
         open={isOpen}
-        onClose={() => setIsOpen(false)}
+        onClose={() => {
+          setClickedId(undefined);
+          setIsOpen(false);
+        }}
         resourceId={clickedID}
         searchTerm={debouncedSearchTerm}
       />

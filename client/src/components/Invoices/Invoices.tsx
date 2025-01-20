@@ -13,15 +13,18 @@ import { syncUserPreference } from "../../services/userPreferencesServices";
 function Invoices() {
   const { user, updateUserPreferences } = useAuth();
   const [view, setView] = useState<ViewTypes>(
-    user?.preferences.view_products || "profile"
+    user?.preferences.view_invoices || "profile"
   );
   const { id } = useParams();
 
-  async function viewSetter(view: ViewTypes) {
-    setView(view);
+  async function viewSetter(newView: ViewTypes) {
+    if (newView === "table") {
+      window.history.replaceState(null, "", "/invoices");
+    }
+    setView(newView);
 
     const updatedPreferences = await syncUserPreference(user!.id, {
-      view_invoices: view,
+      view_invoices: newView,
     });
     updateUserPreferences(updatedPreferences);
   }

@@ -17,11 +17,14 @@ function Products() {
   );
   const { id } = useParams();
 
-  async function viewSetter(view: ViewTypes) {
-    setView(view);
+  async function viewSetter(newView: ViewTypes) {
+    if (newView === "table") {
+      window.history.replaceState(null, "", "/products");
+    }
+    setView(newView);
 
     const updatedPreferences = await syncUserPreference(user!.id, {
-      view_products: view,
+      view_products: newView,
     });
     updateUserPreferences(updatedPreferences);
   }

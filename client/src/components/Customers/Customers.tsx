@@ -15,11 +15,15 @@ function Customers() {
   const [view, setView] = useState<ViewTypes>(user!.preferences.view_customers);
   const { id } = useParams();
 
-  async function viewSetter(view: ViewTypes) {
-    setView(view);
+  async function viewSetter(newView: ViewTypes) {
+    if (newView === "table") {
+      window.history.replaceState(null, "", "/customers");
+    }
+
+    setView(newView);
 
     const updatedPreferences = await syncUserPreference(user!.id, {
-      view_customers: view,
+      view_customers: newView,
     });
     updateUserPreferences(updatedPreferences);
   }
