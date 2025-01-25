@@ -9,7 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "jsx": "preserve",
     "allowJs": true,
-    "checkJs": false,
+    "checkJs": false
   },
   "include": ["./src/**/*"],
   "$schema": "https://json.schemastore.org/tsconfig",

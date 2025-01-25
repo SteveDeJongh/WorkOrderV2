@@ -23,11 +23,16 @@ export const INVOICECOLUMNS = [
 // React-table columns
 export const INVOICECOLUMNSALT = [
   { keys: ["id"], header: "ID" },
-  { keys: ["customer_id"], header: "Customer_ID" },
-  { keys: ["total"], header: "Total" },
-  { keys: ["balance"], header: "Balance" },
+  { keys: ["customer_id"], header: "Customer ID" },
   { keys: ["status"], header: "Status" },
+  { keys: ["total"], header: "Total" },
+  { keys: ["tax"], header: "Tax" },
+  { keys: ["balance"], header: "Balance" },
+  { keys: ["updated_at"], header: "Updated" },
+  { keys: ["created_at"], header: "Created" },
 ];
+
+export const INVOICECOLUMNOPTIONS = INVOICECOLUMNSALT.map((col) => col.header);
 
 export const CUSTOMERCOLUMNS = [
   { keys: ["id"], header: "ID" },
@@ -42,6 +47,72 @@ export const CUSTOMERCOLUMNS = [
   { keys: ["country"], header: "Country" },
 ];
 
+export const CUSTOMERCOLUMNOPTIONS = CUSTOMERCOLUMNS.map((col) => col.header);
+
+// Alternate Customercolumn with aaccesorKEy and cell function.
+export const CUSTOMERCOLUMNSEXTRA = [
+  {
+    accessorKey: "id",
+    header: "ID",
+    cell: (props) => {
+      return <>{props.getValue()}</>;
+    },
+  },
+  {
+    accessorKey: "full_name",
+    header: "Full Name",
+    cell: (props) => {
+      return (
+        <>
+          {props.row.original.first_name} {props.row.original.last_name}
+        </>
+      );
+    },
+  },
+  {
+    accessorKey: "first_name",
+    header: "First Name",
+    cell: (props) => <>{props.getValue()}</>,
+  },
+  {
+    accessorKey: "last_name",
+    header: "Last Name",
+    cell: (props) => {
+      return <>{props.getValue()}</>;
+    },
+  },
+  {
+    accessorKey: "phone",
+    header: "Phone",
+    cell: (props) => <>{props.getValue()}</>,
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+    cell: (props) => <>{props.getValue()}</>,
+  },
+  {
+    accessorKey: "address",
+    header: "Address",
+    cell: (props) => <>{props.getValue()}</>,
+  },
+  {
+    accessorKey: "city",
+    header: "City",
+    cell: (props) => <>{props.getValue()}</>,
+  },
+  {
+    accessorKey: "province",
+    header: "Province",
+    cell: (props) => <>{props.getValue()}</>,
+  },
+  {
+    accessorKey: "country",
+    header: "Country",
+    cell: (props) => <>{props.getValue()}</>,
+  },
+];
+
 export const PRODUCTCOLUMNS = [
   { keys: ["id"], header: "ID" },
   { keys: ["sku"], header: "SKU" },
@@ -50,7 +121,9 @@ export const PRODUCTCOLUMNS = [
   { keys: ["description"], header: "Description" },
   { keys: ["price"], header: "Price" },
   { keys: ["taxrate"], header: "TaxRate" },
-  { keys: ["stock"], header: "stock" },
+  { keys: ["stock"], header: "Stock" },
   { keys: ["min"], header: "Min" },
   { keys: ["max"], header: "Max" },
-]
+];
+
+export const PRODUCTCOLUMNOPTIONS = PRODUCTCOLUMNS.map((col) => col.header);

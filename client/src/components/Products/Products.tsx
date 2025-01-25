@@ -7,8 +7,8 @@ import { FullWidthTable } from "../multiuse/FullWidthTable";
 import { ViewToggle } from "../multiuse/ViewToggle";
 import { ViewTypes } from "../../types/userPreferences";
 import { useAuth } from "../../contexts/AuthContext";
-import { PRODUCTCOLUMNS } from "../columns";
 import { syncUserPreference } from "../../services/userPreferencesServices";
+import { PRODUCTCOLUMNOPTIONS, PRODUCTCOLUMNS } from "../columns";
 
 function Products() {
   const { user, updateUserPreferences } = useAuth();
@@ -72,6 +72,10 @@ function Products() {
                   title={"Products"}
                   fetcher={useProductsData}
                   columns={PRODUCTCOLUMNS}
+                  colPreferences={user!.preferences.product_columns
+                    .split(",")
+                    .map((col) => col.trim())}
+                  colOptions={PRODUCTCOLUMNOPTIONS}
                 />
               </div>
             </div>

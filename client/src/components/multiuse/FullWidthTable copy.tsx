@@ -3,6 +3,7 @@ import {
   useReactTable,
   getCoreRowModel,
   flexRender,
+  createColumnHelper,
 } from "@tanstack/react-table";
 import { useURLSearchParam } from "../../hooks/useURLSearchParam";
 import { SearchBar } from "./SearchBar";
@@ -10,15 +11,11 @@ import { useParams } from "react-router-dom";
 import { CustomerModal } from "../Customers/CustomerModal";
 import { ProductModal } from "../Products/ProductModal";
 import { InvoiceModal } from "../Invoices/InvoiceModal";
-import { Invoice } from "../../types/invoiceTypes";
-import { ColumnSelector } from "./ColumnSelector";
 
 type Props = {
   title: string;
   fetcher: Function;
   columns: Array<Object>;
-  colPreferences: string[];
-  colOptions: string[];
 };
 
 type Customer = {
@@ -47,13 +44,7 @@ type Product = {
   max: Number;
 };
 
-function FullWidthTable({
-  title,
-  fetcher,
-  columns,
-  colPreferences,
-  colOptions,
-}: Props) {
+function FullWidthTable({ title, fetcher, columns }: Props) {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
@@ -74,22 +65,15 @@ function FullWidthTable({
   function handleImmediateSearchChange(searchValue: string) {
     setSearchTerm(searchValue);
   }
-  console.log(columns);
-  console.log(colPreferences);
-
-  const filteredAndOrderedColumns = colPreferences.map((pref) => {
-    return columns[columns.findIndex((col) => col.header === pref)];
-  });
 
   let Modal;
-  const columnDef = filteredAndOrderedColumns.map((col) => {
+  const columnDef = columns.map((col) => {
     return {
       header: col.header,
-      accessorFn: (row: Customer | Product | Invoice) =>
+      accessorFn: (row: Customer | Product) =>
         col.keys.map((key) => row[key]).join(" "),
     };
   });
-
   if (title === "Customers") {
     Modal = CustomerModal;
   } else if (title === "Products") {
@@ -100,11 +84,10 @@ function FullWidthTable({
 
   // Memo columns and data for use in table.
   const finalData = useMemo(() => data, [data, searchTerm]);
-  // Stopped memoizing columns as when preferences are changed we want this to be redone.
-  // const finalColumDef = useMemo(() => columnDef, []);
+  const finalColumDef = useMemo(() => columnDef, []);
 
   const table = useReactTable({
-    columns: columnDef,
+    columns: finalColumDef,
     data: finalData,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -134,31 +117,16 @@ function FullWidthTable({
           <div className="table">
             <table>
               <thead>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header, idx) =>
-                      // if last column, add ColunmSelctor, otherwise just return column.
-                      idx === headerGroup.headers.length - 1 ? (
-                        <th key={header.id} className="flex">
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          <ColumnSelector
-                            colOptions={colOptions}
-                            preferences={colPreferences}
-                            table={title.toLowerCase()}
-                          />
-                        </th>
-                      ) : (
-                        <th key={header.id}>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                        </th>
-                      )
-                    )}
+                {table.getHeaderGroups().map((headerEl) => (
+                  <tr key={headerEl.id}>
+                    {headerEl.headers.map((columnEl) => (
+                      <th key={columnEl.id} colSpan={columnEl.colSpan}>
+                        {flexRender(
+                          columnEl.column.columnDef.header,
+                          columnEl.getContext()
+                        )}
+                      </th>
+                    ))}
                   </tr>
                 ))}
               </thead>
@@ -170,16 +138,16 @@ function FullWidthTable({
                     </tr>
                   ) : (
                     <>
-                      {table.getRowModel().rows.map((row) => (
+                      {table.getRowModel().rows.map((rowEl) => (
                         <tr
-                          key={row.id}
-                          onClick={() => handleClick(Number(row.original.id))}
+                          key={rowEl.id}
+                          onClick={() => handleClick(Number(rowEl.original.id))}
                         >
-                          {row.getVisibleCells().map((cell) => (
-                            <td key={cell.id}>
+                          {rowEl.getVisibleCells().map((cellEl) => (
+                            <td key={cellEl.id}>
                               {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
+                                cellEl.column.columnDef.cell,
+                                cellEl.getContext()
                               )}
                             </td>
                           ))}

@@ -7,7 +7,7 @@ import { useCustomersData } from "../../hooks/useCustomersData";
 import { ViewToggle } from "../multiuse/ViewToggle";
 import { ViewTypes } from "../../types/userPreferences";
 import { useAuth } from "../../contexts/AuthContext";
-import { CUSTOMERCOLUMNS } from "../columns";
+import { CUSTOMERCOLUMNOPTIONS, CUSTOMERCOLUMNS } from "../columns";
 import { syncUserPreference } from "../../services/userPreferencesServices";
 
 function Customers() {
@@ -71,6 +71,10 @@ function Customers() {
                   title={"Customers"}
                   fetcher={useCustomersData}
                   columns={CUSTOMERCOLUMNS}
+                  colPreferences={user!.preferences.customer_columns
+                    .split(",")
+                    .map((col) => col.trim())}
+                  colOptions={CUSTOMERCOLUMNOPTIONS}
                 />
               </div>
             </div>

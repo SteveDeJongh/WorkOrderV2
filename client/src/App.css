@@ -145,9 +145,50 @@ nav li:has(a.active) {
   transition: .3s ease;
 }
 
-.off-screen-menu.active {
+.column-options-list {
+  background-color: var(--main-black);
+  height: auto;
+  width: 300px;
+  max-width: 150px;
+  position:fixed;
+  top: 21vh;
+  right: -450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: start;
+  font-size: 1rem;
+  transition: .3s ease;
+  margin-right: 11px;
+  border: solid 2px var(--light-border);
+  border-radius: 5px;;
+}
+
+.off-screen-menu.active, .column-options-list.active {
   right: 0;
   z-index: 1;
+}
+
+.column-form {
+  padding: 20px;
+}
+
+.column-form .list-item-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.controls button {
+  padding: 2px;
 }
 
 .ham-menu {
@@ -166,6 +207,10 @@ nav li:has(a.active) {
   left: 50%;
   transform: translate(-50%, -50%);
   transition: .3s ease;
+}
+
+.ham-container {
+  display: block;
 }
 
 .ham-menu span:nth-child(1) {
@@ -801,6 +846,16 @@ tbody tr:nth-of-type(odd) {
 
 tbody > tr:hover {
   background-color: var(--light-selection);
+}
+
+th.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+th.flex > div {
+  margin-left: 10px;
 }
 
 /* In Line Link Styling */

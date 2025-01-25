@@ -1,3 +1,11 @@
+import { z } from "zod";
+
+const ZColumnForm = z.object({
+  selections: z.array(z.string())
+})
+
+type TColumnForm = z.infer<typeof ZColumnForm>;
+
 type Customer = {
     id: number;
     first_name: string;
@@ -44,4 +52,4 @@ function isCustomer(customer: Customer | Object): customer is Customer {
   return (customer as Customer).first_name !== undefined && (customer as Customer).last_name !== undefined;
 }
 
-export { Customer, CustomerContext, CustomerWithNotices, CustomerNotice, EditableCustomerData, isCustomer}
+export { Customer, CustomerContext, CustomerWithNotices, CustomerNotice, EditableCustomerData, isCustomer, TColumnForm, ZColumnForm}

@@ -50,6 +50,6 @@ class Users::UserPreferencesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_preference_params
-      params.require(:user_preference).permit(:user_id, :view_customers, :view_products, :view_invoices, :theme)
+      params.require(:user_preference).permit(:user_id, :view_customers, :view_products, :view_invoices, :theme, :customer_columns, :product_columns, :invoice_columns)
     end
 end

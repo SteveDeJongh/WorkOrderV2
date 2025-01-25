@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_09_234740) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_24_231300) do
   create_table "customers", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -118,6 +118,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_09_234740) do
     t.string "theme"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "customer_columns", default: "ID, Full Name, First Name, Last Name, Phone, Email, Address, City, Province, Country"
+    t.string "product_columns", default: "ID, SKU, UPC, Name, Description, Price, TaxRate, Stock, Min, Max"
+    t.string "invoice_columns", default: "ID, Customer ID, Status, Total, Tax, Balance, Updated, Created"
   end
 
   create_table "users", force: :cascade do |t|

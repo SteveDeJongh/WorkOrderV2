@@ -7,7 +7,7 @@ import { ViewToggle } from "../multiuse/ViewToggle";
 import { useInvoicesData } from "../../hooks/useInvoicesData";
 import { ViewTypes } from "../../types/userPreferences";
 import { useAuth } from "../../contexts/AuthContext";
-import { INVOICECOLUMNSALT } from "../columns";
+import { INVOICECOLUMNOPTIONS, INVOICECOLUMNSALT } from "../columns";
 import { syncUserPreference } from "../../services/userPreferencesServices";
 
 function Invoices() {
@@ -72,6 +72,10 @@ function Invoices() {
                   title={"Invoices"}
                   fetcher={useInvoicesData}
                   columns={INVOICECOLUMNSALT}
+                  colPreferences={user!.preferences.invoice_columns
+                    .split(",")
+                    .map((col) => col.trim())}
+                  colOptions={INVOICECOLUMNOPTIONS}
                 />
               </div>
             </div>

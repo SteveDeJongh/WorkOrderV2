@@ -12,6 +12,9 @@ type UserPreferences = {
   theme: string;
   created_at: string;
   updated_at: string;
+  customer_columns: string;
+  product_columns: string;
+  invoice_columns: string;
 }
 
 const ZUserPreferences = z.object({
@@ -22,6 +25,9 @@ const ZUserPreferences = z.object({
   theme: z.string(),
   created_at: z.string(),
   updated_at: z.string(),
+  customer_columns: z.string(),
+  product_columns: z.string(),
+  invoice_columns: z.string(),
 })
 
 type UserPreference<T> = {
