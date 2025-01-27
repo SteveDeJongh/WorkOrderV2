@@ -74,22 +74,12 @@ function FullWidthTable({
   function handleImmediateSearchChange(searchValue: string) {
     setSearchTerm(searchValue);
   }
-  console.log(columns);
-  console.log(colPreferences);
 
   const filteredAndOrderedColumns = colPreferences.map((pref) => {
     return columns[columns.findIndex((col) => col.header === pref)];
   });
 
   let Modal;
-  const columnDef = filteredAndOrderedColumns.map((col) => {
-    return {
-      header: col.header,
-      accessorFn: (row: Customer | Product | Invoice) =>
-        col.keys.map((key) => row[key]).join(" "),
-    };
-  });
-
   if (title === "Customers") {
     Modal = CustomerModal;
   } else if (title === "Products") {
@@ -100,11 +90,18 @@ function FullWidthTable({
 
   // Memo columns and data for use in table.
   const finalData = useMemo(() => data, [data, searchTerm]);
-  // Stopped memoizing columns as when preferences are changed we want this to be redone.
-  // const finalColumDef = useMemo(() => columnDef, []);
+  const finalColumDef = useMemo(() => {
+    return filteredAndOrderedColumns.map((col) => {
+      return {
+        header: col.header,
+        accessorFn: (row: Customer | Product | Invoice) =>
+          col.keys.map((key) => row[key]).join(" "),
+      };
+    });
+  }, [filteredAndOrderedColumns]);
 
   const table = useReactTable({
-    columns: columnDef,
+    columns: finalColumDef,
     data: finalData,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -139,16 +136,18 @@ function FullWidthTable({
                     {headerGroup.headers.map((header, idx) =>
                       // if last column, add ColunmSelctor, otherwise just return column.
                       idx === headerGroup.headers.length - 1 ? (
-                        <th key={header.id} className="flex">
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          <ColumnSelector
-                            colOptions={colOptions}
-                            preferences={colPreferences}
-                            table={title.toLowerCase()}
-                          />
+                        <th key={header.id}>
+                          <div className="flex">
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            <ColumnSelector
+                              colOptions={colOptions}
+                              preferences={colPreferences}
+                              table={title.toLowerCase()}
+                            />
+                          </div>
                         </th>
                       ) : (
                         <th key={header.id}>

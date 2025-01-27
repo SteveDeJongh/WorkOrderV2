@@ -848,13 +848,13 @@ tbody > tr:hover {
   background-color: var(--light-selection);
 }
 
-th.flex {
+th > div.flex {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-th.flex > div {
+th > div > div {
   margin-left: 10px;
 }
 

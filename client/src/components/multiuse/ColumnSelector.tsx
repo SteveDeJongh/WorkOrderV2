@@ -70,7 +70,6 @@ function ColumnSelector({ colOptions, preferences, table }: props) {
                       {...register("selections")}
                       value={col}
                       type="checkbox"
-                      // defaultChecked={preferences.includes(col)}
                     />
                   </div>
                 );
