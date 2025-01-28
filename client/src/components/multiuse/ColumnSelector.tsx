@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TColumnForm, ZColumnForm } from "../../types/customers";
@@ -62,7 +62,7 @@ function ColumnSelector({ colOptions, preferences, table }: props) {
           >
             <h3>Columns</h3>
             <ul>
-              {colOptions.map((col) => {
+              {colOptions.map((col, index) => {
                 return (
                   <div className="list-item-container" key={col}>
                     <label>{col}</label>

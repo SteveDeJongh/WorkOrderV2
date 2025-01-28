@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -12,6 +12,8 @@ import { ProductModal } from "../Products/ProductModal";
 import { InvoiceModal } from "../Invoices/InvoiceModal";
 import { Invoice } from "../../types/invoiceTypes";
 import { ColumnSelector } from "./ColumnSelector";
+import { syncUserPreference } from "../../services/userPreferencesServices";
+import { useAuth } from "../../contexts/AuthContext";
 
 type Props = {
   title: string;
@@ -58,6 +60,7 @@ function FullWidthTable({
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
     useURLSearchParam("search");
+  const { user, updateUserPreferences } = useAuth();
 
   const { data: fetchedData, loading, error } = fetcher(debouncedSearchTerm);
 
@@ -88,6 +91,8 @@ function FullWidthTable({
     Modal = InvoiceModal;
   }
 
+  const [columnOrder, setColumnOrder] = useState<string[]>(colPreferences);
+
   // Memo columns and data for use in table.
   const finalData = useMemo(() => data, [data, searchTerm]);
   const finalColumDef = useMemo(() => {
@@ -98,13 +103,52 @@ function FullWidthTable({
           col.keys.map((key) => row[key]).join(" "),
       };
     });
-  }, [filteredAndOrderedColumns]);
+  }, [columnOrder, colPreferences]);
 
   const table = useReactTable({
     columns: finalColumDef,
     data: finalData,
     getCoreRowModel: getCoreRowModel(),
+    state: {
+      columnOrder,
+    },
+    onColumnOrderChange: setColumnOrder,
   });
+
+  const movingColumnId = useRef();
+  const targetColumnId = useRef();
+
+  function reorderColumn(
+    movingColumnId: React.MutableRefObject<string | undefined>,
+    targetColumnId: React.MutableRefObject<string | undefined>
+  ) {
+    const newColumnOrder = [...columnOrder];
+    newColumnOrder.splice(
+      newColumnOrder.indexOf(targetColumnId.current),
+      0,
+      newColumnOrder.splice(
+        newColumnOrder.indexOf(movingColumnId.current),
+        1
+      )[0]
+    );
+    return newColumnOrder;
+  }
+
+  async function handleDragEnd(e: DragEvent) {
+    if (!movingColumnId || !targetColumnId) return;
+    const newColumns = reorderColumn(movingColumnId, targetColumnId);
+    setColumnOrder(newColumns);
+    updateSavedUserColumns(newColumns);
+  }
+
+  async function updateSavedUserColumns(newColumns) {
+    const keyName = `${title.toLowerCase().slice(0, -1)}_columns`;
+    const updatedPreferences = await syncUserPreference(user!.id, {
+      [keyName]: newColumns.join(", "),
+    });
+
+    updateUserPreferences(updatedPreferences);
+  }
 
   // For Modal
   const { id } = useParams();
@@ -133,10 +177,17 @@ function FullWidthTable({
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header, idx) =>
-                      // if last column, add ColunmSelctor, otherwise just return column.
-                      idx === headerGroup.headers.length - 1 ? (
-                        <th key={header.id}>
+                    {headerGroup.headers.map((header, idx) => (
+                      <th
+                        key={header.id}
+                        draggable
+                        onDragStart={() => (movingColumnId.current = header.id)}
+                        onDragEnter={() => (targetColumnId.current = header.id)}
+                        onDragEndCapture={handleDragEnd}
+                        onDragOver={(e) => e.preventDefault()}
+                      >
+                        {/* if last column, add ColunmSelctor, otherwise just return column.*/}
+                        {idx === headerGroup.headers.length - 1 ? (
                           <div className="flex">
                             {flexRender(
                               header.column.columnDef.header,
@@ -148,16 +199,14 @@ function FullWidthTable({
                               table={title.toLowerCase()}
                             />
                           </div>
-                        </th>
-                      ) : (
-                        <th key={header.id}>
-                          {flexRender(
+                        ) : (
+                          flexRender(
                             header.column.columnDef.header,
                             header.getContext()
-                          )}
-                        </th>
-                      )
-                    )}
+                          )
+                        )}
+                      </th>
+                    ))}
                   </tr>
                 ))}
               </thead>
