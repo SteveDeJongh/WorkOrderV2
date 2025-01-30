@@ -1,3 +1,7 @@
+import { Customer } from "../types/customers";
+import { Invoice } from "../types/invoiceTypes";
+import { Product } from "../types/products";
+
 // Non-react table columns
 export const MOVEMENTCOLUMNS = [
   { name: "Movement ID", propName: "id" },
@@ -120,10 +124,15 @@ export const PRODUCTCOLUMNS = [
   { keys: ["name"], header: "Name" },
   { keys: ["description"], header: "Description" },
   { keys: ["price"], header: "Price" },
-  { keys: ["taxrate"], header: "TaxRate" },
+  { keys: ["tax_rate"], header: "TaxRate" },
   { keys: ["stock"], header: "Stock" },
   { keys: ["min"], header: "Min" },
   { keys: ["max"], header: "Max" },
 ];
 
 export const PRODUCTCOLUMNOPTIONS = PRODUCTCOLUMNS.map((col) => col.header);
+
+export type TColumn = {
+  keys: string[];
+  header: string;
+};

@@ -58,6 +58,7 @@ header {
   align-items: center;
   position: fixed;
   width: 100%;
+  z-index: 1;
 }
 
 #header-sections{
@@ -167,7 +168,7 @@ nav li:has(a.active) {
 
 .off-screen-menu.active, .column-options-list.active {
   right: 0;
-  z-index: 1;
+  z-index: 10;
 }
 
 .column-form {
@@ -195,6 +196,7 @@ nav li:has(a.active) {
   height: 30px;
   width: 30px;
   position: relative;
+  z-index: 1;
 }
 
 .ham-menu span {
@@ -240,7 +242,7 @@ nav li:has(a.active) {
   flex-direction: column;
   height: auto;
   padding: 10px 0;
-  border: 1px solid var(--light-border)
+  border: 1px solid var(--light-border);
 }
 .off-screen-menu .user-nav-list a {
   width: 100%;
@@ -850,7 +852,7 @@ tbody > tr:hover {
 
 th > div.flex {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 

@@ -10,43 +10,17 @@ import { useParams } from "react-router-dom";
 import { CustomerModal } from "../Customers/CustomerModal";
 import { ProductModal } from "../Products/ProductModal";
 import { InvoiceModal } from "../Invoices/InvoiceModal";
-import { Invoice } from "../../types/invoiceTypes";
 import { ColumnSelector } from "./ColumnSelector";
 import { syncUserPreference } from "../../services/userPreferencesServices";
 import { useAuth } from "../../contexts/AuthContext";
+import { TColumn } from "../columns";
 
 type Props = {
   title: string;
   fetcher: Function;
-  columns: Array<Object>;
+  columns: TColumn[];
   colPreferences: string[];
   colOptions: string[];
-};
-
-type Customer = {
-  id: number;
-  full_name: string;
-  first_name: string;
-  last_name: string;
-  phone: string;
-  email: string;
-  address: string;
-  city: string;
-  province: string;
-  country: string;
-};
-
-type Product = {
-  id: Number;
-  sku: String;
-  upc: Number;
-  name: String;
-  description: String;
-  price: Number;
-  taxrate: Number;
-  stock: Number;
-  min: Number;
-  max: Number;
 };
 
 function FullWidthTable({
@@ -82,16 +56,23 @@ function FullWidthTable({
     return columns[columns.findIndex((col) => col.header === pref)];
   });
 
-  let Modal;
-  if (title === "Customers") {
-    Modal = CustomerModal;
-  } else if (title === "Products") {
-    Modal = ProductModal;
-  } else if (title === "Invoices") {
-    Modal = InvoiceModal;
+  function determineModal() {
+    if (title === "Customers") {
+      return CustomerModal;
+    } else if (title === "Products") {
+      return ProductModal;
+    } else if (title === "Invoices") {
+      return InvoiceModal;
+    }
   }
 
+  let Modal = determineModal();
+
   const [columnOrder, setColumnOrder] = useState<string[]>(colPreferences);
+
+  useEffect(() => {
+    setColumnOrder(colPreferences);
+  }, [colPreferences]);
 
   // Memo columns and data for use in table.
   const finalData = useMemo(() => data, [data, searchTerm]);
@@ -99,8 +80,12 @@ function FullWidthTable({
     return filteredAndOrderedColumns.map((col) => {
       return {
         header: col.header,
-        accessorFn: (row: Customer | Product | Invoice) =>
-          col.keys.map((key) => row[key]).join(" "),
+        accessorFn: (row: Object) =>
+          col.keys
+            .map((key) => {
+              return row[key as keyof typeof row];
+            })
+            .join(" "),
       };
     });
   }, [columnOrder, colPreferences]);
@@ -115,12 +100,12 @@ function FullWidthTable({
     onColumnOrderChange: setColumnOrder,
   });
 
-  const movingColumnId = useRef();
-  const targetColumnId = useRef();
+  const movingColumnId = useRef<string>("");
+  const targetColumnId = useRef<string>("");
 
   function reorderColumn(
-    movingColumnId: React.MutableRefObject<string | undefined>,
-    targetColumnId: React.MutableRefObject<string | undefined>
+    movingColumnId: React.MutableRefObject<string>,
+    targetColumnId: React.MutableRefObject<string>
   ) {
     const newColumnOrder = [...columnOrder];
     newColumnOrder.splice(
@@ -134,14 +119,15 @@ function FullWidthTable({
     return newColumnOrder;
   }
 
-  async function handleDragEnd(e: DragEvent) {
+  async function handleDragEnd() {
     if (!movingColumnId || !targetColumnId) return;
     const newColumns = reorderColumn(movingColumnId, targetColumnId);
     setColumnOrder(newColumns);
     updateSavedUserColumns(newColumns);
+    return;
   }
 
-  async function updateSavedUserColumns(newColumns) {
+  async function updateSavedUserColumns(newColumns: string[]) {
     const keyName = `${title.toLowerCase().slice(0, -1)}_columns`;
     const updatedPreferences = await syncUserPreference(user!.id, {
       [keyName]: newColumns.join(", "),
@@ -189,10 +175,12 @@ function FullWidthTable({
                         {/* if last column, add ColunmSelctor, otherwise just return column.*/}
                         {idx === headerGroup.headers.length - 1 ? (
                           <div className="flex">
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            <span>
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                            </span>
                             <ColumnSelector
                               colOptions={colOptions}
                               preferences={colPreferences}
