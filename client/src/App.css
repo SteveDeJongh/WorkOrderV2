@@ -631,10 +631,6 @@ flex-direction: column;;
 }
 
 /* Main Pane Header */
-.pane-mid > .pane-inner > div {
-  /* border: 1px solid red; */
-}
-
 .main-pane-header, .modal-pane-header {
   display: flex;
   flex-direction: column;
@@ -747,14 +743,6 @@ flex-direction: column;;
 }
 
 /* Form Sections */
-
-/* .panel-contents-section > .formPair.half {
- width: 50%;
-}
-
-.panel-contents-section > .formPair.third {
-  width: 33%;
-} */
 
 .half {
   width: 50%;

@@ -94,7 +94,7 @@ function Login() {
                 <>
                   <div className="panel">
                     <h2>Unable to log in.</h2>
-                    {errorMessage && <p>`Error: ${errorMessage}`</p>}
+                    {errorMessage && <p>Error: {errorMessage}</p>}
                     {!errorMessage && <p>An error occured signing in.</p>}
                   </div>
                 </>
