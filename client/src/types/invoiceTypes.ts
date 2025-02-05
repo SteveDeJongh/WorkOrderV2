@@ -30,7 +30,7 @@ type InitialInvoice = {
 }
 
 type Invoice = InitialInvoice & {
-  // id: number | null;
+  id: number;
   // customer_id: number | undefined;
   // user_id: number;
   // total: number;

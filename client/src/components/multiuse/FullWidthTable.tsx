@@ -3,6 +3,7 @@ import {
   useReactTable,
   getCoreRowModel,
   flexRender,
+  createColumnHelper,
 } from "@tanstack/react-table";
 import { useURLSearchParam } from "../../hooks/useURLSearchParam";
 import { SearchBar } from "./SearchBar";
@@ -14,6 +15,10 @@ import { ColumnSelector } from "./ColumnSelector";
 import { syncUserPreference } from "../../services/userPreferencesServices";
 import { useAuth } from "../../contexts/AuthContext";
 import { TColumn } from "../columns";
+import { Customer } from "../../types/customers";
+import { Invoice } from "../../types/invoiceTypes";
+import { Product } from "../../types/products";
+import { dateTimeFormatter, showAsDollarAmount } from "../../utils";
 
 type Props = {
   title: string;
@@ -74,19 +79,31 @@ function FullWidthTable({
     setColumnOrder(colPreferences);
   }, [colPreferences]);
 
+  const columnHelper = createColumnHelper<Customer | Product | Invoice>();
+
   // Memo columns and data for use in table.
   const finalData = useMemo(() => data, [data, searchTerm]);
   const finalColumDef = useMemo(() => {
     return filteredAndOrderedColumns.map((col) => {
-      return {
-        header: col.header,
-        accessorFn: (row: Object) =>
+      return columnHelper.accessor(
+        (row) =>
           col.keys
             .map((key) => {
               return row[key as keyof typeof row];
             })
             .join(" "),
-      };
+        {
+          header: col.header,
+          cell: (props) => {
+            if (col.showAsDollars) {
+              return showAsDollarAmount(props.getValue());
+            } else if (col.showAsDate) {
+              return dateTimeFormatter(props.getValue());
+            }
+            return props.getValue();
+          },
+        }
+      );
     });
   }, [columnOrder, colPreferences]);
 
@@ -94,6 +111,8 @@ function FullWidthTable({
     columns: finalColumDef,
     data: finalData,
     getCoreRowModel: getCoreRowModel(),
+    // Overriding the defualt rows ids, instead using the ID from the data.
+    getRowId: (originalRow) => originalRow.id!.toString(),
     state: {
       columnOrder,
     },

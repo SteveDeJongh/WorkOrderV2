@@ -1,7 +1,3 @@
-import { Customer } from "../types/customers";
-import { Invoice } from "../types/invoiceTypes";
-import { Product } from "../types/products";
-
 // Non-react table columns
 export const MOVEMENTCOLUMNS = [
   { name: "Movement ID", propName: "id" },
@@ -25,20 +21,20 @@ export const INVOICECOLUMNS = [
 ];
 
 // React-table columns
-export const INVOICECOLUMNSALT = [
+export const INVOICECOLUMNSALT: TColumn[] = [
   { keys: ["id"], header: "ID" },
   { keys: ["customer_id"], header: "Customer ID" },
   { keys: ["status"], header: "Status" },
-  { keys: ["total"], header: "Total" },
-  { keys: ["tax"], header: "Tax" },
-  { keys: ["balance"], header: "Balance" },
-  { keys: ["updated_at"], header: "Updated" },
-  { keys: ["created_at"], header: "Created" },
+  { keys: ["total"], header: "Total", showAsDollars: true },
+  { keys: ["tax"], header: "Tax", showAsDollars: true },
+  { keys: ["balance"], header: "Balance", showAsDollars: true },
+  { keys: ["updated_at"], header: "Updated", showAsDate: true },
+  { keys: ["created_at"], header: "Created", showAsDate: true },
 ];
 
 export const INVOICECOLUMNOPTIONS = INVOICECOLUMNSALT.map((col) => col.header);
 
-export const CUSTOMERCOLUMNS = [
+export const CUSTOMERCOLUMNS: TColumn[] = [
   { keys: ["id"], header: "ID" },
   { keys: ["first_name", "last_name"], header: "Full Name" },
   { keys: ["first_name"], header: "First Name" },
@@ -117,13 +113,13 @@ export const CUSTOMERCOLUMNSEXTRA = [
   },
 ];
 
-export const PRODUCTCOLUMNS = [
+export const PRODUCTCOLUMNS: TColumn[] = [
   { keys: ["id"], header: "ID" },
   { keys: ["sku"], header: "SKU" },
   { keys: ["upc"], header: "UPC" },
   { keys: ["name"], header: "Name" },
   { keys: ["description"], header: "Description" },
-  { keys: ["price"], header: "Price" },
+  { keys: ["price"], header: "Price", showAsDollars: true },
   { keys: ["tax_rate"], header: "TaxRate" },
   { keys: ["stock"], header: "Stock" },
   { keys: ["min"], header: "Min" },
@@ -135,4 +131,6 @@ export const PRODUCTCOLUMNOPTIONS = PRODUCTCOLUMNS.map((col) => col.header);
 export type TColumn = {
   keys: string[];
   header: string;
+  showAsDollars?: boolean;
+  showAsDate?: boolean;
 };
