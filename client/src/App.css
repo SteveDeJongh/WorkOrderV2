@@ -840,12 +840,39 @@ tbody > tr:hover {
 
 th > div.flex {
   display: flex;
-  justify-content: space-between;
+  justify-content: left;
   align-items: center;
+}
+
+div.flex > button {
+  border: none;
+  border-radius: 50%;
+  background-color: var(--light-border);
+  padding: 0;
+  height: 12px;
+  width: 12px;
+  margin-right: 5px;
 }
 
 th > div > div {
   margin-left: 10px;
+}
+
+.resizer {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  right: 0;
+  width: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
+}
+
+.resizer.isResizing {
+  background: blue;
+  opacity: 1;
 }
 
 /* In Line Link Styling */

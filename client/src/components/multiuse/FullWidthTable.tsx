@@ -1,9 +1,17 @@
-import { useMemo, useState, useEffect, useRef } from "react";
+import {
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+  type CSSProperties,
+} from "react";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
   createColumnHelper,
+  type Header,
+  type Cell,
 } from "@tanstack/react-table";
 import { useURLSearchParam } from "../../hooks/useURLSearchParam";
 import { SearchBar } from "./SearchBar";
@@ -20,12 +28,92 @@ import { Invoice } from "../../types/invoiceTypes";
 import { Product } from "../../types/products";
 import { dateTimeFormatter, showAsDollarAmount } from "../../utils";
 
+// needed for table body level scope DnD setup
+import {
+  DndContext,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  closestCenter,
+  type DragEndEvent,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
+import {
+  arrayMove,
+  SortableContext,
+  horizontalListSortingStrategy,
+} from "@dnd-kit/sortable";
+
+// needed for row & cell level scope DnD setup
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
 type Props = {
   title: string;
   fetcher: Function;
   columns: TColumn[];
   colPreferences: string[];
   colOptions: string[];
+};
+
+const DraggableTableHeader = ({
+  header,
+}: {
+  header: Header<Customer | Product | Invoice, unknown>;
+}) => {
+  const { attributes, isDragging, listeners, setNodeRef, transform } =
+    useSortable({
+      id: header.column.id,
+    });
+
+  const style: CSSProperties = {
+    opacity: isDragging ? 0.8 : 1,
+    position: "relative",
+    transform: CSS.Translate.toString(transform), // translate instead of transform to avoid squishing
+    transition: "width transform 0.2s ease-in-out",
+    whiteSpace: "nowrap",
+    width: header.column.getSize(),
+    zIndex: isDragging ? 1 : 0,
+  };
+
+  return (
+    <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
+      <div className="flex">
+        <button {...attributes} {...listeners}></button>
+        {header.isPlaceholder
+          ? null
+          : flexRender(header.column.columnDef.header, header.getContext())}
+      </div>
+      {/* <div className="resizer"></div> */}
+    </th>
+  );
+};
+
+const DragAlongCell = ({
+  cell,
+}: {
+  cell: Cell<Customer | Product | Invoice, unknown>;
+}) => {
+  const { isDragging, setNodeRef, transform } = useSortable({
+    id: cell.column.id,
+  });
+
+  const style: CSSProperties = {
+    opacity: isDragging ? 0.8 : 1,
+    position: "relative",
+    transform: CSS.Translate.toString(transform), // translate instead of transform to avoid squishing
+    transition: "width transform 0.2s ease-in-out",
+    width: cell.column.getSize(),
+    zIndex: isDragging ? 1 : 0,
+  };
+
+  return (
+    <td style={style} ref={setNodeRef}>
+      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+    </td>
+  );
 };
 
 function FullWidthTable({
@@ -102,6 +190,7 @@ function FullWidthTable({
             }
             return props.getValue();
           },
+          size: col.size,
         }
       );
     });
@@ -116,35 +205,14 @@ function FullWidthTable({
     state: {
       columnOrder,
     },
+    columnResizeMode: "onChange",
+    defaultColumn: {
+      size: 200, //starting column size
+      minSize: 50, //enforced during column resizing
+      maxSize: 500, //enforced during column resizing
+    },
     onColumnOrderChange: setColumnOrder,
   });
-
-  const movingColumnId = useRef<string>("");
-  const targetColumnId = useRef<string>("");
-
-  function reorderColumn(
-    movingColumnId: React.MutableRefObject<string>,
-    targetColumnId: React.MutableRefObject<string>
-  ) {
-    const newColumnOrder = [...columnOrder];
-    newColumnOrder.splice(
-      newColumnOrder.indexOf(targetColumnId.current),
-      0,
-      newColumnOrder.splice(
-        newColumnOrder.indexOf(movingColumnId.current),
-        1
-      )[0]
-    );
-    return newColumnOrder;
-  }
-
-  async function handleDragEnd() {
-    if (!movingColumnId || !targetColumnId) return;
-    const newColumns = reorderColumn(movingColumnId, targetColumnId);
-    setColumnOrder(newColumns);
-    updateSavedUserColumns(newColumns);
-    return;
-  }
 
   async function updateSavedUserColumns(newColumns: string[]) {
     const keyName = `${title.toLowerCase().slice(0, -1)}_columns`;
@@ -154,6 +222,27 @@ function FullWidthTable({
 
     updateUserPreferences(updatedPreferences);
   }
+
+  // reorder columns after drag & drop
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (active && over && active.id !== over.id) {
+      const oldIndex = columnOrder.indexOf(active.id as string);
+      const newIndex = columnOrder.indexOf(over.id as string);
+      let newColumnOrder = arrayMove(columnOrder, oldIndex, newIndex); //this is just a splice util
+
+      setColumnOrder((columnOrder) => {
+        return newColumnOrder;
+      });
+      updateSavedUserColumns(newColumnOrder);
+    }
+  }
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, {}),
+    useSensor(TouchSensor, {}),
+    useSensor(KeyboardSensor, {})
+  );
 
   // For Modal
   const { id } = useParams();
@@ -178,73 +267,98 @@ function FullWidthTable({
             onImmediateChange={handleImmediateSearchChange}
           />
           <div className="table">
-            <table>
-              <thead>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header, idx) => (
-                      <th
-                        key={header.id}
-                        draggable
-                        onDragStart={() => (movingColumnId.current = header.id)}
-                        onDragEnter={() => (targetColumnId.current = header.id)}
-                        onDragEndCapture={handleDragEnd}
-                        onDragOver={(e) => e.preventDefault()}
+            <DndContext
+              collisionDetection={closestCenter}
+              modifiers={[restrictToHorizontalAxis]}
+              onDragEnd={handleDragEnd}
+              sensors={sensors}
+            >
+              <table>
+                <thead>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <tr key={headerGroup.id}>
+                      <SortableContext
+                        items={columnOrder}
+                        strategy={horizontalListSortingStrategy}
                       >
-                        {/* if last column, add ColunmSelctor, otherwise just return column.*/}
-                        {idx === headerGroup.headers.length - 1 ? (
-                          <div className="flex">
-                            <span>
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                            </span>
-                            <ColumnSelector
-                              colOptions={colOptions}
-                              preferences={colPreferences}
-                              table={title.toLowerCase()}
-                            />
-                          </div>
-                        ) : (
-                          flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )
-                        )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                <>
-                  {data.length <= 0 ? (
-                    <tr>
-                      <td>No Results</td>
+                        {headerGroup.headers.map((header, idx) => (
+                          <DraggableTableHeader
+                            header={header}
+                            key={header.id}
+                          />
+                          // <th
+                          //   key={header.id}
+                          //   colSpan={header.colSpan}
+                          //   style={{ width: `${header.getSize()}px` }}
+                          //   draggable
+                          //   onDragStart={() => (movingColumnId.current = header.id)}
+                          //   onDragEnter={() => (targetColumnId.current = header.id)}
+                          //   onDragEndCapture={handleDragEnd}
+                          //   onDragOver={(e) => e.preventDefault()}
+                          // >
+                          //   {/* if last column, add ColunmSelctor, otherwise just return column.*/}
+                          //   {idx === headerGroup.headers.length - 1 ? (
+                          //     <div className="flex">
+                          //       <span>
+                          //         {flexRender(
+                          //           header.column.columnDef.header,
+                          //           header.getContext()
+                          //         )}
+                          //       </span>
+                          //       <ColumnSelector
+                          //         colOptions={colOptions}
+                          //         preferences={colPreferences}
+                          //         table={title.toLowerCase()}
+                          //       />
+                          //     </div>
+                          //   ) : (
+                          //     flexRender(
+                          //       header.column.columnDef.header,
+                          //       header.getContext()
+                          //     )
+                          //   )}
+                          // </th>
+                        ))}
+                      </SortableContext>
                     </tr>
-                  ) : (
-                    <>
-                      {table.getRowModel().rows.map((row) => (
-                        <tr
-                          key={row.id}
-                          onClick={() => handleClick(Number(row.original.id))}
-                        >
-                          {row.getVisibleCells().map((cell) => (
-                            <td key={cell.id}>
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                              )}
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
-                    </>
-                  )}
-                </>
-              </tbody>
-            </table>
+                  ))}
+                </thead>
+                <tbody>
+                  <>
+                    {data.length <= 0 ? (
+                      <tr>
+                        <td>No Results</td>
+                      </tr>
+                    ) : (
+                      <>
+                        {table.getRowModel().rows.map((row) => (
+                          <tr
+                            key={row.id}
+                            onClick={() => handleClick(Number(row.original.id))}
+                          >
+                            {row.getVisibleCells().map((cell) => (
+                              <SortableContext
+                                key={cell.id}
+                                items={columnOrder}
+                                strategy={horizontalListSortingStrategy}
+                              >
+                                <DragAlongCell key={cell.id} cell={cell} />
+                                {/* <td key={cell.id}>
+                                  {flexRender(
+                                    cell.column.columnDef.cell,
+                                    cell.getContext()
+                                  )}
+                                </td> */}
+                              </SortableContext>
+                            ))}
+                          </tr>
+                        ))}
+                      </>
+                    )}
+                  </>
+                </tbody>
+              </table>
+            </DndContext>
           </div>
         </div>
       )}
