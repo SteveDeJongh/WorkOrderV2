@@ -35,20 +35,20 @@ export const INVOICECOLUMNSALT: TColumn[] = [
 export const INVOICECOLUMNOPTIONS = INVOICECOLUMNSALT.map((col) => col.header);
 
 export const CUSTOMERCOLUMNS: TColumn[] = [
-  { keys: ["id"], header: "ID", size: 1200, id: "ID" },
+  { keys: ["id"], header: "ID", size: 80, id: "ID" },
   {
     keys: ["first_name", "last_name"],
     header: "Full Name",
-    size: 200,
+    size: 115,
     id: "Full Name",
   },
-  { keys: ["first_name"], header: "First Name", size: 200, id: "First Name" },
-  { keys: ["last_name"], header: "Last Name", size: 200, id: "Last Name" },
-  { keys: ["phone"], header: "Phone", size: 200, id: "Phone" },
-  { keys: ["email"], header: "Email", size: 200, id: "Email" },
-  { keys: ["address"], header: "Address", size: 200, id: "Address" },
-  { keys: ["city"], header: "City", size: 200, id: "City" },
-  { keys: ["province"], header: "Province", size: 200, id: "Province" },
+  { keys: ["first_name"], header: "First Name", size: 115, id: "First Name" },
+  { keys: ["last_name"], header: "Last Name", size: 115, id: "Last Name" },
+  { keys: ["phone"], header: "Phone", size: 110, id: "Phone" },
+  { keys: ["email"], header: "Email", size: 150, id: "Email" },
+  { keys: ["address"], header: "Address", size: 100, id: "Address" },
+  { keys: ["city"], header: "City", size: 100, id: "City" },
+  { keys: ["province"], header: "Province", size: 150, id: "Province" },
   { keys: ["country"], header: "Country", size: 200, id: "Country" },
 ];
 
@@ -141,3 +141,16 @@ export type TColumn = {
   showAsDollars?: boolean;
   showAsDate?: boolean;
 };
+
+export type ColumnPreferences = {
+  id: string;
+  size: number;
+  sequence: number | null;
+};
+
+let b = CUSTOMERCOLUMNS.map((col) => {
+  return {
+    id: col.id,
+    size: col.size,
+  };
+});

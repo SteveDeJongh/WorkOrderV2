@@ -863,15 +863,15 @@ th > div > div {
   top: 0;
   height: 100%;
   right: 0;
-  width: 5px;
-  background: rgba(0, 0, 0, 0.5);
+  width: 2px;
+  background: var(--light-border);
   cursor: col-resize;
   user-select: none;
   touch-action: none;
 }
 
 .resizer.isResizing {
-  background: blue;
+  background: var(--dark-selection);
   opacity: 1;
 }
 

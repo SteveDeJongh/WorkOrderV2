@@ -118,7 +118,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_24_231300) do
     t.string "theme"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "customer_columns", default: "ID, Full Name, First Name, Last Name, Phone, Email, Address, City, Province, Country"
+    t.string "customer_columns", default: "[{\"id\":\"ID\",\"size\":80},{\"id\":\"Full Name\",\"size\":115},{\"id\":\"First Name\",\"size\":115},{\"id\":\"Last Name\",\"size\":115},{\"id\":\"Phone\",\"size\":110},{\"id\":\"Email\",\"size\":150},{\"id\":\"Address\",\"size\":100},{\"id\":\"City\",\"size\":100},{\"id\":\"Province\",\"size\":150},{\"id\":\"Country\",\"size\":200}]"
     t.string "product_columns", default: "ID, SKU, UPC, Name, Description, Price, TaxRate, Stock, Min, Max"
     t.string "invoice_columns", default: "ID, Customer ID, Status, Total, Tax, Balance, Updated, Created"
   end

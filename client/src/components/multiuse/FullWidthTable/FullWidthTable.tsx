@@ -1,32 +1,28 @@
-import {
-  useMemo,
-  useState,
-  useEffect,
-  useRef,
-  type CSSProperties,
-} from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import {
   useReactTable,
   getCoreRowModel,
-  flexRender,
   createColumnHelper,
-  type Header,
-  type Cell,
+  ColumnSizingState,
 } from "@tanstack/react-table";
-import { useURLSearchParam } from "../../hooks/useURLSearchParam";
-import { SearchBar } from "./SearchBar";
+import { useURLSearchParam } from "../../../hooks/useURLSearchParam";
+import { SearchBar } from "../SearchBar";
 import { useParams } from "react-router-dom";
-import { CustomerModal } from "../Customers/CustomerModal";
-import { ProductModal } from "../Products/ProductModal";
-import { InvoiceModal } from "../Invoices/InvoiceModal";
-import { ColumnSelector } from "./ColumnSelector";
-import { syncUserPreference } from "../../services/userPreferencesServices";
-import { useAuth } from "../../contexts/AuthContext";
-import { TColumn } from "../columns";
-import { Customer } from "../../types/customers";
-import { Invoice } from "../../types/invoiceTypes";
-import { Product } from "../../types/products";
-import { dateTimeFormatter, showAsDollarAmount } from "../../utils";
+import { CustomerModal } from "../../Customers/CustomerModal";
+import { ProductModal } from "../../Products/ProductModal";
+import { InvoiceModal } from "../../Invoices/InvoiceModal";
+import { syncUserPreference } from "../../../services/userPreferencesServices";
+import { useAuth } from "../../../contexts/AuthContext";
+import { ColumnPreferences, TColumn } from "../../columns";
+import { Customer } from "../../../types/customers";
+import { Invoice } from "../../../types/invoiceTypes";
+import { Product } from "../../../types/products";
+import { dateTimeFormatter, showAsDollarAmount } from "../../../utils";
+
+// Components
+
+import { DragAlongCell } from "./DragAlongCell";
+import { DraggableTableHeader } from "./DragableTableHeader";
 
 // needed for table body level scope DnD setup
 import {
@@ -46,74 +42,34 @@ import {
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-// needed for row & cell level scope DnD setup
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+// Utilities
+function reorderColumnPreferences(
+  newColumnOrder: string[],
+  preferences: ColumnPreferences[],
+  allColumns: TColumn[]
+) {
+  let newColPreferences: ColumnPreferences[] = newColumnOrder.map((col) => {
+    let column = preferences.find((el) => el.id === col);
+    if (column) {
+      return column;
+    } else {
+      let column = allColumns.find((el) => el.id === col);
+      return {
+        id: column!.id,
+        size: column!.size,
+      } as ColumnPreferences;
+    }
+  });
+
+  return newColPreferences;
+}
 
 type Props = {
   title: string;
   fetcher: Function;
   columns: TColumn[];
-  colPreferences: string[];
+  colPreferences: ColumnPreferences[];
   colOptions: string[];
-};
-
-const DraggableTableHeader = ({
-  header,
-}: {
-  header: Header<Customer | Product | Invoice, unknown>;
-}) => {
-  const { attributes, isDragging, listeners, setNodeRef, transform } =
-    useSortable({
-      id: header.column.id,
-    });
-
-  const style: CSSProperties = {
-    opacity: isDragging ? 0.8 : 1,
-    position: "relative",
-    transform: CSS.Translate.toString(transform), // translate instead of transform to avoid squishing
-    transition: "width transform 0.2s ease-in-out",
-    whiteSpace: "nowrap",
-    width: header.column.getSize(),
-    zIndex: isDragging ? 1 : 0,
-  };
-
-  return (
-    <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
-      <div className="flex">
-        <button {...attributes} {...listeners}></button>
-        {header.isPlaceholder
-          ? null
-          : flexRender(header.column.columnDef.header, header.getContext())}
-      </div>
-      {/* <div className="resizer"></div> */}
-    </th>
-  );
-};
-
-const DragAlongCell = ({
-  cell,
-}: {
-  cell: Cell<Customer | Product | Invoice, unknown>;
-}) => {
-  const { isDragging, setNodeRef, transform } = useSortable({
-    id: cell.column.id,
-  });
-
-  const style: CSSProperties = {
-    opacity: isDragging ? 0.8 : 1,
-    position: "relative",
-    transform: CSS.Translate.toString(transform), // translate instead of transform to avoid squishing
-    transition: "width transform 0.2s ease-in-out",
-    width: cell.column.getSize(),
-    zIndex: isDragging ? 1 : 0,
-  };
-
-  return (
-    <td style={style} ref={setNodeRef}>
-      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-    </td>
-  );
 };
 
 function FullWidthTable({
@@ -123,19 +79,11 @@ function FullWidthTable({
   colPreferences,
   colOptions,
 }: Props) {
-  const [data, setData] = useState([]);
+  const { user, updateUserPreferences } = useAuth();
+  // SearchBar
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
     useURLSearchParam("search");
-  const { user, updateUserPreferences } = useAuth();
-
-  const { data: fetchedData, loading, error } = fetcher(debouncedSearchTerm);
-
-  useEffect(() => {
-    if (fetchedData) {
-      setData(fetchedData);
-    }
-  }, [fetchedData]);
 
   function handleDebouncedSearchChange(searchValue: string) {
     setDebouncedSearchTerm(searchValue);
@@ -145,34 +93,53 @@ function FullWidthTable({
     setSearchTerm(searchValue);
   }
 
-  const filteredAndOrderedColumns = colPreferences.map((pref) => {
-    return columns[columns.findIndex((col) => col.header === pref)];
+  const columnsWithPreferencesApplied = colPreferences.map((pref) => {
+    let column = columns[columns.findIndex((col) => col.header === pref.id)];
+    column.size = pref.size;
+    return column;
   });
 
-  function determineModal() {
-    if (title === "Customers") {
-      return CustomerModal;
-    } else if (title === "Products") {
-      return ProductModal;
-    } else if (title === "Invoices") {
-      return InvoiceModal;
-    }
-  }
-
-  let Modal = determineModal();
-
-  const [columnOrder, setColumnOrder] = useState<string[]>(colPreferences);
+  // Data Fetching
+  const [data, setData] = useState([]);
+  const { data: fetchedData, loading, error } = fetcher(debouncedSearchTerm);
 
   useEffect(() => {
-    setColumnOrder(colPreferences);
+    if (fetchedData) {
+      setData(fetchedData);
+    }
+  }, [fetchedData]);
+
+  // Columns
+  const [columnOrder, setColumnOrder] = useState<string[]>(
+    colPreferences.map((pref) => pref.id)
+  );
+
+  useEffect(() => {
+    setColumnOrder(colPreferences.map((pref) => pref.id));
   }, [colPreferences]);
+
+  const [columnSizing, setColumnSizing] = useState<ColumnSizingState>(() =>
+    columnSizingInit()
+  );
+
+  useEffect(() => {
+    setColumnSizing(() => columnSizingInit());
+  }, [colPreferences]);
+
+  function columnSizingInit() {
+    let columnSizingObject: ColumnSizingState = {};
+    colPreferences.forEach((pref) => {
+      columnSizingObject[pref.id] = pref.size;
+    });
+    return columnSizingObject;
+  }
 
   const columnHelper = createColumnHelper<Customer | Product | Invoice>();
 
   // Memo columns and data for use in table.
   const finalData = useMemo(() => data, [data, searchTerm]);
   const finalColumDef = useMemo(() => {
-    return filteredAndOrderedColumns.map((col) => {
+    return columnsWithPreferencesApplied.map((col) => {
       return columnHelper.accessor(
         (row) =>
           col.keys
@@ -200,24 +167,77 @@ function FullWidthTable({
     columns: finalColumDef,
     data: finalData,
     getCoreRowModel: getCoreRowModel(),
-    // Overriding the defualt rows ids, instead using the ID from the data.
+    // Overriding the default row ids, instead using the ID from the data.
     getRowId: (originalRow) => originalRow.id!.toString(),
     state: {
       columnOrder,
+      columnSizing,
     },
     columnResizeMode: "onChange",
     defaultColumn: {
-      size: 200, //starting column size
+      // size: 200, //starting column size
       minSize: 50, //enforced during column resizing
       maxSize: 500, //enforced during column resizing
     },
     onColumnOrderChange: setColumnOrder,
+    onColumnSizingChange: handleColumnSizeChange,
   });
 
-  async function updateSavedUserColumns(newColumns: string[]) {
+  // Column Resizing
+  const columnSizeDebounceRef = useRef<ReturnType<typeof setTimeout>>();
+  function handleColumnSizeChange() {
+    let colInfo = table.getState().columnSizingInfo;
+    let newSize = colInfo.startSize! + colInfo.deltaOffset!;
+    let colName = colInfo.isResizingColumn;
+
+    let newSizingInfo: ColumnSizingState = { ...columnSizing };
+    newSizingInfo[colName as string] = newSize;
+
+    setColumnSizing(newSizingInfo);
+    updateColumnWidthsDebouncer(newSizingInfo);
+  }
+
+  function updateColumnWidthsDebouncer(newSizingInfo: ColumnSizingState) {
+    if (columnSizeDebounceRef.current) {
+      clearTimeout(columnSizeDebounceRef.current);
+    }
+
+    columnSizeDebounceRef.current = setTimeout(() => {
+      updateColumnWidths(newSizingInfo);
+    }, 2000);
+  }
+
+  async function updateColumnWidths(newSizingInfo: ColumnSizingState) {
+    let newColPreferences = colPreferences.map((pref) => {
+      let temp = { ...pref };
+      temp.size = newSizingInfo[pref.id];
+      return temp;
+    });
+
     const keyName = `${title.toLowerCase().slice(0, -1)}_columns`;
     const updatedPreferences = await syncUserPreference(user!.id, {
-      [keyName]: newColumns.join(", "),
+      [keyName]: JSON.stringify(newColPreferences),
+    });
+
+    updateUserPreferences(updatedPreferences);
+  }
+
+  // Memoizing coolumns sizes.
+  const columnSizeVars = useMemo(() => {
+    const headers = table.getFlatHeaders();
+    const colSizes: { [key: string]: number } = {};
+    for (let i = 0; i < headers.length; i++) {
+      const header = headers[i]!;
+      colSizes[`--header-${header.id}-size`] = header.getSize();
+      colSizes[`--col-${header.column.id}-size`] = header.column.getSize();
+    }
+    return colSizes;
+  }, [table.getState().columnSizingInfo, table.getState().columnSizing]);
+
+  async function updateSavedUserColumns(newColumns: ColumnPreferences[]) {
+    const keyName = `${title.toLowerCase().slice(0, -1)}_columns`;
+    const updatedPreferences = await syncUserPreference(user!.id, {
+      [keyName]: JSON.stringify(newColumns),
     });
 
     updateUserPreferences(updatedPreferences);
@@ -231,10 +251,11 @@ function FullWidthTable({
       const newIndex = columnOrder.indexOf(over.id as string);
       let newColumnOrder = arrayMove(columnOrder, oldIndex, newIndex); //this is just a splice util
 
-      setColumnOrder((columnOrder) => {
-        return newColumnOrder;
-      });
-      updateSavedUserColumns(newColumnOrder);
+      setColumnOrder(newColumnOrder);
+
+      updateSavedUserColumns(
+        reorderColumnPreferences(newColumnOrder, colPreferences, columns)
+      );
     }
   }
 
@@ -245,6 +266,17 @@ function FullWidthTable({
   );
 
   // For Modal
+  function determineModal() {
+    if (title === "Customers") {
+      return CustomerModal;
+    } else if (title === "Products") {
+      return ProductModal;
+    } else if (title === "Invoices") {
+      return InvoiceModal;
+    }
+  }
+
+  let Modal = determineModal();
   const { id } = useParams();
   const [clickedID, setClickedId] = useState(Number(id) || undefined);
   const [isOpen, setIsOpen] = useState(!!clickedID);
@@ -273,7 +305,15 @@ function FullWidthTable({
               onDragEnd={handleDragEnd}
               sensors={sensors}
             >
-              <table>
+              <table
+                {...{
+                  className: "divTable",
+                  style: {
+                    ...columnSizeVars,
+                    width: table.getTotalSize(),
+                  },
+                }}
+              >
                 <thead>
                   {table.getHeaderGroups().map((headerGroup) => (
                     <tr key={headerGroup.id}>
@@ -285,39 +325,12 @@ function FullWidthTable({
                           <DraggableTableHeader
                             header={header}
                             key={header.id}
+                            last={idx === headerGroup.headers.length - 1}
+                            colOptions={colOptions}
+                            colPreferences={colPreferences}
+                            title={title.toLowerCase()}
+                            columns={columns}
                           />
-                          // <th
-                          //   key={header.id}
-                          //   colSpan={header.colSpan}
-                          //   style={{ width: `${header.getSize()}px` }}
-                          //   draggable
-                          //   onDragStart={() => (movingColumnId.current = header.id)}
-                          //   onDragEnter={() => (targetColumnId.current = header.id)}
-                          //   onDragEndCapture={handleDragEnd}
-                          //   onDragOver={(e) => e.preventDefault()}
-                          // >
-                          //   {/* if last column, add ColunmSelctor, otherwise just return column.*/}
-                          //   {idx === headerGroup.headers.length - 1 ? (
-                          //     <div className="flex">
-                          //       <span>
-                          //         {flexRender(
-                          //           header.column.columnDef.header,
-                          //           header.getContext()
-                          //         )}
-                          //       </span>
-                          //       <ColumnSelector
-                          //         colOptions={colOptions}
-                          //         preferences={colPreferences}
-                          //         table={title.toLowerCase()}
-                          //       />
-                          //     </div>
-                          //   ) : (
-                          //     flexRender(
-                          //       header.column.columnDef.header,
-                          //       header.getContext()
-                          //     )
-                          //   )}
-                          // </th>
                         ))}
                       </SortableContext>
                     </tr>
@@ -343,12 +356,6 @@ function FullWidthTable({
                                 strategy={horizontalListSortingStrategy}
                               >
                                 <DragAlongCell key={cell.id} cell={cell} />
-                                {/* <td key={cell.id}>
-                                  {flexRender(
-                                    cell.column.columnDef.cell,
-                                    cell.getContext()
-                                  )}
-                                </td> */}
                               </SortableContext>
                             ))}
                           </tr>

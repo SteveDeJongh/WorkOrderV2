@@ -2,7 +2,7 @@ import { LeftListWithAction } from "../multiuse/LeftListWithAction";
 import { Outlet, useParams, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { NoSelection } from "../NoSelection";
-import { FullWidthTable } from "../multiuse/FullWidthTable";
+import { FullWidthTable } from "../multiuse/FullWidthTable/FullWidthTable";
 import { ViewToggle } from "../multiuse/ViewToggle";
 import { useInvoicesData } from "../../hooks/useInvoicesData";
 import { ViewTypes } from "../../types/userPreferences";

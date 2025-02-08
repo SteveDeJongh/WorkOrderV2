@@ -57,8 +57,12 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   };
 
   const loginSuccess = (user: User) => {
+    let tempUser = { ...user };
+    tempUser.preferences.customer_columns = JSON.parse(
+      user.preferences.customer_columns
+    );
     setUser({
-      ...user,
+      ...tempUser,
     });
   };
 
@@ -76,7 +80,9 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     setUser(undefined);
   };
 
-  const updateUserPreferences = (preferences: UserPreferences) => {
+  const updateUserPreferences = (p: UserPreferences) => {
+    let preferences = { ...p };
+    preferences.customer_columns = JSON.parse(p.customer_columns);
     setUser({
       ...user!,
       preferences,

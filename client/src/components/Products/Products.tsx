@@ -3,7 +3,7 @@ import { Outlet, useParams, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { NoSelection } from "../NoSelection";
 import { useProductsData } from "../../hooks/useProductsData";
-import { FullWidthTable } from "../multiuse/FullWidthTable";
+import { FullWidthTable } from "../multiuse/FullWidthTable/FullWidthTable";
 import { ViewToggle } from "../multiuse/ViewToggle";
 import { ViewTypes } from "../../types/userPreferences";
 import { useAuth } from "../../contexts/AuthContext";

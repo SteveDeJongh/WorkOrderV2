@@ -1,5 +1,5 @@
 import { LeftListWithAction } from "../multiuse/LeftListWithAction";
-import { FullWidthTable } from "../multiuse/FullWidthTable";
+import { FullWidthTable } from "../multiuse/FullWidthTable/FullWidthTable";
 import { Outlet, useParams, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { NoSelection } from "../NoSelection";
@@ -71,9 +71,7 @@ function Customers() {
                   title={"Customers"}
                   fetcher={useCustomersData}
                   columns={CUSTOMERCOLUMNS}
-                  colPreferences={user!.preferences.customer_columns
-                    .split(",")
-                    .map((col) => col.trim())}
+                  colPreferences={user!.preferences.customer_columns}
                   colOptions={CUSTOMERCOLUMNOPTIONS}
                 />
               </div>
