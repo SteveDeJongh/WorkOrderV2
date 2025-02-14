@@ -35,21 +35,52 @@ export const INVOICECOLUMNSALT: TColumn[] = [
 export const INVOICECOLUMNOPTIONS = INVOICECOLUMNSALT.map((col) => col.header);
 
 export const CUSTOMERCOLUMNS: TColumn[] = [
-  { keys: ["id"], header: "ID", size: 80, id: "ID" },
+  { keys: ["id"], header: "ID", size: 80, id: "ID", sequence: 1 },
   {
     keys: ["first_name", "last_name"],
     header: "Full Name",
     size: 115,
     id: "Full Name",
+    sequence: 2,
   },
-  { keys: ["first_name"], header: "First Name", size: 115, id: "First Name" },
-  { keys: ["last_name"], header: "Last Name", size: 115, id: "Last Name" },
-  { keys: ["phone"], header: "Phone", size: 110, id: "Phone" },
-  { keys: ["email"], header: "Email", size: 150, id: "Email" },
-  { keys: ["address"], header: "Address", size: 100, id: "Address" },
-  { keys: ["city"], header: "City", size: 100, id: "City" },
-  { keys: ["province"], header: "Province", size: 150, id: "Province" },
-  { keys: ["country"], header: "Country", size: 200, id: "Country" },
+  {
+    keys: ["first_name"],
+    header: "First Name",
+    size: 115,
+    id: "First Name",
+    sequence: 3,
+  },
+  {
+    keys: ["last_name"],
+    header: "Last Name",
+    size: 115,
+    id: "Last Name",
+    sequence: 4,
+  },
+  { keys: ["phone"], header: "Phone", size: 110, id: "Phone", sequence: 5 },
+  { keys: ["email"], header: "Email", size: 150, id: "Email", sequence: 6 },
+  {
+    keys: ["address"],
+    header: "Address",
+    size: 100,
+    id: "Address",
+    sequence: 7,
+  },
+  { keys: ["city"], header: "City", size: 100, id: "City", sequence: 8 },
+  {
+    keys: ["province"],
+    header: "Province",
+    size: 150,
+    id: "Province",
+    sequence: 9,
+  },
+  {
+    keys: ["country"],
+    header: "Country",
+    size: 200,
+    id: "Country",
+    sequence: 10,
+  },
 ];
 
 export const CUSTOMERCOLUMNOPTIONS = CUSTOMERCOLUMNS.map((col) => col.header);
@@ -138,6 +169,7 @@ export type TColumn = {
   header: string;
   size?: number;
   id?: string;
+  sequence?: number;
   showAsDollars?: boolean;
   showAsDate?: boolean;
 };
@@ -146,6 +178,7 @@ export type ColumnPreferences = {
   id: string;
   size: number;
   sequence: number | null;
+  display: boolean;
 };
 
 let b = CUSTOMERCOLUMNS.map((col) => {

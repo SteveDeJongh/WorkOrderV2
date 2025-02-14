@@ -52,7 +52,7 @@ const DraggableTableHeader = ({
         {last ? (
           <ColumnSelector
             colOptions={colOptions}
-            preferences={colPreferences}
+            colPreferences={colPreferences}
             title={title}
             columns={columns}
           />

@@ -8,31 +8,29 @@ import { syncUserPreference } from "../../../services/userPreferencesServices";
 import { ColumnPreferences, TColumn } from "../../columns";
 type props = {
   colOptions: string[];
-  preferences: ColumnPreferences[];
+  colPreferences: ColumnPreferences[];
   title: string;
   columns: TColumn[];
 };
 
-function ColumnSelector({ colOptions, preferences, title, columns }: props) {
+function ColumnSelector({ colOptions, colPreferences, title, columns }: props) {
   const [isActive, setActive] = useState(false);
   const { user, updateUserPreferences } = useAuth();
 
   async function onSubmit(data: { selections: string[] }) {
     setActive(false);
 
-    let newColPreferences: ColumnPreferences[] = data.selections.map((col) => {
-      let column = preferences.find((el) => el.id === col);
-      if (column) {
-        return column;
-      } else {
-        let column = columns.find((el) => el.id === col);
-        return {
-          id: column!.id,
-          size: column!.size,
-          sequence: null,
-        } as ColumnPreferences;
+    let newColPreferences: ColumnPreferences[] = colPreferences.map(
+      (colPref) => {
+        const isSelected = data.selections.findIndex(
+          (selection) => selection === colPref.id
+        );
+
+        return isSelected >= 0
+          ? { ...colPref, display: true }
+          : { ...colPref, display: false };
       }
-    });
+    );
 
     const keyName = `${title.toLowerCase().slice(0, -1)}_columns`;
     const updatedPreferences = await syncUserPreference(user!.id, {
@@ -47,7 +45,11 @@ function ColumnSelector({ colOptions, preferences, title, columns }: props) {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<TColumnForm>({
-    defaultValues: { selections: preferences.map((pref) => pref.id) },
+    defaultValues: {
+      selections: colPreferences
+        .filter((colPref) => colPref.display)
+        .map((pref) => pref.id),
+    },
     resolver: zodResolver(ZColumnForm),
   });
 

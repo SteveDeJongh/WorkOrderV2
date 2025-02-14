@@ -45,23 +45,42 @@ import {
 // Utilities
 function reorderColumnPreferences(
   newColumnOrder: string[],
-  preferences: ColumnPreferences[],
+  colPreferences: ColumnPreferences[],
   allColumns: TColumn[]
 ) {
-  let newColPreferences: ColumnPreferences[] = newColumnOrder.map((col) => {
-    let column = preferences.find((el) => el.id === col);
-    if (column) {
-      return column;
+  let newColPreferences: ColumnPreferences[] = [...colPreferences];
+
+  newColumnOrder.forEach((colName, colPosition) => {
+    let savedColumn = newColPreferences.find(
+      (preference) => preference.id === colName
+    );
+
+    if (savedColumn) {
+      savedColumn.sequence = colPosition + 1;
     } else {
-      let column = allColumns.find((el) => el.id === col);
-      return {
-        id: column!.id,
-        size: column!.size,
-      } as ColumnPreferences;
+      // In case the column isn't already in the colPreferences, find it in allColumns.
+      let newColumn = allColumns.find((column) => column.id === colName);
+      if (!newColumn) return;
+      newColPreferences.push({
+        id: newColumn.id,
+        size: newColumn.size,
+        sequence: colPosition + 1,
+        display: true,
+      } as ColumnPreferences);
     }
   });
 
-  return newColPreferences;
+  // Change `display` property to false on any column not in the new order. Won't be required once managing display state via ColumnSelector.
+  return newColPreferences.map((preference) => {
+    let inColumnOrder = newColumnOrder.findIndex(
+      (colName) => colName === preference.id
+    );
+
+    if (inColumnOrder === -1) {
+      return { ...preference, display: false };
+    }
+    return preference;
+  });
 }
 
 type Props = {
@@ -93,12 +112,6 @@ function FullWidthTable({
     setSearchTerm(searchValue);
   }
 
-  const columnsWithPreferencesApplied = colPreferences.map((pref) => {
-    let column = columns[columns.findIndex((col) => col.header === pref.id)];
-    column.size = pref.size;
-    return column;
-  });
-
   // Data Fetching
   const [data, setData] = useState([]);
   const { data: fetchedData, loading, error } = fetcher(debouncedSearchTerm);
@@ -111,11 +124,22 @@ function FullWidthTable({
 
   // Columns
   const [columnOrder, setColumnOrder] = useState<string[]>(
-    colPreferences.map((pref) => pref.id)
+    sortColumnOrder(colPreferences)
   );
 
+  function sortColumnOrder(columns: ColumnPreferences[]) {
+    return columns
+      .filter((colPref) => colPref.display)
+      .toSorted((a, b) => a.sequence - b.sequence)
+      .map((colPref) => colPref.id);
+  }
+
   useEffect(() => {
-    setColumnOrder(colPreferences.map((pref) => pref.id));
+    console.log(
+      "colPreferences in useEffect to setColumnOrder",
+      colPreferences
+    );
+    setColumnOrder(sortColumnOrder(colPreferences));
   }, [colPreferences]);
 
   const [columnSizing, setColumnSizing] = useState<ColumnSizingState>(() =>
@@ -128,8 +152,8 @@ function FullWidthTable({
 
   function columnSizingInit() {
     let columnSizingObject: ColumnSizingState = {};
-    colPreferences.forEach((pref) => {
-      columnSizingObject[pref.id] = pref.size;
+    colPreferences.forEach((colPref) => {
+      columnSizingObject[colPref.id] = colPref.size;
     });
     return columnSizingObject;
   }
@@ -139,7 +163,11 @@ function FullWidthTable({
   // Memo columns and data for use in table.
   const finalData = useMemo(() => data, [data, searchTerm]);
   const finalColumDef = useMemo(() => {
-    return columnsWithPreferencesApplied.map((col) => {
+    // Filter columns to just those selected.
+    let filteredCol = columns.filter((col) => {
+      return columnOrder.some((x) => x === col.id);
+    });
+    return filteredCol.map((col) => {
       return columnHelper.accessor(
         (row) =>
           col.keys
@@ -157,7 +185,6 @@ function FullWidthTable({
             }
             return props.getValue();
           },
-          size: col.size,
         }
       );
     });
@@ -208,10 +235,8 @@ function FullWidthTable({
   }
 
   async function updateColumnWidths(newSizingInfo: ColumnSizingState) {
-    let newColPreferences = colPreferences.map((pref) => {
-      let temp = { ...pref };
-      temp.size = newSizingInfo[pref.id];
-      return temp;
+    let newColPreferences = colPreferences.map((colPref) => {
+      return { ...colPref, size: newSizingInfo[colPref.id] };
     });
 
     const keyName = `${title.toLowerCase().slice(0, -1)}_columns`;
