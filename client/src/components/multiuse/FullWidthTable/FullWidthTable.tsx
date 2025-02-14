@@ -70,17 +70,7 @@ function reorderColumnPreferences(
     }
   });
 
-  // Change `display` property to false on any column not in the new order. Won't be required once managing display state via ColumnSelector.
-  return newColPreferences.map((preference) => {
-    let inColumnOrder = newColumnOrder.findIndex(
-      (colName) => colName === preference.id
-    );
-
-    if (inColumnOrder === -1) {
-      return { ...preference, display: false };
-    }
-    return preference;
-  });
+  return newColPreferences;
 }
 
 type Props = {
@@ -122,10 +112,14 @@ function FullWidthTable({
     }
   }, [fetchedData]);
 
-  // Columns
+  // Columns Order and Filtering
   const [columnOrder, setColumnOrder] = useState<string[]>(
     sortColumnOrder(colPreferences)
   );
+
+  useEffect(() => {
+    setColumnOrder(sortColumnOrder(colPreferences));
+  }, [colPreferences]);
 
   function sortColumnOrder(columns: ColumnPreferences[]) {
     return columns
@@ -134,14 +128,7 @@ function FullWidthTable({
       .map((colPref) => colPref.id);
   }
 
-  useEffect(() => {
-    console.log(
-      "colPreferences in useEffect to setColumnOrder",
-      colPreferences
-    );
-    setColumnOrder(sortColumnOrder(colPreferences));
-  }, [colPreferences]);
-
+  // Column Sizing
   const [columnSizing, setColumnSizing] = useState<ColumnSizingState>(() =>
     columnSizingInit()
   );
@@ -202,7 +189,6 @@ function FullWidthTable({
     },
     columnResizeMode: "onChange",
     defaultColumn: {
-      // size: 200, //starting column size
       minSize: 50, //enforced during column resizing
       maxSize: 500, //enforced during column resizing
     },
