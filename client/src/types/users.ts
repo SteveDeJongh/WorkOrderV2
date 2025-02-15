@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ZUserPreferences } from "./userPreferences";
+import { ZUserPreferences, UserPreferencesResponse, ZUserPreferencesResponse } from "./userPreferences";
 
 const ZRoleTypes = z.union([z.literal("user"), z.literal("manager"), z.literal("admin")]);
 
@@ -59,6 +59,18 @@ const ZUser = z.object({
   preferences: ZUserPreferences,
 })
 
+const ZUserResponse = z.object({
+  id: z.number(),
+  email: z.string().email(),
+  created_at: z.string(),
+  name: z.string(),
+  roles: ZRoleTypes.array(),
+  created_date: z.string(),
+  preferences: ZUserPreferencesResponse,
+})
+
+type TUserResponse = z.infer<typeof ZUserResponse>
+
 const ZUserWithID = ZUser.extend({
   id: z.number(),
 })
@@ -77,7 +89,7 @@ type RoleTypes = z.infer<typeof ZRoleTypes>
 
 type UserResponse = {
   status: StatusResponse;
-  data: User;
+  data: TUserResponse;
 }
 
 type StatusResponse = UserErrorData & {
@@ -99,4 +111,4 @@ type UserContext = {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
-export { NestedUser, NestedSignInUser, UserResponse, UserErrorData, SignInUser, TUserForm, RoleTypes, User, UserContext, ZUserWithID, ZUser, ZUserForm }
+export { NestedUser, NestedSignInUser, UserResponse, UserErrorData, SignInUser, TUserForm, TUserResponse, RoleTypes, User, UserContext, ZUserWithID, ZUser, ZUserForm }

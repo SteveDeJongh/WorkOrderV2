@@ -72,9 +72,7 @@ function Products() {
                   title={"Products"}
                   fetcher={useProductsData}
                   columns={PRODUCTCOLUMNS}
-                  colPreferences={user!.preferences.product_columns
-                    .split(",")
-                    .map((col) => col.trim())}
+                  colPreferences={user!.preferences.product_columns}
                   colOptions={PRODUCTCOLUMNOPTIONS}
                 />
               </div>

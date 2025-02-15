@@ -22,16 +22,56 @@ export const INVOICECOLUMNS = [
 
 // React-table columns
 export const INVOICECOLUMNSALT: TColumn[] = [
-  { keys: ["id"], header: "ID" },
-  { keys: ["customer_id"], header: "Customer ID" },
-  { keys: ["status"], header: "Status" },
-  { keys: ["total"], header: "Total", showAsDollars: true },
-  { keys: ["tax"], header: "Tax", showAsDollars: true },
-  { keys: ["balance"], header: "Balance", showAsDollars: true },
-  { keys: ["updated_at"], header: "Updated", showAsDate: true },
-  { keys: ["created_at"], header: "Created", showAsDate: true },
+  { keys: ["id"], id: "ID", header: "ID", sequence: 1, size: 200 },
+  {
+    keys: ["customer_id"],
+    id: "Customer ID",
+    header: "Customer ID",
+    sequence: 2,
+    size: 200,
+  },
+  { keys: ["status"], id: "Status", header: "Status", sequence: 3, size: 200 },
+  {
+    keys: ["total"],
+    id: "Total",
+    header: "Total",
+    showAsDollars: true,
+    sequence: 4,
+    size: 200,
+  },
+  {
+    keys: ["tax"],
+    id: "Tax",
+    header: "Tax",
+    showAsDollars: true,
+    sequence: 5,
+    size: 200,
+  },
+  {
+    keys: ["balance"],
+    id: "Balance",
+    header: "Balance",
+    showAsDollars: true,
+    sequence: 6,
+    size: 200,
+  },
+  {
+    keys: ["updated_at"],
+    id: "Updated",
+    header: "Updated",
+    showAsDate: true,
+    sequence: 7,
+    size: 200,
+  },
+  {
+    keys: ["created_at"],
+    id: "Created",
+    header: "Created",
+    showAsDate: true,
+    sequence: 8,
+    size: 200,
+  },
 ];
-
 export const INVOICECOLUMNOPTIONS = INVOICECOLUMNSALT.map((col) => col.header);
 
 export const CUSTOMERCOLUMNS: TColumn[] = [
@@ -82,86 +122,39 @@ export const CUSTOMERCOLUMNS: TColumn[] = [
     sequence: 10,
   },
 ];
-
 export const CUSTOMERCOLUMNOPTIONS = CUSTOMERCOLUMNS.map((col) => col.header);
 
-// Alternate Customercolumn with aaccesorKEy and cell function.
-export const CUSTOMERCOLUMNSEXTRA = [
-  {
-    accessorKey: "id",
-    header: "ID",
-    cell: (props) => {
-      return <>{props.getValue()}</>;
-    },
-  },
-  {
-    accessorKey: "full_name",
-    header: "Full Name",
-    cell: (props) => {
-      return (
-        <>
-          {props.row.original.first_name} {props.row.original.last_name}
-        </>
-      );
-    },
-  },
-  {
-    accessorKey: "first_name",
-    header: "First Name",
-    cell: (props) => <>{props.getValue()}</>,
-  },
-  {
-    accessorKey: "last_name",
-    header: "Last Name",
-    cell: (props) => {
-      return <>{props.getValue()}</>;
-    },
-  },
-  {
-    accessorKey: "phone",
-    header: "Phone",
-    cell: (props) => <>{props.getValue()}</>,
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-    cell: (props) => <>{props.getValue()}</>,
-  },
-  {
-    accessorKey: "address",
-    header: "Address",
-    cell: (props) => <>{props.getValue()}</>,
-  },
-  {
-    accessorKey: "city",
-    header: "City",
-    cell: (props) => <>{props.getValue()}</>,
-  },
-  {
-    accessorKey: "province",
-    header: "Province",
-    cell: (props) => <>{props.getValue()}</>,
-  },
-  {
-    accessorKey: "country",
-    header: "Country",
-    cell: (props) => <>{props.getValue()}</>,
-  },
-];
-
 export const PRODUCTCOLUMNS: TColumn[] = [
-  { keys: ["id"], header: "ID" },
-  { keys: ["sku"], header: "SKU" },
-  { keys: ["upc"], header: "UPC" },
-  { keys: ["name"], header: "Name" },
-  { keys: ["description"], header: "Description" },
-  { keys: ["price"], header: "Price", showAsDollars: true },
-  { keys: ["tax_rate"], header: "TaxRate" },
-  { keys: ["stock"], header: "Stock" },
-  { keys: ["min"], header: "Min" },
-  { keys: ["max"], header: "Max" },
+  { keys: ["id"], id: "ID", header: "ID", size: 100, sequence: 1 },
+  { keys: ["sku"], id: "SKU", header: "SKU", size: 100, sequence: 1 },
+  { keys: ["upc"], id: "UPC", header: "UPC", size: 100, sequence: 1 },
+  { keys: ["name"], id: "Name", header: "Name", size: 100, sequence: 1 },
+  {
+    keys: ["description"],
+    id: "Description",
+    header: "Description",
+    size: 100,
+    sequence: 1,
+  },
+  {
+    keys: ["price"],
+    id: "Price",
+    header: "Price",
+    size: 100,
+    sequence: 1,
+    showAsDollars: true,
+  },
+  {
+    keys: ["tax_rate"],
+    id: "TaxRate",
+    header: "TaxRate",
+    size: 100,
+    sequence: 1,
+  },
+  { keys: ["stock"], id: "Stock", header: "Stock", size: 100, sequence: 1 },
+  { keys: ["min"], id: "Min", header: "Min", size: 100, sequence: 1 },
+  { keys: ["max"], id: "Max", header: "Max", size: 100, sequence: 1 },
 ];
-
 export const PRODUCTCOLUMNOPTIONS = PRODUCTCOLUMNS.map((col) => col.header);
 
 export type TColumn = {
@@ -174,16 +167,11 @@ export type TColumn = {
   showAsDate?: boolean;
 };
 
-export type ColumnPreferences = {
-  id: string;
-  size: number;
-  sequence: number | null;
-  display: boolean;
-};
-
 let b = CUSTOMERCOLUMNS.map((col) => {
   return {
     id: col.id,
     size: col.size,
+    sequence: col.sequence,
+    display: true,
   };
 });

@@ -72,9 +72,7 @@ function Invoices() {
                   title={"Invoices"}
                   fetcher={useInvoicesData}
                   columns={INVOICECOLUMNSALT}
-                  colPreferences={user!.preferences.invoice_columns
-                    .split(",")
-                    .map((col) => col.trim())}
+                  colPreferences={user!.preferences.invoice_columns}
                   colOptions={INVOICECOLUMNOPTIONS}
                 />
               </div>

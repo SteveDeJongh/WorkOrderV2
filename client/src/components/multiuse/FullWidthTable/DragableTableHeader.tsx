@@ -6,7 +6,8 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSSProperties } from "react";
 import { CSS } from "@dnd-kit/utilities";
 import { ColumnSelector } from "./ColumnSelector";
-import { ColumnPreferences, TColumn } from "../../columns";
+import { TColumn } from "../../columns";
+import { ColumnPreferences } from "../../../types/userPreferences";
 
 const DraggableTableHeader = ({
   header,

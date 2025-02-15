@@ -4,20 +4,16 @@ const ZViewTypes = z.union([z.literal("profile"), z.literal('table')]);
 
 type ViewTypes = z.infer<typeof ZViewTypes>
 
-type UserPreferences = {
-  user_id: number;
-  view_customers: ViewTypes;
-  view_products: ViewTypes;
-  view_invoices: ViewTypes;
-  theme: string;
-  created_at: string;
-  updated_at: string;
-  customer_columns: string;
-  product_columns: string;
-  invoice_columns: string;
-}
+const ZColumnPreferences = z.object({
+  id: z.string(),
+  size: z.number(),
+  sequence: z.number(),
+  display: z.boolean(),
+});
 
-const ZUserPreferences = z.object({
+type ColumnPreferences = z.infer<typeof ZColumnPreferences>
+
+const ZUserPreferencesResponse = z.object({
   user_id: z.number(),
   view_customers: ZViewTypes,
   view_products: ZViewTypes,
@@ -30,6 +26,23 @@ const ZUserPreferences = z.object({
   invoice_columns: z.string(),
 })
 
+type UserPreferencesResponse = z.infer<typeof ZUserPreferencesResponse>
+
+const ZUserPreferences = z.object({
+  user_id: z.number(),
+  view_customers: ZViewTypes,
+  view_products: ZViewTypes,
+  view_invoices: ZViewTypes,
+  theme: z.string(),
+  created_at: z.string(),
+  updated_at: z.string(),
+  customer_columns: z.array(ZColumnPreferences),
+  product_columns: z.array(ZColumnPreferences),
+  invoice_columns: z.array(ZColumnPreferences),
+})
+
+type UserPreferences = z.infer<typeof ZUserPreferences>;
+
 type UserPreference<T> = {
   [key in keyof T]?: T[key];
 }
@@ -38,4 +51,4 @@ type NestedPreference = {
   userPreference: UserPreference<UserPreferences>;
 }
 
-export { NestedPreference, UserPreference, UserPreferences, ZUserPreferences, ZViewTypes, ViewTypes }
+export { NestedPreference, UserPreference, UserPreferencesResponse, UserPreferences, ZUserPreferences, ZUserPreferencesResponse, ZViewTypes, ViewTypes, ColumnPreferences }

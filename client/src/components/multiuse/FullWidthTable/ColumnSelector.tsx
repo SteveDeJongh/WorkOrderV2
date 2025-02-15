@@ -5,7 +5,9 @@ import { TColumnForm, ZColumnForm } from "../../../types/customers";
 import { Button } from "../Button";
 import { useAuth } from "../../../contexts/AuthContext";
 import { syncUserPreference } from "../../../services/userPreferencesServices";
-import { ColumnPreferences, TColumn } from "../../columns";
+import { TColumn } from "../../columns";
+import { ColumnPreferences } from "../../../types/userPreferences";
+
 type props = {
   colOptions: string[];
   colPreferences: ColumnPreferences[];

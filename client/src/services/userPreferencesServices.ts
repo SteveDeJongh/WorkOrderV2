@@ -1,7 +1,7 @@
-import { UserPreference, UserPreferences } from "../types/userPreferences"; 
+import { UserPreference, UserPreferences, UserPreferencesResponse } from "../types/userPreferences"; 
 import { HOST_URL } from "../constants";
 
-async function syncUserPreference(user_id: number, preference: UserPreference<UserPreferences>): Promise<UserPreferences> {
+async function syncUserPreference(user_id: number, preference: UserPreference<UserPreferences>): Promise<UserPreferencesResponse> {
   const response = await fetch(`${HOST_URL}/users/user_preferences/${user_id}`, {
     method: "PATCH",
     headers: {

@@ -13,10 +13,11 @@ import { ProductModal } from "../../Products/ProductModal";
 import { InvoiceModal } from "../../Invoices/InvoiceModal";
 import { syncUserPreference } from "../../../services/userPreferencesServices";
 import { useAuth } from "../../../contexts/AuthContext";
-import { ColumnPreferences, TColumn } from "../../columns";
+import { TColumn } from "../../columns";
 import { Customer } from "../../../types/customers";
 import { Invoice } from "../../../types/invoiceTypes";
 import { Product } from "../../../types/products";
+import { ColumnPreferences } from "../../../types/userPreferences";
 import { dateTimeFormatter, showAsDollarAmount } from "../../../utils";
 
 // Components
@@ -24,7 +25,7 @@ import { dateTimeFormatter, showAsDollarAmount } from "../../../utils";
 import { DragAlongCell } from "./DragAlongCell";
 import { DraggableTableHeader } from "./DragableTableHeader";
 
-// needed for table body level scope DnD setup
+// Needed for table body level scope DnD setup
 import {
   DndContext,
   KeyboardSensor,
@@ -125,7 +126,7 @@ function FullWidthTable({
     return columns
       .filter((colPref) => colPref.display)
       .toSorted((a, b) => a.sequence - b.sequence)
-      .map((colPref) => colPref.id);
+      .map((colPref: ColumnPreferences) => colPref.id);
   }
 
   // Column Sizing

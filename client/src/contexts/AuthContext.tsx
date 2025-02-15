@@ -8,15 +8,19 @@ import {
 } from "react";
 import { getUserByToken, destroySession } from "../services/userServices";
 
-import { User } from "../types/users";
-import { UserPreferences } from "../types/userPreferences";
+import { User, TUserResponse } from "../types/users";
+import {
+  ColumnPreferences,
+  UserPreferences,
+  UserPreferencesResponse,
+} from "../types/userPreferences";
 
 interface AuthContext {
   setToken: (token: string) => void;
   user?: User;
-  loginSuccess: (user: User) => void;
+  loginSuccess: (user: TUserResponse) => void;
   logout: () => Promise<void>;
-  updateUserPreferences: (preferences: UserPreferences) => void;
+  updateUserPreferences: (preferences: UserPreferencesResponse) => void;
 }
 
 const AuthContext = createContext<AuthContext>({
@@ -56,11 +60,29 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     return;
   };
 
-  const loginSuccess = (user: User) => {
-    let tempUser = { ...user };
-    tempUser.preferences.customer_columns = JSON.parse(
+  const loginSuccess = (user: TUserResponse) => {
+    let customer: ColumnPreferences[] = JSON.parse(
       user.preferences.customer_columns
     );
+    let invoice: ColumnPreferences[] = JSON.parse(
+      user.preferences.invoice_columns
+    );
+    let product: ColumnPreferences[] = JSON.parse(
+      user.preferences.product_columns
+    );
+
+    let preferences = {
+      ...user.preferences,
+      customer_columns: customer,
+      invoice_columns: invoice,
+      product_columns: product,
+    };
+
+    let tempUser: User = {
+      ...user,
+      preferences,
+    };
+
     setUser({
       ...tempUser,
     });
@@ -80,9 +102,18 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     setUser(undefined);
   };
 
-  const updateUserPreferences = (p: UserPreferences) => {
-    let preferences = { ...p };
-    preferences.customer_columns = JSON.parse(p.customer_columns);
+  const updateUserPreferences = (p: UserPreferencesResponse) => {
+    let customer: ColumnPreferences[] = JSON.parse(p.customer_columns);
+    let invoice: ColumnPreferences[] = JSON.parse(p.invoice_columns);
+    let product: ColumnPreferences[] = JSON.parse(p.product_columns);
+
+    let preferences: UserPreferences = {
+      ...p,
+      customer_columns: customer,
+      invoice_columns: invoice,
+      product_columns: product,
+    };
+
     setUser({
       ...user!,
       preferences,
