@@ -27,10 +27,6 @@ function PaymentModal({
     }
   }
 
-  useEffect(() => {
-    console.log("balance changed", balance);
-  }, [balance]);
-
   function onSavePayment(data: EditablePaymentData) {
     if (data.id || data.created_at) {
       dispatch({ type: "updatePayment", payment: data });

@@ -51,7 +51,7 @@ function ProductForm({
     try {
       onSubmit(data);
     } catch (e) {
-      console.log("failed!");
+      console.error("failed!");
     }
   }
 

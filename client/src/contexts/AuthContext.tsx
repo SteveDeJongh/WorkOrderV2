@@ -10,7 +10,6 @@ import { getUserByToken, destroySession } from "../services/userServices";
 
 import { User, TUserResponse } from "../types/users";
 import {
-  ColumnPreferences,
   UserPreferences,
   UserPreferencesResponse,
 } from "../types/userPreferences";
@@ -29,6 +28,17 @@ const AuthContext = createContext<AuthContext>({
   logout: () => Promise.resolve(),
   updateUserPreferences: () => null,
 });
+
+function parsePreferences(p: UserPreferencesResponse): UserPreferences {
+  let preferences: UserPreferences = {
+    ...p,
+    customer_columns: JSON.parse(p.customer_columns),
+    invoice_columns: JSON.parse(p.invoice_columns),
+    product_columns: JSON.parse(p.product_columns),
+  };
+
+  return preferences;
+}
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<User | undefined>();
@@ -61,22 +71,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   };
 
   const loginSuccess = (user: TUserResponse) => {
-    let customer: ColumnPreferences[] = JSON.parse(
-      user.preferences.customer_columns
-    );
-    let invoice: ColumnPreferences[] = JSON.parse(
-      user.preferences.invoice_columns
-    );
-    let product: ColumnPreferences[] = JSON.parse(
-      user.preferences.product_columns
-    );
-
-    let preferences = {
-      ...user.preferences,
-      customer_columns: customer,
-      invoice_columns: invoice,
-      product_columns: product,
-    };
+    const preferences = parsePreferences(user.preferences);
 
     let tempUser: User = {
       ...user,
@@ -103,16 +98,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   };
 
   const updateUserPreferences = (p: UserPreferencesResponse) => {
-    let customer: ColumnPreferences[] = JSON.parse(p.customer_columns);
-    let invoice: ColumnPreferences[] = JSON.parse(p.invoice_columns);
-    let product: ColumnPreferences[] = JSON.parse(p.product_columns);
-
-    let preferences: UserPreferences = {
-      ...p,
-      customer_columns: customer,
-      invoice_columns: invoice,
-      product_columns: product,
-    };
+    const preferences = parsePreferences(p);
 
     setUser({
       ...user!,

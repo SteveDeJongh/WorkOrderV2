@@ -20,11 +20,8 @@ function FormInvoiceLines({ invoice_lines = [], invoice_id, dispatch }: props) {
   const [lines, setLines] = useState<TInvoiceLine[]>(invoice_lines);
 
   useEffect(() => {
-    console.log("*** invoice_lines changed ", invoice_lines);
     setLines(invoice_lines);
   }, [invoice_lines]);
-
-  console.log("*** FormInvoiceLines rerender", lines);
 
   function updateLine(updatedLine: TInvoiceLine) {
     const invoiceLine = recalculateLine(updatedLine);

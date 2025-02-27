@@ -23,15 +23,8 @@ function FormPaymentLines({
   const [lines, setLines] = useState(payments);
 
   useEffect(() => {
-    console.log("*** payments changed ", payments);
     setLines(payments);
   }, [payments]);
-
-  useEffect(() => {
-    console.log("lines changed", lines);
-  }, [lines]);
-
-  console.log("*** FormPaymentLines rerender");
 
   function toggleDelete(paymentId: string | number, created_at: string | Date) {
     dispatch({

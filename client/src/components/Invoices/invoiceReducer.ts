@@ -7,11 +7,11 @@ function invoiceReducer(invoice: Invoice, action: Action): Invoice {
       return { ...action.data };
     }
     case "recaculateInvoice": {
-      let payments = sumAProp(invoice.payments, "amount", { _destroy: true });
-      let sub_total = sumAProp(invoice.invoice_lines, "line_total");
-      let tax = sumAProp(invoice.invoice_lines, "line_tax");
-      let total = sub_total + tax;
-      let balance = total - payments;
+      const payments = sumAProp(invoice.payments, "amount", { _destroy: true });
+      const sub_total = sumAProp(invoice.invoice_lines, "line_total");
+      const tax = sumAProp(invoice.invoice_lines, "line_tax");
+      const total = sub_total + tax;
+      const balance = total - payments;
       return {
         ...invoice,
         sub_total: sub_total,
