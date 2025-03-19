@@ -1,37 +1,77 @@
-import { NavLink } from "react-router-dom";
+import { Button, Menu, Typography } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
 
-function NavBar() {
+type Page = {
+  title: string;
+  href: string;
+};
+
+const PAGES: Page[] = [
+  { title: "Customers", href: "/customers" },
+  { title: "Products", href: "/products" },
+  { title: "Invoices", href: "/Invoices" },
+];
+
+type Props = {
+  menu: boolean;
+  anchorElNav: HTMLElement | null;
+  handleCloseNavMenu: () => void;
+  handleNavClick: (
+    event: React.MouseEvent<HTMLElement>,
+    index: number,
+    href: string
+  ) => void;
+  selectedIndex?: number;
+};
+
+function NavBar({
+  menu,
+  anchorElNav,
+  handleCloseNavMenu,
+  handleNavClick,
+  selectedIndex,
+}: Props) {
   return (
     <>
-      <nav>
-        <ul>
-          {/*  Removed Home link for now as the Logo will play that role. Commented out NavBar links for out of inital project scope sections. */}
-          {/* <li id="navBar-link-for-home" className="navBar-tab">
-            <NavLink to="/">Home</NavLink>
-          </li> */}
-          <li id="navBar-link-for-customers" className="navBar-tab">
-            <NavLink to="/customers">Customers</NavLink>
-          </li>
-          <li id="navBar-link-for-products" className="navBar-tab">
-            <NavLink to="/products">Products</NavLink>
-          </li>
-          <li id="navBar-link-for-reports" className="navBar-tab">
-            <NavLink to="/invoices">Invoices</NavLink>
-          </li>
-          {/* <li id="navBar-link-for-workorders" className="navBar-tab">
-            <NavLink to="/workorders">Workorders</NavLink>
-          </li>
-          <li id="navBar-link-for-services" className="navBar-tab">
-            <NavLink to="/services">Services</NavLink>
-          </li>
-          <li id="navBar-link-for-reports" className="navBar-tab">
-            <NavLink to="/reports">Reports</NavLink>
-          </li>
-          <li id="navBar-link-for-settings" className="navBar-tab">
-            <NavLink to="/settings">Settings</NavLink>
-          </li>*/}
-        </ul>
-      </nav>
+      {menu && (
+        <Menu
+          id="menu-appbar"
+          anchorEl={anchorElNav}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+          open={Boolean(anchorElNav)}
+          onClose={handleCloseNavMenu}
+          sx={{ display: { xs: "block", md: "none" } }}
+        >
+          {PAGES.map((page, index) => (
+            <MenuItem
+              key={page.title}
+              onClick={(event) => handleNavClick(event, index, page.href)}
+              selected={selectedIndex === index}
+            >
+              <Typography sx={{ textAlign: "center" }}>{page.title}</Typography>
+            </MenuItem>
+          ))}
+        </Menu>
+      )}
+      {!menu &&
+        PAGES.map((page, index) => (
+          <Button
+            key={page.title}
+            onClick={(event) => handleNavClick(event, index, page.href)}
+            sx={{ my: 2, color: "white", display: "block" }}
+            disabled={selectedIndex === index}
+          >
+            {page.title}
+          </Button>
+        ))}
     </>
   );
 }

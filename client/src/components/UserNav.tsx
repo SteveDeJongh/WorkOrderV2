@@ -1,82 +1,120 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
-import { CapitalizeFullName } from "../utils";
+import { useNavigate, To } from "react-router-dom";
+import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import { RoleTypes } from "../types/users";
+
+type UserAction = { type: "link"; href: To } | { type: "logOut" };
+
+const USEROPTS: { tag: string; action: UserAction; role: RoleTypes }[] = [
+  {
+    tag: "My Profile",
+    action: { type: "link", href: "/profile" },
+    role: "user",
+  },
+  {
+    tag: "Create Account",
+    action: { type: "link", href: "/signup" },
+    role: "admin",
+  },
+  { tag: "Sign Out", action: { type: "logOut" }, role: "user" },
+];
 
 function UserNav() {
-  const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const [isActive, setActive] = useState(false);
-  const menuRef = useRef();
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number>();
 
-  useEffect(() => {
-    function handler(e) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        const parentClassName = e.target.parentElement.className;
-        if (
-          parentClassName.includes("ham-menu") ||
-          parentClassName.includes("header-right")
-        ) {
-          return;
-        }
-        setActive(false);
-      }
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuItemClick = (
+    event: React.MouseEvent<HTMLElement>,
+    index: number,
+    action: UserAction
+  ) => {
+    setAnchorEl(null);
+
+    switch (action.type) {
+      case "link":
+        setSelectedIndex(index);
+        navigate(action.href);
+        break;
+      case "logOut":
+        setSelectedIndex(undefined);
+        logout();
+        navigate("/");
+        break;
+      default:
+        console.warn("Unknown action type.");
     }
+  };
 
-    document.addEventListener("mousedown", handler);
-
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
-  }, [menuRef, setActive]);
+  const handleCloseUserMenu = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <>
       {!user && (
-        <>
-          <ul>
-            <li>
-              <Link to="/login">Sign In</Link>
-            </li>
-          </ul>
-        </>
+        <Button
+          onClick={() => navigate("/login")}
+          sx={{ my: 2, color: "white", display: "block" }}
+        >
+          Sign In
+        </Button>
       )}
       {user && (
-        <>
-          <div className="hello-tag">
-            <p>Signed in as: {CapitalizeFullName(user.name)}</p>
-          </div>
-          <div
-            className={isActive ? "ham-menu active" : "ham-menu"}
-            onClick={() => setActive(!isActive)}
+        <Box sx={{ flexGrow: 0 }}>
+          <Tooltip title="User settings">
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <Avatar />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            sx={{ mt: "45px" }}
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorEl)}
+            onClose={handleCloseUserMenu}
           >
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <div
-            ref={menuRef}
-            className={!isActive ? "off-screen-menu" : "off-screen-menu active"}
-          >
-            <ul className="user-nav-list">
-              {user && (
-                <>
-                  <Link to="/profile" onClick={() => setActive(!isActive)}>
-                    <li>My Profile</li>
-                  </Link>
-                  {user.roles.includes("admin") && ( // Eventually turn this into a link to an admin panel?
-                    <Link to="/signup" onClick={() => setActive(!isActive)}>
-                      <li>Create Account</li>
-                    </Link>
-                  )}
-                  <Link>
-                    <li onClick={() => logout()}>Sign Out</li>
-                  </Link>
-                </>
-              )}
-            </ul>
-          </div>
-        </>
+            {USEROPTS.map((option, index) =>
+              user.roles.includes(option.role) ? (
+                <MenuItem
+                  key={option.tag}
+                  onClick={(event) =>
+                    handleMenuItemClick(event, index, option.action)
+                  }
+                  selected={index === selectedIndex}
+                >
+                  <Typography sx={{ textAlign: "center" }}>
+                    {option.tag}
+                  </Typography>
+                </MenuItem>
+              ) : null
+            )}
+          </Menu>
+        </Box>
       )}
     </>
   );
