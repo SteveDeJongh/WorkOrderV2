@@ -1,13 +1,24 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createSession } from "../../services/userServices";
 import { PageTitle } from "../PageTitle";
 import { LoadingModal } from "../multiuse/LoadingModal";
-import { Button } from "../multiuse/Button";
-import { SignInUser, UserResponse } from "../../types/users";
+import { SignInUser, UserResponse, ZSignInUser } from "../../types/users";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  FormLabel,
+  Grid2,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 function Login() {
   const navigate = useNavigate();
@@ -22,10 +33,12 @@ function Login() {
   }, []);
 
   const {
-    register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<SignInUser>();
+    control,
+    formState: { isSubmitting, errors },
+  } = useForm<SignInUser>({
+    resolver: zodResolver(ZSignInUser),
+  });
 
   const {
     mutate: login,
@@ -63,76 +76,102 @@ function Login() {
   return (
     <>
       <PageTitle title="Sign In" />
-      <div id="panes">
-        <div className="pane pane-full">
-          <div className="main-pane-header">
-            <div className="main-pane-header-title">
-              <h2>Sign In</h2>
-              <div className="main-pane-form-actions">
-                <Button
-                  onClick={() => navigate("/")}
-                  text="Cancel"
-                  className={""}
-                />
-                <Button
-                  form={"main-pane-content"}
-                  disabled={isPending}
-                  type="submit"
-                  text={"Sign In"}
-                />
-              </div>
-            </div>
-          </div>
-          {isPending && <LoadingModal text={"Signing in..."} />}
-          <form
-            id="main-pane-content"
-            className="main-pane-content"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            {isError ||
-              (errorMessage && (
-                <>
-                  <div className="panel">
-                    <h2>Unable to log in.</h2>
-                    {errorMessage && <p>Error: {errorMessage}</p>}
-                    {!errorMessage && <p>An error occured signing in.</p>}
-                  </div>
-                </>
-              ))}
-            <div className="panel">
-              <h3>User Details</h3>
-              <div className="panel-contents-section">
-                <div className="formPair half">
-                  <label htmlFor="email">Email:</label>
-                  <input
-                    {...register("email", {
-                      required: "Email is required.",
-                    })}
-                    type="text"
-                    id="email"
-                    name="email"
-                    placeholder="example@example.com"
-                  />
-                  {errors.email && <p>{`${errors.email.message}`}</p>}
-                </div>
-                <div className="formPair half">
-                  <label htmlFor="password">Password:</label>
-                  <input
-                    {...register("password", {
-                      required: "Password is required.",
-                    })}
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder=""
-                  />
-                  {errors.password && <p>{`${errors.password.message}`}</p>}
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
+      <Grid2
+        container
+        direction={"column"}
+        maxWidth="xl"
+        sx={{ pt: 3, pb: 3, alignItems: "center" }}
+      >
+        <Card raised>
+          <CardContent>
+            <Box
+              component={"form"}
+              id="main-pane-content"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <Typography component={"h5"} variant="h5">
+                Sign In
+              </Typography>
+              {isPending && <LoadingModal text={"Signing in..."} />}
+              {isError ||
+                (errorMessage && (
+                  <>
+                    <div className="panel">
+                      <h2>Unable to log in.</h2>
+                      {errorMessage && <p>Error: {errorMessage}</p>}
+                      {!errorMessage && <p>An error occured signing in.</p>}
+                    </div>
+                  </>
+                ))}
+
+              <Controller
+                name={"email"}
+                control={control}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                  formState,
+                }) => (
+                  <>
+                    <FormLabel htmlFor={"email"}>{"Email"}</FormLabel>
+
+                    <TextField
+                      disabled={isSubmitting}
+                      helperText={error ? error.message : null}
+                      size="small"
+                      error={!!error}
+                      onChange={onChange}
+                      value={value}
+                      fullWidth
+                      label={"Email"}
+                      variant="outlined"
+                    />
+                  </>
+                )}
+              />
+              <Controller
+                name={"password"}
+                control={control}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                  formState,
+                }) => (
+                  <>
+                    <FormLabel htmlFor={"password"}>{"Password"}</FormLabel>
+
+                    <TextField
+                      disabled={isSubmitting}
+                      type="password"
+                      helperText={error ? error.message : null}
+                      size="small"
+                      error={!!error}
+                      onChange={onChange}
+                      value={value}
+                      fullWidth
+                      label={"password"}
+                      variant="outlined"
+                    />
+                  </>
+                )}
+              />
+            </Box>
+            <CardActions>
+              <Button variant="contained" onClick={() => navigate("/")}>
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                form={"main-pane-content"}
+                disabled={isPending}
+                type="submit"
+              >
+                Sign in
+              </Button>
+            </CardActions>
+          </CardContent>
+        </Card>
+      </Grid2>
     </>
   );
 }

@@ -1,6 +1,4 @@
 import { RouterProvider } from "react-router-dom";
-import "./whitespace-resets.css";
-// import "./App.css";
 import { useEffect, useState } from "react";
 import { interceptor } from "./interceptors/interceptor";
 import { router } from "./navigation/Navigation";
@@ -35,9 +33,11 @@ function App() {
   }, []);
 
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </>
   );
 }
 

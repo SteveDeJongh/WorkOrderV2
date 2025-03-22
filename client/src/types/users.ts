@@ -101,14 +101,16 @@ type UserErrorData = {
   error?: string;
 }
 
-type SignInUser = {
-  email: string;
-  password: string;
-};
+const ZSignInUser = z.object({
+  email: z.string().email(),
+  password: z.string(),
+}).required();
+
+type SignInUser = z.infer<typeof ZSignInUser>
 
 type UserContext = {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
-export { NestedUser, NestedSignInUser, UserResponse, UserErrorData, SignInUser, TUserForm, TUserResponse, RoleTypes, User, UserContext, ZUserWithID, ZUser, ZUserForm }
+export { NestedUser, NestedSignInUser, UserResponse, UserErrorData, SignInUser, TUserForm, TUserResponse, RoleTypes, User, UserContext, ZSignInUser, ZUserWithID, ZUser, ZUserForm }

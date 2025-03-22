@@ -1,6 +1,8 @@
+import { Container } from "@mui/material";
+
 function Index() {
   return (
-    <>
+    <Container maxWidth="xl" sx={{ pt: 3, pb: 3 }}>
       <div id="panes">
         <div className="pane pane-full">
           <div className="pane-inner">
@@ -12,7 +14,7 @@ function Index() {
           </div>
         </div>
       </div>
-    </>
+    </Container>
   );
 }
 
