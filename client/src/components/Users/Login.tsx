@@ -3,16 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { createSession } from "../../services/userServices";
 import { PageTitle } from "../PageTitle";
-import { LoadingModal } from "../multiuse/LoadingModal";
 import { SignInUser, UserResponse, ZSignInUser } from "../../types/users";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   Card,
   CardActions,
   CardContent,
+  CircularProgress,
   FormLabel,
   Grid2,
   TextField,
@@ -30,13 +32,9 @@ function Login() {
     if (user) {
       navigate(-1);
     }
-  }, []);
+  }, [user]);
 
-  const {
-    handleSubmit,
-    control,
-    formState: { isSubmitting, errors },
-  } = useForm<SignInUser>({
+  const { handleSubmit, control, formState } = useForm<SignInUser>({
     resolver: zodResolver(ZSignInUser),
   });
 
@@ -64,7 +62,7 @@ function Login() {
 
   function handleSuccess(response: UserResponse, token: string) {
     if (response.status.code === 200) {
-      let trimmedResponse = { ...response.data, ...response.status };
+      const trimmedResponse = { ...response.data, ...response.status };
       loginSuccess(trimmedResponse);
       setToken(token);
       navigate("/");
@@ -89,20 +87,17 @@ function Login() {
               id="main-pane-content"
               onSubmit={handleSubmit(onSubmit)}
             >
-              <Typography component={"h5"} variant="h5">
+              <Typography component={"h5"} variant="h5" mb={3}>
                 Sign In
               </Typography>
-              {isPending && <LoadingModal text={"Signing in..."} />}
-              {isError ||
-                (errorMessage && (
-                  <>
-                    <div className="panel">
-                      <h2>Unable to log in.</h2>
-                      {errorMessage && <p>Error: {errorMessage}</p>}
-                      {!errorMessage && <p>An error occured signing in.</p>}
-                    </div>
-                  </>
-                ))}
+              {isError && (
+                <Alert severity="error">
+                  <AlertTitle component={"h6"} variant="h6">
+                    Unable to sign in:
+                  </AlertTitle>
+                  {errorMessage || "An unkown error occured."}
+                </Alert>
+              )}
 
               <Controller
                 name={"email"}
@@ -110,20 +105,18 @@ function Login() {
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
-                  formState,
                 }) => (
                   <>
                     <FormLabel htmlFor={"email"}>{"Email"}</FormLabel>
 
                     <TextField
-                      disabled={isSubmitting}
+                      disabled={formState.isSubmitting}
                       helperText={error ? error.message : null}
                       size="small"
                       error={!!error}
                       onChange={onChange}
                       value={value}
                       fullWidth
-                      label={"Email"}
                       variant="outlined"
                     />
                   </>
@@ -135,13 +128,12 @@ function Login() {
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
-                  formState,
                 }) => (
                   <>
                     <FormLabel htmlFor={"password"}>{"Password"}</FormLabel>
 
                     <TextField
-                      disabled={isSubmitting}
+                      disabled={formState.isSubmitting}
                       type="password"
                       helperText={error ? error.message : null}
                       size="small"
@@ -149,7 +141,6 @@ function Login() {
                       onChange={onChange}
                       value={value}
                       fullWidth
-                      label={"password"}
                       variant="outlined"
                     />
                   </>
@@ -165,8 +156,9 @@ function Login() {
                 form={"main-pane-content"}
                 disabled={isPending}
                 type="submit"
+                startIcon={isPending ? <CircularProgress size={20} /> : null}
               >
-                Sign in
+                {isPending ? "Signing in..." : "Sign in"}
               </Button>
             </CardActions>
           </CardContent>
