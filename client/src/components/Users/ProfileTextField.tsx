@@ -9,7 +9,7 @@ type Props = {
   value: string;
 };
 
-function FormTextInput(props: Props) {
+function ProfileTextField(props: Props) {
   return (
     <Box>
       <FormLabel style={{ fontWeight: "bold" }} htmlFor={props.id}>
@@ -28,4 +28,4 @@ function FormTextInput(props: Props) {
   );
 }
 
-export { FormTextInput };
+export { ProfileTextField };

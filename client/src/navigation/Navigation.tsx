@@ -64,7 +64,8 @@ export const router = createBrowserRouter([
             path: "profile",
             element: <Profile />,
           },
-          { path: "profile/edit", element: <EditProfile /> },
+          // Removed, editing can now be done via a tab in the profile.
+          // { path: "profile/edit", element: <EditProfile /> },
           {
             path: "customers",
             element: (

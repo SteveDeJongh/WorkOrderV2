@@ -90,8 +90,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   puts "self", self
     if request.method == "POST" && resource.persisted?
       render json: {
-        status: {code: 200, message: "Signed up sucessfully."},
-        data: serailized_user(resource)
+        status: {code: 200, message: "Profile created sucessfully."},
+        data: [],
+        #serailized_user(resource) // This fails because user_preferences have not yet been created.
       }, status: :ok
     elsif request.method == "POST" && !resource.persisted?
       render json: {

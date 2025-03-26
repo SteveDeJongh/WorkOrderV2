@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { RoleTypes } from "../types/users";
+import placeholder from "../assets/avatar-placeholder.png";
 
 type UserAction = { type: "link"; href: To } | { type: "logOut" };
 
@@ -79,7 +80,7 @@ function UserNav() {
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="User settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar />
+              <Avatar src={placeholder} />
             </IconButton>
           </Tooltip>
           <Menu
