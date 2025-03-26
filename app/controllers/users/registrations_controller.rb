@@ -95,20 +95,25 @@ class Users::RegistrationsController < Devise::RegistrationsController
       }, status: :ok
     elsif request.method == "POST" && !resource.persisted?
       render json: {
-        status: {code: 422, message: "Failed to create account.", error: "#{resource.errors.full_messages.to_sentence}"},
+        status: {code: 422, message: "Failed to create profile.", error: "#{resource.errors.full_messages.to_sentence}"},
       }, status: :ok
     elsif request.method == "DELETE"
       render json: {
-        status: { code: 200, message: "Account deleted successfully."}
+        status: { code: 200, message: "Profile deleted successfully."}
+      }, status: :ok
+    elsif request.method == "PATCH" && resource.persisted? && resource.previous_changes.blank?
+      render json: {
+        status: { code: 200, message: "No changes were made to the profile." },
+        data: serailized_user(resource)
       }, status: :ok
     elsif request.method == "PATCH" && self.not_updated?(resource)
       render json: {
-        status: { code: 422, message: "Failed to updated account.", error: "#{resource.errors.full_messages.to_sentence}"},
+        status: { code: 422, message: "Failed to update profile.", error: "#{resource.errors.full_messages.to_sentence}"},
         data: serailized_user(resource)
       }, status: :ok
     elsif request.method == "PATCH" && resource.persisted?
       render json: {
-        status: { code: 200, message: "Account updated successfully."},
+        status: { code: 200, message: "Profile updated successfully."},
         data: serailized_user(resource)
       }, status: :ok
     else

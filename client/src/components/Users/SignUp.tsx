@@ -10,7 +10,7 @@ function SignUp() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<UserErrorData>();
 
-  const { mutate } = useMutation({
+  const { mutate, isPending, isSuccess } = useMutation({
     mutationFn: (user: TUserForm) => {
       setErrorMessage(undefined);
       return createUser(user);
@@ -43,10 +43,12 @@ function SignUp() {
         <div className="pane pane-full">
           <div className="pane-inner">
             <UserForm
-              headerText="Create New User"
+              headerText="Create New Profile"
               onSubmit={mutate}
-              buttonText={"Create User"}
+              buttonText={"Save"}
               errorMessage={errorMessage}
+              isPending={isPending}
+              isSuccess={isSuccess}
             />
           </div>
         </div>

@@ -1,9 +1,23 @@
-import { useForm } from "react-hook-form";
-import { Button } from "../multiuse/Button";
+import { Controller, useForm } from "react-hook-form";
 import { User, ZUserForm, TUserForm, UserErrorData } from "../../types/users";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../../contexts/AuthContext";
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Button,
+  CardActions,
+  CircularProgress,
+  Collapse,
+  FormGroup,
+  Grid2,
+  Typography,
+} from "@mui/material";
+import { FormTextInput } from "./FormTextInput";
+import { FormMultiCheckBox } from "./FormMultiCheckBox";
+import { useEffect, useState } from "react";
 
 type Props = {
   user?: User;
@@ -11,6 +25,8 @@ type Props = {
   onSubmit: (user: TUserForm) => void;
   buttonText: string;
   errorMessage?: UserErrorData;
+  isPending: boolean;
+  isSuccess?: boolean;
 };
 
 function UserForm({
@@ -19,15 +35,21 @@ function UserForm({
   onSubmit,
   buttonText,
   errorMessage,
+  isPending,
+  isSuccess,
 }: Props) {
   const navigate = useNavigate();
   const { user: SignedInUser } = useAuth();
+  const [hide, setHide] = useState(isSuccess);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<TUserForm>({
+  useEffect(() => {
+    if (isSuccess) {
+      setHide(true);
+      setTimeout(() => setHide(false), 3000); // Auto-hide after 3 seconds
+    }
+  }, [isSuccess]);
+
+  const { handleSubmit, control, setValue, reset } = useForm<TUserForm>({
     defaultValues: user
       ? { name: user.name, email: user.email, roles: user.roles }
       : { roles: ["user"] },
@@ -35,136 +57,190 @@ function UserForm({
     shouldUnregister: true,
   });
 
+  useEffect(() => {
+    reset(
+      user
+        ? { name: user.name, email: user.email, roles: user.roles }
+        : { roles: ["user"] }
+    );
+  }, [user, reset]);
+
   return (
     <>
-      <div className="main-pane-header">
-        <div className="main-pane-header-title">
-          <h2>{headerText}</h2>
-          <div className="main-pane-form-actions">
-            <Button onClick={() => navigate(`/`)} text={"Cancel"} />
-            <Button
-              form="main-pane-content"
-              disabled={isSubmitting}
-              type="submit"
-              text={buttonText}
-            />
-          </div>
-        </div>
-      </div>
-      <form
-        id="main-pane-content"
-        className="main-pane-content"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        {errorMessage && (
-          <div className="panel">
-            <h2>{errorMessage.message}</h2>
-            <p>{errorMessage.error}</p>
-          </div>
-        )}
-        <div className="panel">
-          <h3>User Details</h3>
-          <div className="panel-contents">
-            <div className="panel-contents-section">
-              <div className="formPair half">
-                <label htmlFor="name">Name:</label>
-                <input
-                  {...register("name")}
-                  type="text"
-                  id="name"
-                  placeholder="Your Name"
-                />
-                {errors.name && <p>{`${errors.name.message}`}</p>}
-              </div>
-              <div className="formPair half">
-                <label htmlFor="email">Email:</label>
-                <input
-                  {...register("email")}
-                  type="text"
-                  id="email"
-                  placeholder="Email"
-                />
-                {errors.email && <p>{`${errors.email.message}`}</p>}
-              </div>
-            </div>
-            {user && (
-              <div className="formPair half">
-                <label htmlFor="current_password">current_password:</label>
-                <input
-                  {...register("current_password")}
-                  type="password"
-                  id="current_password"
-                  placeholder=""
-                />
-                {errors.current_password && (
-                  <p>{`${errors.current_password.message}`}</p>
+      {!user && <h2>No Active User</h2>}
+      {user && (
+        <Box
+          p={3}
+          sx={{ textAlign: { xs: "center", md: "start" } }}
+          component={"form"}
+          id="main-pane-content"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <Typography component={"h6"} variant="h6">
+            {headerText}
+          </Typography>
+          {errorMessage && (
+            <Alert severity="error">
+              <AlertTitle component={"h6"} variant="h6">
+                Failed to edit profile:
+              </AlertTitle>
+              {errorMessage.message || "An unkown error occured."}
+            </Alert>
+          )}
+          {isSuccess && (
+            <Collapse in={hide}>
+              <Alert severity="success">
+                <AlertTitle component={"h6"} variant="h6">
+                  Profile saved.
+                </AlertTitle>
+              </Alert>
+            </Collapse>
+          )}
+          <Grid2
+            container
+            direction={{ xs: "column", md: "row" }}
+            columnSpacing={5}
+            rowSpacing={3}
+          >
+            <Grid2 size={{ xs: 6 }}>
+              <Controller
+                name={"name"}
+                control={control}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <FormTextInput
+                    id="name"
+                    name={"name"}
+                    title={"First Name"}
+                    value={value}
+                    onChange={onChange}
+                    dis={false}
+                    error={error}
+                  />
                 )}
-              </div>
-            )}
-            {/* No Password changes via edit profile page. */}
-            {!user && (
-              <div className="panel-contents-section">
-                <div className="formPair half">
-                  <label htmlFor="password">Password:</label>
-                  <input
-                    {...register("password")}
-                    type="password"
-                    id="password"
+              />
+            </Grid2>
+            <Grid2 size={{ xs: 6 }}>
+              <Controller
+                name={"email"}
+                control={control}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <FormTextInput
+                    id="email"
+                    name={"email"}
+                    title={"Email"}
+                    value={value}
+                    onChange={onChange}
+                    placeholder={"example@example.com"}
+                    dis={false}
+                    error={error}
                   />
-                  {errors.password && <p>{`${errors.password.message}`}</p>}
-                </div>
-                <div className="formPair half">
-                  <label htmlFor="password_confirmation">
-                    Confirm Password:
-                  </label>
-                  <input
-                    {...register("password_confirmation")}
-                    type="password"
-                    id="password_confirmation"
-                  />
-                  {errors.password_confirmation && (
-                    <p>{`${errors.password_confirmation.message}`}</p>
+                )}
+              />
+            </Grid2>
+            {user && (
+              <Grid2 size={{ xs: 6 }}>
+                <Controller
+                  name={"current_password"}
+                  control={control}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <FormTextInput
+                      id="current_password"
+                      name={"current_password"}
+                      title={"Current Password"}
+                      value={value ? value : ""}
+                      onChange={onChange}
+                      dis={false}
+                      type={"password"}
+                      error={error}
+                      req
+                    />
                   )}
-                </div>
-              </div>
+                />
+              </Grid2>
+            )}
+            {!user && (
+              <>
+                <Grid2 size={{ xs: 6 }}>
+                  <Controller
+                    name={"password"}
+                    control={control}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <FormTextInput
+                        id="password"
+                        name={"password"}
+                        title={"Password"}
+                        value={value || ""}
+                        dis={false}
+                        error={error}
+                      />
+                    )}
+                  />
+                </Grid2>
+                <Grid2 size={{ xs: 6 }}>
+                  <Controller
+                    name={"password_confirmation"}
+                    control={control}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <FormTextInput
+                        id="password_confirmation"
+                        name={"password_confirmation"}
+                        title={"Confirm Password"}
+                        value={""}
+                        dis={false}
+                        error={error}
+                      />
+                    )}
+                  />
+                </Grid2>
+              </>
             )}
             {SignedInUser && SignedInUser.roles?.includes("admin") && (
-              <div className="panel-contents-section">
-                <div className="formList">
-                  <h3>Roles:</h3>
-                  <div className="formPair">
-                    <input
-                      {...register("roles")}
-                      type="checkbox"
-                      value="user"
-                    />
-                    <label htmlFor="user">User</label>
-                    {errors.roles && <p>{`${errors.roles.message}`}</p>}
-                  </div>
-                  <div className="formPair">
-                    <input
-                      {...register("roles")}
-                      type="checkbox"
-                      value="manager"
-                    />
-                    <label htmlFor="manager">Manager</label>
-                    {errors.roles && <p>{`${errors.roles.message}`}</p>}
-                  </div>
-                  <div className="formPair">
-                    <input
-                      {...register("roles")}
-                      type="checkbox"
-                      value="admin"
-                    />
-                    <label htmlFor="admin">Admin</label>
-                    {errors.roles && <p>{`${errors.roles.message}`}</p>}
-                  </div>
-                </div>
-              </div>
+              <Grid2 size={{ xs: 12 }}>
+                <Typography component={"h6"} variant={"h6"}>
+                  Roles
+                </Typography>
+                <FormGroup row>
+                  <FormMultiCheckBox
+                    name={"roles"}
+                    control={control}
+                    setValue={setValue}
+                    defaultValues={user?.roles || ["user"]}
+                  />
+                </FormGroup>
+              </Grid2>
             )}
-          </div>
-        </div>
-      </form>
+          </Grid2>
+          <CardActions>
+            <Button variant="contained" onClick={() => navigate("/")}>
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              form={"main-pane-content"}
+              disabled={isPending}
+              type="submit"
+              startIcon={isPending ? <CircularProgress size={20} /> : null}
+            >
+              {buttonText}
+            </Button>
+          </CardActions>
+        </Box>
+      )}
     </>
   );
 }

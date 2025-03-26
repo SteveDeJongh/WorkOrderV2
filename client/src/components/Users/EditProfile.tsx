@@ -2,19 +2,20 @@ import { useNavigate } from "react-router-dom";
 import { editUser } from "../../services/userServices";
 import { useMutation } from "@tanstack/react-query";
 import { UserForm } from "./UserForm";
-import { TUserForm, UserErrorData, UserResponse } from "../../types/users";
+import { UserErrorData, UserResponse } from "../../types/users";
 import { useAuth } from "../../contexts/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function EditProfile() {
   const navigate = useNavigate();
   const { user, loginSuccess } = useAuth();
   const [errorMessage, setErrorMessage] = useState<UserErrorData>();
+  const [isSuccess, setIsSuccess] = useState(false);
 
-  const { mutate } = useMutation({
-    mutationFn: (userData: TUserForm) => {
+  const { mutate, isPending } = useMutation({
+    mutationFn: editUser,
+    onMutate: () => {
       setErrorMessage(undefined);
-      return editUser(userData);
     },
     onSuccess: (response) => {
       handleSuccess(response);
@@ -24,11 +25,25 @@ function EditProfile() {
     },
   });
 
+  useEffect(() => {
+    if (isSuccess) {
+      const alertTimer = setTimeout(() => {
+        setIsSuccess(false);
+      }, 5000);
+
+      return () => {
+        clearTimeout(alertTimer);
+      };
+    }
+  }, [isSuccess]);
+
   function handleSuccess(response: UserResponse) {
     if (response.status.code === 200) {
       loginSuccess(response.data);
+      setIsSuccess(true);
       navigate("/profile");
     } else {
+      console.error("Edit Profile Error:", response.status.message);
       setErrorMessage({
         message: response.status.message,
         error: response.status.error,
@@ -37,21 +52,15 @@ function EditProfile() {
   }
 
   return (
-    <>
-      <div id="panes">
-        <div className="pane pane-full">
-          <div className="pane-inner">
-            <UserForm
-              user={user}
-              headerText={"Edit User"}
-              onSubmit={mutate}
-              buttonText={"Save"}
-              errorMessage={errorMessage}
-            />
-          </div>
-        </div>
-      </div>
-    </>
+    <UserForm
+      user={user}
+      headerText={"Edit Profile"}
+      onSubmit={mutate}
+      buttonText={isPending ? "Saving..." : "Save"}
+      errorMessage={errorMessage}
+      isPending={isPending}
+      isSuccess={isSuccess}
+    />
   );
 }
 
