@@ -3,22 +3,24 @@ import { NumericFormat } from "react-number-format";
 import { Customer, isCustomer } from "../../types/customers";
 import { isProduct } from "../../types/products";
 import { isInvoice } from "../../types/invoiceTypes";
+import { ListItemButton, ListItemText } from "@mui/material";
 
 type Props = {
-  value: Customer | Object;
+  value: Object;
   linkToPage: string;
   selected: boolean;
+  onClick: React.MouseEventHandler<HTMLDivElement>;
 };
 
-function ListItem({ value, linkToPage, selected }: Props) {
+function ListItem({ value, linkToPage, selected, onClick }: Props) {
   return (
     <>
       {isCustomer(value) && (
-        <Link to={`/customers/${value.id}/${linkToPage}`} className="col-link">
-          <li className={`single-col-li ${selected ? "selected" : ""}`}>
+        <ListItemButton selected={selected} onClick={onClick}>
+          <ListItemText>
             {value.first_name + " " + value.last_name}
-          </li>
-        </Link>
+          </ListItemText>
+        </ListItemButton>
       )}
       {isProduct(value) && (
         <Link to={`/products/${value.id}/${linkToPage}`} className="col-link">

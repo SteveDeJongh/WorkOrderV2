@@ -1,11 +1,21 @@
-import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useState, useEffect, MouseEvent } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { SearchBar } from "./SearchBar";
 import { ListItem } from "./ListItem";
 import { useURLSearchParam } from "../../hooks/useURLSearchParam";
 import { Customer } from "../../types/customers";
 import { Product } from "../../types/products";
 import { Invoice } from "../../types/invoiceTypes";
+import AddIcon from "@mui/icons-material/Add";
+import {
+  Box,
+  Button,
+  Grid2,
+  List,
+  ListItemButton,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 
 type OptionalSelection = {
   selected?: boolean;
@@ -44,26 +54,35 @@ function LeftListWithAction({ title, linkToPage, getter }: Props) {
     setSearchTerm(searchValue);
   }
 
+  const [selectedID, setSelectedID] = useState<number>(Number(paramID));
+  const navigate = useNavigate();
+
+  function handleItemClick(
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
+    index: number
+  ) {
+    console.log(e, index, "clicked");
+    setSelectedID(index);
+    navigate(`/${title}/${index}/${linkToPage}`);
+  }
+
   return (
-    <>
-      <h3 className="title">{title}</h3>
+    <Grid2 container direction="column">
       <SearchBar
         title={title}
         value={searchTerm}
         onSearchChange={handleDebouncedSearchChange}
         onImmediateChange={handleImmediateSearchChange}
       />
-      <ul>
+      <List sx={{}}>
         {loading && (
-          <>
-            <p>Information loading...</p>
-          </>
+          <Typography component="p">Information loading...</Typography>
         )}
-        {error && <p>An error occured.</p>}
+        {error && <Typography component="p">An error occured.</Typography>}
         {!loading && !error && data?.length === 0 ? (
-          <>
-            <p>No Results</p>
-          </>
+          <ListItemButton disabled>
+            <ListItemText>No Results</ListItemText>
+          </ListItemButton>
         ) : !loading && !error ? (
           data ? (
             <>
@@ -73,20 +92,25 @@ function LeftListWithAction({ title, linkToPage, getter }: Props) {
                     value={data}
                     linkToPage={linkToPage}
                     key={data.id}
-                    selected={data.id == Number(paramID)}
+                    selected={data.id === selectedID}
+                    onClick={(e) => handleItemClick(e, data.id)}
                   />
                 );
               })}
             </>
           ) : null
         ) : null}
-      </ul>
-      <div id="single-col-bottom">
-        <Link to={`/${title.toLowerCase()}/new`}>
-          <span>➕ New {title.slice(0, -1)}</span>
-        </Link>
-      </div>
-    </>
+      </List>
+      <Box>
+        <Button
+          onClick={() => navigate(`/${title.toLowerCase()}/new`)}
+          startIcon={<AddIcon />}
+          variant="outlined"
+        >
+          New {title.slice(0, -1)}
+        </Button>
+      </Box>
+    </Grid2>
   );
 }
 

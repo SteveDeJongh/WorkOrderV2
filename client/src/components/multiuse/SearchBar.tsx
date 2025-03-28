@@ -1,4 +1,5 @@
-import { useRef } from "react";
+import { Box, TextField } from "@mui/material";
+import { ChangeEvent, FocusEvent, useRef } from "react";
 
 type Props = {
   title: string;
@@ -10,7 +11,9 @@ type Props = {
 function SearchBar({ title, value, onSearchChange, onImmediateChange }: Props) {
   const searchDebouceRef = useRef<ReturnType<typeof setTimeout>>();
 
-  function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleSearchChange(
+    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) {
     const searchValue = e.target.value;
 
     onImmediateChange(searchValue);
@@ -24,13 +27,15 @@ function SearchBar({ title, value, onSearchChange, onImmediateChange }: Props) {
     }, 1000);
   }
 
-  function handleFocus(e) {
+  function handleFocus(e: FocusEvent<HTMLTextAreaElement | HTMLInputElement>) {
     e.target.select();
   }
 
   return (
-    <div className="searchBar">
-      <input
+    <Box>
+      <TextField
+        fullWidth
+        size="small"
         type="text"
         name="searchBar"
         placeholder={`Search ${title}...`}
@@ -38,7 +43,7 @@ function SearchBar({ title, value, onSearchChange, onImmediateChange }: Props) {
         onChange={(e) => handleSearchChange(e)}
         onFocus={handleFocus}
       />
-    </div>
+    </Box>
   );
 }
 

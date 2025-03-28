@@ -1,12 +1,14 @@
+import { Typography } from "@mui/material";
+
 type Props = {
   item: string;
 };
 
 function NoSelection({ item }: Props) {
   return (
-    <>
-      <h1>No {item} selected.</h1>
-    </>
+    <Typography component={"h1"} variant="h1">
+      No {item} selected.
+    </Typography>
   );
 }
 
