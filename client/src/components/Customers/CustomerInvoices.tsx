@@ -29,13 +29,11 @@ function CustomerInvoices() {
   }
 
   return (
-    <div className="main-pane-content">
-      <ScrollableTableTall
-        columns={INVOICECOLUMNS}
-        data={data}
-        onClick={(invoice: Invoice) => onClick(invoice)}
-      />
-    </div>
+    <ScrollableTableTall
+      columns={INVOICECOLUMNS}
+      data={data}
+      onClick={(invoice: Invoice) => onClick(invoice)}
+    />
   );
 }
 

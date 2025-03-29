@@ -1,4 +1,16 @@
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import { dateTimeFormatter } from "../../utils";
+import { Product } from "../../types/products";
+import { Invoice } from "../../types/invoiceTypes";
+import { Customer } from "../../types/customers";
 
 type Column = {
   name: String;
@@ -8,63 +20,59 @@ type Column = {
 
 type Props = {
   columns: Array<Column>;
-  data: Array<object>;
+  data: Array<Customer | Product | Invoice>;
   onClick?: Function;
   inModal?: boolean;
 };
 
 function ScrollableTableTall({ columns, data, onClick, inModal }: Props) {
-  let divClass = inModal
-    ? "scrollable-table tall modal-content"
-    : "scrollable-table tall";
   return (
     <>
-      <div className={divClass}>
-        <table>
-          <thead>
-            <tr>
+      <TableContainer component={Paper} sx={{ padding: 1 }} variant="outlined">
+        <Table sx={{ minWidth: 1000 }}>
+          <TableHead>
+            <TableRow>
               {columns.map((column, idx) => {
-                return <th key={idx}>{column.name}</th>;
+                return (
+                  <TableCell key={idx} align={idx !== 0 ? "right" : "inherit"}>
+                    {column.name}
+                  </TableCell>
+                );
               })}
-            </tr>
-          </thead>
-          <tbody>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {data.map((line) => {
               return (
-                <tr
+                <TableRow
                   key={line.id}
                   onClick={() => (onClick ? onClick(line) : null)}
                 >
-                  {columns.map((column) => {
-                    if (
-                      column.propName == "created_at" ||
-                      column.propName == "updated_at"
-                    ) {
-                      return (
-                        <td key={`${line.id}${column.name}`}>
-                          {dateTimeFormatter(line[column.propName])}
-                        </td>
-                      );
-                    } else if (column.returnBoolean) {
-                      return (
-                        <td key={`${line.id}${column.name}`}>
-                          {line[column.propName] ? "True" : "False"}
-                        </td>
-                      );
-                    }
-
+                  {columns.map((column, idx) => {
                     return (
-                      <td key={`${line.id}${column.name}`}>
-                        {line[column.propName]}
-                      </td>
+                      <TableCell
+                        key={`${line.id}${column.name}`}
+                        align={idx !== 0 ? "right" : "inherit"}
+                      >
+                        {(column.propName == "created_at" ||
+                          column.propName == "updated_at") && (
+                          <>{dateTimeFormatter(line[column.propName])}</>
+                        )}
+                        {column.returnBoolean && (
+                          <>{line[column.propName] ? "True" : "False"}</>
+                        )}
+                        {column.propName !== "created_at" &&
+                          column.propName !== "updated_at" &&
+                          !column.returnBoolean && <>{line[column.propName]}</>}
+                      </TableCell>
                     );
                   })}
-                </tr>
+                </TableRow>
               );
             })}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 }

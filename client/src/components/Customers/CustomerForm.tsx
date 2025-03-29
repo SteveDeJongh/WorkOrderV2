@@ -1,8 +1,16 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../multiuse/Button";
 import { Customer, EditableCustomerData } from "../../types/customers";
 import { LoadingModal } from "../multiuse/LoadingModal";
+import {
+  Box,
+  Button,
+  CardActions,
+  CircularProgress,
+  Grid2,
+  Typography,
+} from "@mui/material";
+import { FormTextInput } from "../FormParts/FormTextInput";
 
 type props = {
   modalForm?: boolean;
@@ -10,6 +18,7 @@ type props = {
   headerText: string;
   onSubmit: (data: EditableCustomerData) => void;
   buttonText: string;
+  onCancel: Function;
 };
 
 function CustomerForm({
@@ -18,13 +27,13 @@ function CustomerForm({
   headerText,
   onSubmit,
   buttonText,
+  onCancel,
 }: props) {
   const navigate = useNavigate();
   const {
-    register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-    getValues,
+    formState: { isSubmitting },
+    control,
   } = useForm({
     defaultValues: customer
       ? {
@@ -43,177 +52,230 @@ function CustomerForm({
 
   return (
     <>
-      {!modalForm && (
-        <div className="main-pane-header">
-          <div className="main-pane-header-title">
-            <h2>{headerText}</h2>
-            <div className="main-pane-form-actions">
-              <Button onClick={() => navigate(-1)} text={"Cancel"} />
-              <Button
-                type={"submit"}
-                form={"main-pane-content"}
-                text={buttonText}
-                disabled={isSubmitting}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-      <form
+      <Box
         id="main-pane-content"
-        className="main-pane-content"
+        component={"form"}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="panel">
-          {isSubmitting && (
-            <LoadingModal text={"Editing customer..."}></LoadingModal>
-          )}
-          <h3>Customer Details</h3>
-          <div className="panel-contents-section">
-            <div className="formPair half">
-              <label htmlFor="first_name">First name:</label>
-              <input
-                {...register("first_name", {
-                  required: "First Name is required.",
-                })}
-                type="text"
-                id="first_name"
-                name="first_name"
-                placeholder="First Name"
-              />
-              {errors.first_name && <p>{`${errors.first_name.message}`}</p>}
-            </div>
-            <div className="formPair half">
-              <label htmlFor="last_name">Last name:</label>
-              <input
-                {...register("last_name", {
-                  required: "Last Name is required.",
-                })}
-                type="text"
-                id="last_name"
-                name="last_name"
-                placeholder="Last Name"
-              />
-              {errors.last_name && <p>{`${errors.last_name.message}`}</p>}
-            </div>
-          </div>
-        </div>
-        <div className="panel">
-          <h3>Contact Details</h3>
-          <div className="panel-contents-section">
-            <div className="formPair half">
-              <label htmlFor="Email">Email:</label>
-              <input
-                {...register("email", {
-                  pattern: {
-                    value: /^\S+@\S+$/,
-                    message: "Please enter a valid email address.",
-                  },
-                })}
-                type="email"
-                id="email"
-                name="email"
-                placeholder="test@case.com"
-              />
-              {errors.email && <p>{`${errors.email.message}`}</p>}
-            </div>
-            <div className="formPair half">
-              <label htmlFor="phone">Phone Number:</label>
-              <input
-                {...register("phone", {
-                  validate: (value) => {
-                    if (value === "" && getValues("email") === "") {
-                      return "A contact method is requried, please provide a phone number or email address.";
-                    }
-                  },
-                })}
-                type="phone"
-                id="phone"
-                name="phone"
-                placeholder="123-456-7890"
-              />
-              {errors.phone && <p>{`${errors.phone.message}`}</p>}
-            </div>
-          </div>
-        </div>
-        <div className="panel">
-          <h3>Address Details</h3>
-          <div className="panel-contents-section">
-            <div className="formPair half">
-              <label htmlFor="address">Address:</label>
-              <input
-                {...register("address")}
-                type="string"
-                id="address"
-                name="address"
-                placeholder="123 Donald Ave"
-              />
-              {errors.address && <p>{`${errors.address.message}`}</p>}
-            </div>
-            <div className="formPair half">
-              <label htmlFor="city">City:</label>
-              <input
-                {...register("city")}
-                type="string"
-                id="city"
-                name="city"
-                placeholder="Vancouver"
-              />
-              {errors.city && <p>{`${errors.city.message}`}</p>}
-            </div>
-          </div>
-          <div className="panel-contents-section">
-            <div className="formPair half">
-              <label htmlFor="province">Province:</label>
-              <input
-                {...register("province")}
-                type="string"
-                id="province"
-                name="province"
-                placeholder="BC"
-              />
-              {errors.province && <p>{`${errors.province.message}`}</p>}
-            </div>
-            <div className="formPair">
-              <label htmlFor="country">Country:</label>
-              <input
-                {...register("country")}
-                type="string"
-                id="country"
-                name="country"
-                placeholder="Canada"
-              />
-              {errors.country && <p>{`${errors.country.message}`}</p>}
-            </div>
-          </div>
-          <div className="panel-contents-section">
-            <div className="formPair half">
-              <label htmlFor="province">Province:</label>
-              <input
-                {...register("postal")}
-                type="string"
-                id="postal"
-                name="postal"
-                placeholder="A1A 1A1"
-              />
-              {errors.postal && <p>{`${errors.postal.message}`}</p>}
-            </div>
-          </div>
-        </div>
-      </form>
-      {modalForm && (
-        <div className="main-modal-form-actions">
-          <div className="main-pane-form-actions">
-            <Button text="Cancel" />
-            <Button
-              form="main-pane-content"
-              disabled={isSubmitting}
-              type="submit"
-              text={buttonText}
-            />
-          </div>
-        </div>
-      )}
+        {/* Error handling to go here */}
+        <Grid2 container direction="column">
+          <Typography component="h6" variant="h6">
+            Customer Details
+          </Typography>
+          <Grid2>
+            <Grid2 container direction={"row"} spacing={2}>
+              <Grid2 size={{ xs: 6 }}>
+                <Controller
+                  name={"first_name"}
+                  control={control}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <FormTextInput
+                      id="first_name"
+                      name="first_name"
+                      title="First Name"
+                      value={value}
+                      onChange={onChange}
+                      error={error}
+                    />
+                  )}
+                />
+              </Grid2>
+              <Grid2 size={{ xs: 6 }}>
+                <Controller
+                  name={"last_name"}
+                  control={control}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <FormTextInput
+                      id="last_name"
+                      name="last_name"
+                      title="Last Name"
+                      value={value}
+                      onChange={onChange}
+                      error={error}
+                    />
+                  )}
+                />
+              </Grid2>
+            </Grid2>
+          </Grid2>
+        </Grid2>
+        <Grid2 container direction="column">
+          <Typography component="h6" variant="h6">
+            Contact Details
+          </Typography>
+          <Grid2>
+            <Grid2 container direction={"row"} spacing={2}>
+              <Grid2 size={{ xs: 6 }}>
+                <Controller
+                  name={"email"}
+                  control={control}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <FormTextInput
+                      id="email"
+                      name="email"
+                      title="Email"
+                      value={value}
+                      onChange={onChange}
+                      error={error}
+                    />
+                  )}
+                />
+              </Grid2>
+              <Grid2 size={{ xs: 6 }}>
+                <Controller
+                  name={"phone"}
+                  control={control}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <FormTextInput
+                      id="phone"
+                      name="phone"
+                      title="Phone Number"
+                      value={value}
+                      onChange={onChange}
+                      error={error}
+                    />
+                  )}
+                />
+              </Grid2>
+            </Grid2>
+          </Grid2>
+        </Grid2>
+        <Grid2 container direction="column">
+          <Typography component="h6" variant="h6">
+            Address Details
+          </Typography>
+          <Grid2>
+            <Grid2 container direction={"row"} spacing={2}>
+              <Grid2 size={{ xs: 6 }}>
+                <Controller
+                  name={"address"}
+                  control={control}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <FormTextInput
+                      id="address"
+                      name="address"
+                      title="Address"
+                      value={value}
+                      onChange={onChange}
+                      error={error}
+                    />
+                  )}
+                />
+              </Grid2>
+              <Grid2 size={{ xs: 6 }}>
+                <Controller
+                  name={"city"}
+                  control={control}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <FormTextInput
+                      id="city"
+                      name="city"
+                      title="City"
+                      value={value}
+                      onChange={onChange}
+                      error={error}
+                    />
+                  )}
+                />
+              </Grid2>
+            </Grid2>
+            <Grid2 container direction={"row"} spacing={2}>
+              <Grid2 size={{ xs: 4 }}>
+                <Controller
+                  name={"province"}
+                  control={control}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <FormTextInput
+                      id="province"
+                      name="province"
+                      title="Province"
+                      value={value}
+                      onChange={onChange}
+                      error={error}
+                    />
+                  )}
+                />
+              </Grid2>
+              <Grid2 size={{ xs: 4 }}>
+                <Controller
+                  name={"country"}
+                  control={control}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <FormTextInput
+                      id="country"
+                      name="country"
+                      title="Country"
+                      value={value}
+                      onChange={onChange}
+                      error={error}
+                    />
+                  )}
+                />
+              </Grid2>
+              <Grid2 size={{ xs: 4 }}>
+                <Controller
+                  name={"postal"}
+                  control={control}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <FormTextInput
+                      id="postal"
+                      name="postal"
+                      title="Postal Code"
+                      value={value}
+                      onChange={onChange}
+                      error={error}
+                      placeholder="A1B 2C3"
+                    />
+                  )}
+                />
+              </Grid2>
+            </Grid2>
+          </Grid2>
+        </Grid2>
+      </Box>
+      <Box>
+        <CardActions>
+          <Button variant="contained" onClick={() => onCancel()}>
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            form="main-pane-content"
+            disabled={isSubmitting}
+            type="submit"
+            startIcon={isSubmitting ? <CircularProgress size={20} /> : null}
+          >
+            {buttonText}
+          </Button>
+        </CardActions>
+      </Box>
     </>
   );
 }

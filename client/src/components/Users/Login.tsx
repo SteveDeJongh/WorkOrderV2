@@ -35,6 +35,7 @@ function Login() {
   }, [user]);
 
   const { handleSubmit, control, formState } = useForm<SignInUser>({
+    defaultValues: { email: "", password: "" },
     resolver: zodResolver(ZSignInUser),
   });
 

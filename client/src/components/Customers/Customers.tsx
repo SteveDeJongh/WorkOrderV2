@@ -44,9 +44,12 @@ function Customers() {
             </Typography>
             <ViewToggle view={view} setView={viewSetter} />
           </Grid2>
-          <Grid2 container direction="row" spacing={3}>
-            <Grid2 size={{ xs: 3, xl: 2 }}>
-              <Card variant="outlined" sx={{ padding: 1 }}>
+          <Grid2 container direction="row" spacing={3} alignItems={"stretch"}>
+            <Grid2 size={{ xs: 3 }} sx={{ display: "flex", minHeight: "76vh" }}>
+              <Card
+                variant="outlined"
+                sx={{ padding: 1, height: "100%", width: "100%" }}
+              >
                 <LeftListWithAction
                   title={"Customers"}
                   linkToPage={"profile"}
@@ -54,7 +57,7 @@ function Customers() {
                 />
               </Card>
             </Grid2>
-            <Grid2 size={{ xs: 9, xl: 10 }}>
+            <Grid2 size={{ xs: 9 }}>
               <Card variant="outlined" sx={{ padding: 1 }}>
                 {renderNoSelection ? (
                   <NoSelection item={"customer"} />

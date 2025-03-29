@@ -1,8 +1,11 @@
-import { useOutletContext } from "react-router-dom";
-import { CustomerWithNotices, CustomerContext } from "../../types/customers";
+import { CustomerWithNotices, Customer } from "../../types/customers";
+import { Box, List, ListItem, Paper, Stack, Typography } from "@mui/material";
 
-function CustomerProfile() {
-  const { mainData } = useOutletContext<CustomerContext>();
+type Props = {
+  mainData: Customer;
+};
+
+function CustomerProfile({ mainData }: Props) {
   const customerData: CustomerWithNotices = { ...mainData };
 
   // Example Notices data, to be part of the customer data api fetch in the future.
@@ -19,58 +22,78 @@ function CustomerProfile() {
 
   return (
     <>
-      {!customerData && <h2>No Customer Selected</h2>}
+      {!customerData && (
+        <Typography component="h2" variant="h2">
+          No Customer Selected
+        </Typography>
+      )}
       {customerData && (
-        <>
-          <div className="main-pane-content">
-            <div className="panel">
-              <h3>Details</h3>
-              <div className="panel-contents">
-                <div className="panel-contents-section">
-                  <div className="panel-section-desc">📞</div>
-                  <div className="panel-section-data">
-                    <div className="data-item">{customerData.phone}</div>
-                    <div className="data-item">{customerData.phone}</div>
-                  </div>
-                </div>
-                <div className="panel-contents-section">
-                  <div className="panel-section-desc">📧</div>
-                  <div className="panel-section-data">
-                    <div className="data-item">{customerData.email}</div>
-                  </div>
-                </div>
-                <div className="panel-contents-section">
-                  <div className="panel-section-desc">🏠</div>
-                  <div className="panel-section-data">
-                    <div className="data-item">{customerData.address}</div>
-                    <div className="data-item">
+        <Stack spacing={3}>
+          <Paper variant="outlined" sx={{ padding: 1 }}>
+            <Typography variant="h6" component="h6" pb={1}>
+              Details
+            </Typography>
+            <Box>
+              <Stack spacing={2}>
+                <Stack direction={"row"}>
+                  <Box pr={2}>📞</Box>
+                  <Box>
+                    <Typography variant="body1">
+                      {customerData.phone}
+                    </Typography>
+                    <Typography variant="body1">
+                      {customerData.phone}
+                    </Typography>
+                  </Box>
+                </Stack>
+                <Stack direction="row">
+                  <Box pr={2}>📧</Box>
+                  <Box>
+                    <Typography variant="body1">
+                      {customerData.email}
+                    </Typography>
+                  </Box>
+                </Stack>
+                <Stack direction={"row"}>
+                  <Box pr={2}>🏠</Box>
+                  <Box>
+                    <Typography variant="body1">
+                      {customerData.address}
+                    </Typography>
+                    <Typography variant="body1">
                       {customerData.city} {customerData.province}{" "}
                       {customerData.postal}
-                    </div>
-                    <div className="data-item">{customerData.country}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="panel customer-notices">
-              <h3>
-                Notices <span>({`${noticeCount}`})</span>
-              </h3>
-              <ul>
-                {noticeCount === 0 && <li>No Notices</li>}
-                {customerData.notices?.map((notice) => {
-                  return <li key={notice.id}>{notice.notice}</li>;
-                })}
-              </ul>
-            </div>
-            <div className="panel customer-history">
-              <h3>History</h3>
-              <ul>
-                <li>Todo...</li>
-              </ul>
-            </div>
-          </div>
-        </>
+                    </Typography>
+                    <Typography variant="body1">
+                      {customerData.country}
+                    </Typography>
+                  </Box>
+                </Stack>
+              </Stack>
+            </Box>
+          </Paper>
+          <Paper variant="outlined" sx={{ padding: 1 }}>
+            <Typography variant="h6" component="h6">
+              Notices
+            </Typography>
+
+            <List>
+              {noticeCount === 0 && <ListItem>No Notices</ListItem>}
+              {customerData.notices?.map((notice) => {
+                return <ListItem key={notice.id}>{notice.notice}</ListItem>;
+              })}
+            </List>
+          </Paper>
+          <Paper variant="outlined" sx={{ padding: 1 }}>
+            <Typography variant="h6" component="h6">
+              History
+            </Typography>
+
+            <List>
+              <ListItem>To do...</ListItem>
+            </List>
+          </Paper>
+        </Stack>
       )}
     </>
   );

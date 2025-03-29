@@ -4,7 +4,7 @@ import {
   ViewList,
   ViewListOutlined,
 } from "@mui/icons-material";
-import { Box, Button, ButtonGroup, Grid2, Typography } from "@mui/material";
+import { Button, ButtonGroup, Grid2, Typography } from "@mui/material";
 
 type props = {
   view: string;
@@ -29,7 +29,6 @@ function ViewToggle({ view, setView }: props) {
             ) : (
               <PageviewOutlined fontSize="large" />
             )}
-            {/* <PageviewOutlined fontSize="large" /> */}
           </Button>
           <Button onClick={() => onBtnClick("table")}>
             {view === "table" ? (

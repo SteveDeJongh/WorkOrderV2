@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createCustomer } from "../../services/customerServices";
 import { objectToFormData } from "../../utils/formDataHelper";
 import { EditableCustomerData } from "../../types/customers";
+import { Box, Typography } from "@mui/material";
 
 function CustomerNew() {
   const navigate = useNavigate();
@@ -18,15 +19,17 @@ function CustomerNew() {
   }
 
   return (
-    <>
-      <div className="pane-inner">
-        <CustomerForm
-          headerText={`New Customer`}
-          buttonText={"Create"}
-          onSubmit={handleCreateSubmit}
-        />
-      </div>
-    </>
+    <Box p={1}>
+      <Typography variant="h4">New Customer</Typography>
+      <br></br>
+      <br></br>
+      <CustomerForm
+        headerText={`New Customer`}
+        buttonText={"Create"}
+        onSubmit={handleCreateSubmit}
+        onCancel={() => navigate("/customers/1")}
+      />
+    </Box>
   );
 }
 

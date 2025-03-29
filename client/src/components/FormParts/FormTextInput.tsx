@@ -10,7 +10,7 @@ type Props = {
   name: string;
   value: string;
   onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-  dis: boolean;
+  dis?: boolean;
   req?: boolean;
   placeholder?: string;
   type?: string;

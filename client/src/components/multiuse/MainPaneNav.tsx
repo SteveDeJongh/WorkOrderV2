@@ -1,10 +1,14 @@
+import { Stack, Tab, Tabs, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import { TabProps } from "../Users/CustomTabPanel";
 
 interface MainPaneNavProps {
   title: string;
   id: string | number;
   identifier: string;
   pages: Array<string>;
+  tab: number;
+  handleChange: (event: React.SyntheticEvent, newValue: number) => void;
 }
 
 const MainPaneNav: React.FC<MainPaneNavProps> = ({
@@ -12,34 +16,28 @@ const MainPaneNav: React.FC<MainPaneNavProps> = ({
   id,
   identifier,
   pages,
+  tab,
+  handleChange,
 }) => {
   return (
     <>
-      <div className="main-pane-header">
-        <div className="main-pane-header-title">
-          <h2>{title}</h2>
-          <div className="main-pane-id">
-            {identifier} {id}
-          </div>
-        </div>
-        <div className="main-pane-nav">
-          <ul className="main-pane-nav mid-nav">
-            {pages.map((page: string) => {
-              return (
-                <li key={page} className="mid-nav-pill">
-                  <NavLink
-                    to={`/${
-                      identifier.toLowerCase() + "s"
-                    }/${id}/${page.toLowerCase()}`}
-                  >
-                    {page}
-                  </NavLink>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </div>
+      <Stack
+        direction="row"
+        justifyContent={"space-between"}
+        alignItems={"center"}
+      >
+        <Typography variant="h4" component="h4">
+          {title}
+        </Typography>
+        <Typography>
+          {identifier} {id}
+        </Typography>
+      </Stack>
+      <Tabs value={tab} onChange={handleChange}>
+        {pages.map((page, idx) => {
+          return <Tab key={page} label={page} {...TabProps(idx)} />;
+        })}
+      </Tabs>
     </>
   );
 };

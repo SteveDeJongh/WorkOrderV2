@@ -1,12 +1,17 @@
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { editCustomer } from "../../services/customerServices";
 import { objectToFormData } from "../../utils/formDataHelper";
 import { CustomerForm } from "./CustomerForm";
-import { CustomerContext, EditableCustomerData } from "../../types/customers";
+import { Customer, EditableCustomerData } from "../../types/customers";
 import { useQueryClient } from "@tanstack/react-query";
 
-function CustomerEdit() {
-  const { mainData, setMainData } = useOutletContext<CustomerContext>();
+type Props = {
+  mainData: Customer;
+  setMainData: React.Dispatch<React.SetStateAction<Customer | undefined>>;
+  setTab: React.Dispatch<React.SetStateAction<number>>;
+};
+
+function CustomerEdit({ mainData, setMainData, setTab }: Props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -23,18 +28,13 @@ function CustomerEdit() {
   }
 
   return (
-    <>
-      <div className="pane-inner">
-        <>
-          <CustomerForm
-            customer={mainData}
-            headerText={`Edit Customer`}
-            buttonText={"Save"}
-            onSubmit={handleEditSubmit}
-          />
-        </>
-      </div>
-    </>
+    <CustomerForm
+      customer={mainData}
+      headerText={`Edit Customer`}
+      buttonText={"Save"}
+      onSubmit={handleEditSubmit}
+      onCancel={() => setTab(0)}
+    />
   );
 }
 

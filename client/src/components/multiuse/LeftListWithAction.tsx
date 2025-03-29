@@ -46,6 +46,10 @@ function LeftListWithAction({ title, linkToPage, getter }: Props) {
     }
   }, [fetchedData]);
 
+  useEffect(() => {
+    setSelectedID(Number(paramID));
+  }, [paramID]);
+
   function handleDebouncedSearchChange(searchValue: string) {
     setDebouncedSearchTerm(searchValue);
   }
@@ -63,11 +67,11 @@ function LeftListWithAction({ title, linkToPage, getter }: Props) {
   ) {
     console.log(e, index, "clicked");
     setSelectedID(index);
-    navigate(`/${title}/${index}/${linkToPage}`);
+    navigate(`/${title.toLowerCase()}/${index}`);
   }
 
   return (
-    <Grid2 container direction="column">
+    <Grid2 container direction="column" height={"100%"}>
       <SearchBar
         title={title}
         value={searchTerm}
@@ -101,7 +105,7 @@ function LeftListWithAction({ title, linkToPage, getter }: Props) {
           ) : null
         ) : null}
       </List>
-      <Box>
+      <Box mt={"auto"} mx={"auto"}>
         <Button
           onClick={() => navigate(`/${title.toLowerCase()}/new`)}
           startIcon={<AddIcon />}

@@ -79,35 +79,7 @@ export const router = createBrowserRouter([
               {
                 path: ":id",
                 element: <CustomerShow />,
-                children: [
-                  {
-                    path: "profile",
-                    element: (
-                      <>
-                        <PageTitle title="Customer Profile" />
-                        <CustomerProfile />
-                      </>
-                    ),
-                  },
-                  {
-                    path: "invoices",
-                    element: (
-                      <>
-                        <PageTitle title="Customer Invoices" />
-                        <CustomerInvoices />
-                      </>
-                    ),
-                  },
-                  {
-                    path: "edit",
-                    element: (
-                      <>
-                        <PageTitle title="Edit Customer" />
-                        <CustomerEdit />
-                      </>
-                    ),
-                  },
-                ],
+                children: [],
               },
               {
                 path: "new",
