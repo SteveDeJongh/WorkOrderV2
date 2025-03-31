@@ -1,14 +1,16 @@
 import { NavBar } from "./NavBar";
 import { UserNav } from "./UserNav";
 import { useNavigate } from "react-router-dom";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import MenuIcon from "@mui/icons-material/Menu";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  MenuIcon,
+  Container,
+} from "../utils/muiImports";
 import { useState } from "react";
-import Container from "@mui/material/Container";
 
 type NavClickHandler = (
   event: React.MouseEvent<HTMLElement>,

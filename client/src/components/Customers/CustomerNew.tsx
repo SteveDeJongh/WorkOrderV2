@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createCustomer } from "../../services/customerServices";
 import { objectToFormData } from "../../utils/formDataHelper";
 import { EditableCustomerData } from "../../types/customers";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from "../../utils/muiImports";
 
 function CustomerNew() {
   const navigate = useNavigate();

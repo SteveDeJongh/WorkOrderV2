@@ -11,7 +11,7 @@ function useCustomersData(searchTerm: string) {
     error,
   } = useQuery({
     queryKey: ["customersSearch", { searchTerm }],
-    queryFn: () => {
+    queryFn: async () => {
       if (searchTerm) {
         return searchCustomers(searchTerm);
       } else {
@@ -20,7 +20,7 @@ function useCustomersData(searchTerm: string) {
     },
   });
 
-  return { data, loading, error };
+  return { data: data ?? [], loading, error };
 }
 
 export { useCustomersData };

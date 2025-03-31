@@ -1,5 +1,4 @@
-import { Button, Menu, Typography } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
+import { Button, Menu, MenuItem, Typography } from "../utils/muiImports";
 
 type Page = {
   title: string;

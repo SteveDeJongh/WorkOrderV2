@@ -1,3 +1,5 @@
+import { Container, Typography } from "../../utils/muiImports";
+
 type props = {
   title: string;
 };
@@ -5,9 +7,9 @@ type props = {
 function PageIndex({ title }: props) {
   return (
     <>
-      <div className="pane-inner">
-        <p>No {title} selected</p>
-      </div>
+      <Container className="pane-inner">
+        <Typography variant="body1">No {title} selected</Typography>
+      </Container>
     </>
   );
 }

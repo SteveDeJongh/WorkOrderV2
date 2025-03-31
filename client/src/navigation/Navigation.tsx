@@ -29,7 +29,7 @@ import { InvoiceNew } from "../components/Invoices/InvoiceNew";
 import { SignUp } from "../components/Users/SignUp";
 import { Login } from "../components/Users/Login";
 import { Profile } from "../components/Users/Profile";
-import { EditProfile } from "../components/Users/EditProfile";
+// import { EditProfile } from "../components/Users/EditProfile";
 
 export const router = createBrowserRouter([
   {

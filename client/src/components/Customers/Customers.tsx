@@ -9,7 +9,7 @@ import { ViewTypes } from "../../types/userPreferences";
 import { useAuth } from "../../contexts/AuthContext";
 import { CUSTOMERCOLUMNOPTIONS, CUSTOMERCOLUMNS } from "../columns";
 import { syncUserPreference } from "../../services/userPreferencesServices";
-import { Card, Container, Grid2, Typography } from "@mui/material";
+import { Card, Grid2, Typography } from "../../utils/muiImports";
 
 function Customers() {
   const { user, updateUserPreferences } = useAuth();

@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ScrollableTableTall } from "../multiuse/ScrollableTableTall";
 import { Invoice } from "../../types/invoiceTypes";
 import { INVOICECOLUMNS } from "../columns";
+import { Typography } from "../../utils/muiImports";
 
 function CustomerInvoices() {
   const navigate = useNavigate();
@@ -17,11 +18,19 @@ function CustomerInvoices() {
   });
 
   if (isPending) {
-    return <h1>Loading...</h1>;
+    return (
+      <Typography variant="h1" component={"h1"}>
+        Loading...
+      </Typography>
+    );
   }
 
   if (isError) {
-    return <h1>Error</h1>;
+    return (
+      <Typography variant="h1" component={"h1"}>
+        Error
+      </Typography>
+    );
   }
 
   function onClick(invoice: Invoice) {

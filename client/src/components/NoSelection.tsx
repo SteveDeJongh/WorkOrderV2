@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Typography } from "../utils/muiImports";
 
 type Props = {
   item: string;
@@ -6,7 +6,7 @@ type Props = {
 
 function NoSelection({ item }: Props) {
   return (
-    <Typography component={"h1"} variant="h1">
+    <Typography component={"h6"} variant="h6">
       No {item} selected.
     </Typography>
   );

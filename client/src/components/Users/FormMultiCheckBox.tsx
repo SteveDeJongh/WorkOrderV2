@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { RoleTypes } from "../../types/users";
 import { Controller } from "react-hook-form";
-import { Box, Checkbox } from "@mui/material";
+import { Box, Checkbox } from "../../utils/muiImports";
 import { CapitalizeFullName } from "../../utils";
 
 const roleOptions: RoleTypes[] = ["user", "manager", "admin"];

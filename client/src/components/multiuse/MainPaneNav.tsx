@@ -1,5 +1,4 @@
-import { Stack, Tab, Tabs, Typography } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { Stack, Tab, Tabs, Typography } from "../../utils/muiImports";
 import { TabProps } from "../Users/CustomTabPanel";
 
 interface MainPaneNavProps {

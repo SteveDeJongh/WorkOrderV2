@@ -1,21 +1,20 @@
 import { useState, useEffect, MouseEvent } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { SearchBar } from "./SearchBar";
 import { ListItem } from "./ListItem";
 import { useURLSearchParam } from "../../hooks/useURLSearchParam";
 import { Customer } from "../../types/customers";
 import { Product } from "../../types/products";
 import { Invoice } from "../../types/invoiceTypes";
-import AddIcon from "@mui/icons-material/Add";
 import {
-  Box,
+  AddIcon,
   Button,
-  Grid2,
   List,
   ListItemButton,
   ListItemText,
   Typography,
-} from "@mui/material";
+  Grid2,
+} from "../../utils/muiImports";
 
 type OptionalSelection = {
   selected?: boolean;
@@ -24,17 +23,23 @@ type CustomerWithSelection = Customer & OptionalSelection;
 type ProductWithSelection = Product & OptionalSelection;
 type InvoiceWithSelection = Invoice & OptionalSelection;
 
+type GetterFunction = (searchTerm: string) => {
+  data: Customer[] | Product[] | Invoice[];
+  loading: boolean;
+  error: Error | null;
+};
+
 type Props = {
   title: string;
   linkToPage: string;
-  getter: Function;
+  getter: GetterFunction;
 };
 
 function LeftListWithAction({ title, linkToPage, getter }: Props) {
   const { id: paramID } = useParams();
   const [data, setData] = useState<
     CustomerWithSelection[] | ProductWithSelection[] | InvoiceWithSelection[]
-  >();
+  >([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
     useURLSearchParam("search");
@@ -47,7 +52,9 @@ function LeftListWithAction({ title, linkToPage, getter }: Props) {
   }, [fetchedData]);
 
   useEffect(() => {
-    setSelectedID(Number(paramID));
+    if (paramID) {
+      setSelectedID(parseInt(paramID, 10));
+    }
   }, [paramID]);
 
   function handleDebouncedSearchChange(searchValue: string) {
@@ -61,11 +68,7 @@ function LeftListWithAction({ title, linkToPage, getter }: Props) {
   const [selectedID, setSelectedID] = useState<number>(Number(paramID));
   const navigate = useNavigate();
 
-  function handleItemClick(
-    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
-    index: number
-  ) {
-    console.log(e, index, "clicked");
+  function handleItemClick(index: number) {
     setSelectedID(index);
     navigate(`/${title.toLowerCase()}/${index}`);
   }
@@ -83,37 +86,36 @@ function LeftListWithAction({ title, linkToPage, getter }: Props) {
           <Typography component="p">Information loading...</Typography>
         )}
         {error && <Typography component="p">An error occured.</Typography>}
-        {!loading && !error && data?.length === 0 ? (
+        {!loading && !error && data?.length === 0 && (
           <ListItemButton disabled>
             <ListItemText>No Results</ListItemText>
           </ListItemButton>
-        ) : !loading && !error ? (
-          data ? (
-            <>
-              {data.map((data) => {
-                return (
-                  <ListItem
-                    value={data}
-                    linkToPage={linkToPage}
-                    key={data.id}
-                    selected={data.id === selectedID}
-                    onClick={(e) => handleItemClick(e, data.id)}
-                  />
-                );
-              })}
-            </>
-          ) : null
-        ) : null}
+        )}
+        {!loading && !error && data?.length > 0 && (
+          <>
+            {data.map((data) => {
+              return (
+                <ListItem
+                  value={data}
+                  linkToPage={linkToPage}
+                  key={data.id}
+                  selected={data.id === selectedID}
+                  onClick={() => handleItemClick(data.id)}
+                />
+              );
+            })}
+          </>
+        )}
       </List>
-      <Box mt={"auto"} mx={"auto"}>
-        <Button
-          onClick={() => navigate(`/${title.toLowerCase()}/new`)}
-          startIcon={<AddIcon />}
-          variant="outlined"
-        >
-          New {title.slice(0, -1)}
-        </Button>
-      </Box>
+
+      <Button
+        sx={{ marginTop: "auto", alightSelf: "auto" }}
+        onClick={() => navigate(`/${title.toLowerCase()}/new`)}
+        startIcon={<AddIcon />}
+        variant="outlined"
+      >
+        New {title.replace(/s$/, "")}
+      </Button>
     </Grid2>
   );
 }

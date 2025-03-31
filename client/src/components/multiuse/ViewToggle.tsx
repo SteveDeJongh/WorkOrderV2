@@ -4,7 +4,7 @@ import {
   ViewList,
   ViewListOutlined,
 } from "@mui/icons-material";
-import { Button, ButtonGroup, Grid2, Typography } from "@mui/material";
+import { Button, ButtonGroup, Grid2, Typography } from "../../utils/muiImports";
 
 type props = {
   view: string;

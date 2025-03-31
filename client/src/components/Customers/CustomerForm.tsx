@@ -1,7 +1,6 @@
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { Customer, EditableCustomerData } from "../../types/customers";
-import { LoadingModal } from "../multiuse/LoadingModal";
 import {
   Box,
   Button,
@@ -9,7 +8,7 @@ import {
   CircularProgress,
   Grid2,
   Typography,
-} from "@mui/material";
+} from "../../utils/muiImports";
 import { FormTextInput } from "../FormParts/FormTextInput";
 
 type props = {

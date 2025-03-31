@@ -1,8 +1,7 @@
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { Outlet } from "react-router-dom";
-import { blue } from "@mui/material/colors";
-import { Container, Grid2 } from "@mui/material";
+import { Grid2 } from "../utils/muiImports";
 
 function Layout() {
   return (

@@ -6,7 +6,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from "@mui/material";
+} from "../../utils/muiImports";
 import { dateTimeFormatter } from "../../utils";
 import { Product } from "../../types/products";
 import { Invoice } from "../../types/invoiceTypes";

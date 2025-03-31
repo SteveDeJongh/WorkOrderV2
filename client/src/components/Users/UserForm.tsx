@@ -14,7 +14,7 @@ import {
   FormGroup,
   Grid2,
   Typography,
-} from "@mui/material";
+} from "../../utils/muiImports";
 import { FormTextInput } from "../FormParts/FormTextInput";
 import { FormMultiCheckBox } from "./FormMultiCheckBox";
 import { useEffect, useState } from "react";

@@ -13,7 +13,7 @@ import {
   Tab,
   Tabs,
   Typography,
-} from "@mui/material";
+} from "../../utils/muiImports";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { CustomTabPanel, TabProps } from "./CustomTabPanel";
 import placeholder from "../../assets/avatar-placeholder.png";

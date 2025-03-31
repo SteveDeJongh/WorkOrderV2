@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import { FormLabel } from "@mui/material";
+import { FormLabel } from "../../utils/muiImports";
 
 type Props = {
   title: string;

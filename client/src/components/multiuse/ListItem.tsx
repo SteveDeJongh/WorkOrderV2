@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
-import { Customer, isCustomer } from "../../types/customers";
+import { isCustomer } from "../../types/customers";
 import { isProduct } from "../../types/products";
 import { isInvoice } from "../../types/invoiceTypes";
-import { ListItemButton, ListItemText } from "@mui/material";
+import { ListItemButton, ListItemText } from "../../utils/muiImports";
 
 type Props = {
   value: Object;

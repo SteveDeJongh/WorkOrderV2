@@ -10,7 +10,7 @@ import {
   MenuItem,
   Tooltip,
   Typography,
-} from "@mui/material";
+} from "../utils/muiImports";
 import { RoleTypes } from "../types/users";
 import placeholder from "../assets/avatar-placeholder.png";
 

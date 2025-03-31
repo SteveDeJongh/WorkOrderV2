@@ -1,5 +1,12 @@
 import { CustomerWithNotices, Customer } from "../../types/customers";
-import { Box, List, ListItem, Paper, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  List,
+  ListItem,
+  Paper,
+  Stack,
+  Typography,
+} from "../../utils/muiImports";
 
 type Props = {
   mainData: Customer;
