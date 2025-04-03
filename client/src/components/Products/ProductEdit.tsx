@@ -1,11 +1,16 @@
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { editProduct } from "../../services/productServices";
 import { ProductForm } from "./ProductForm";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { EditableProductData, ProductContext } from "../../types/products";
+import { EditableProductData, Product } from "../../types/products";
 
-function ProductEdit() {
-  const { mainData, setMainData } = useOutletContext<ProductContext>();
+type Props = {
+  mainData: Product;
+  setMainData: React.Dispatch<React.SetStateAction<Product | undefined>>;
+  setTab: React.Dispatch<React.SetStateAction<number>>;
+};
+
+function ProductEdit({ mainData, setMainData, setTab }: Props) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -24,18 +29,13 @@ function ProductEdit() {
   });
 
   return (
-    <>
-      <div className="pane-inner">
-        <>
-          <ProductForm
-            product={mainData}
-            headerText={`Edit Product`}
-            buttonText={"Save"}
-            onSubmit={mutate}
-          />
-        </>
-      </div>
-    </>
+    <ProductForm
+      product={mainData}
+      headerText={`Edit Product`}
+      buttonText={"Save"}
+      onSubmit={mutate}
+      onCancel={() => setTab(0)}
+    />
   );
 }
 

@@ -4,6 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ScrollableTableTall } from "../multiuse/ScrollableTableTall";
 import { Movement } from "../../types/movements";
 import { MOVEMENTCOLUMNS } from "../columns";
+import { Typography } from "../../utils/muiImports";
+import { LoadingBox } from "../multiuse/LoadingBox";
 
 function ProductMovements() {
   const navigate = useNavigate();
@@ -14,14 +16,6 @@ function ProductMovements() {
     queryFn: () => fetchInventoryMovementsFor(Number(id)),
   });
 
-  if (isPending) {
-    return <h1>Loading...</h1>;
-  }
-
-  if (isError) {
-    return <h1>Error</h1>;
-  }
-
   function onClick(line: Movement) {
     if (line.change_type === "Invoice") {
       navigate(`/invoices/${line.relation.split(" ")[1]}`);
@@ -30,11 +24,20 @@ function ProductMovements() {
 
   return (
     <>
-      <ScrollableTableTall
-        columns={MOVEMENTCOLUMNS}
-        data={data}
-        onClick={(line: Movement) => onClick(line)}
-      />
+      {isPending && <LoadingBox text="Loading movements..." />}
+      {isError && (
+        <Typography variant="h5" component={"h5"}>
+          Error
+        </Typography>
+      )}
+      {!isPending && !isError && (
+        <ScrollableTableTall
+          columns={MOVEMENTCOLUMNS}
+          data={data}
+          onClick={(line: Movement) => onClick(line)}
+          height={"65vh"}
+        />
+      )}
     </>
   );
 }

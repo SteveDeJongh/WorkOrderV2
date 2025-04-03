@@ -10,20 +10,27 @@ type Props = {
   name: string;
   control: any;
   setValue?: any;
-  defaultValues: RoleTypes[];
+  defaultValues: string[];
+  options: string[];
 };
 
-function FormMultiCheckBox({ name, control, setValue, defaultValues }: Props) {
-  const [selectedRoles, setSelectedRoles] =
-    useState<RoleTypes[]>(defaultValues);
+function FormMultiCheckBox({
+  name,
+  control,
+  setValue,
+  defaultValues,
+  options,
+}: Props) {
+  const [selectedOptions, setSelectedOptions] =
+    useState<string[]>(defaultValues);
 
   function handleSelect(value: any) {
-    const isPresent = selectedRoles.indexOf(value);
+    const isPresent = selectedOptions.indexOf(value);
     if (isPresent !== -1) {
-      const remaining = selectedRoles.filter((item: any) => item !== value);
-      setSelectedRoles(remaining);
+      const remaining = selectedOptions.filter((item: any) => item !== value);
+      setSelectedOptions(remaining);
     } else {
-      setSelectedRoles((previousItems) => [...previousItems, value]);
+      setSelectedOptions((previousItems) => [...previousItems, value]);
     }
   }
 
@@ -32,12 +39,13 @@ function FormMultiCheckBox({ name, control, setValue, defaultValues }: Props) {
   }, [defaultValues]);
 
   useEffect(() => {
-    setValue(name, selectedRoles);
-  }, [selectedRoles]);
+    setValue(name, selectedOptions);
+  }, [selectedOptions]);
 
+  const mapArray = options ? options : roleOptions;
   return (
     <>
-      {roleOptions.map((option) => {
+      {mapArray.map((option) => {
         return (
           <Box key={option}>
             <Controller
@@ -45,7 +53,7 @@ function FormMultiCheckBox({ name, control, setValue, defaultValues }: Props) {
               render={({}) => {
                 return (
                   <Checkbox
-                    checked={selectedRoles.includes(option)}
+                    checked={selectedOptions.includes(option)}
                     onChange={() => handleSelect(option)}
                   />
                 );

@@ -5,6 +5,7 @@ import { ScrollableTableTall } from "../multiuse/ScrollableTableTall";
 import { Invoice } from "../../types/invoiceTypes";
 import { INVOICECOLUMNS } from "../columns";
 import { Typography } from "../../utils/muiImports";
+import { LoadingBox } from "../multiuse/LoadingBox";
 
 function CustomerInvoices() {
   const navigate = useNavigate();
@@ -17,32 +18,26 @@ function CustomerInvoices() {
     gcTime: 0,
   });
 
-  if (isPending) {
-    return (
-      <Typography variant="h1" component={"h1"}>
-        Loading...
-      </Typography>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Typography variant="h1" component={"h1"}>
-        Error
-      </Typography>
-    );
-  }
-
   function onClick(invoice: Invoice) {
     navigate(`/invoices/${invoice.id}/`);
   }
 
   return (
-    <ScrollableTableTall
-      columns={INVOICECOLUMNS}
-      data={data}
-      onClick={(invoice: Invoice) => onClick(invoice)}
-    />
+    <>
+      {isPending && <LoadingBox text="Loading Invoices..." />}
+      {isError && (
+        <Typography variant="h5" component={"h5"}>
+          Error
+        </Typography>
+      )}
+      {!isPending && !isError && (
+        <ScrollableTableTall
+          columns={INVOICECOLUMNS}
+          data={data}
+          onClick={(invoice: Invoice) => onClick(invoice)}
+        />
+      )}
+    </>
   );
 }
 

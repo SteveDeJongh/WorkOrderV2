@@ -11,6 +11,7 @@ import { dateTimeFormatter } from "../../utils";
 import { Product } from "../../types/products";
 import { Invoice } from "../../types/invoiceTypes";
 import { Customer } from "../../types/customers";
+import { Movement } from "../../types/movements";
 
 type Column = {
   name: String;
@@ -20,16 +21,30 @@ type Column = {
 
 type Props = {
   columns: Array<Column>;
-  data: Array<Customer | Product | Invoice>;
+  data: Array<Customer | Product | Invoice | Movement>;
   onClick?: Function;
   inModal?: boolean;
+  height?: string;
 };
 
-function ScrollableTableTall({ columns, data, onClick, inModal }: Props) {
+function ScrollableTableTall({
+  columns,
+  data,
+  onClick,
+  inModal,
+  height,
+}: Props) {
   return (
     <>
-      <TableContainer component={Paper} sx={{ padding: 1 }} variant="outlined">
-        <Table sx={{ minWidth: 1000 }}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          ...(height ? { maxHeight: height } : {}),
+          overflow: "auto",
+        }}
+        variant="outlined"
+      >
+        <Table sx={{ minWidth: 1000 }} stickyHeader>
           <TableHead>
             <TableRow>
               {columns.map((column, idx) => {

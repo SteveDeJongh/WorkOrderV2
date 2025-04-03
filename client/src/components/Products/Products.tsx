@@ -9,6 +9,7 @@ import { ViewTypes } from "../../types/userPreferences";
 import { useAuth } from "../../contexts/AuthContext";
 import { syncUserPreference } from "../../services/userPreferencesServices";
 import { PRODUCTCOLUMNOPTIONS, PRODUCTCOLUMNS } from "../columns";
+import { Card, Grid2, Typography } from "../../utils/muiImports";
 
 function Products() {
   const { user, updateUserPreferences } = useAuth();
@@ -37,48 +38,56 @@ function Products() {
   return (
     <>
       {view === "profile" && (
-        <div id="panes">
-          <div className="pane pane-left">
-            <div className="pane-inner">
-              <LeftListWithAction
-                title={"Products"}
-                linkToPage={"view"}
-                getter={useProductsData}
-              />
-            </div>
-          </div>
-          <div className="pane pane-mid">
-            <div className="pane-inner">
-              <ViewToggle view={view} setView={viewSetter} />
-              {renderNoSelection ? (
-                <NoSelection item={"product"} />
-              ) : (
-                <Outlet />
-              )}
-            </div>
-          </div>
-        </div>
+        <Grid2 container direction="column" spacing={5} mx={5} my={3}>
+          <Grid2 container direction="row" justifyContent={"space-between"}>
+            <Typography component={"h4"} variant="h4">
+              Products
+            </Typography>
+            <ViewToggle view={view} setView={viewSetter} />
+          </Grid2>
+          <Grid2 container direction="row" spacing={3} alignItems={"stretch"}>
+            <Grid2 size={{ xs: 3 }} sx={{ display: "flex", height: "78vh" }}>
+              <Card variant="outlined" sx={{ padding: 1, width: "100%" }}>
+                <LeftListWithAction
+                  title={"Products"}
+                  linkToPage={"view"}
+                  getter={useProductsData}
+                />
+              </Card>
+            </Grid2>
+            <Grid2 size={{ xs: 9 }} sx={{ display: "flex" }}>
+              <Card
+                variant="outlined"
+                sx={{ padding: 1, height: "78vh", width: "100%" }}
+              >
+                {renderNoSelection ? (
+                  <NoSelection item={"product"} />
+                ) : (
+                  <Outlet />
+                )}
+              </Card>
+            </Grid2>
+          </Grid2>
+        </Grid2>
       )}
       {view === "table" && (
-        <>
-          <div id="panes">
-            <div className="pane pane-full">
-              <div className="pane-inner">
-                <div className="table-top">
-                  <h3 className="title">Products</h3>
-                  <ViewToggle view={view} setView={viewSetter} />
-                </div>
-                <FullWidthTable
-                  title={"Products"}
-                  fetcher={useProductsData}
-                  columns={PRODUCTCOLUMNS}
-                  colPreferences={user!.preferences.product_columns}
-                  colOptions={PRODUCTCOLUMNOPTIONS}
-                />
-              </div>
-            </div>
-          </div>
-        </>
+        <Grid2 container direction="column" spacing={5} m={5}>
+          <Grid2 container direction="row" justifyContent={"space-between"}>
+            <Typography component={"h4"} variant="h4">
+              Products
+            </Typography>
+            <ViewToggle view={view} setView={viewSetter} />
+          </Grid2>
+          <Grid2 container direction="row">
+            <FullWidthTable
+              title={"Products"}
+              fetcher={useProductsData}
+              columns={PRODUCTCOLUMNS}
+              colPreferences={user!.preferences.product_columns}
+              colOptions={PRODUCTCOLUMNOPTIONS}
+            />
+          </Grid2>
+        </Grid2>
       )}
     </>
   );

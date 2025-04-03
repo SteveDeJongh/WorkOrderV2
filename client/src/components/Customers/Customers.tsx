@@ -37,7 +37,7 @@ function Customers() {
   return (
     <>
       {view === "profile" && (
-        <Grid2 container direction="column" spacing={5} m={5}>
+        <Grid2 container direction="column" spacing={5} mx={5} my={3}>
           <Grid2 container direction="row" justifyContent={"space-between"}>
             <Typography component={"h4"} variant="h4">
               Customers
@@ -45,11 +45,8 @@ function Customers() {
             <ViewToggle view={view} setView={viewSetter} />
           </Grid2>
           <Grid2 container direction="row" spacing={3} alignItems={"stretch"}>
-            <Grid2 size={{ xs: 3 }} sx={{ display: "flex", minHeight: "76vh" }}>
-              <Card
-                variant="outlined"
-                sx={{ padding: 1, height: "100%", width: "100%" }}
-              >
+            <Grid2 size={{ xs: 3 }} sx={{ display: "flex", height: "78vh" }}>
+              <Card variant="outlined" sx={{ padding: 1, width: "100%" }}>
                 <LeftListWithAction
                   title={"Customers"}
                   linkToPage={"profile"}
@@ -57,8 +54,8 @@ function Customers() {
                 />
               </Card>
             </Grid2>
-            <Grid2 size={{ xs: 9 }}>
-              <Card variant="outlined" sx={{ padding: 1 }}>
+            <Grid2 size={{ xs: 9 }} sx={{ display: "flex" }}>
+              <Card variant="outlined" sx={{ padding: 1, width: "100%" }}>
                 {renderNoSelection ? (
                   <NoSelection item={"customer"} />
                 ) : (

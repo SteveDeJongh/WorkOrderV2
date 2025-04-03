@@ -3,7 +3,21 @@ import { NumericFormat } from "react-number-format";
 import { isCustomer } from "../../types/customers";
 import { isProduct } from "../../types/products";
 import { isInvoice } from "../../types/invoiceTypes";
-import { ListItemButton, ListItemText } from "../../utils/muiImports";
+import {
+  Grid2,
+  ListItemButton,
+  ListItemText,
+  Typography,
+} from "../../utils/muiImports";
+
+function spreadStrings(t1: string, t2: string) {
+  return (
+    <Grid2 container direction="row" justifyContent="space-between">
+      <Typography variant="body1">{t1}</Typography>
+      <Typography variant="body1">{t2}</Typography>
+    </Grid2>
+  );
+}
 
 type Props = {
   value: Object;
@@ -23,27 +37,15 @@ function ListItem({ value, linkToPage, selected, onClick }: Props) {
         </ListItemButton>
       )}
       {isProduct(value) && (
-        <Link to={`/products/${value.id}/${linkToPage}`} className="col-link">
-          <li className={`single-col-li ${selected ? "selected" : ""}`}>
-            <div className="li-row li-top">
-              <span>{value.name}</span>
-              {/* trim this to x# of characters eventually. */}
-              <span>
-                {/* {value.price} */}
-                <NumericFormat
-                  value={Number(value.price).toFixed(2)}
-                  displayType={"text"}
-                  thousandSeparator={true}
-                  prefix={"$"}
-                />
-              </span>
-            </div>
-            <div className="li-row li-bottom">
-              <span>{value.sku}</span>
-              <span>{value.stock}</span>
-            </div>
-          </li>
-        </Link>
+        <ListItemButton selected={selected} onClick={onClick}>
+          <ListItemText
+            primary={spreadStrings(
+              value.name,
+              `$${parseInt(value.price).toFixed(2)}`
+            )}
+            secondary={spreadStrings(value.sku, String(value.stock))}
+          />
+        </ListItemButton>
       )}
       {isInvoice(value) && (
         <Link to={`/invoices/${value.id}/${linkToPage}`} className="col-link">

@@ -1,13 +1,31 @@
-import { useOutletContext, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
 import { fetchLast3MovementsFor } from "../../services/movementServices";
 import { useQuery } from "@tanstack/react-query";
 import { dateTimeFormatter } from "../../utils";
-import { ProductContext } from "../../types/products";
+import { Product } from "../../types/products";
+import {
+  Box,
+  FormLabel,
+  Grid2,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TableRow,
+  Typography,
+} from "../../utils/muiImports";
 
-function ProductView() {
+type Props = {
+  mainData: Product;
+};
+
+function ProductView({ mainData }: Props) {
   const navigate = useNavigate();
-  const { mainData, setMainData } = useOutletContext<ProductContext>();
 
   const {
     data: movementData,
@@ -21,140 +39,142 @@ function ProductView() {
 
   return (
     <>
+      {!mainData && (
+        <Typography component={"h2"} variant="h2">
+          No Product Selected
+        </Typography>
+      )}
       {mainData && (
         <>
-          <div className="main-pane-content">
-            <div className="panel">
-              <h3>Details</h3>
-              <div className="panel-contents">
-                <div className="panel-contents-section">
-                  <div className="panel-section-desc">Name:</div>
-                  <div className="panel-section-data">
-                    <div className="data-item">{mainData.name}</div>
+          <Stack
+            spacing={3}
+            py={1}
+            sx={{ overflowY: "auto", maxHeight: "65vh" }}
+          >
+            <Paper variant="outlined" sx={{ padding: 1 }}>
+              <Typography variant="h6" component="h6" pb={1}>
+                Details
+              </Typography>
+              <Grid2
+                container
+                direction={"row"}
+                justifyContent={"space-evenly"}
+              >
+                <Box width={"50%"}>
+                  <FormLabel style={{ fontWeight: "bold" }}>Name:</FormLabel>
+                  <Typography variant="body1">{mainData.name}</Typography>
+                </Box>
+                <Box width={"50%"}>
+                  <FormLabel style={{ fontWeight: "bold" }}>
+                    Description:
+                  </FormLabel>
+                  <Typography variant="body1">
+                    {mainData.description}
+                  </Typography>
+                </Box>
+              </Grid2>
+              <Grid2 container direction="row" justifyContent={"space-evenly"}>
+                <Box width={"50%"}>
+                  <FormLabel style={{ fontWeight: "bold" }}>Sku:</FormLabel>
+                  <Typography variant="body1">{mainData.sku}</Typography>
+                </Box>
+                <Box width={"50%"}>
+                  <FormLabel style={{ fontWeight: "bold" }}>UPC:</FormLabel>
+                  <Typography variant="body1">{mainData.upc}</Typography>
+                </Box>
+              </Grid2>
+            </Paper>
+            <Paper variant="outlined" sx={{ padding: 1 }}>
+              <Typography variant="h6" component="h6" pb={1}>
+                Pricing
+              </Typography>
+              <Grid2 container direction="row" justifyContent={"space-evenly"}>
+                <Box width={"50%"}>
+                  <FormLabel style={{ fontWeight: "bold" }}>Price:</FormLabel>
+                  <Typography variant="body1">
+                    <NumericFormat
+                      value={Number(mainData.price).toFixed(2)}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={"$"}
+                    />
+                  </Typography>
+                </Box>
+                <Box width={"50%"}>
+                  <FormLabel style={{ fontWeight: "bold" }}>Cost:</FormLabel>
+                  <Typography variant="body1">
+                    <NumericFormat
+                      value={Number(mainData.cost).toFixed(2)}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={"$"}
+                    />
+                  </Typography>
+                </Box>
+              </Grid2>
+            </Paper>
+            <Paper variant="outlined" sx={{ padding: 1 }}>
+              <Typography variant="h6" component="h6" pb={1}>
+                Inventory
+              </Typography>
+              <Grid2 container direction="row" justifyContent={"space-evenly"}>
+                <Box width="33.3333%">
+                  <FormLabel style={{ fontWeight: "bold" }}>Stock:</FormLabel>
+                  <Typography variant="body1">{mainData.stock}</Typography>
+                </Box>
+                <Box width="33.3333%">
+                  <FormLabel style={{ fontWeight: "bold" }}>Min:</FormLabel>
+                  <Typography variant="body1">{mainData.min}</Typography>
+                </Box>
+                <Box width="33.3333%">
+                  <FormLabel style={{ fontWeight: "bold" }}>Max:</FormLabel>
+                  <Typography variant="body1">{mainData.max}</Typography>
+                </Box>
+              </Grid2>
+              {/* {!mainData.inventory && (
+                <>
+                  <div className="panel-contents-section">
+                    <FormLabel style={{ fontWeight: "bold" }}>Stock:</FormLabel>
+                    <Typography variant="body1">{mainData.stock}</Typography>
                   </div>
-                </div>
-                <div className="panel-contents-section">
-                  <div className="panel-section-desc">Description:</div>
-                  <div className="panel-section-data">
-                    <div className="data-item">{mainData.description}</div>
-                  </div>
-                </div>
-                <div className="panel-contents-section">
-                  <div className="panel-section-desc">Sku:</div>
-                  <div className="panel-section-data">
-                    <div className="data-item">{mainData.sku}</div>
-                  </div>
-                </div>
-                <div className="panel-contents-section">
-                  <div className="panel-section-desc">UPC:</div>
-                  <div className="panel-section-data">
-                    <div className="data-item">{mainData.upc}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="panel">
-              <h3>Pricing</h3>
-              <div className="panel-contents">
-                <div className="panel-contents-section">
-                  <div className="panel-section-desc">Price:</div>
-                  <div className="panel-section-data">
-                    <div className="data-item">
-                      <NumericFormat
-                        value={Number(mainData.price).toFixed(2)}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                        prefix={"$"}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="panel-contents-section">
-                  <div className="panel-section-desc">Cost:</div>
-                  <div className="panel-section-data">
-                    <div className="data-item">
-                      {" "}
-                      <NumericFormat
-                        value={Number(mainData.cost).toFixed(2)}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                        prefix={"$"}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="panel customer-details">
-              <h3>Inventory</h3>
-              <div className="panel-contents">
-                {mainData.inventory && (
-                  <>
-                    <div className="panel-contents-section">
-                      <div className="panel-section-desc">Stock:</div>
-                      <div className="panel-section-data">
-                        <div className="data-item">{mainData.stock}</div>
-                      </div>
-                    </div>
-                    <div className="panel-contents-section">
-                      <div className="panel-section-desc">Min:</div>
-                      <div className="panel-section-data">
-                        <div className="data-item">{mainData.min}</div>
-                      </div>
-                      <div className="panel-contents-section">
-                        <div className="panel-section-desc">Max:</div>
-                        <div className="panel-section-data">
-                          <div className="data-item">{mainData.max}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
-                {!mainData.inventory && (
-                  <>
-                    <div className="panel-contents-section">
-                      <div className="panel-section-desc">Stock:</div>
-                      <div className="panel-section-data">
-                        <div className="data-item">{mainData.stock}</div>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="panel customer-history">
-              <h3>Movement History</h3>
-              <div className="table short">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Movement ID</th>
-                      <th>Relation</th>
-                      <th>Adjustment</th>
-                      <th>Change</th>
-                      <th>Stock</th>
-                      <th>ChangeType</th>
-                      <th>userId</th>
-                      <th>Time</th>
-                      <th>ProductID</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                </>
+              )} */}
+            </Paper>
+            <Paper variant="outlined" sx={{ padding: 1 }}>
+              <Typography variant="h6" component="h6" pb={1}>
+                Movement History
+              </Typography>
+              <TableContainer className="table short">
+                <Table sx={{ minWidth: 1000 }}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="right">Movement ID</TableCell>
+                      <TableCell align="right">Relation</TableCell>
+                      <TableCell align="right">Adjustment</TableCell>
+                      <TableCell align="right">Change</TableCell>
+                      <TableCell align="right">Stock</TableCell>
+                      <TableCell align="right">ChangeType</TableCell>
+                      <TableCell align="right">userId</TableCell>
+                      <TableCell align="right">Time</TableCell>
+                      <TableCell align="right">ProductID</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
                     {movementPending && (
-                      <tr>
-                        <td>Loading...</td>
-                      </tr>
+                      <TableRow>
+                        <TableCell>Loading...</TableCell>
+                      </TableRow>
                     )}
                     {movementError && (
-                      <tr>
-                        <td>Error...</td>
-                      </tr>
+                      <TableRow>
+                        <TableCell>Error...</TableCell>
+                      </TableRow>
                     )}
                     {!movementPending &&
                       !movementError &&
                       movementData.map((movement) => {
                         return (
-                          <tr
+                          <TableRow
                             key={movement.id}
                             onClick={() => {
                               if (movement.change_type === "Invoice") {
@@ -164,35 +184,39 @@ function ProductView() {
                               }
                             }}
                           >
-                            <td>{movement.id}</td>
-                            <td>{movement.relation}</td>
-                            <td>{movement.adjustment ? "True" : "False"}</td>
-                            <td>{movement.change}</td>
-                            <td>{movement.stock}</td>
-                            <td>{movement.change_type}</td>
-                            <td>{movement.user_id}</td>
-                            <td>{dateTimeFormatter(movement.created_at)}</td>
-                            <td>{movement.product_id}</td>
-                          </tr>
+                            <TableCell>{movement.id}</TableCell>
+                            <TableCell>{movement.relation}</TableCell>
+                            <TableCell>
+                              {movement.adjustment ? "True" : "False"}
+                            </TableCell>
+                            <TableCell>{movement.change}</TableCell>
+                            <TableCell>{movement.stock}</TableCell>
+                            <TableCell>{movement.change_type}</TableCell>
+                            <TableCell>{movement.user_id}</TableCell>
+                            <TableCell>
+                              {dateTimeFormatter(movement.created_at)}
+                            </TableCell>
+                            <TableCell>{movement.product_id}</TableCell>
+                          </TableRow>
                         );
                       })}
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colSpan={"100%"}>
+                  </TableBody>
+                  <TableFooter>
+                    <TableRow>
+                      <TableCell colSpan={4}>
                         <Link
                           to={`/products/${mainData.id}/movements`}
                           className="inLineLink"
                         >
                           View Full Movement History
                         </Link>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </div>
-          </div>
+                      </TableCell>
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+              </TableContainer>
+            </Paper>
+          </Stack>
         </>
       )}
     </>

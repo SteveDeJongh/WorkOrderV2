@@ -23,12 +23,12 @@ UserPreference.create(user_id: 2, theme: "dark")
 # Add a default tax rate for "1" of 15%
 TaxRate.new(percentage: 0.15).save
 
-(1..8).each do |x|
-  p = Product.create(name: "Product #{x}" ,description: "This is product #{x}" ,sku: "PR000#{x}" , upc: (x.to_s * 12).to_i, price: (x * 10) , cost: x, stock: x, min: x, max: (x * 10), inventory: true, tax_rate_id: 1,)
+(1..15).each do |x|
+  p = Product.create(name: "Product #{x}" ,description: "This is product #{x}" ,sku: "PR000#{x}" , upc: ((x.to_s * 12).slice(0,12)).to_i, price: (x * 10) , cost: x, stock: x, min: x, max: (x * 10), inventory: true, tax_rate_id: 1,)
   MovementService.new(p).record_movement("ProductCreation", x, @user)
 end
 
-productIDs = [1,2,3,4,5,6,7,8]
+productIDs = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 
 250.times do |x|
   id = productIDs.sample

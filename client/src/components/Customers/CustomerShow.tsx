@@ -45,10 +45,6 @@ function CustomerShow() {
     setTab(newValue);
   };
 
-  if (mainLoading) {
-    return <LoadingBox text="Loading Customer..." />;
-  }
-
   return (
     <>
       {mainError && (
@@ -56,32 +52,31 @@ function CustomerShow() {
           An error occured.
         </Typography>
       )}
+      {mainLoading && <LoadingBox text="Loading Customer..." />}
       {!mainLoading && mainData && (
-        <>
-          <Box p={1}>
-            <MainPaneNav
-              title={`${mainData.first_name} ${mainData.last_name}`}
-              id={mainData.id}
-              identifier={"Customer"}
-              pages={["Profile", "Edit", "Invoices"]}
-              tab={tab}
-              handleChange={handleChange}
+        <Box p={1}>
+          <MainPaneNav
+            title={`${mainData.first_name} ${mainData.last_name}`}
+            id={mainData.id}
+            identifier={"Customer"}
+            pages={["Profile", "Edit", "Invoices"]}
+            tab={tab}
+            handleChange={handleChange}
+          />
+          <CustomTabPanel value={tab} index={0}>
+            <CustomerProfile mainData={mainData} />
+          </CustomTabPanel>
+          <CustomTabPanel value={tab} index={1}>
+            <CustomerEdit
+              mainData={mainData}
+              setMainData={setMainData}
+              setTab={setTab}
             />
-            <CustomTabPanel value={tab} index={0}>
-              <CustomerProfile mainData={mainData} />
-            </CustomTabPanel>
-            <CustomTabPanel value={tab} index={1}>
-              <CustomerEdit
-                mainData={mainData}
-                setMainData={setMainData}
-                setTab={setTab}
-              />
-            </CustomTabPanel>
-            <CustomTabPanel value={tab} index={2}>
-              <CustomerInvoices />
-            </CustomTabPanel>
-          </Box>
-        </>
+          </CustomTabPanel>
+          <CustomTabPanel value={tab} index={2}>
+            <CustomerInvoices />
+          </CustomTabPanel>
+        </Box>
       )}
     </>
   );

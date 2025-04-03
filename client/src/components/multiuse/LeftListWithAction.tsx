@@ -16,13 +16,6 @@ import {
   Grid2,
 } from "../../utils/muiImports";
 
-type OptionalSelection = {
-  selected?: boolean;
-};
-type CustomerWithSelection = Customer & OptionalSelection;
-type ProductWithSelection = Product & OptionalSelection;
-type InvoiceWithSelection = Invoice & OptionalSelection;
-
 type GetterFunction = (searchTerm: string) => {
   data: Customer[] | Product[] | Invoice[];
   loading: boolean;
@@ -37,19 +30,13 @@ type Props = {
 
 function LeftListWithAction({ title, linkToPage, getter }: Props) {
   const { id: paramID } = useParams();
-  const [data, setData] = useState<
-    CustomerWithSelection[] | ProductWithSelection[] | InvoiceWithSelection[]
-  >([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] =
     useURLSearchParam("search");
-  const { data: fetchedData, loading, error } = getter(debouncedSearchTerm);
-
-  useEffect(() => {
-    if (fetchedData) {
-      setData(fetchedData);
-    }
-  }, [fetchedData]);
+  const { data = [], loading, error } = getter(debouncedSearchTerm);
+  const [selectedID, setSelectedID] = useState<number | null>(
+    paramID ? parseInt(paramID, 10) : null
+  );
 
   useEffect(() => {
     if (paramID) {
@@ -65,36 +52,59 @@ function LeftListWithAction({ title, linkToPage, getter }: Props) {
     setSearchTerm(searchValue);
   }
 
-  const [selectedID, setSelectedID] = useState<number>(Number(paramID));
   const navigate = useNavigate();
 
-  function handleItemClick(index: number) {
-    setSelectedID(index);
-    navigate(`/${title.toLowerCase()}/${index}`);
+  function handleItemClick(id: number) {
+    if (id !== selectedID) {
+      setSelectedID(id);
+      navigate(`/${title.toLowerCase()}/${id}`);
+    }
   }
 
   return (
-    <Grid2 container direction="column" height={"100%"}>
-      <SearchBar
-        title={title}
-        value={searchTerm}
-        onSearchChange={handleDebouncedSearchChange}
-        onImmediateChange={handleImmediateSearchChange}
-      />
-      <List sx={{}}>
-        {loading && (
-          <Typography component="p">Information loading...</Typography>
-        )}
-        {error && <Typography component="p">An error occured.</Typography>}
-        {!loading && !error && data?.length === 0 && (
-          <ListItemButton disabled>
-            <ListItemText>No Results</ListItemText>
-          </ListItemButton>
-        )}
-        {!loading && !error && data?.length > 0 && (
-          <>
-            {data.map((data) => {
-              return (
+    <Grid2
+      container
+      direction="column"
+      height="100%"
+      wrap="nowrap"
+      sx={{ width: "100%" }}
+      spacing={1}
+    >
+      <Grid2 sx={{ flexShrink: 0, height: 40, width: "100%" }} pb={1}>
+        <SearchBar
+          title={title}
+          value={searchTerm}
+          onSearchChange={handleDebouncedSearchChange}
+          onImmediateChange={handleImmediateSearchChange}
+        />
+      </Grid2>
+
+      <Grid2
+        sx={{
+          flexGrow: 1,
+          overflow: "auto",
+          width: "100%",
+        }}
+      >
+        <List>
+          {loading && (
+            <Typography component="p">Information loading...</Typography>
+          )}
+          {error && (
+            <Typography component="p">
+              {typeof error === "string"
+                ? error
+                : error.message || "An error occurred"}
+            </Typography>
+          )}
+          {!loading && !error && data?.length === 0 && (
+            <ListItemButton disabled>
+              <ListItemText>No Results</ListItemText>
+            </ListItemButton>
+          )}
+          {!loading && !error && data?.length > 0 && (
+            <>
+              {data.map((data) => (
                 <ListItem
                   value={data}
                   linkToPage={linkToPage}
@@ -102,20 +112,22 @@ function LeftListWithAction({ title, linkToPage, getter }: Props) {
                   selected={data.id === selectedID}
                   onClick={() => handleItemClick(data.id)}
                 />
-              );
-            })}
-          </>
-        )}
-      </List>
+              ))}
+            </>
+          )}
+        </List>
+      </Grid2>
 
-      <Button
-        sx={{ marginTop: "auto", alightSelf: "auto" }}
-        onClick={() => navigate(`/${title.toLowerCase()}/new`)}
-        startIcon={<AddIcon />}
-        variant="outlined"
-      >
-        New {title.replace(/s$/, "")}
-      </Button>
+      <Grid2 sx={{ flexShrink: 0, height: 40, width: "100%" }}>
+        <Button
+          fullWidth
+          onClick={() => navigate(`/${title.toLowerCase()}/new`)}
+          startIcon={<AddIcon />}
+          variant="outlined"
+        >
+          New {title.replace(/s$/, "")}
+        </Button>
+      </Grid2>
     </Grid2>
   );
 }

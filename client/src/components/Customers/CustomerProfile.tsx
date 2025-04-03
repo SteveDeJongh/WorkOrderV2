@@ -35,7 +35,7 @@ function CustomerProfile({ mainData }: Props) {
         </Typography>
       )}
       {customerData && (
-        <Stack spacing={3}>
+        <Stack spacing={3} py={1} sx={{ overflowY: "auto", maxHeight: "65vh" }}>
           <Paper variant="outlined" sx={{ padding: 1 }}>
             <Typography variant="h6" component="h6" pb={1}>
               Details
