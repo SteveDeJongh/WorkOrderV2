@@ -2,9 +2,15 @@ import { useState, useEffect } from "react";
 import { CustomerSearchModal } from "./CustomerSearchModal";
 import { fetchCustomerData } from "../../../services/customerServices";
 import { LoadingBox } from "../../multiuse/LoadingBox";
-import { Button } from "../../multiuse/Button";
 import { Action } from "../../../types/invoiceTypes";
 import { Customer } from "../../../types/customers";
+import {
+  Box,
+  Button,
+  Grid2,
+  Stack,
+  Typography,
+} from "../../../utils/muiImports";
 
 type props = {
   customerId?: number;
@@ -13,10 +19,11 @@ type props = {
 
 function FormCustomerSection({ customerId, dispatch }: props) {
   const [customerModal, setCustomerModal] = useState(false);
+  const handleClose = () => setCustomerModal(false);
   const [loading, setloading] = useState(false);
   const [customer, setCustomer] = useState<Customer>();
 
-  // Get the customer data wjemever customerId changes and on intial render.
+  // Get the customer data whenever customerId changes and on intial render.
   useEffect(() => {
     if (!customerId) {
       setCustomer(undefined);
@@ -66,66 +73,84 @@ function FormCustomerSection({ customerId, dispatch }: props) {
   }
 
   return (
-    <div className="panel">
-      <div className="panel-heading">
-        <h3>Customer Details</h3>
-        <div className="panel-action">
+    <>
+      <Stack
+        direction="row"
+        justifyContent={"space-between"}
+        alignItems={"center"}
+      >
+        <Typography variant="h6">Customer Details</Typography>
+        <Stack direction={"row"} spacing={1}>
           {customer && (
-            <Button onClick={() => removeCustomer()} text={"Remove Customer"} />
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => removeCustomer()}
+            >
+              Remove Customer
+            </Button>
           )}
           <Button
+            variant="outlined"
+            size="small"
             onClick={() => setCustomerModal(true)}
-            text={customerId ? "Change Customer" : "Add Customer"}
-          />
-        </div>
-      </div>
-      {loading && (
-        <div className="panel-contents-section">
-          <LoadingBox text="Loading customer..." />
-        </div>
+          >
+            {customerId ? "Change Customer" : "Add Customer"}
+          </Button>
+        </Stack>
+      </Stack>
+      {loading && <LoadingBox text="Loading customer..." />}
+      {!customer && !customerId && !loading && (
+        <Typography variant="h6">No Customer Assigned</Typography>
       )}
-      {!customer && !customerId && (
-        <div className="panel-contents-section">
-          <div className="panel-hero">
-            <div className="hero-text">No Customer Assigned</div>
-          </div>
-        </div>
-      )}
-      {customer && (
-        <div className="panel-contents">
-          <div className="panel-contents-section">
-            <div className="panel-section-data">
-              {customer.first_name + " " + customer.last_name}
-            </div>
-          </div>
-          <div className="panel-contents-section">
-            <div className="panel-section-desc">📞</div>
-            <div className="panel-section-data">
-              <div className="data-item">{customer.phone}</div>
-              <div className="data-item">{customer.phone}</div>
-            </div>
-            <div className="panel-section-desc">📧</div>
-            <div className="panel-section-data">
-              <div className="data-item">{customer.email}</div>
-            </div>
-            <div className="panel-section-desc">🏠</div>
-            <div className="panel-section-data">
-              <div className="data-item">{customer.address}</div>
-              <div className="data-item">
-                {customer.city} {customer.province} {customer.postal}
-              </div>
-              <div className="data-item">{customer.country}</div>
-            </div>
-          </div>
-        </div>
+      {customer && !loading && (
+        <Box>
+          <Stack spacing={1} p={1}>
+            <Grid2 container direction="row" spacing={1}>
+              <Grid2 container direction={"row"} size={{ xs: 6 }}>
+                <Box pr={2}>🏷️</Box>
+                <Box>
+                  <Typography variant="body1">
+                    {customer.first_name} {customer.last_name}
+                  </Typography>
+                </Box>
+              </Grid2>
+              <Grid2 container direction={"row"} size={{ xs: 6 }}>
+                <Box pr={2}>🏠</Box>
+                <Box>
+                  <Typography variant="body1">{customer.address}</Typography>
+                  <Typography variant="body1">
+                    {customer.city} {customer.province} {customer.postal}
+                  </Typography>
+                  <Typography variant="body1">{customer.country}</Typography>
+                </Box>
+              </Grid2>
+            </Grid2>
+            <Grid2 container direction="row" spacing={1}>
+              <Grid2 container direction={"row"} size={{ xs: 6 }}>
+                <Box pr={2}>📞</Box>
+                <Box>
+                  <Typography variant="body1">{customer.phone}</Typography>
+                  <Typography variant="body1">{customer.phone}</Typography>
+                </Box>
+              </Grid2>
+              <Grid2 container direction={"row"} size={{ xs: 6 }}>
+                <Box pr={2}>📧</Box>
+                <Box>
+                  <Typography variant="body1">{customer.email}</Typography>
+                </Box>
+              </Grid2>
+            </Grid2>
+          </Stack>
+        </Box>
       )}
       <CustomerSearchModal
         open={customerModal}
-        onClose={() => setCustomerModal(false)}
+        handleClose={handleClose}
         onSave={(id: number) => handleCustomerChange(id)}
         customer_id={customerId}
       />
-    </div>
+    </>
   );
 }
 

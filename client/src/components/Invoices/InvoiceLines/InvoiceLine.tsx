@@ -4,6 +4,7 @@ import {
   InvoiceColumn,
 } from "../../../types/invoiceTypes";
 import { showAsDollarAmount } from "../../../utils/index";
+import { TableCell, TableRow } from "@mui/material";
 
 type props = {
   line: TInvoiceLine;
@@ -45,7 +46,7 @@ function TableData({ onDelayedChange, disabled, field, val }: TableDataProps) {
   val = field.keyName === "movement_created" ? (val ? "🔒" : "") : val;
 
   return (
-    <td>
+    <TableCell>
       {field.editable && (
         <input
           name={field.keyName}
@@ -57,7 +58,7 @@ function TableData({ onDelayedChange, disabled, field, val }: TableDataProps) {
         />
       )}
       {!field.editable && <div>{val}</div>}
-    </td>
+    </TableCell>
   );
 }
 
@@ -69,7 +70,7 @@ function InvoiceLine({ line, updateLine, columns }: props) {
 
   return (
     <>
-      <tr
+      <TableRow
         title={
           line.movement_created
             ? "This invoice line has already been saved. To make changes, create a return line and start over."
@@ -93,7 +94,7 @@ function InvoiceLine({ line, updateLine, columns }: props) {
             }
           />
         ))}
-      </tr>
+      </TableRow>
     </>
   );
 }

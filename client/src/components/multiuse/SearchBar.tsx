@@ -1,4 +1,5 @@
-import { Box, TextField } from "../../utils/muiImports";
+import { InputAdornment } from "@mui/material";
+import { Box, SearchIcon, TextField } from "../../utils/muiImports";
 import { ChangeEvent, FocusEvent, useRef } from "react";
 
 type Props = {
@@ -42,6 +43,15 @@ function SearchBar({ title, value, onSearchChange, onImmediateChange }: Props) {
         value={value}
         onChange={(e) => handleSearchChange(e)}
         onFocus={handleFocus}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          },
+        }}
       />
     </Box>
   );

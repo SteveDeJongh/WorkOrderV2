@@ -1,3 +1,4 @@
+import { Checkbox, TableCell, TableRow } from "../../../utils/muiImports";
 import { Payment } from "../../../types/payments";
 import { dateRegExp, dateTimeFormatter } from "../../../utils/index";
 
@@ -24,14 +25,14 @@ function TabelData({ showAsDollars, val, deleted }: TabelDataProps) {
   val = dateRegExp.test(val as string) ? dateTimeFormatter(val as string) : val;
 
   return (
-    <td>
+    <TableCell>
       {deleted && (
         <del>
           <div>{val}</div>
         </del>
       )}
       {!deleted && <div>{val}</div>}
-    </td>
+    </TableCell>
   );
 }
 
@@ -59,7 +60,7 @@ function PaymentLine({
   ];
 
   return (
-    <tr onClick={(e) => lineClick(e)}>
+    <TableRow onClick={(e) => lineClick(e)}>
       {columns.map((col) => (
         <TabelData
           showAsDollars={col.showAsDollars}
@@ -69,15 +70,14 @@ function PaymentLine({
         />
       ))}
       {adminActions && (
-        <td className="pad">
-          <input
-            type="checkbox"
+        <TableCell>
+          <Checkbox
             onClick={() => toggleDelete(payment.id, payment.created_at)}
             checked={payment._destroy}
           />
-        </td>
+        </TableCell>
       )}
-    </tr>
+    </TableRow>
   );
 }
 

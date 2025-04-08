@@ -18,15 +18,11 @@ function InvoiceNew() {
   };
 
   return (
-    <>
-      <div className="pane-inner">
-        <InvoiceForm
-          modalForm={false}
-          buttonText={"Save"}
-          invoiceData={newInvoice}
-        />
-      </div>
-    </>
+    <InvoiceForm
+      modalForm={false}
+      buttonText={"Save"}
+      invoiceData={newInvoice}
+    />
   );
 }
 

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
 import { fetchLast3MovementsFor } from "../../services/movementServices";
 import { useQuery } from "@tanstack/react-query";
@@ -6,6 +6,7 @@ import { dateTimeFormatter } from "../../utils";
 import { Product } from "../../types/products";
 import {
   Box,
+  Button,
   FormLabel,
   Grid2,
   Paper,
@@ -22,9 +23,10 @@ import {
 
 type Props = {
   mainData: Product;
+  setTab: React.Dispatch<React.SetStateAction<number>>;
 };
 
-function ProductView({ mainData }: Props) {
+function ProductView({ mainData, setTab }: Props) {
   const navigate = useNavigate();
 
   const {
@@ -144,8 +146,11 @@ function ProductView({ mainData }: Props) {
               <Typography variant="h6" component="h6" pb={1}>
                 Movement History
               </Typography>
-              <TableContainer className="table short">
-                <Table sx={{ minWidth: 1000 }}>
+              <TableContainer
+                className="table short"
+                sx={{ whiteSpace: "nowrap" }}
+              >
+                <Table>
                   <TableHead>
                     <TableRow>
                       <TableCell align="right">Movement ID</TableCell>
@@ -204,12 +209,9 @@ function ProductView({ mainData }: Props) {
                   <TableFooter>
                     <TableRow>
                       <TableCell colSpan={4}>
-                        <Link
-                          to={`/products/${mainData.id}/movements`}
-                          className="inLineLink"
-                        >
+                        <Button onClick={() => setTab(2)}>
                           View Full Movement History
-                        </Link>
+                        </Button>
                       </TableCell>
                     </TableRow>
                   </TableFooter>

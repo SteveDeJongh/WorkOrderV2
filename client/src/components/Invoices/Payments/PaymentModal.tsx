@@ -1,15 +1,29 @@
-import ReactDom from "react-dom";
 import { PaymentForm } from "./PaymentForm";
 import { EditablePaymentData, Payment } from "../../../types/payments";
-import { useEffect } from "react";
+import { Box, Modal } from "@mui/material";
+import { parseCurrencyString } from "../../../utils";
+import { Action } from "../../../types/invoiceTypes";
+
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: { xs: "90%", sm: "60%", md: "40%", lg: "30%" },
+  bgcolor: "background.paper",
+  border: "1px solid #000",
+  borderRadius: "10px",
+  boxShadow: 24,
+  p: 4,
+};
 
 type Props = {
   open: boolean;
-  closeModal: Function;
+  closeModal: () => void;
   payment?: Payment;
   balance: number;
   invoice_id: number | null;
-  dispatch: Function;
+  dispatch: (action: Action) => void;
 };
 
 function PaymentModal({
@@ -20,14 +34,9 @@ function PaymentModal({
   invoice_id,
   dispatch,
 }: Props) {
-  function handleClose(e: React.MouseEvent<HTMLElement, MouseEvent>) {
-    const target = e.target as HTMLElement;
-    if (target.className === "main-modal-background") {
-      closeModal();
-    }
-  }
-
   function onSavePayment(data: EditablePaymentData) {
+    const now = new Date().toISOString();
+
     if (data.id || data.created_at) {
       dispatch({ type: "updatePayment", payment: data });
     } else {
@@ -35,49 +44,51 @@ function PaymentModal({
         type: "createPayment",
         payment: {
           ...data,
-          created_at: new Date(Date.now()).toISOString(),
+          created_at: now,
         },
       });
-      if (data.change && data.change !== "$0.00" && data.method === "Cash") {
-        let val = data.change;
-        if (typeof data.change === "string") {
-          val = Number(data.change.split("$")[1]);
+
+      if (data.change && data.method === "Cash") {
+        const val =
+          typeof data.change === "string"
+            ? parseCurrencyString(data.change)
+            : data.change;
+
+        if (val > 0) {
+          dispatch({
+            type: "createPayment",
+            payment: {
+              ...data,
+              method: "Change",
+              amount: -val,
+              change: 0,
+              created_at: now,
+            },
+          });
         }
-        dispatch({
-          type: "createPayment",
-          payment: {
-            ...data,
-            method: "Change",
-            amount: -val,
-            change: 0,
-            created_at: new Date(Date.now()).toISOString(),
-          },
-        });
       }
     }
     closeModal();
   }
 
-  if (!open) return null;
-
-  return ReactDom.createPortal(
-    <>
-      <div className="main-modal-background" onClick={(e) => handleClose(e)}>
-        <div className="main-modal">
-          <>
-            <PaymentForm
-              handleCancel={() => closeModal()}
-              payment={payment}
-              onSubmit={onSavePayment}
-              buttonText={"Save"}
-              invoice_id={invoice_id}
-              balance={balance}
-            />
-          </>
-        </div>
-      </div>
-    </>,
-    document.getElementById("portal")!
+  return (
+    <Modal
+      open={open}
+      onClose={closeModal}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={modalStyle}>
+        <PaymentForm
+          handleCancel={closeModal}
+          payment={payment}
+          onSubmit={onSavePayment}
+          buttonText={"Save"}
+          invoice_id={invoice_id}
+          balance={balance}
+        />
+      </Box>
+    </Modal>
   );
 }
 

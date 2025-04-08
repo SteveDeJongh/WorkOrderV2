@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { useProductsData } from "../../../hooks/useProductsData";
 import { useURLSearchParam } from "../../../hooks/useURLSearchParam";
 import { SearchBar } from "../../multiuse/SearchBar";
-import { Button } from "../../multiuse/Button";
 import { SearchResultsTable } from "../../multiuse/SearchResultsTable";
 import { Product } from "../../../types/products";
+import { Box, Button, Grid2, Popper } from "../../../utils/muiImports";
 
 type props = {
   addLine: Function;
@@ -16,6 +16,7 @@ function NewInvoiceLine({ addLine }: props) {
     useURLSearchParam("productSearch");
   const [data, setData] = useState<Product[]>();
   const [isOpen, setIsOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement>();
 
   const {
     data: fetchedData,
@@ -25,6 +26,7 @@ function NewInvoiceLine({ addLine }: props) {
 
   useEffect(() => {
     if (searchTerm) {
+      setAnchorEl(document.getElementById("search-container")!);
       setIsOpen(true);
     } else {
       setIsOpen(false);
@@ -70,29 +72,37 @@ function NewInvoiceLine({ addLine }: props) {
   ];
 
   return (
-    <div
+    <Box
       className="searchContainer"
       onClick={(event) => event.stopPropagation()}
     >
-      <div id="search-actions">
-        <SearchBar
-          title={"products"}
-          value={searchTerm}
-          onSearchChange={handleDebouncedSearchChange}
-          onImmediateChange={handleImmediateSearchChange}
-        />
-        <Button text={"Add Product"} />
-      </div>
-      {isOpen && data && (
-        <div className="results-list">
-          <SearchResultsTable
-            results={data}
-            handleSelection={(product: Product) => handleSelection(product)}
-            columns={columns}
+      <Grid2
+        container
+        direction="row"
+        spacing={1}
+        alignItems={"center"}
+        id="search-container"
+      >
+        <Grid2 size={{ xs: 9 }}>
+          <SearchBar
+            title={"products"}
+            value={searchTerm}
+            onSearchChange={handleDebouncedSearchChange}
+            onImmediateChange={handleImmediateSearchChange}
           />
-        </div>
-      )}
-    </div>
+        </Grid2>
+        <Grid2 size={{ xs: 3 }} display={"flex"} justifyContent={"center"}>
+          <Button variant="outlined">Add Product</Button>
+        </Grid2>
+      </Grid2>
+      <Popper open={isOpen && !!data} anchorEl={anchorEl}>
+        <SearchResultsTable
+          results={data ? data : []}
+          handleSelection={(product: Product) => handleSelection(product)}
+          columns={columns}
+        />
+      </Popper>
+    </Box>
   );
 }
 

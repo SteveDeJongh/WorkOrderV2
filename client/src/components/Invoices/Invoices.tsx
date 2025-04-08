@@ -9,6 +9,7 @@ import { ViewTypes } from "../../types/userPreferences";
 import { useAuth } from "../../contexts/AuthContext";
 import { INVOICECOLUMNOPTIONS, INVOICECOLUMNSALT } from "../columns";
 import { syncUserPreference } from "../../services/userPreferencesServices";
+import { Card, Grid2, Typography } from "@mui/material";
 
 function Invoices() {
   const { user, updateUserPreferences } = useAuth();
@@ -37,48 +38,53 @@ function Invoices() {
   return (
     <>
       {view === "profile" && (
-        <div id="panes">
-          <div className="pane pane-left">
-            <div className="pane-inner">
-              <LeftListWithAction
-                title={"Invoices"}
-                linkToPage={""}
-                getter={useInvoicesData}
-              />
-            </div>
-          </div>
-          <div className="pane pane-mid">
-            <div className="pane-inner">
-              <ViewToggle view={view} setView={viewSetter} />
-              {renderNoSelection ? (
-                <NoSelection item={"invoice"} />
-              ) : (
-                <Outlet />
-              )}
-            </div>
-          </div>
-        </div>
+        <Grid2 container direction="column" spacing={5} mx={5} my={3}>
+          <Grid2 container direction="row" justifyContent={"space-between"}>
+            <Typography component={"h4"} variant="h4">
+              Invoices
+            </Typography>
+            <ViewToggle view={view} setView={viewSetter} />
+          </Grid2>
+          <Grid2 container direction="row" spacing={3} alignItems={"stretch"}>
+            <Grid2 size={{ xs: 3 }} sx={{ display: "flex", height: "78vh" }}>
+              <Card variant="outlined" sx={{ padding: 1, width: "100%" }}>
+                <LeftListWithAction
+                  title={"Invoices"}
+                  linkToPage={""}
+                  getter={useInvoicesData}
+                />
+              </Card>
+            </Grid2>
+            <Grid2 size={{ xs: 9 }} sx={{ display: "flex" }}>
+              <Card variant="outlined" sx={{ padding: 0, width: "100%" }}>
+                {renderNoSelection ? (
+                  <NoSelection item={"invoice"} />
+                ) : (
+                  <Outlet />
+                )}
+              </Card>
+            </Grid2>
+          </Grid2>
+        </Grid2>
       )}
       {view === "table" && (
-        <>
-          <div id="panes">
-            <div className="pane pane-full">
-              <div className="pane-inner">
-                <div className="table-top">
-                  <h3 className="title">Invoices</h3>
-                  <ViewToggle view={view} setView={viewSetter} />
-                </div>
-                <FullWidthTable
-                  title={"Invoices"}
-                  fetcher={useInvoicesData}
-                  columns={INVOICECOLUMNSALT}
-                  colPreferences={user!.preferences.invoice_columns}
-                  colOptions={INVOICECOLUMNOPTIONS}
-                />
-              </div>
-            </div>
-          </div>
-        </>
+        <Grid2 container direction="column" spacing={5} m={5}>
+          <Grid2 container direction="row" justifyContent={"space-between"}>
+            <Typography component={"h4"} variant="h4">
+              Invoices
+            </Typography>
+            <ViewToggle view={view} setView={viewSetter} />
+          </Grid2>
+          <Grid2 container direction="row">
+            <FullWidthTable
+              title={"Invoices"}
+              fetcher={useInvoicesData}
+              columns={INVOICECOLUMNSALT}
+              colPreferences={user!.preferences.invoice_columns}
+              colOptions={INVOICECOLUMNOPTIONS}
+            />
+          </Grid2>
+        </Grid2>
       )}
     </>
   );

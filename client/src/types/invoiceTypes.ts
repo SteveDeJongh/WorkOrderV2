@@ -1,5 +1,5 @@
 import { Product } from "./products"
-import { Payment } from "./payments";
+import { EditablePaymentData, Payment } from "./payments";
 
 type Action =
   | { type: "setInvoice"; data: Invoice }
@@ -9,8 +9,12 @@ type Action =
   | { type: "createInvoiceLine"; invoice_line: InvoiceLine}
   | { type: "updateInvoiceLine"; invoice_line: InvoiceLine }
   | { type: "togglePaymentDelete"; paymentId: number | string; created_at: string | Date }
-  | { type: "updatePayment"; payment: Payment }
-  | { type: "createPayment"; payment: Payment };
+  | { type: "updatePayment"; payment: EditablePaymentData }
+  | { type: "createPayment"; payment: EditablePaymentData };
+
+type PaymentAction =
+| { type: "createPayment"; payment: EditablePaymentData }
+| { type: "updatePayment"; payment: EditablePaymentData };
 
 type NestedInvoiceData = {
   invoice: InitialInvoice;
@@ -30,7 +34,7 @@ type InitialInvoice = {
 }
 
 type Invoice = InitialInvoice & {
-  id: number;
+  id: number | null;
   // customer_id: number | undefined;
   // user_id: number;
   // total: number;
@@ -85,4 +89,4 @@ function isInvoice(invoice: Invoice | Object): invoice is Invoice {
   return (invoice as Invoice).total !== undefined && (invoice as Invoice).sub_total !== undefined;
 }
 
-export { Action, Invoice, InvoiceLine, Total, InvoiceColumn, NestedInvoiceData, SelectionContext, isInvoice }
+export { Action, Invoice, InvoiceLine, Total, InvoiceColumn, NestedInvoiceData, PaymentAction, SelectionContext, isInvoice }

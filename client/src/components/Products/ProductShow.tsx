@@ -51,7 +51,7 @@ function ProductShow() {
             handleChange={handleChange}
           />
           <CustomTabPanel value={tab} index={0}>
-            <ProductView mainData={mainData} />
+            <ProductView mainData={mainData} setTab={setTab} />
           </CustomTabPanel>
           <CustomTabPanel value={tab} index={1}>
             <ProductEdit

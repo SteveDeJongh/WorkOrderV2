@@ -41,6 +41,7 @@ function ScrollableTableTall({
         sx={{
           ...(height ? { maxHeight: height } : {}),
           overflow: "auto",
+          whiteSpace: "nowrap",
         }}
         variant="outlined"
       >

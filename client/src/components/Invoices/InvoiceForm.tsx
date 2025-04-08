@@ -7,10 +7,19 @@ import { FormCustomerSection } from "./Customer/FormCustomerSection";
 import { FormInvoiceLines } from "./InvoiceLines/FormInvoiceLines";
 import { FormPaymentLines } from "./Payments/FormPaymentLines";
 import { InvoiceTotalDetails } from "./InvoiceTotalDetails";
-import { Button } from "../multiuse/Button";
 import { Invoice } from "../../types/invoiceTypes";
 import { useAuth } from "../../contexts/AuthContext";
 import { invoiceReducer } from "./invoiceReducer";
+import {
+  Button,
+  CardActions,
+  Chip,
+  Divider,
+  Grid2,
+  Paper,
+  Stack,
+  Typography,
+} from "../../utils/muiImports";
 
 type Props = {
   modalForm: boolean;
@@ -109,53 +118,77 @@ function InvoiceForm({ modalForm, buttonText, invoiceData }: Props) {
   // }, []);
 
   return (
-    <>
-      {!modalForm && (
-        <div className="main-pane-header">
-          <div className="main-pane-header-title">
-            <h2>
+    <Grid2 container direction="column">
+      <Grid2>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent={"space-between"}
+          paddingX={2}
+          paddingY={1}
+        >
+          <Stack direction="row" alignItems={"center"}>
+            <Typography variant="h4" component="h4">
               {headerText}
-              <span
-                className={`invoice-status ${
-                  invoice.status === "open" ? "open" : "closed"
-                }`}
-              >
-                {CapitalizeFullName(invoice.status)}
-              </span>
-            </h2>
-            <div className="main-pane-form-actions">
-              <Button onClick={() => handleCancel()} text={"Cancel"} />
-              <Button
-                disabled={false}
-                type="button"
-                text={buttonText}
-                onClick={() => mutate(invoice)}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-      <div id="main-pane-content" className="main-pane-content">
-        <FormCustomerSection
-          customerId={invoice?.customer_id}
-          dispatch={dispatch}
-        />
-        <FormInvoiceLines
-          invoice_lines={invoice.invoice_lines}
-          adminActions={!!adminActions}
-          invoice_id={invoice.id}
-          dispatch={dispatch}
-        />
-        <FormPaymentLines
-          payments={invoice.payments}
-          adminActions={!!adminActions}
-          balance={invoice.balance}
-          invoice_id={invoice.id}
-          dispatch={dispatch}
-        />
-        <InvoiceTotalDetails invoice={invoice} />
-      </div>
-    </>
+            </Typography>
+            <Chip
+              sx={{ mx: 2 }}
+              color={invoice.status === "open" ? "success" : "error"}
+              label={CapitalizeFullName(invoice.status)}
+            />
+          </Stack>
+          <CardActions>
+            <Button
+              variant={"contained"}
+              disabled={false}
+              type="button"
+              onClick={() => mutate(invoice)}
+            >
+              {buttonText}
+            </Button>
+            <Button variant="outlined" onClick={() => handleCancel()}>
+              Cancel
+            </Button>
+          </CardActions>
+        </Stack>
+      </Grid2>
+      <Grid2>
+        <Divider />
+      </Grid2>
+      <Stack
+        spacing={1}
+        paddingX={2}
+        paddingY={1}
+        sx={{ overflowY: "auto", maxHeight: "70vh", maxWidth: "100%" }}
+      >
+        <Paper variant="outlined" sx={{ padding: 1 }}>
+          <FormCustomerSection
+            customerId={invoice?.customer_id}
+            dispatch={dispatch}
+          />
+        </Paper>
+        <Paper variant="outlined" sx={{ padding: 1 }}>
+          <FormInvoiceLines
+            invoice_lines={invoice.invoice_lines}
+            adminActions={!!adminActions}
+            invoice_id={invoice.id}
+            dispatch={dispatch}
+          />
+        </Paper>
+        <Paper variant="outlined" sx={{ padding: 1 }}>
+          <FormPaymentLines
+            payments={invoice.payments}
+            adminActions={!!adminActions}
+            balance={invoice.balance}
+            invoice_id={invoice.id}
+            dispatch={dispatch}
+          />
+        </Paper>
+        <Paper variant="outlined" sx={{ padding: 1 }}>
+          <InvoiceTotalDetails invoice={invoice} />
+        </Paper>
+      </Stack>
+    </Grid2>
   );
 }
 

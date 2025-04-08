@@ -10,7 +10,6 @@ import {
   fetchInventoryMovementsFor,
 } from "../../services/movementServices";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "../multiuse/Button";
 import { EditableProductData, Product } from "../../types/products";
 
 type Props = {

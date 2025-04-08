@@ -1,14 +1,25 @@
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
   getSortedRowModel,
+  ColumnDef,
 } from "@tanstack/react-table";
 import { Product } from "../../types/products";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "../../utils/muiImports";
+import { Customer } from "../../types/customers";
 
 type Props = {
-  results: Array<object>;
+  results: Product[] | Customer[];
   handleSelection: Function;
   handleDoubleClick?: Function;
   columns: { keys: string[]; header: string }[];
@@ -21,50 +32,38 @@ function SearchResultsTable({
   columns,
 }: Props) {
   const [haveResults, setHaveResults] = useState(false);
-  const lastSelectedRow = useRef<HTMLTableRowElement>();
 
   useEffect(() => {
-    if (results.length === 0) {
-      setHaveResults(false);
-    } else {
-      setHaveResults(true);
+    if (results) {
+      setHaveResults(results.length !== 0);
     }
   }, [results]);
 
-  const columnDef = [];
+  const columnDef: ColumnDef<Product | Customer>[] = [];
 
   columns.forEach((col) => {
     columnDef.push({
       header: col.header,
-      accessorFn: (row: Product) => {
+      accessorFn: (row: Product | Customer) => {
         return row[col.keys];
       },
     });
   });
 
-  const data = useMemo(() => results, [results]);
+  const data: Product[] | Customer[] = useMemo(() => results, [results]);
   const finalColumDef = useMemo(() => columnDef, []);
 
-  const table = useReactTable({
+  const table = useReactTable<Product | Customer>({
     data: data,
     columns: finalColumDef,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
 
-  function handleClick(row, target: HTMLElement) {
-    let tr = target.closest("tr");
-    tr ? manageSelectionState(tr) : null;
+  const [selectedRow, setSelectedRow] = useState<number>();
+  function handleClick(row) {
+    setSelectedRow(row.id);
     handleSelection(row, row);
-  }
-
-  function manageSelectionState(row: HTMLTableRowElement) {
-    if (lastSelectedRow.current) {
-      lastSelectedRow.current.classList.remove("active");
-    }
-
-    lastSelectedRow.current = row;
-    row.classList.add("active");
   }
 
   function doubleClickHandler(row, target: HTMLElement) {
@@ -76,56 +75,64 @@ function SearchResultsTable({
   }
 
   return (
-    <>
-      <table>
-        <thead>
+    <TableContainer
+      component={Paper}
+      sx={{ maxHeight: "400px", overflow: "auto", whiteSpace: "nowrap" }}
+      variant="outlined"
+    >
+      <Table sx={{ maxWidth: 100, overflow: "auto" }} stickyHeader>
+        <TableHead>
           {table.getHeaderGroups().map((headerEl) => (
-            <tr key={headerEl.id}>
+            <TableRow key={headerEl.id}>
               {headerEl.headers.map((columnEl) => (
-                <th key={columnEl.id} colSpan={columnEl.colSpan}>
+                <TableCell key={columnEl.id} colSpan={columnEl.colSpan}>
                   {flexRender(
                     columnEl.column.columnDef.header,
                     columnEl.getContext()
                   )}
-                </th>
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </thead>
-        <tbody>
+        </TableHead>
+        <TableBody>
           {!haveResults && (
-            <tr>
-              <td>No Results</td>
-            </tr>
+            <TableRow>
+              <TableCell>No Results</TableCell>
+            </TableRow>
           )}
           {haveResults && (
             <>
               {table.getRowModel().rows.map((rowEl) => (
-                <tr
+                <TableRow
                   key={rowEl.id}
                   onClick={(e) => {
-                    handleClick(rowEl.original, e.target as HTMLElement);
+                    handleClick(rowEl.original);
                   }}
                   onDoubleClick={(e) =>
                     doubleClickHandler(rowEl.original, e.target as HTMLElement)
                   }
-                  className={"search-result"}
+                  selected={
+                    selectedRow
+                      ? selectedRow === Number(rowEl.original.id)
+                      : false
+                  }
                 >
                   {rowEl.getVisibleCells().map((cellEl) => (
-                    <td key={cellEl.id}>
+                    <TableCell key={cellEl.id}>
                       {flexRender(
                         cellEl.column.columnDef.cell,
                         cellEl.getContext()
                       )}
-                    </td>
+                    </TableCell>
                   ))}
-                </tr>
+                </TableRow>
               ))}
             </>
           )}
-        </tbody>
-      </table>
-    </>
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
 

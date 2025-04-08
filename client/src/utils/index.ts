@@ -80,3 +80,8 @@ export function dateTimeFormatter(date: string): string {
 export function showAsDollarAmount(value: string | number): string {
   return `$${Number(value).toFixed(2)}`
 }
+
+export function parseCurrencyString(value: string | number): number {
+  if (typeof value === "number") return value;
+  return Number(value.replace(/[^0-9.-]+/g, ""));
+}

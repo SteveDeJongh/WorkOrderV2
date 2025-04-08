@@ -3,26 +3,22 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { fetchInvoiceData } from "../../services/invoiceServices";
 import { LoadingBox } from "../multiuse/LoadingBox";
+import { Alert } from "../../utils/muiImports";
 
 function InvoiceShow() {
   const { id } = useParams();
-  const { data, isError, error, isPending } = useQuery({
+  const { data, error, isPending } = useQuery({
     queryKey: ["fetchInvoice", { id }],
     queryFn: () => fetchInvoiceData(Number(id)),
   });
 
-  if (isPending) {
-    return <LoadingBox text="Loading Invoice..." />;
-  }
-
-  if (isError) {
-    return <div>{error.message}</div>;
-  }
   return (
     <>
-      <div className="pane-inner">
+      {error && <Alert color="error">{error.message}</Alert>}
+      {isPending && <LoadingBox text="Loading Invoice..." />}
+      {!isPending && data && (
         <InvoiceForm modalForm={false} buttonText={"Save"} invoiceData={data} />
-      </div>
+      )}
     </>
   );
 }

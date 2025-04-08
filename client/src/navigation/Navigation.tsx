@@ -105,20 +105,6 @@ export const router = createBrowserRouter([
               {
                 path: ":id",
                 element: <ProductShow />,
-                children: [
-                  {
-                    path: "view",
-                    element: <ProductView />,
-                  },
-                  {
-                    path: "movements",
-                    element: <ProductMovements />,
-                  },
-                  {
-                    path: "edit",
-                    element: <ProductEdit />,
-                  },
-                ],
               },
               {
                 path: "new",

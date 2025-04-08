@@ -1,4 +1,4 @@
-import { Container, Typography } from "../../utils/muiImports";
+import { Box, Typography } from "../../utils/muiImports";
 
 type props = {
   title: string;
@@ -6,11 +6,9 @@ type props = {
 
 function PageIndex({ title }: props) {
   return (
-    <>
-      <Container className="pane-inner">
-        <Typography variant="body1">No {title} selected</Typography>
-      </Container>
-    </>
+    <Box className="pane-inner">
+      <Typography variant="h6">No {title} selected.</Typography>
+    </Box>
   );
 }
 

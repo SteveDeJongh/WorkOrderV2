@@ -1,9 +1,21 @@
 import { useState, useEffect } from "react";
 import { PaymentLine } from "./PaymentLine";
-import { Button } from "../../multiuse/Button";
 import { PaymentModal } from "./PaymentModal";
 import { Action } from "../../../types/invoiceTypes";
 import { Payment } from "../../../types/payments";
+import {
+  Button,
+  CardActions,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "../../../utils/muiImports";
 
 type props = {
   payments: Payment[];
@@ -47,63 +59,68 @@ function FormPaymentLines({
     }
   }
 
-  function handleClose(data: Payment | undefined) {
+  function handleClose() {
     dispatch({ type: "recaculateInvoice" });
     setPayment(undefined);
     setIsOpen(false);
   }
 
   return (
-    <>
-      <div className="panel">
-        <div className="panel-heading">
-          <h3>Payments</h3>
-          <div className="panel-action"></div>
-        </div>
-        {lines && (
-          <div className="panel-contents">
-            <div className="panel-contents-section">
-              <div className="scrollable-table">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Method</th>
-                      <th>Amount</th>
-                      <th>Date</th>
-                      {adminActions && <th>Delete</th>}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {lines?.map((line, idx) => {
-                      return (
-                        <PaymentLine
-                          key={line.id ? line.id : `new${idx}`}
-                          paymentData={line}
-                          lineClick={(e: React.MouseEvent) =>
-                            handlePaymentClick(line, e)
-                          }
-                          adminActions={adminActions}
-                          toggleDelete={toggleDelete}
-                        />
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <Button text="Add Payment" onClick={() => setIsOpen(true)} />
-          </div>
-        )}
-      </div>
+    <Stack spacing={1} sx={{ overflow: "auto", maxWidth: "100%" }}>
+      <Typography variant="h6">Payments</Typography>
+
+      {lines && (
+        <TableContainer
+          component={Paper}
+          sx={{
+            maxHeight: "400px",
+            overflow: "auto",
+            maxWidth: "100%",
+            whiteSpace: "nowrap",
+          }}
+          variant="outlined"
+        >
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Method</TableCell>
+                <TableCell>Amount</TableCell>
+                <TableCell>Date</TableCell>
+                {adminActions && <TableCell>Delete</TableCell>}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {lines?.map((line, idx) => {
+                return (
+                  <PaymentLine
+                    key={line.id ? line.id : `new${idx}`}
+                    paymentData={line}
+                    lineClick={(e: React.MouseEvent) =>
+                      handlePaymentClick(line, e)
+                    }
+                    adminActions={adminActions}
+                    toggleDelete={toggleDelete}
+                  />
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+      <CardActions>
+        <Button variant="outlined" onClick={() => setIsOpen(true)}>
+          Add Payment
+        </Button>
+      </CardActions>
       <PaymentModal
         open={isOpen}
-        closeModal={(data: Payment | undefined) => handleClose(data)}
+        closeModal={handleClose}
         payment={payment}
         balance={balance}
         invoice_id={invoice_id}
         dispatch={dispatch}
       />
-    </>
+    </Stack>
   );
 }
 

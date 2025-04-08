@@ -17,7 +17,7 @@ function useInvoicesData(searchTerm: string) {
     },
   });
 
-  return { data, loading, error };
+  return { data: data ?? [], loading, error };
 }
 
 export { useInvoicesData };

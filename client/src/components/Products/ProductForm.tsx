@@ -1,6 +1,6 @@
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EditableProductData, Product } from "../../types/products";
 import { UseMutateFunction } from "@tanstack/react-query";
 import {
@@ -10,10 +10,13 @@ import {
   CircularProgress,
   FormGroup,
   Grid2,
+  MenuItem,
   Typography,
 } from "../../utils/muiImports";
 import { FormTextInput } from "../FormParts/FormTextInput";
 import { FormMultiCheckBox } from "../Users/FormMultiCheckBox";
+import { FormNumberInput } from "../FormParts/FormNumberInput";
+import { FormSelectInput } from "../FormParts/FormSelectInput";
 
 type Props = {
   modalForm?: boolean;
@@ -24,6 +27,13 @@ type Props = {
   onCancel: React.Dispatch<React.SetStateAction<number>>;
 };
 
+// Hardcoded tax rates for now, to be fetched from API eventually.
+const TAX_RATES = [
+  { id: 1, percentage: 0.15 },
+  { id: 2, percentage: 0.12 },
+  { id: 3, percentage: 0.1 },
+];
+
 function ProductForm({
   modalForm,
   product,
@@ -32,16 +42,11 @@ function ProductForm({
   buttonText,
   onCancel,
 }: Props) {
-  const navigate = useNavigate();
-  const [inventoried, setInventoried] = useState<boolean>(
-    product ? product.inventory : true
-  );
-
   const {
-    register,
     handleSubmit,
     formState: { isSubmitting },
     control,
+    watch,
     setValue,
   } = useForm({
     defaultValues: product
@@ -50,8 +55,8 @@ function ProductForm({
           description: product.description,
           sku: product.sku,
           upc: product.upc,
-          price: product.price,
-          cost: product.cost,
+          price: parseInt(product.price, 10).toFixed(2),
+          cost: parseInt(product.cost, 10).toFixed(2),
           stock: product.stock,
           min: product.min,
           max: product.max,
@@ -60,6 +65,16 @@ function ProductForm({
         }
       : undefined,
   });
+
+  // const watchInventory = watch("inventory");
+  // const [inventoried, setInventoried] = useState<boolean>(product!.inventory);
+
+  // useEffect(() => {
+  //   if (watchInventory) {
+  //     setInventoried(true);
+  //   }
+  // }, [watchInventory]);
+  const inventoried = true;
 
   async function onSubmitHandler(data: EditableProductData) {
     try {
@@ -166,7 +181,7 @@ function ProductForm({
                     field: { onChange, value },
                     fieldState: { error },
                   }) => (
-                    <FormTextInput
+                    <FormNumberInput
                       id="upc"
                       name="upc"
                       title="UPC"
@@ -181,9 +196,9 @@ function ProductForm({
             </Grid2>
           </Grid2>
           <Grid2>
-            <h3>Pricing</h3>
+            <Typography variant="h6">Pricing</Typography>
             <Grid2 container direction="row" spacing={2}>
-              <div className="formPair half">
+              <Grid2 size={{ xs: 4 }}>
                 <Controller
                   name="price"
                   control={control}
@@ -202,8 +217,8 @@ function ProductForm({
                     />
                   )}
                 />
-              </div>
-              <div className="formPair half">
+              </Grid2>
+              <Grid2 size={{ xs: 4 }}>
                 <Controller
                   name="cost"
                   control={control}
@@ -222,34 +237,32 @@ function ProductForm({
                     />
                   )}
                 />
-              </div>
-            </Grid2>
-            <Grid2 container direction="row" spacing={2}>
-              <Grid2 size={{ xs: 6 }}>
-                {/* <Controller
-                    id="tax_rate_id"
-                    control={control}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      // This should be a select input
-                      <FormTextInput
-                        id="tax_rate_id"
-                        name="tax_rate_id"
-                        title="Tax Rate"
-                        placeholder="1"
-                        onChange={onChange}
-                        value={value}
-                        error={error}
-                      />
-                    )}
-                  /> */}
+              </Grid2>
+              <Grid2 size={{ xs: 4 }}>
+                <FormSelectInput
+                  id="tax_rate_id"
+                  name="tax_rate_id"
+                  control={control}
+                  title={"Tax Rate"}
+                  defaultValue={product?.tax_rate_id ? product.tax_rate_id : 1}
+                >
+                  {TAX_RATES.map((opt) => {
+                    return (
+                      <MenuItem
+                        key={`tax_rate_${opt.id}`}
+                        value={opt.id}
+                        selected={opt.id == product?.tax_rate_id}
+                      >
+                        {`${opt.percentage * 100}%`}
+                      </MenuItem>
+                    );
+                  })}
+                </FormSelectInput>
               </Grid2>
             </Grid2>
           </Grid2>
           <Grid2>
-            <h3>Inventory Options</h3>
+            <Typography variant="h6">Inventory Options</Typography>
             <Grid2 container direction="row" spacing={2}>
               <Grid2 size={{ xs: 6 }}>
                 <FormGroup row>
@@ -263,73 +276,78 @@ function ProductForm({
                 </FormGroup>
               </Grid2>
             </Grid2>
-            <Grid2
-              id="inventoryDetails"
-              style={{ display: inventoried ? "" : "none" }}
-            >
-              <Grid2 container direction="row" spacing={2}>
-                <Grid2 size={{ xs: 4 }}>
-                  <Controller
-                    name="stock"
-                    control={control}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <FormTextInput
-                        id="stock"
-                        name="stock"
-                        title="Stock"
-                        placeholder="1"
-                        onChange={onChange}
-                        value={value}
-                        error={error}
-                      />
-                    )}
-                  />
-                </Grid2>
-                <Grid2 size={{ xs: 4 }}>
-                  <Controller
-                    name="min"
-                    control={control}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <FormTextInput
-                        id="min"
-                        name="min"
-                        title="Min"
-                        placeholder="1"
-                        onChange={onChange}
-                        value={value}
-                        error={error}
-                      />
-                    )}
-                  />
-                </Grid2>
-                <Grid2 size={{ xs: 4 }}>
-                  <Controller
-                    name="max"
-                    control={control}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <FormTextInput
-                        id="max"
-                        name="max"
-                        title="Max"
-                        placeholder="100"
-                        onChange={onChange}
-                        value={value}
-                        error={error}
-                      />
-                    )}
-                  />
+            {inventoried && (
+              <Grid2
+                id="inventoryDetails"
+                style={{ display: inventoried ? "" : "none" }}
+              >
+                <Grid2 container direction="row" spacing={2}>
+                  <Grid2 size={{ xs: 4 }}>
+                    <Controller
+                      name="stock"
+                      control={control}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <FormNumberInput
+                          id="stock"
+                          name="stock"
+                          title="Stock"
+                          placeholder="1"
+                          onChange={onChange}
+                          value={value}
+                          error={error}
+                          keepSpinner={true}
+                        />
+                      )}
+                    />
+                  </Grid2>
+                  <Grid2 size={{ xs: 4 }}>
+                    <Controller
+                      name="min"
+                      control={control}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <FormNumberInput
+                          id="min"
+                          name="min"
+                          title="Min"
+                          placeholder="1"
+                          onChange={onChange}
+                          value={value}
+                          error={error}
+                          keepSpinner={true}
+                        />
+                      )}
+                    />
+                  </Grid2>
+                  <Grid2 size={{ xs: 4 }}>
+                    <Controller
+                      name="max"
+                      control={control}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <FormNumberInput
+                          id="max"
+                          name="max"
+                          title="Max"
+                          placeholder="100"
+                          onChange={onChange}
+                          value={value}
+                          error={error}
+                          keepSpinner={true}
+                        />
+                      )}
+                    />
+                  </Grid2>
                 </Grid2>
               </Grid2>
-            </Grid2>
+            )}
           </Grid2>
         </Grid2>
       </Box>

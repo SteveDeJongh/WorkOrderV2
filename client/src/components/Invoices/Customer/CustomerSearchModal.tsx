@@ -1,28 +1,45 @@
 import { useState, useEffect } from "react";
-import ReactDom from "react-dom";
 import { SearchBar } from "../../multiuse/SearchBar";
 import { useCustomersData } from "../../../hooks/useCustomersData";
 import { useURLSearchParam } from "../../../hooks/useURLSearchParam";
 import { SearchResultsTable } from "../../multiuse/SearchResultsTable";
-import { Button } from "../../multiuse/Button";
 import { Customer } from "../../../types/customers";
 import { CUSTOMERCOLUMNS } from "../../columns";
+import {
+  Box,
+  Button,
+  CardActions,
+  Modal,
+  Stack,
+  Typography,
+} from "../../../utils/muiImports";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "70%",
+  bgcolor: "background.paper",
+  border: "1px solid #000",
+  borderRadius: "10px",
+  boxShadow: 24,
+  p: 4,
+};
 
 type Props = {
   open: boolean;
-  onClose: Function;
+  handleClose: () => void;
   onSave: Function;
   customer_id?: number | string;
 };
 
-function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
-  function handleClose(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    let target = e.target as HTMLElement;
-    if (target.className === "main-modal-background") {
-      onClose();
-    }
-  }
-
+function CustomerSearchModal({
+  open,
+  handleClose,
+  onSave,
+  customer_id,
+}: Props) {
   // Main Pane states
   const [selection, setSelection] = useState(customer_id);
   const [data, setMainData] = useState<Customer[]>();
@@ -60,42 +77,48 @@ function CustomerSearchModal({ open, onClose, onSave, customer_id }: Props) {
 
   if (!open) return null;
 
-  return ReactDom.createPortal(
-    <>
-      <div className="main-modal-background" onClick={(e) => handleClose(e)}>
-        <div className="main-modal">
-          <SearchBar
-            title={"Customers"}
-            value={searchTerm}
-            onSearchChange={handleDebouncedSearchChange}
-            onImmediateChange={handleImmediateSearchChange}
-          />
-          {loading && <p>Information loading...</p>}
-          {error && <p>An error occured.</p>}
-          {!loading && !error && data ? (
-            <>
-              <div className="contained-search-table">
-                <SearchResultsTable
-                  results={data}
-                  handleSelection={(customer: Customer) => {
-                    handleCustomerSelect(customer.id);
-                  }}
-                  handleDoubleClick={() => {
-                    onSave(selection);
-                  }}
-                  columns={CUSTOMERCOLUMNS}
-                />
-              </div>
-            </>
-          ) : null}
-          <div className="controls">
-            <Button onClick={() => onSave(selection)} text={"Save"} />
-            <Button onClick={() => onClose()} text={"Cancel"} />
-          </div>
-        </div>
-      </div>
-    </>,
-    document.getElementById("portal") as HTMLElement
+  return (
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Stack sx={style} spacing={3}>
+        <SearchBar
+          title={"Customers"}
+          value={searchTerm}
+          onSearchChange={handleDebouncedSearchChange}
+          onImmediateChange={handleImmediateSearchChange}
+        />
+        {loading && (
+          <Typography variant="body1">Information loading...</Typography>
+        )}
+        {error && <Typography variant="body1">An error occured.</Typography>}
+        {!loading && !error && data ? (
+          <Box className="contained-search-table">
+            <SearchResultsTable
+              results={data}
+              handleSelection={(customer: Customer) => {
+                handleCustomerSelect(customer.id);
+              }}
+              handleDoubleClick={() => {
+                onSave(selection);
+              }}
+              columns={CUSTOMERCOLUMNS}
+            />
+          </Box>
+        ) : null}
+        <CardActions>
+          <Button variant="outlined" onClick={() => onSave(selection)}>
+            Save
+          </Button>
+          <Button variant="outlined" onClick={handleClose}>
+            Cancel
+          </Button>
+        </CardActions>
+      </Stack>
+    </Modal>
   );
 }
 

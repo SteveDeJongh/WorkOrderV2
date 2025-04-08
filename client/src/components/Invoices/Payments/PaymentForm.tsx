@@ -1,17 +1,35 @@
-import { useForm } from "react-hook-form";
-import { Button } from "../../multiuse/Button";
+import { Controller, useForm } from "react-hook-form";
 import { EditablePaymentData, Payment } from "../../../types/payments";
 import { useEffect, useState } from "react";
 import { showAsDollarAmount } from "../../../utils/index";
+import {
+  Box,
+  Button,
+  CardActions,
+  Chip,
+  FormLabel,
+  Grid2,
+  MenuItem,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { FormSelectInput } from "../../FormParts/FormSelectInput";
+import { FormNumberInput } from "../../FormParts/FormNumberInput";
 
 type Props = {
-  handleCancel: Function;
+  handleCancel: () => void;
+  onSubmit: (data: EditablePaymentData) => void;
   payment?: Payment;
-  onSubmit: Function;
   buttonText: string;
   invoice_id: number | null;
   balance: number;
 };
+
+const PAYMENT_METHODS = [
+  { value: "Cash", label: "Cash" },
+  { value: "Visa", label: "Visa" },
+  { value: "Debit", label: "Debit" },
+];
 
 function PaymentForm({
   handleCancel,
@@ -22,9 +40,9 @@ function PaymentForm({
   balance,
 }: Props) {
   const {
-    register,
+    control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
     watch,
     setValue,
   } = useForm({
@@ -54,27 +72,16 @@ function PaymentForm({
   );
 
   useEffect(() => {
-    setValue("change", showAsDollarAmount(change));
-  }, [change]);
+    setValue("change", change);
+  }, [change, setValue]);
 
   useEffect(() => {
-    if (watchMethod === "Cash") {
-      if (watchAmount && watchAmount < 0) {
-        setChange(0);
-      } else {
-        let existingPayment = payment ? Number(payment.amount) : 0;
-        if (Number(watchAmount) - balance - existingPayment <= 0) {
-          setChange(0);
-        } else {
-          setChange(Number(watchAmount) - balance - existingPayment);
-        }
-      }
-      setShowChange(true);
-    } else {
-      setChange(0);
-      setShowChange(false);
-    }
-  }, [watchMethod, watchAmount]);
+    const existing = payment ? Number(payment.amount) : 0;
+    const rawChange = Number(watchAmount) - balance - existing;
+
+    setChange(watchAmount && rawChange > 0 ? rawChange : 0);
+    setShowChange(watchMethod === "Cash");
+  }, [watchMethod, watchAmount, balance, payment]);
 
   async function onSubmitHandler(data: EditablePaymentData) {
     try {
@@ -86,98 +93,117 @@ function PaymentForm({
 
   return (
     <>
-      <form
+      <Box
         id="main-modal-form"
-        className="main-pane-content"
+        component={"form"}
         onSubmit={handleSubmit(onSubmitHandler)}
       >
-        <input {...register("id")} type="hidden" id="id" name="id" />
-        <input
-          {...register("id")}
-          type="hidden"
-          id="created_at"
-          name="created_at"
+        {/* <Controller
+          name={"id"}
+          control={control}
+          render={() => <input type="hidden" id="id" name="id" />}
         />
-
-        <input
-          {...register("invoice_id")}
-          type="hidden"
-          id="invoice_id"
-          name="invoice_id"
+        <Controller
+          name={"created_at"}
+          control={control}
+          render={() => (
+            <input type="hidden" id="created_at" name="created_at" />
+          )}
         />
-
-        <div className="panel">
-          <h3>Details</h3>
-          <div className="panel-contents">
-            <div className="panel-contents-section">
-              <div className="formPair">
-                <label htmlFor="method">Method:</label>
-                <select
-                  {...register("method", {
-                    required: "Product Name is required.",
-                  })}
-                  id="method"
-                  name="method"
-                >
-                  <option value="Cash">Cash</option>
-                  <option value="Visa">Visa</option>
-                  <option value="Debit">Debit</option>
-                </select>
-                {errors.method && (
-                  <p className="error">{`${errors.method.message}`}</p>
-                )}
-              </div>
-            </div>
-            <div className="panel-contents-section">
-              <div className="formPair">
-                <label htmlFor="amount">Amount:</label>
-                <input
-                  {...register("amount", {
-                    required: "amount is required.",
-                  })}
-                  type="text"
+        <Controller
+          name={"invoice_id"}
+          control={control}
+          render={() => (
+            <input type="hidden" id="invoice_id" name="invoice_id" />
+          )}
+        /> */}
+        <Typography variant="h6">Details</Typography>
+        <Grid2 container>
+          <Grid2 size={{ xs: 12, sm: 6 }}>
+            <FormSelectInput
+              id="method"
+              name="method"
+              control={control}
+              title={"Method"}
+              defaultValue={"Cash"}
+            >
+              {PAYMENT_METHODS.map((opt) => {
+                return (
+                  <MenuItem
+                    key={`payment_method_${opt.value}`}
+                    value={opt.value}
+                  >
+                    {opt.label}
+                  </MenuItem>
+                );
+              })}
+            </FormSelectInput>
+          </Grid2>
+          <Grid2 size={{ xs: 12, sm: 6 }}>
+            <Controller
+              name="amount"
+              control={control}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <FormNumberInput
                   id="amount"
                   name="amount"
-                  placeholder="amount"
-                  defaultValue={balance}
+                  title="Amount"
+                  placeholder={payment ? payment.amount : 0}
+                  onChange={onChange}
+                  value={value}
+                  error={error}
                 />
-                {errors.amount && (
-                  <p className="error">{`${errors.amount.message}`}</p>
+              )}
+            />
+          </Grid2>
+          {showChange && (
+            <Grid2 size={{ xs: 12, sm: 6 }}>
+              <Controller
+                name="change"
+                control={control}
+                render={({ field: { value } }) => (
+                  <Stack direction="row" alignItems={"center"}>
+                    <FormLabel
+                      style={{ fontWeight: "bold" }}
+                      htmlFor={"change"}
+                    >
+                      Change
+                    </FormLabel>
+                    <Chip
+                      color={
+                        value
+                          ? Number(value) > 0
+                            ? "success"
+                            : "error"
+                          : "default"
+                      }
+                      label={showAsDollarAmount(value!)}
+                    />
+                  </Stack>
                 )}
-              </div>
-            </div>
-            {showChange && (
-              <div className="panel-contents-section">
-                <div className="formPair">
-                  <label htmlFor="amount">Change Due:</label>
-                  <input
-                    {...register("change")}
-                    type="text"
-                    id="change"
-                    name="change"
-                    disabled={true}
-                    value={showAsDollarAmount(change)}
-                  />
-                  {errors.amount && (
-                    <p className="error">{`${errors.amount.message}`}</p>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </form>
-      <div className="main-modal-form-actions">
-        <div className="main-pane-form-actions">
-          <Button onClick={() => handleCancel()} text={"Cancel"} />
+              />
+            </Grid2>
+          )}
+        </Grid2>
+      </Box>
+      <Box>
+        <CardActions>
           <Button
+            variant="contained"
             form={"main-modal-form"}
             disabled={isSubmitting}
             type={"submit"}
-            text={buttonText}
-          />
-        </div>
-      </div>
+          >
+            {buttonText}
+          </Button>
+          <Button variant="outlined" onClick={() => handleCancel()}>
+            Cancel
+          </Button>
+        </CardActions>
+      </Box>
     </>
   );
 }
