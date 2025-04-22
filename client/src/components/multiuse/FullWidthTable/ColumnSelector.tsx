@@ -1,12 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TColumnForm, ZColumnForm } from "../../../types/customers";
-import { Button } from "../Button";
 import { useAuth } from "../../../contexts/AuthContext";
 import { syncUserPreference } from "../../../services/userPreferencesServices";
 import { TColumn } from "../../columns";
 import { ColumnPreferences } from "../../../types/userPreferences";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardActions,
+  ClickAwayListener,
+  IconButton,
+  List,
+  Popper,
+  Typography,
+} from "@mui/material";
+import { MenuIcon, MenuOpenIcon } from "../../../utils/muiImports";
+import { FormMultiCheckBox } from "../../FormParts/FormMultiCheckBox";
 
 type props = {
   colOptions: string[];
@@ -16,11 +29,12 @@ type props = {
 };
 
 function ColumnSelector({ colOptions, colPreferences, title, columns }: props) {
-  const [isActive, setActive] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement>();
   const { user, updateUserPreferences } = useAuth();
 
   async function onSubmit(data: { selections: string[] }) {
-    setActive(false);
+    setIsOpen(false);
 
     let newColPreferences: ColumnPreferences[] = colPreferences.map(
       (colPref) => {
@@ -42,10 +56,18 @@ function ColumnSelector({ colOptions, colPreferences, title, columns }: props) {
     updateUserPreferences(updatedPreferences);
   }
 
+  const [selected, setSelected] = useState<string[]>([]);
+  useEffect(() => {
+    if (colPreferences) {
+      setSelected(colPreferences.map((pref) => (pref.display ? pref.id : "")));
+    }
+  }, [colPreferences]);
+
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setValue,
   } = useForm<TColumnForm>({
     defaultValues: {
       selections: colPreferences
@@ -57,57 +79,67 @@ function ColumnSelector({ colOptions, colPreferences, title, columns }: props) {
 
   return (
     <>
-      <div
-        className={isActive ? "ham-menu columns active" : "ham-menu columns"}
-        onClick={() => setActive(!isActive)}
+      <Box
+        onClick={(e) => {
+          setAnchorEl(e.currentTarget);
+          setIsOpen(!isOpen);
+        }}
+        sx={{ marginLeft: "auto" }}
       >
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-      <div
-        className={
-          isActive ? "column-options-list active" : "column-options-list"
-        }
-      >
-        {errors.selections && (
-          <>
-            <p>An error occured with your selections, please try again.</p>
-          </>
+        {!isOpen && (
+          <IconButton>
+            <MenuIcon />
+          </IconButton>
         )}
-        <div>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            id="column-form"
-            className="column-form"
-          >
-            <h3>Columns</h3>
-            <ul>
-              {colOptions.map((col, index) => {
-                return (
-                  <div className="list-item-container" key={col}>
-                    <label>{col}</label>
-                    <input
-                      {...register("selections")}
-                      value={col}
-                      type="checkbox"
+        {isOpen && (
+          <IconButton>
+            <MenuOpenIcon />
+          </IconButton>
+        )}
+      </Box>
+      {isOpen && (
+        <Box>
+          <ClickAwayListener onClickAway={() => setIsOpen(false)}>
+            <Popper open={isOpen} anchorEl={anchorEl}>
+              <Card sx={{ padding: 1 }}>
+                {errors.selections && (
+                  <Alert color="error">
+                    An error occured with your selections, please try again.
+                  </Alert>
+                )}
+                <Box
+                  onSubmit={handleSubmit(onSubmit)}
+                  id="column-form"
+                  className="column-form"
+                  component={"form"}
+                >
+                  <Typography variant="h6">Columns</Typography>
+                  <List>
+                    <FormMultiCheckBox
+                      name="selections"
+                      control={control}
+                      setValue={setValue}
+                      defaultValues={selected}
+                      options={colOptions}
+                      dense={true}
                     />
-                  </div>
-                );
-              })}
-            </ul>
-          </form>
-          <div className="controls">
-            <Button
-              form={"column-form"}
-              disabled={isSubmitting}
-              type="submit"
-              text={"Save"}
-            />
-            <Button text={"Cancel"} onClick={() => setActive(!isActive)} />
-          </div>
-        </div>
-      </div>
+                  </List>
+                </Box>
+                <CardActions>
+                  <Button
+                    form={"column-form"}
+                    disabled={isSubmitting}
+                    type="submit"
+                  >
+                    Save
+                  </Button>
+                  <Button onClick={() => setIsOpen(!isOpen)}>Cancel</Button>
+                </CardActions>
+              </Card>
+            </Popper>
+          </ClickAwayListener>
+        </Box>
+      )}
     </>
   );
 }

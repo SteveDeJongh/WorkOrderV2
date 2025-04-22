@@ -5,6 +5,7 @@ import {
 } from "../../../types/invoiceTypes";
 import { showAsDollarAmount } from "../../../utils/index";
 import { TableCell, TableRow } from "@mui/material";
+import { DebugBox } from "../../../utils/debugBox";
 
 type props = {
   line: TInvoiceLine;

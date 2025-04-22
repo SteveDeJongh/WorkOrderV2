@@ -1,5 +1,11 @@
 import { Controller, useForm } from "react-hook-form";
-import { User, ZUserForm, TUserForm, UserErrorData } from "../../types/users";
+import {
+  User,
+  ZUserForm,
+  TUserForm,
+  UserErrorData,
+  RoleTypes,
+} from "../../types/users";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../../contexts/AuthContext";
@@ -16,8 +22,10 @@ import {
   Typography,
 } from "../../utils/muiImports";
 import { FormTextInput } from "../FormParts/FormTextInput";
-import { FormMultiCheckBox } from "./FormMultiCheckBox";
+import { FormMultiCheckBox } from "../FormParts/FormMultiCheckBox";
 import { useEffect, useState } from "react";
+
+const roleOptions: RoleTypes[] = ["user", "manager", "admin"];
 
 type Props = {
   user?: User;
@@ -224,6 +232,7 @@ function UserForm({
                   control={control}
                   setValue={setValue}
                   defaultValues={user?.roles || ["user"]}
+                  options={roleOptions}
                 />
               </FormGroup>
             </Grid2>

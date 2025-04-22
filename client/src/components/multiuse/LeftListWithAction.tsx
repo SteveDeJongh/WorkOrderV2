@@ -15,12 +15,7 @@ import {
   Typography,
   Grid2,
 } from "../../utils/muiImports";
-
-type GetterFunction = (searchTerm: string) => {
-  data: Customer[] | Product[] | Invoice[];
-  loading: boolean;
-  error: Error | null;
-};
+import { GetterFunction } from "../../types/utils";
 
 type Props = {
   title: string;

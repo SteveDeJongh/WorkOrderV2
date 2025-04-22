@@ -8,6 +8,12 @@ import { CSS } from "@dnd-kit/utilities";
 import { ColumnSelector } from "./ColumnSelector";
 import { TColumn } from "../../columns";
 import { ColumnPreferences } from "../../../types/userPreferences";
+import {
+  DragIndicator,
+  DragHandle,
+  Stack,
+  TableCell,
+} from "../../../utils/muiImports";
 
 const DraggableTableHeader = ({
   header,
@@ -37,12 +43,13 @@ const DraggableTableHeader = ({
     whiteSpace: "nowrap",
     width: header.column.getSize(),
     zIndex: isDragging ? 1 : 0,
+    padding: 0,
   };
 
   return (
-    <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
-      <div className="flex">
-        <button
+    <TableCell colSpan={header.colSpan} ref={setNodeRef} style={style}>
+      <Stack direction="row" alignItems={"center"}>
+        <DragIndicator
           // Reordering
           {...attributes}
           {...listeners}
@@ -58,20 +65,22 @@ const DraggableTableHeader = ({
             columns={columns}
           />
         ) : (
-          <div
+          <DragHandle
+            sx={{ marginLeft: "auto", transform: "rotate(90deg)" }}
             // Resizing
             {...{
               onDoubleClick: () => header.column.resetSize(),
               onMouseDown: header.getResizeHandler(),
               onTouchStart: header.getResizeHandler(),
+              cursor: "ew-resize",
               className: `resizer ${
                 header.column.getIsResizing() ? "isResizing" : ""
               }`,
             }}
-          ></div>
+          />
         )}
-      </div>
-    </th>
+      </Stack>
+    </TableCell>
   );
 };
 

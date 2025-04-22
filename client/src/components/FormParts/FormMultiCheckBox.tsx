@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { RoleTypes } from "../../types/users";
 import { Controller } from "react-hook-form";
 import { Box, Checkbox } from "../../utils/muiImports";
 import { CapitalizeFullName } from "../../utils";
-
-const roleOptions: RoleTypes[] = ["user", "manager", "admin"];
+import { FormControlLabel, ListItem } from "../../utils/muiImports";
 
 type Props = {
   name: string;
@@ -12,6 +10,7 @@ type Props = {
   setValue?: any;
   defaultValues: string[];
   options: string[];
+  dense?: boolean;
 };
 
 function FormMultiCheckBox({
@@ -20,6 +19,7 @@ function FormMultiCheckBox({
   setValue,
   defaultValues,
   options,
+  dense,
 }: Props) {
   const [selectedOptions, setSelectedOptions] =
     useState<string[]>(defaultValues);
@@ -42,27 +42,30 @@ function FormMultiCheckBox({
     setValue(name, selectedOptions);
   }, [selectedOptions]);
 
-  const mapArray = options ? options : roleOptions;
   return (
     <>
-      {mapArray.map((option) => {
+      {options.map((option) => {
         return (
           <Box key={option}>
             <Controller
               name={name}
               render={({}) => {
                 return (
-                  <Checkbox
-                    checked={selectedOptions.includes(option)}
-                    onChange={() => handleSelect(option)}
-                  />
+                  <ListItem dense={dense}>
+                    <FormControlLabel
+                      label={CapitalizeFullName(option)}
+                      control={
+                        <Checkbox
+                          checked={selectedOptions.includes(option)}
+                          onChange={() => handleSelect(option)}
+                        />
+                      }
+                    />
+                  </ListItem>
                 );
               }}
               control={control}
             />
-            <label style={{ fontWeight: "normal" }} htmlFor={option}>
-              {CapitalizeFullName(option)}
-            </label>
           </Box>
         );
       })}

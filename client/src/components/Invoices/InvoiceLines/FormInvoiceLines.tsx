@@ -19,6 +19,7 @@ import {
   TableRow,
   Typography,
 } from "../../../utils/muiImports";
+import { DebugBox } from "../../../utils/debugBox";
 
 type props = {
   invoice_lines: TInvoiceLine[];
@@ -171,39 +172,43 @@ function FormInvoiceLines({ invoice_lines = [], invoice_id, dispatch }: props) {
   ];
 
   return (
-    <Stack spacing={1} sx={{ overflow: "auto", maxWidth: "100%" }}>
-      <Typography variant="h6">Invoice Details</Typography>
-      <TableContainer
-        component={Paper}
-        sx={{ overflow: "auto", maxWidth: "100%", whiteSpace: "nowrap" }}
-        variant="outlined"
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell key={`header${column.title}`}>
-                  {column.title}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          {lines && (
-            <TableBody>
-              {lines.map((line, idx) => (
-                <InvoiceLine
-                  key={line.id ? line.id : `new${idx}`}
-                  line={line}
-                  updateLine={updateLine}
-                  columns={columns}
-                />
-              ))}
-            </TableBody>
-          )}
-        </Table>
-      </TableContainer>
-      <NewInvoiceLine addLine={(product: Product) => addLine(product)} />
-    </Stack>
+    <DebugBox color="blue" label="forminvocielines">
+      <Stack spacing={1} sx={{ overflow: "auto", maxWidth: "100%" }}>
+        <Typography variant="h6">Invoice Details</Typography>
+        <DebugBox color="pink">
+          <TableContainer
+            component={Paper}
+            sx={{ overflow: "auto", maxWidth: "100%", whiteSpace: "nowrap" }}
+            variant="outlined"
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell key={`header${column.title}`}>
+                      {column.title}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              {lines && (
+                <TableBody>
+                  {lines.map((line, idx) => (
+                    <InvoiceLine
+                      key={line.id ? line.id : `new${idx}`}
+                      line={line}
+                      updateLine={updateLine}
+                      columns={columns}
+                    />
+                  ))}
+                </TableBody>
+              )}
+            </Table>
+          </TableContainer>
+        </DebugBox>
+        <NewInvoiceLine addLine={(product: Product) => addLine(product)} />
+      </Stack>
+    </DebugBox>
   );
 }
 

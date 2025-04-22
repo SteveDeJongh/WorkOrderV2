@@ -42,6 +42,18 @@ import {
   SortableContext,
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import {
+  Alert,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Modal,
+} from "../../../utils/muiImports";
+import { LoadingBox } from "../LoadingBox";
 
 // Utilities
 function reorderColumnPreferences(
@@ -288,7 +300,7 @@ function FullWidthTable({
     }
   }
 
-  let Modal = determineModal();
+  let ModalContent = determineModal();
   const { id } = useParams();
   const [clickedID, setClickedId] = useState(Number(id) || undefined);
   const [isOpen, setIsOpen] = useState(!!clickedID);
@@ -300,35 +312,46 @@ function FullWidthTable({
 
   return (
     <>
-      {loading && <p>Information loading...</p>}
-      {error && <p>An error occured.</p>}
+      {loading && <LoadingBox text="Information loading..." />}
+      {error && <Alert color={"error"}>An error occured.</Alert>}
       {!loading && !error && (
-        <div>
+        <Stack spacing={2} sx={{ width: "100%" }}>
           <SearchBar
             title={title}
             value={searchTerm}
             onSearchChange={handleDebouncedSearchChange}
             onImmediateChange={handleImmediateSearchChange}
           />
-          <div className="table">
+          <TableContainer
+            sx={{
+              overflowX: "auto",
+              overflowY: "auto",
+              maxWidth: "100%",
+              maxHeight: "75vh",
+              minHeight: "75vh",
+            }}
+          >
             <DndContext
               collisionDetection={closestCenter}
               modifiers={[restrictToHorizontalAxis]}
               onDragEnd={handleDragEnd}
               sensors={sensors}
             >
-              <table
+              <Table
+                size="small"
                 {...{
                   className: "divTable",
                   style: {
+                    whiteSpace: "nowrap",
                     ...columnSizeVars,
                     width: table.getTotalSize(),
+                    minWidth: "max-content",
                   },
                 }}
               >
-                <thead>
+                <TableHead>
                   {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id}>
+                    <TableRow key={headerGroup.id}>
                       <SortableContext
                         items={columnOrder}
                         strategy={horizontalListSortingStrategy}
@@ -345,19 +368,20 @@ function FullWidthTable({
                           />
                         ))}
                       </SortableContext>
-                    </tr>
+                    </TableRow>
                   ))}
-                </thead>
-                <tbody>
+                </TableHead>
+                <TableBody>
                   <>
                     {data.length <= 0 ? (
-                      <tr>
-                        <td>No Results</td>
-                      </tr>
+                      <TableRow>
+                        <TableCell>No Results</TableCell>
+                      </TableRow>
                     ) : (
                       <>
                         {table.getRowModel().rows.map((row) => (
-                          <tr
+                          <TableRow
+                            hover
                             key={row.id}
                             onClick={() => handleClick(Number(row.original.id))}
                           >
@@ -370,18 +394,18 @@ function FullWidthTable({
                                 <DragAlongCell key={cell.id} cell={cell} />
                               </SortableContext>
                             ))}
-                          </tr>
+                          </TableRow>
                         ))}
                       </>
                     )}
                   </>
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </DndContext>
-          </div>
-        </div>
+          </TableContainer>
+        </Stack>
       )}
-      <Modal
+      {/* <Modal
         open={isOpen}
         onClose={() => {
           setClickedId(undefined);
@@ -389,7 +413,11 @@ function FullWidthTable({
         }}
         resourceId={clickedID}
         searchTerm={debouncedSearchTerm}
-      />
+      /> */}
+
+      <Modal open={isOpen}>
+        <div>Wahoo</div>
+      </Modal>
     </>
   );
 }

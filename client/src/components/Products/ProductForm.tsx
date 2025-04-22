@@ -14,7 +14,7 @@ import {
   Typography,
 } from "../../utils/muiImports";
 import { FormTextInput } from "../FormParts/FormTextInput";
-import { FormMultiCheckBox } from "../Users/FormMultiCheckBox";
+import { FormMultiCheckBox } from "../FormParts/FormMultiCheckBox";
 import { FormNumberInput } from "../FormParts/FormNumberInput";
 import { FormSelectInput } from "../FormParts/FormSelectInput";
 

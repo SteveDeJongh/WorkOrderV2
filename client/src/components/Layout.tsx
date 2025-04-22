@@ -10,7 +10,7 @@ function Layout() {
         <Grid2>
           <Header />
         </Grid2>
-        <Grid2>
+        <Grid2 sx={{ width: "100%" }}>
           <Outlet />
         </Grid2>
         <Grid2>

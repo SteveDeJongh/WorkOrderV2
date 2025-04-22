@@ -5,6 +5,7 @@ import { Invoice } from "../../../types/invoiceTypes";
 import { CSSProperties } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { TableCell } from "@mui/material";
 
 const DragAlongCell = ({
   cell,
@@ -25,9 +26,9 @@ const DragAlongCell = ({
   };
 
   return (
-    <td style={style} ref={setNodeRef} key={cell.id}>
+    <TableCell style={style} ref={setNodeRef} key={cell.id}>
       {flexRender(cell.column.columnDef.cell, cell.getContext())}
-    </td>
+    </TableCell>
   );
 };
 
